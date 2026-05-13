@@ -5,7 +5,6 @@ import { createClient } from "@/utils/supabase"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { useTranslation } from "@/lib/i18n"
 
@@ -30,8 +29,8 @@ export default function LoginPage() {
   // 新規登録処理
   const handleSignUp = async () => {
     setLoading(true)
-    const { error } = await supabase.auth.signUp({ 
-      email, 
+    const { error } = await supabase.auth.signUp({
+      email,
       password,
       options: { data: { display_name: email.split('@')[0] } } // メールの@前を表示名にする
     })
@@ -41,31 +40,31 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-slate-50">
-      <Card className="w-full max-w-md shadow-lg border-none">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Milenote</CardTitle>
-          <CardDescription className="text-center">{t("login.subtitle")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">{t("login.email")}</Label>
-              <Input id="email" type="email" placeholder="example@mail.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">{t("login.password")}</Label>
-              <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-            </div>
-            <Button className="w-full font-bold" type="submit" disabled={loading}>
+    <div className="flex min-h-screen items-center justify-center p-4 bg-white">
+      <div className="w-full max-w-sm">
+        <div className="space-y-1 mb-6">
+          <h1 className="text-2xl font-bold text-center">Milenote</h1>
+          <p className="text-sm text-slate-500 text-center">{t("login.subtitle")}</p>
+        </div>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">{t("login.email")}</Label>
+            <Input id="email" type="email" placeholder="example@mail.com" value={email} onChange={(e) => setEmail(e.target.value)} required className="border-slate-300" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">{t("login.password")}</Label>
+            <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="border-slate-300" />
+          </div>
+          <div className="flex flex-col items-center gap-3 pt-2">
+            <Button className="font-bold min-w-[200px]" type="submit" disabled={loading}>
               {loading ? t("login.processing") : t("login.login")}
             </Button>
-            <Button variant="outline" className="w-full" type="button" onClick={handleSignUp} disabled={loading}>
+            <Button variant="outline" className="min-w-[200px]" type="button" onClick={handleSignUp} disabled={loading}>
               {t("login.signup")}
             </Button>
-          </form>
-        </CardContent>
-      </Card>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }
