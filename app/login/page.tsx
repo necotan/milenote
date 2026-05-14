@@ -42,7 +42,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4 bg-white">
+    <div className="flex min-h-screen items-center justify-center p-8 bg-white">
       <div className="w-full max-w-sm">
         <div className="space-y-1 mb-6">
           <h1 className="text-2xl font-bold text-center">Milenote</h1>
