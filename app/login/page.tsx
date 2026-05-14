@@ -28,19 +28,6 @@ export default function LoginPage() {
     setLoading(false)
   }
 
-  // 新規登録処理
-  const handleSignUp = async () => {
-    setLoading(true)
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { display_name: email.split('@')[0] } } // メールの@前を表示名にする
-    })
-    if (error) alert(error.message)
-    else alert(t("login.confirmation_sent"))
-    setLoading(false)
-  }
-
   return (
     <div className="flex min-h-screen items-center justify-center p-8 bg-white">
       <div className="w-full max-w-sm">
@@ -66,7 +53,7 @@ export default function LoginPage() {
             <Button className="font-bold min-w-[200px]" type="submit" disabled={loading}>
               {loading ? t("login.processing") : t("login.login")}
             </Button>
-            <Button variant="outline" className="min-w-[200px]" type="button" onClick={handleSignUp} disabled={loading}>
+            <Button variant="outline" className="min-w-[200px]" type="button" onClick={() => router.push("/login/signup")}>
               {t("login.signup")}
             </Button>
           </div>

@@ -222,6 +222,19 @@
     "signup": "Create Account",
     "confirmation_sent": "Confirmation email sent! Click the link in the email to complete registration."
   },
+  "signup": {
+    "subtitle": "Create a new account",
+    "user_id": "User ID",
+    "user_id_hint": "Only letters, numbers, and underscores (_) are allowed",
+    "password_placeholder": "At least 6 characters",
+    "create_account": "Create Account",
+    "back_to_login": "Back to login",
+    "error_title": "Registration Error",
+    "email_taken": "This email address is already in use.",
+    "user_id_taken": "This User ID is already taken. Please choose a different one.",
+    "password_too_short": "Password must be at least 6 characters.",
+    "invalid_user_id": "User ID can only contain letters, numbers, and underscores (_)."
+  },
   "categories": {
     "fuel": "Fuel",
     "maintenance": "Maint.",

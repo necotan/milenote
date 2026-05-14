@@ -222,6 +222,19 @@
     "signup": "新規アカウント作成",
     "confirmation_sent": "確認メールを送信しました！メール内のリンクをクリックして登録を完了してください。"
   },
+  "signup": {
+    "subtitle": "新規アカウントを作成",
+    "user_id": "ユーザーID",
+    "user_id_hint": "英数字とアンダースコア（_）のみ使用できます",
+    "password_placeholder": "6文字以上で入力",
+    "create_account": "アカウントを作成する",
+    "back_to_login": "ログインに戻る",
+    "error_title": "登録エラー",
+    "email_taken": "このメールアドレスは既に使用されています。",
+    "user_id_taken": "このユーザーIDは既に使用されています。別のIDを入力してください。",
+    "password_too_short": "パスワードは6文字以上で入力してください。",
+    "invalid_user_id": "ユーザーIDには英数字とアンダースコア（_）のみ使用できます。"
+  },
   "categories": {
     "fuel": "給油",
     "maintenance": "メンテ",
