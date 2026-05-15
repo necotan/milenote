@@ -324,7 +324,7 @@ export default function StatsPage() {
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={categoryData} cx="50%" cy="45%" innerRadius={70} outerRadius={95} dataKey="value" stroke="#ffffff" strokeWidth={2}>
+                  <Pie data={categoryData} cx="50%" cy="45%" innerRadius={70} outerRadius={95} dataKey="value" stroke="none" paddingAngle={3}>
                     {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                     <Label value={`¥${totalAmount.toLocaleString()}`} position="center" className="text-xl font-black fill-slate-800" />
                     <Label value={t("stats.total")} position="center" dy={20} className="text-[10px] font-bold fill-slate-400" />
