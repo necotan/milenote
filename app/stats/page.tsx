@@ -22,13 +22,13 @@ const CATEGORY_MAP_COLORFUL: Record<string, { color: string }> = {
 }
 
 const CATEGORY_MAP_BLUE: Record<string, { color: string }> = {
-  fuel: { color: "#1e3a8a" },
-  maintenance: { color: "#1e40af" },
-  custom: { color: "#1d4ed8" },
-  highway: { color: "#2563eb" },
-  tax: { color: "#3b82f6" },
-  insurance: { color: "#60a5fa" },
-  other: { color: "#93c5fd" },
+  fuel: { color: "#0ea5e9" },
+  maintenance: { color: "#2563eb" },
+  custom: { color: "#6366f1" },
+  highway: { color: "#38bdf8" },
+  tax: { color: "#1e3a8a" },
+  insurance: { color: "#818cf8" },
+  other: { color: "#cbd5e1" },
 }
 
 // 期間フィルターUIコンポーネント
@@ -324,7 +324,7 @@ export default function StatsPage() {
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={categoryData} cx="50%" cy="45%" innerRadius={70} outerRadius={95} dataKey="value" stroke="none">
+                  <Pie data={categoryData} cx="50%" cy="45%" innerRadius={70} outerRadius={95} dataKey="value" stroke="#ffffff" strokeWidth={2}>
                     {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                     <Label value={`¥${totalAmount.toLocaleString()}`} position="center" className="text-xl font-black fill-slate-800" />
                     <Label value={t("stats.total")} position="center" dy={20} className="text-[10px] font-bold fill-slate-400" />
