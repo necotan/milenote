@@ -203,8 +203,9 @@ export default function MyPage() {
                 <Label className="text-slate-700 font-bold text-xs">{t("mypage.user_id")}</Label>
                 <div className="flex h-10 w-full overflow-hidden rounded-md border border-slate-200 focus-within:ring-1 focus-within:ring-slate-300">
                   <span className="flex items-center justify-center bg-slate-50 border-r border-slate-200 text-slate-400 px-3 text-sm font-bold min-w-[40px]">@</span>
-                  <Input value={username} onChange={(e) => setUsername(e.target.value.replace(/[^a-zA-Z0-9_]/g, ""))} placeholder="milenote_user" className="border-none bg-white h-full w-full focus-visible:ring-0 focus-visible:ring-offset-0 text-sm" />
+                  <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="milenote_user" className="border-none bg-white h-full w-full focus-visible:ring-0 focus-visible:ring-offset-0 text-sm" />
                 </div>
+                <p className="text-xs text-slate-400">{t("signup.user_id_hint")}</p>
               </div>
             </div>
           </div>
