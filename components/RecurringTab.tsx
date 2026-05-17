@@ -282,87 +282,66 @@ export default function RecurringTab({ cars }: { cars: any[] }) {
     if (cars.length > 0) setCarId(cars[0].id)
   }
 
-  const processRecurringCostNow = async (cost: any, userId: string) => {
-    const today = new Date()
-    let currentNextDate = new Date(cost.next_billing_date)
-    let cyclesProcessed = 0
+  const toDateStr = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
-    while (currentNextDate <= today && cyclesProcessed < 120) {
-      const dateStr = `${currentNextDate.getFullYear()}-${String(currentNextDate.getMonth() + 1).padStart(2, '0')}-${String(currentNextDate.getDate()).padStart(2, '0')}`
-      const autoPrefix = t("records.auto_recorded") || "【自動記録】"
-
-      const { error: insertError } = await supabase.from("records").insert({
-        user_id: userId,
-        car_id: cost.car_id,
-        category: cost.category,
-        sub_category: cost.sub_category,
-        amount: cost.amount,
-        date: dateStr,
-        memo: `${autoPrefix}${cost.memo || ""}`,
-      })
-      if (insertError) break
-
-      if (cost.frequency === "weekly") {
-        currentNextDate.setDate(currentNextDate.getDate() + 7)
-      } else if (cost.frequency === "monthly") {
-        currentNextDate.setMonth(currentNextDate.getMonth() + 1)
-      } else if (cost.frequency === "bimonthly") {
-        currentNextDate.setMonth(currentNextDate.getMonth() + 2)
-      } else if (cost.frequency === "quarterly") {
-        currentNextDate.setMonth(currentNextDate.getMonth() + 3)
-      } else if (cost.frequency === "semiannually") {
-        currentNextDate.setMonth(currentNextDate.getMonth() + 6)
-      } else if (cost.frequency === "yearly") {
-        currentNextDate.setFullYear(currentNextDate.getFullYear() + 1)
-      }
-      cyclesProcessed++
-    }
-
-    if (cyclesProcessed > 0) {
-      const nextDateStr = `${currentNextDate.getFullYear()}-${String(currentNextDate.getMonth() + 1).padStart(2, '0')}-${String(currentNextDate.getDate()).padStart(2, '0')}`
-      await supabase.from("recurring_costs").update({ next_billing_date: nextDateStr }).eq("id", cost.id)
-    }
-
-    return cyclesProcessed
+  const advanceByFrequency = (d: Date, freq: string) => {
+    if (freq === "weekly")        d.setDate(d.getDate() + 7)
+    else if (freq === "monthly")      d.setMonth(d.getMonth() + 1)
+    else if (freq === "bimonthly")    d.setMonth(d.getMonth() + 2)
+    else if (freq === "quarterly")    d.setMonth(d.getMonth() + 3)
+    else if (freq === "semiannually") d.setMonth(d.getMonth() + 6)
+    else if (freq === "yearly")       d.setFullYear(d.getFullYear() + 1)
   }
 
-  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSave = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
     if (!carId) return alert(t("records.select_car_alert"))
 
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
-    const payload = {
-      car_id: carId,
-      category,
-      sub_category: subCategory || null,
-      amount: parseInt(amount),
-      frequency,
-      next_billing_date: nextBillingDate,
-      memo,
-    }
-
     if (editId) {
-      const { error } = await supabase.from("recurring_costs").update(payload).eq("id", editId)
+      const { error } = await supabase.from("recurring_costs").update({
+        car_id: carId, category, sub_category: subCategory || null,
+        amount: parseInt(amount), frequency, next_billing_date: nextBillingDate, memo,
+      }).eq("id", editId)
       if (error) return toast.error(t("common.error_occurred") + ": " + error.message)
       toast.success(t("records.recurring_updated"))
     } else {
-      const { data: inserted, error } = await supabase.from("recurring_costs").insert({
-        ...payload,
-        user_id: user.id
-      }).select().single()
+      // 初回支払日が今日以前なら、過去分の日付リストと正しい次回支払日を先に計算する
+      const today = new Date()
+      const cursor = new Date(nextBillingDate + "T00:00:00")
+      const pastDates: string[] = []
+
+      while (cursor <= today && pastDates.length < 120) {
+        pastDates.push(toDateStr(cursor))
+        advanceByFrequency(cursor, frequency)
+      }
+
+      // 次回支払日：過去分があれば計算済みの cursor、なければ入力値そのまま
+      const resolvedNextBillingDate = pastDates.length > 0 ? toDateStr(cursor) : nextBillingDate
+
+      const { error } = await supabase.from("recurring_costs").insert({
+        car_id: carId, category, sub_category: subCategory || null,
+        amount: parseInt(amount), frequency,
+        next_billing_date: resolvedNextBillingDate,
+        memo, user_id: user.id,
+      })
       if (error) return toast.error(t("common.error_occurred") + ": " + error.message)
 
-      const today = new Date()
-      const firstDate = new Date(nextBillingDate)
-      if (inserted && firstDate <= today) {
-        const count = await processRecurringCostNow(inserted, user.id)
-        if (count > 0) {
-          toast.success(`定期費用を登録しました。過去${count}件の記録を自動作成しました。`)
-        } else {
-          toast.success(t("records.recurring_saved"))
+      // 過去分を自動記録
+      if (pastDates.length > 0) {
+        const autoPrefix = t("records.auto_recorded") || "【自動記録】"
+        for (const dateStr of pastDates) {
+          await supabase.from("records").insert({
+            user_id: user.id, car_id: carId, category,
+            sub_category: subCategory || null,
+            amount: parseInt(amount), date: dateStr,
+            memo: `${autoPrefix}${memo || ""}`,
+          })
         }
+        toast.success(`定期費用を登録しました。過去${pastDates.length}件の記録を自動作成しました。`)
       } else {
         toast.success(t("records.recurring_saved"))
       }
