@@ -44,7 +44,7 @@ export default function RecurringCostProcessor() {
         let currentNextDate = new Date(cost.next_billing_date)
         let cyclesProcessed = 0
 
-        while (currentNextDate <= today && cyclesProcessed < 12) { // max 12 cycles at once to prevent infinite loop
+        while (currentNextDate <= today && cyclesProcessed < 120) { // max 120 cycles at once to prevent infinite loop
           const currentNextDateStr = `${currentNextDate.getFullYear()}-${String(currentNextDate.getMonth() + 1).padStart(2, '0')}-${String(currentNextDate.getDate()).padStart(2, '0')}`
           
           const autoPrefix = t("records.auto_recorded") || "【自動記録】"

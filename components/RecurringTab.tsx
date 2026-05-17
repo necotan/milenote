@@ -167,7 +167,7 @@ const RecurringForm = ({
               />
               {!isEdit && (
                 <p className="text-[11px] text-slate-400">
-                  ※ 今日以前の日付を設定すると、次回アプリ起動時に自動記録されます
+                  ※ 過去の日付を設定すると、保存時に過去分がまとめて自動記録されます
                 </p>
               )}
             </div>
@@ -282,7 +282,51 @@ export default function RecurringTab({ cars }: { cars: any[] }) {
     if (cars.length > 0) setCarId(cars[0].id)
   }
 
-  const handleSave = async (e: React.FormEvent) => {
+  const processRecurringCostNow = async (cost: any, userId: string) => {
+    const today = new Date()
+    let currentNextDate = new Date(cost.next_billing_date)
+    let cyclesProcessed = 0
+
+    while (currentNextDate <= today && cyclesProcessed < 120) {
+      const dateStr = `${currentNextDate.getFullYear()}-${String(currentNextDate.getMonth() + 1).padStart(2, '0')}-${String(currentNextDate.getDate()).padStart(2, '0')}`
+      const autoPrefix = t("records.auto_recorded") || "【自動記録】"
+
+      const { error: insertError } = await supabase.from("records").insert({
+        user_id: userId,
+        car_id: cost.car_id,
+        category: cost.category,
+        sub_category: cost.sub_category,
+        amount: cost.amount,
+        date: dateStr,
+        memo: `${autoPrefix}${cost.memo || ""}`,
+      })
+      if (insertError) break
+
+      if (cost.frequency === "weekly") {
+        currentNextDate.setDate(currentNextDate.getDate() + 7)
+      } else if (cost.frequency === "monthly") {
+        currentNextDate.setMonth(currentNextDate.getMonth() + 1)
+      } else if (cost.frequency === "bimonthly") {
+        currentNextDate.setMonth(currentNextDate.getMonth() + 2)
+      } else if (cost.frequency === "quarterly") {
+        currentNextDate.setMonth(currentNextDate.getMonth() + 3)
+      } else if (cost.frequency === "semiannually") {
+        currentNextDate.setMonth(currentNextDate.getMonth() + 6)
+      } else if (cost.frequency === "yearly") {
+        currentNextDate.setFullYear(currentNextDate.getFullYear() + 1)
+      }
+      cyclesProcessed++
+    }
+
+    if (cyclesProcessed > 0) {
+      const nextDateStr = `${currentNextDate.getFullYear()}-${String(currentNextDate.getMonth() + 1).padStart(2, '0')}-${String(currentNextDate.getDate()).padStart(2, '0')}`
+      await supabase.from("recurring_costs").update({ next_billing_date: nextDateStr }).eq("id", cost.id)
+    }
+
+    return cyclesProcessed
+  }
+
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!carId) return alert(t("records.select_car_alert"))
 
@@ -304,12 +348,24 @@ export default function RecurringTab({ cars }: { cars: any[] }) {
       if (error) return toast.error(t("common.error_occurred") + ": " + error.message)
       toast.success(t("records.recurring_updated"))
     } else {
-      const { error } = await supabase.from("recurring_costs").insert({
+      const { data: inserted, error } = await supabase.from("recurring_costs").insert({
         ...payload,
         user_id: user.id
-      })
+      }).select().single()
       if (error) return toast.error(t("common.error_occurred") + ": " + error.message)
-      toast.success(t("records.recurring_saved"))
+
+      const today = new Date()
+      const firstDate = new Date(nextBillingDate)
+      if (inserted && firstDate <= today) {
+        const count = await processRecurringCostNow(inserted, user.id)
+        if (count > 0) {
+          toast.success(`定期費用を登録しました。過去${count}件の記録を自動作成しました。`)
+        } else {
+          toast.success(t("records.recurring_saved"))
+        }
+      } else {
+        toast.success(t("records.recurring_saved"))
+      }
     }
 
     resetForm()
