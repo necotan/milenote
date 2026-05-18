@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket } from "lucide-react"
+import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
@@ -264,7 +264,7 @@ function RecordsPageInner() {
   // 編集モード用
   const [editRecordId, setEditRecordId] = useState<string | null>(null)
   const supabase = createClient()
-  const { t } = useTranslation()
+  const { t, locale } = useTranslation()
 
   const [carId, setCarId] = useState("")
   const [category, setCategory] = useState("fuel")
@@ -279,6 +279,42 @@ function RecordsPageInner() {
   // 高速料金用ステート
   const [entryIc, setEntryIc] = useState("")
   const [exitIc, setExitIc] = useState("")
+
+  // 月別・全期間 表示切り替え
+  const currentYM = (() => {
+    const now = new Date()
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+  })()
+  const [viewMode, setViewMode] = useState<"month" | "all">("month")
+  const [selectedYearMonth, setSelectedYearMonth] = useState(currentYM)
+
+  useEffect(() => {
+    const saved = localStorage.getItem("records_view_mode") as "month" | "all"
+    if (saved === "month" || saved === "all") setViewMode(saved)
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem("records_view_mode", viewMode)
+  }, [viewMode])
+
+  const goToPrevMonth = () => {
+    const [y, m] = selectedYearMonth.split('-').map(Number)
+    const d = new Date(y, m - 2)
+    setSelectedYearMonth(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`)
+  }
+  const goToNextMonth = () => {
+    const [y, m] = selectedYearMonth.split('-').map(Number)
+    const d = new Date(y, m)
+    const next = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    if (next <= currentYM) setSelectedYearMonth(next)
+  }
+  const [displayYear, displayMonth] = selectedYearMonth.split('-').map(Number)
+  const monthLabel = locale === "en"
+    ? new Date(displayYear, displayMonth - 1).toLocaleDateString("en-US", { year: "numeric", month: "long" })
+    : `${displayYear}年${displayMonth}月`
+  const displayedRecords = viewMode === "month"
+    ? records.filter(r => r.date.startsWith(selectedYearMonth))
+    : records
 
   useEffect(() => {
     if (SUB_CATEGORIES[category]) {
@@ -530,13 +566,46 @@ function RecordsPageInner() {
           </TabsList>
           
           <TabsContent value="manual" className="space-y-6 outline-none">
-            <div className="flex justify-end">
-              {!isAdding && !editRecordId && (
-                <Button onClick={() => setIsAdding(true)} size="sm" className="font-bold">
-                  <Plus className="mr-1 h-4 w-4" /> {t("records.add_record")}
-                </Button>
-              )}
-            </div>
+            {!isAdding && !editRecordId && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-1 bg-slate-100 rounded-lg p-1">
+                    <button
+                      onClick={() => setViewMode("month")}
+                      className={`px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${viewMode === "month" ? "bg-white shadow-sm text-slate-800" : "text-slate-500 hover:text-slate-700"}`}
+                    >
+                      {t("records.view_by_month")}
+                    </button>
+                    <button
+                      onClick={() => setViewMode("all")}
+                      className={`px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${viewMode === "all" ? "bg-white shadow-sm text-slate-800" : "text-slate-500 hover:text-slate-700"}`}
+                    >
+                      {t("records.view_all")}
+                    </button>
+                  </div>
+                  <Button onClick={() => setIsAdding(true)} size="sm" className="font-bold">
+                    <Plus className="mr-1 h-4 w-4" /> {t("records.add_record")}
+                  </Button>
+                </div>
+                {viewMode === "month" && (
+                  <div className="flex items-center justify-center gap-4">
+                    <button onClick={goToPrevMonth} className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
+                      <ChevronLeft size={18} className="text-slate-600" />
+                    </button>
+                    <span className="font-bold text-slate-700 min-w-[120px] text-center">
+                      {monthLabel}
+                    </span>
+                    <button
+                      onClick={goToNextMonth}
+                      disabled={selectedYearMonth >= currentYM}
+                      className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors disabled:opacity-30"
+                    >
+                      <ChevronRight size={18} className="text-slate-600" />
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
       {isAdding && <RecordForm 
           onSubmit={handleAddRecord} 
@@ -581,9 +650,15 @@ function RecordsPageInner() {
         <p className="text-center text-slate-500 py-20">{t("records.no_records_line1")}<br/>{t("records.no_records_line2")}</p>
       )}
 
-      {!loading && !isAdding && !editRecordId && records.length > 0 && (
+      {!loading && !isAdding && !editRecordId && records.length > 0 && displayedRecords.length === 0 && (
+        <p className="text-center text-slate-400 py-20 font-medium">
+          {t("records.no_records_in_month", { label: monthLabel })}
+        </p>
+      )}
+
+      {!loading && !isAdding && !editRecordId && displayedRecords.length > 0 && (
         <div className="space-y-4">
-          {records.map((record) => {
+          {displayedRecords.map((record) => {
             const cat = CATEGORIES[record.category] || CATEGORIES.other
             const Icon = cat.icon
             
