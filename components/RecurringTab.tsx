@@ -434,60 +434,56 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
           return (
             <Card
               key={cost.id}
-              className={`border-none shadow-sm overflow-hidden transition-opacity relative ${cost.is_active ? 'bg-white' : 'bg-slate-50 opacity-60'}`}
+              className={`border-none shadow-sm overflow-hidden transition-opacity ${cost.is_active ? 'bg-white' : 'bg-slate-50 opacity-60'}`}
             >
               <CardContent className="p-0">
-                {/* アクションボタン群 */}
-                <div className="absolute right-3 top-3 flex items-center gap-1">
-                  {/* 停止/再開ボタン */}
-                  <button
-                    onClick={() => toggleActive(cost.id, cost.is_active)}
-                    className={`flex items-center gap-1 text-[11px] font-bold px-2.5 py-1.5 rounded-lg transition-colors ${
-                      cost.is_active
-                        ? 'text-slate-500 bg-slate-100 hover:bg-slate-200'
-                        : 'text-green-600 bg-green-50 hover:bg-green-100'
-                    }`}
-                    title={cost.is_active ? t("records.pause_recurring") : t("records.resume_recurring")}
-                  >
-                    {cost.is_active
-                      ? <><Pause size={11} />{t("records.pause_recurring")}</>
-                      : <><Play size={11} />{t("records.resume_recurring")}</>
-                    }
-                  </button>
-                  <button
-                    onClick={() => handleStartEdit(cost)}
-                    className="p-1.5 rounded-lg text-slate-300 hover:text-blue-500 hover:bg-blue-50 transition-colors"
-                  >
-                    <Pencil size={14} />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(cost.id)}
-                    className="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-
-                <div className="p-4 flex gap-4 items-start">
+                <div className="p-4 flex gap-3 items-start">
                   <div className={`p-3 rounded-full shrink-0 mt-1 ${cat.bg} ${cat.color}`}>
                     <Icon size={24} />
                   </div>
-                  <div className="flex-1 min-w-0 pr-32">
-                    {/* 金額 + 頻度 */}
-                    <h3 className="font-bold text-slate-800 text-lg mb-1">
-                      ¥{cost.amount.toLocaleString()}
-                      <span className="text-xs text-slate-400 font-medium ml-1">
-                        / {getFrequencyLabel(cost.frequency, t)}
-                      </span>
-                    </h3>
+                  <div className="flex-1 min-w-0">
+                    {/* 金額 + アクションボタン */}
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <h3 className="font-bold text-slate-800 text-lg">
+                        ¥{cost.amount.toLocaleString()}
+                        <span className="text-xs text-slate-400 font-medium ml-1">
+                          / {getFrequencyLabel(cost.frequency, t)}
+                        </span>
+                      </h3>
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          onClick={() => toggleActive(cost.id, cost.is_active)}
+                          className={`p-1.5 rounded-lg transition-colors ${
+                            cost.is_active
+                              ? 'text-slate-300 hover:text-slate-500 hover:bg-slate-100'
+                              : 'text-slate-300 hover:text-green-500 hover:bg-green-50'
+                          }`}
+                          title={cost.is_active ? t("records.pause_recurring") : t("records.resume_recurring")}
+                        >
+                          {cost.is_active ? <Pause size={14} /> : <Play size={14} />}
+                        </button>
+                        <button
+                          onClick={() => handleStartEdit(cost)}
+                          className="p-1.5 rounded-lg text-slate-300 hover:text-blue-500 hover:bg-blue-50 transition-colors"
+                        >
+                          <Pencil size={14} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(cost.id)}
+                          className="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    </div>
 
                     {/* ジャンルタグ + ステータスバッジ */}
-                    <div className="flex items-center gap-2 flex-wrap mb-2">
-                      <span className="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded-md">
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <span className="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded-md whitespace-nowrap">
                         {t(`categories.${cost.category}`)}
                       </span>
                       {cost.sub_category && (
-                        <span className="text-[10px] font-bold border border-slate-200 text-slate-600 px-2 py-1 rounded-md">
+                        <span className="text-[10px] font-bold border border-slate-200 text-slate-600 px-2 py-1 rounded-md whitespace-nowrap">
                           {t(`subcategories.${cost.sub_category}`)}
                         </span>
                       )}
