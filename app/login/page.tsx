@@ -43,7 +43,7 @@ export default function LoginPage() {
           <div className="space-y-2">
             <Label htmlFor="password">{t("login.password")}</Label>
             <div className="relative">
-              <Input id="password" type={showPassword ? "text" : "password"} placeholder="6文字以上で入力" value={password} onChange={(e) => setPassword(e.target.value)} required className="border-slate-300 pr-10" />
+              <Input id="password" type={showPassword ? "text" : "password"} placeholder={t("login.password_placeholder")} value={password} onChange={(e) => setPassword(e.target.value)} required className="border-slate-300 pr-10" />
               <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors" tabIndex={-1}>
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
