@@ -396,7 +396,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
 
       {/* 追加ボタン（コスト一覧がある場合のみ右上に表示） */}
       {!isAdding && !editId && cars.length > 0 && costs.length > 0 && (
-        <div className="flex justify-end mb-2">
+        <div className="flex justify-end mt-8 mb-8">
           <Button onClick={() => setIsAdding(true)} size="sm" className="font-bold gap-1">
             <Plus className="h-4 w-4" /> {t("records.add_recurring")}
           </Button>
