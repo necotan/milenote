@@ -400,7 +400,7 @@ export default function GaragePage() {
                     <Label>{t("garage.car_name")} <span className="text-red-500">{t("common.required")}</span></Label>
                     <Input placeholder="TOYOTA 86" value={name} onChange={(e) => setName(e.target.value)} required className="placeholder:text-slate-300" />
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="space-y-2"><Label>{t("garage.maker")}</Label><Input placeholder="" value={maker} onChange={(e) => setMaker(e.target.value)} className="placeholder:text-slate-300" /></div>
                     <div className="space-y-2"><Label>{t("garage.model_code")}</Label><Input placeholder="ZN6" value={modelCode} onChange={(e) => setModelCode(e.target.value)} className="placeholder:text-slate-300" /></div>
                     <div className="space-y-2"><Label>{t("garage.year")}</Label><Input type="number" placeholder="2018" value={year} onChange={(e) => setYear(e.target.value)} className="placeholder:text-slate-300" /></div>
