@@ -192,14 +192,14 @@ const StatusBadge = ({ isActive }: { isActive: boolean }) => {
   const { t } = useTranslation()
   if (isActive) {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md bg-green-100 text-green-700">
-        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md bg-green-100 text-green-700 whitespace-nowrap shrink-0">
+        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shrink-0" />
         {t("records.status_active")}
       </span>
     )
   }
   return (
-    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md border border-slate-200 text-slate-500">
+    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md border border-slate-200 text-slate-500 whitespace-nowrap shrink-0">
       {t("records.status_paused")}
     </span>
   )
