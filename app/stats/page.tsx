@@ -697,6 +697,7 @@ export default function StatsPage() {
                     <Tooltip
                       cursor={false}
                       contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                      itemStyle={{ color: '#3b82f6' }}
                       formatter={expenditureTooltipFormatter}
                       labelFormatter={monthTooltipLabelFormatter}
                     />
@@ -725,6 +726,7 @@ export default function StatsPage() {
                     <Tooltip
                       cursor={false}
                       contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                      itemStyle={{ color: '#3b82f6' }}
                       formatter={expenditureTooltipFormatter}
                       labelFormatter={monthTooltipLabelFormatter}
                     />
