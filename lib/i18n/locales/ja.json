@@ -103,7 +103,12 @@
     "uploading_photo": "写真をアップロード中...",
     "upload_failed": "アップロードに失敗しました",
     "db_update_failed": "データベースの更新に失敗しました",
-    "photo_set": "愛車の写真を設定しました！"
+    "photo_set": "愛車の写真を設定しました！",
+    "status": "ステータス",
+    "car_status_pending": "納車待ち",
+    "car_status_active": "所有中",
+    "car_status_archived": "元愛車（統計に含める）",
+    "car_status_archived_excluded": "元愛車（統計から除外）"
   },
   "records": {
     "title": "記録",

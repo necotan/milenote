@@ -103,7 +103,12 @@
     "uploading_photo": "Uploading photo...",
     "upload_failed": "Upload failed",
     "db_update_failed": "Database update failed",
-    "photo_set": "Car photo updated!"
+    "photo_set": "Car photo updated!",
+    "status": "Status",
+    "car_status_pending": "Pending Delivery",
+    "car_status_active": "Owned",
+    "car_status_archived": "Former Car (Tracked)",
+    "car_status_archived_excluded": "Former Car (Excluded)"
   },
   "records": {
     "title": "Records",

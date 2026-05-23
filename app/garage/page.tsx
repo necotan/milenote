@@ -19,6 +19,17 @@ const WISHLIST_GENRE_KEYS = [
 
 const FUEL_TYPE_KEYS = ["レギュラー", "ハイオク", "軽油", "EV", "その他"]
 
+const CAR_STATUS_KEYS = ["pending", "active", "archived", "archived_excluded"] as const
+type CarStatus = typeof CAR_STATUS_KEYS[number]
+
+// 一覧での並び順
+const CAR_STATUS_ORDER: Record<string, number> = {
+  active: 0,
+  pending: 1,
+  archived: 2,
+  archived_excluded: 3,
+}
+
 export default function GaragePage() {
   const [cars, setCars] = useState<any[]>([])
   const [wishlists, setWishlists] = useState<any[]>([])
@@ -49,6 +60,7 @@ export default function GaragePage() {
   const [firstRegistrationDate, setFirstRegistrationDate] = useState("")
   const [purchaseDate, setPurchaseDate] = useState("")
   const [purchaseOdo, setPurchaseOdo] = useState("")
+  const [carStatus, setCarStatus] = useState<CarStatus>("active")
 
   // ウィッシュリスト追加フォームの状態管理
   const [wishCarId, setWishCarId] = useState("")
@@ -67,15 +79,21 @@ export default function GaragePage() {
         .from("cars")
         .select("*")
         .eq("user_id", user.id)
-        .eq("status", "active")
+        .neq("status", "deleted")
         .order("created_at", { ascending: false })
 
       if (carsData) {
-        setCars(carsData)
-        if (carsData.length === 1) setWishCarId(carsData[0].id)
+        // ステータス順でソートしてから状態にセット
+        const sortedCars = [...carsData].sort((a, b) => {
+          const aOrder = CAR_STATUS_ORDER[a.status] ?? 99
+          const bOrder = CAR_STATUS_ORDER[b.status] ?? 99
+          return aOrder - bOrder
+        })
+        setCars(sortedCars)
+        if (sortedCars.length === 1) setWishCarId(sortedCars[0].id)
       }
 
-      // ウィッシュリストの取得（関連する車両名を含む）
+      // ウィッシュリストの取得
       const { data: wishesData } = await supabase
         .from("wishlists")
         .select(`*, cars(name)`)
@@ -103,6 +121,7 @@ export default function GaragePage() {
     setName(""); setMaker(""); setModelCode(""); setYear("");
     setGrade(""); setColor(""); setFuelType("レギュラー"); setCurrentOdo("");
     setFirstRegistrationDate(""); setPurchaseDate(""); setPurchaseOdo("");
+    setCarStatus("active")
   }
 
   // 新規車両の登録処理
@@ -118,6 +137,7 @@ export default function GaragePage() {
       first_registration_date: firstRegistrationDate ? `${firstRegistrationDate}-01` : null,
       purchase_date: purchaseDate || null,
       purchase_odo: parseInt(purchaseOdo) || 0,
+      status: carStatus,
     })
 
     if (error) {
@@ -144,6 +164,7 @@ export default function GaragePage() {
     setFirstRegistrationDate(car.first_registration_date ? car.first_registration_date.substring(0, 7) : "")
     setPurchaseDate(car.purchase_date || "")
     setPurchaseOdo(car.purchase_odo ? String(car.purchase_odo) : "")
+    setCarStatus((CAR_STATUS_KEYS as readonly string[]).includes(car.status) ? (car.status as CarStatus) : "active")
   }
 
   // 車両情報の更新処理
@@ -158,6 +179,7 @@ export default function GaragePage() {
       first_registration_date: firstRegistrationDate ? `${firstRegistrationDate}-01` : null,
       purchase_date: purchaseDate || null,
       purchase_odo: parseInt(purchaseOdo) || 0,
+      status: carStatus,
     }).eq("id", editCarId)
 
     if (error) {
@@ -422,6 +444,17 @@ export default function GaragePage() {
                       </SelectContent>
                     </Select>
                   </div>
+                  <div className="space-y-2">
+                    <Label>{t("garage.status")}</Label>
+                    <Select value={carStatus} onValueChange={(v) => setCarStatus(v as CarStatus)}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        {CAR_STATUS_KEYS.map(key => (
+                          <SelectItem key={key} value={key}>{t(`garage.car_status_${key}`)}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   <div className="pt-4 flex justify-center">
                     <Button type="submit" className="px-12 font-bold">
                       {editCarId ? t("common.update") : t("common.register")}
@@ -497,10 +530,14 @@ export default function GaragePage() {
                         <span className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">{t("common.car_age")}</span>
                         <span className="font-bold text-slate-700 tracking-wider text-[10px]">{formatMonthsPassedLocale(car.first_registration_date, locale)}</span>
                       </div>
+                      <div className="flex items-center gap-4">
+                        <span className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">{t("common.grade")}</span>
+                        <span className="font-bold text-slate-700 tracking-wider text-[10px]">{car.grade || "-"}</span>
+                      </div>
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-4">
-                          <span className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">{t("common.grade")}</span>
-                          <span className="font-bold text-slate-700 tracking-wider text-[10px]">{car.grade || "-"}</span>
+                          <span className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">{t("garage.status")}</span>
+                          <span className="font-bold text-slate-700 tracking-wider text-[10px]">{t(`garage.car_status_${car.status}`)}</span>
                         </div>
                         {/* 編集・削除アクション */}
                         <div className="flex items-center gap-1">
