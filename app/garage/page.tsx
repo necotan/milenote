@@ -578,8 +578,8 @@ export default function GaragePage() {
                   <span className="font-bold text-slate-800">{t("garage.delete_car_message", { name: deleteCarTarget.name })}</span><br />
                   {t("garage.delete_car_warning")}
                 </p>
-                <div className="bg-red-50 border border-red-100 rounded-lg p-3">
-                  <p className="text-xs font-bold text-red-600 mb-2">
+                <div className="space-y-2">
+                  <p className="text-xs font-bold text-slate-800">
                     {t("garage.delete_confirm_instruction")}
                   </p>
                   <Input
@@ -599,7 +599,7 @@ export default function GaragePage() {
                   </Button>
                   <Button
                     variant="destructive"
-                    className="flex-1 font-bold"
+                    className="flex-1 font-bold bg-red-600 border border-red-700 text-white hover:bg-red-700"
                     disabled={deleteCarConfirmName !== deleteCarTarget.name}
                     onClick={handleDeleteCar}
                   >
