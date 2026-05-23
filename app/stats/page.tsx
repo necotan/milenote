@@ -206,7 +206,7 @@ export default function StatsPage() {
       if (user) {
         const { data: recordsData } = await supabase.from("records").select("*").eq("user_id", user.id)
         if (recordsData) setRecords(recordsData)
-        const { data: carsData } = await supabase.from("cars").select("id, current_odo, fuel_type").eq("user_id", user.id)
+        const { data: carsData } = await supabase.from("cars").select("id, current_odo, fuel_type").eq("user_id", user.id).eq("status", "active")
         if (carsData) {
           const maxOdo = Math.max(...carsData.map(c => c.current_odo), 0)
           setTotalOdo(maxOdo)
