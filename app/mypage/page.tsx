@@ -303,7 +303,7 @@ export default function MyPage() {
                   onClick={() => setLocale("ja")}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
                     locale === "ja"
-                      ? "border-slate-800 bg-slate-50 shadow-sm"
+                      ? "border-slate-400 bg-slate-50 shadow-sm"
                       : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
                   }`}
                 >
@@ -314,7 +314,7 @@ export default function MyPage() {
                   onClick={() => setLocale("en")}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
                     locale === "en"
-                      ? "border-slate-800 bg-slate-50 shadow-sm"
+                      ? "border-slate-400 bg-slate-50 shadow-sm"
                       : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
                   }`}
                 >
@@ -347,7 +347,7 @@ export default function MyPage() {
                   onClick={() => handleColorfulChange(false)}
                   className={`flex-1 flex flex-col items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
                     !isColorful
-                      ? "border-slate-800 bg-slate-50 shadow-sm"
+                      ? "border-slate-400 bg-slate-50 shadow-sm"
                       : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
                   }`}
                 >
@@ -362,7 +362,7 @@ export default function MyPage() {
                   onClick={() => handleColorfulChange(true)}
                   className={`flex-1 flex flex-col items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
                     isColorful
-                      ? "border-slate-800 bg-slate-50 shadow-sm"
+                      ? "border-slate-400 bg-slate-50 shadow-sm"
                       : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
                   }`}
                 >
