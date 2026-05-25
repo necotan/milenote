@@ -404,6 +404,7 @@ export default function StatsPage() {
     <main className="p-4 space-y-6 max-w-5xl mx-auto pb-20">
       <header className="pt-4 pb-2">
         <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">{t("stats.title")}</h1>
+        <p className="text-xs font-bold text-slate-400 tracking-wider mt-1">{t("stats.subtitle")}</p>
       </header>
 
       <Tabs defaultValue="distance" className="w-full">

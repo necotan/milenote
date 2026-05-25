@@ -59,6 +59,7 @@
   },
   "garage": {
     "title": "Garage",
+    "subtitle": "Manage your cars and wishlist items",
     "my_cars": "My Cars",
     "wishlist": "Wishlist",
     "register_car": "Add Car",
@@ -112,6 +113,7 @@
   },
   "records": {
     "title": "Records",
+    "subtitle": "Log your mileage and expenses",
     "add_record": "Add Record",
     "edit_record": "Edit Record",
     "new_record": "New Record",
@@ -181,6 +183,7 @@
   },
   "stats": {
     "title": "Stats",
+    "subtitle": "Analyze your spending and mileage",
     "analysis": "Analysis",
     "category_breakdown": "By Category",
     "monthly_trend": "Monthly Trend",
@@ -217,6 +220,7 @@
   },
   "mypage": {
     "title": "My Page",
+    "subtitle": "Configure your profile and app settings",
     "profile": "Profile",
     "profile_desc": "Set your display name and user ID. This info is shown on the dashboard and to other users.",
     "display_name": "Display Name",

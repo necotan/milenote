@@ -175,6 +175,7 @@ export default function MyPage() {
       <header className="pt-4 pb-2 flex justify-between items-start">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">{t("mypage.title")}</h1>
+          <p className="text-xs font-bold text-slate-400 tracking-wider mt-1">{t("mypage.subtitle")}</p>
         </div>
       </header>
 

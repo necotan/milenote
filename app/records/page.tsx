@@ -546,6 +546,7 @@ function RecordsPageInner() {
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
         <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">{t("records.title")}</h1>
+        <p className="text-xs font-bold text-slate-400 tracking-wider mt-1">{t("records.subtitle")}</p>
       </header>
 
       {loading && <RecordSkeleton />}

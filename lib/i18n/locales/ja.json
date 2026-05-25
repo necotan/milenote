@@ -59,6 +59,7 @@
   },
   "garage": {
     "title": "ガレージ",
+    "subtitle": "愛車と欲しいものを管理します",
     "my_cars": "愛車一覧",
     "wishlist": "欲しいもの",
     "register_car": "車を登録",
@@ -112,6 +113,7 @@
   },
   "records": {
     "title": "記録",
+    "subtitle": "走行距離と費用を記録します",
     "add_record": "記録する",
     "edit_record": "記録を編集",
     "new_record": "新しい記録",
@@ -181,6 +183,7 @@
   },
   "stats": {
     "title": "統計",
+    "subtitle": "支出と走行距離を分析します",
     "analysis": "分析",
     "category_breakdown": "カテゴリ別内訳",
     "monthly_trend": "月別出費推移",
@@ -217,6 +220,7 @@
   },
   "mypage": {
     "title": "マイページ",
+    "subtitle": "プロフィールとアプリ設定を行います",
     "profile": "プロフィール",
     "profile_desc": "表示名とユーザーIDを設定します。これはダッシュボードや他のユーザーに表示される情報です。",
     "display_name": "表示名",
