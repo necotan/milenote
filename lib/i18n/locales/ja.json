@@ -235,6 +235,11 @@
     "settings_saved": "設定を保存しました！",
     "language": "言語設定",
     "language_desc": "アプリの表示言語を変更します。変更は即時反映されます。",
+    "accessibility": "アクセシビリティ",
+    "accessibility_desc": "グラフのカラーモードなど、視認性に関わる設定を変更します。変更は即時反映されます。",
+    "chart_color_mode": "グラフのカラーモード",
+    "chart_color_basic": "ベーシック",
+    "chart_color_colorful": "カラフル",
     "home_sections": {
       "summary": "今月の費用 ＆ 直近の記録",
       "alerts": "アラート",

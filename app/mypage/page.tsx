@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { User, LogOut, Save, Settings, Wrench, ArrowUp, ArrowDown, LayoutTemplate, Globe } from "lucide-react"
+import { User, LogOut, Save, Settings, Wrench, ArrowUp, ArrowDown, LayoutTemplate, Globe, Accessibility } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
 import type { Locale } from "@/lib/i18n"
@@ -24,6 +24,7 @@ export default function MyPage() {
   const [displayName, setDisplayName] = useState("")
   const [maintSettings, setMaintSettings] = useState<any>(DEFAULT_MAINT_SETTINGS)
   const [homeOrder, setHomeOrder] = useState<string[]>(["summary", "alerts", "cars"])
+  const [isColorful, setIsColorful] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const router = useRouter()
@@ -56,7 +57,15 @@ export default function MyPage() {
         setHomeOrder(JSON.parse(savedOrder))
       } catch(e) {}
     }
+
+    // グラフのカラーモード設定を取得
+    setIsColorful(localStorage.getItem("milenote_colorful_pie") === "true")
   }, [supabase])
+
+  const handleColorfulChange = (val: boolean) => {
+    setIsColorful(val)
+    localStorage.setItem("milenote_colorful_pie", String(val))
+  }
 
   const handleUpdate = async () => {
     if (username && !/^[a-zA-Z0-9_]+$/.test(username)) {
@@ -311,6 +320,58 @@ export default function MyPage() {
                 >
                   <span className="text-lg">🇺🇸</span>
                   <span className={`text-sm font-bold ${locale === "en" ? "text-slate-800" : "text-slate-500"}`}>English</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* アクセシビリティ */}
+        <Card className="border border-slate-200 shadow-sm bg-white overflow-hidden rounded-xl">
+          <div className="md:flex">
+            {/* 左側：説明 */}
+            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 bg-white">
+              <h2 className="text-base font-bold text-slate-800 flex items-center gap-2 mb-2">
+                <Accessibility size={18} className="text-slate-500" /> {t("mypage.accessibility")}
+              </h2>
+              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                {t("mypage.accessibility_desc")}
+              </p>
+            </div>
+
+            {/* 右側：カラーモード選択UI */}
+            <div className="md:w-2/3 p-6">
+              <Label className="text-slate-700 font-bold text-xs">{t("mypage.chart_color_mode")}</Label>
+              <div className="flex gap-3 max-w-sm mt-2">
+                <button
+                  onClick={() => handleColorfulChange(false)}
+                  className={`flex-1 flex flex-col items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
+                    !isColorful
+                      ? "border-slate-800 bg-slate-50 shadow-sm"
+                      : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
+                  }`}
+                >
+                  <div className="flex gap-1">
+                    {["#0ea5e9", "#2563eb", "#6366f1", "#38bdf8", "#1e3a8a"].map(c => (
+                      <span key={c} className="w-3 h-3 rounded-full" style={{ background: c }} />
+                    ))}
+                  </div>
+                  <span className={`text-sm font-bold ${!isColorful ? "text-slate-800" : "text-slate-500"}`}>{t("mypage.chart_color_basic")}</span>
+                </button>
+                <button
+                  onClick={() => handleColorfulChange(true)}
+                  className={`flex-1 flex flex-col items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
+                    isColorful
+                      ? "border-slate-800 bg-slate-50 shadow-sm"
+                      : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
+                  }`}
+                >
+                  <div className="flex gap-1">
+                    {["#3b82f6", "#f97316", "#a855f7", "#ef4444", "#22c55e"].map(c => (
+                      <span key={c} className="w-3 h-3 rounded-full" style={{ background: c }} />
+                    ))}
+                  </div>
+                  <span className={`text-sm font-bold ${isColorful ? "text-slate-800" : "text-slate-500"}`}>{t("mypage.chart_color_colorful")}</span>
                 </button>
               </div>
             </div>

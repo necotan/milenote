@@ -9,7 +9,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   BarChart, Bar
 } from "recharts"
-import { Globe, Moon, PieChart as PieIcon, BarChart3, ChevronLeft, ChevronRight, CalendarDays, RotateCcw, LineChart as LineChartIcon, Palette, Fuel, Hash, Receipt, TrendingUp, Leaf, Droplet } from "lucide-react"
+import { Globe, Moon, PieChart as PieIcon, BarChart3, ChevronLeft, ChevronRight, CalendarDays, RotateCcw, LineChart as LineChartIcon, Fuel, Hash, Receipt, TrendingUp, Leaf, Droplet } from "lucide-react"
 import { useTranslation } from "@/lib/i18n"
 
 const CATEGORY_MAP_COLORFUL: Record<string, { color: string }> = {
@@ -272,12 +272,6 @@ export default function StatsPage() {
     localStorage.setItem("milenote_yearly_chart", nextType)
   }
 
-  const toggleColorful = () => {
-    const nextVal = !isColorful
-    setIsColorful(nextVal)
-    localStorage.setItem("milenote_colorful_pie", String(nextVal))
-  }
-
   // データ集計処理
   const activeCategoryMap = isColorful ? CATEGORY_MAP_COLORFUL : CATEGORY_MAP_BLUE
   const categoryData = catFilteredRecords.reduce((acc: { name: string; value: number; fill: string }[], curr) => {
@@ -437,16 +431,20 @@ export default function StatsPage() {
     cat: CategoryKey,
     topByRow: Map<string, CategoryKey>,
     getKey: (payload: any) => string,
-  ) => (props: any) => {
-    const { x, y, width, height, fill, payload } = props
-    if (!width || width <= 0 || !height || height <= 0) return <g />
-    const isTop = topByRow.get(getKey(payload)) === cat
-    if (!isTop) {
-      return <rect x={x} y={y} width={width} height={height} fill={fill} />
+  ) => {
+    const StackedBarShape = (props: any) => {
+      const { x, y, width, height, fill, payload } = props
+      if (!width || width <= 0 || !height || height <= 0) return <g />
+      const isTop = topByRow.get(getKey(payload)) === cat
+      if (!isTop) {
+        return <rect x={x} y={y} width={width} height={height} fill={fill} />
+      }
+      const r = Math.min(4, height, width / 2)
+      const path = `M${x},${y + r} Q${x},${y} ${x + r},${y} L${x + width - r},${y} Q${x + width},${y} ${x + width},${y + r} L${x + width},${y + height} L${x},${y + height} Z`
+      return <path d={path} fill={fill} />
     }
-    const r = Math.min(4, height, width / 2)
-    const path = `M${x},${y + r} Q${x},${y} ${x + r},${y} L${x + width - r},${y} Q${x + width},${y} ${x + width},${y + r} L${x + width},${y + height} L${x},${y + height} Z`
-    return <path d={path} fill={fill} />
+    StackedBarShape.displayName = "StackedBarShape"
+    return StackedBarShape
   }
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
@@ -592,18 +590,10 @@ export default function StatsPage() {
 
             {/* カテゴリ別内訳 */}
             <Card className="border-none shadow-sm bg-white">
-              <CardHeader className="p-4 pb-0 flex flex-row items-center justify-between space-y-0">
+              <CardHeader className="p-4 pb-0">
                 <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600">
                   <PieIcon size={16} /> {t("stats.category_breakdown")}
                 </CardTitle>
-                <button
-                  onClick={toggleColorful}
-                  className={`p-1.5 rounded-lg transition-colors ${isColorful ? 'text-blue-500 bg-blue-50' : 'text-slate-400 hover:text-blue-500 hover:bg-blue-50'}`}
-                  aria-label="Toggle colorful pie chart"
-                  title="カラー切り替え"
-                >
-                  <Palette size={16} />
-                </button>
               </CardHeader>
               <PeriodFilter
                 start={catStart} end={catEnd}
