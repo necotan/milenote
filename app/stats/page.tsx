@@ -323,6 +323,14 @@ export default function StatsPage() {
     cat => monthlyData.some(d => d[cat] > 0)
   )
 
+  // 各行で実際にスタックの最上段になるカテゴリを記録（角丸描画のため）
+  const monthlyTopByRow = new Map<string, CategoryKey>()
+  monthlyData.forEach(row => {
+    let top: CategoryKey | null = null
+    CATEGORY_KEYS.forEach(cat => { if (row[cat] > 0) top = cat })
+    if (top) monthlyTopByRow.set(row.month, top)
+  })
+
   // 年次統計: 1〜12月をすべて0で初期化してから集計
   const currentMonth = new Date().getMonth() + 1
   type YearlyBucket = { month: number; monthStr: string; amount: number | null } & Record<CategoryKey, number>
@@ -346,6 +354,13 @@ export default function StatsPage() {
   const yearlyCategoriesPresent: CategoryKey[] = CATEGORY_KEYS.filter(
     cat => yearlyData.some(d => d[cat] > 0)
   )
+
+  const yearlyTopByRow = new Map<string, CategoryKey>()
+  yearlyData.forEach(row => {
+    let top: CategoryKey | null = null
+    CATEGORY_KEYS.forEach(cat => { if (row[cat] > 0) top = cat })
+    if (top) yearlyTopByRow.set(String(row.month), top)
+  })
 
   const yearlyTotal = yearFilteredRecords.reduce((sum, r) => sum + r.amount, 0)
 
@@ -418,6 +433,21 @@ export default function StatsPage() {
   const categoryLegendFormatter = (value: any) => (
     <span className="text-xs font-bold text-slate-600 mr-2">{t(`categories.${value}`)}</span>
   )
+  const makeStackedBarShape = (
+    cat: CategoryKey,
+    topByRow: Map<string, CategoryKey>,
+    getKey: (payload: any) => string,
+  ) => (props: any) => {
+    const { x, y, width, height, fill, payload } = props
+    if (!width || width <= 0 || !height || height <= 0) return <g />
+    const isTop = topByRow.get(getKey(payload)) === cat
+    if (!isTop) {
+      return <rect x={x} y={y} width={width} height={height} fill={fill} />
+    }
+    const r = Math.min(4, height, width / 2)
+    const path = `M${x},${y + r} Q${x},${y} ${x + r},${y} L${x + width - r},${y} Q${x + width},${y} ${x + width},${y + r} L${x + width},${y + height} L${x},${y + height} Z`
+    return <path d={path} fill={fill} />
+  }
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
   // ローディング状態の表示
@@ -682,8 +712,14 @@ export default function StatsPage() {
                         <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} tickFormatter={(v: any) => v.toLocaleString()} />
                         <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={categoryBarTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
                         <Legend verticalAlign="bottom" iconType="circle" wrapperStyle={{ fontSize: 11, paddingTop: 4 }} formatter={categoryLegendFormatter} />
-                        {monthlyCategoriesPresent.map((cat, i, arr) => (
-                          <Bar key={cat} dataKey={cat} stackId="a" fill={activeCategoryMap[cat].color} radius={i === arr.length - 1 ? [4, 4, 0, 0] : 0} />
+                        {monthlyCategoriesPresent.map((cat) => (
+                          <Bar
+                            key={cat}
+                            dataKey={cat}
+                            stackId="a"
+                            fill={activeCategoryMap[cat].color}
+                            shape={makeStackedBarShape(cat, monthlyTopByRow, (p) => p.month)}
+                          />
                         ))}
                       </BarChart>
                     )}
@@ -796,8 +832,14 @@ export default function StatsPage() {
                       labelFormatter={monthTooltipLabelFormatter}
                     />
                     <Legend verticalAlign="bottom" iconType="circle" wrapperStyle={{ fontSize: 11, paddingTop: 4 }} formatter={categoryLegendFormatter} />
-                    {yearlyCategoriesPresent.map((cat, i, arr) => (
-                      <Bar key={cat} dataKey={cat} stackId="a" fill={activeCategoryMap[cat].color} radius={i === arr.length - 1 ? [4, 4, 0, 0] : 0} />
+                    {yearlyCategoriesPresent.map((cat) => (
+                      <Bar
+                        key={cat}
+                        dataKey={cat}
+                        stackId="a"
+                        fill={activeCategoryMap[cat].color}
+                        shape={makeStackedBarShape(cat, yearlyTopByRow, (p) => String(p.month))}
+                      />
                     ))}
                   </BarChart>
                 )}
