@@ -32,6 +32,16 @@ const CATEGORY_MAP_BLUE: Record<string, { color: string }> = {
   other: { color: "#cbd5e1" },
 }
 
+const CATEGORY_KEYS = ["fuel", "maintenance", "custom", "highway", "tax", "insurance", "other"] as const
+type CategoryKey = typeof CATEGORY_KEYS[number]
+
+const normalizeCategoryKey = (cat: string): CategoryKey =>
+  (CATEGORY_KEYS as readonly string[]).includes(cat) ? (cat as CategoryKey) : "other"
+
+const buildEmptyCategoryBuckets = (): Record<CategoryKey, number> => ({
+  fuel: 0, maintenance: 0, custom: 0, highway: 0, tax: 0, insurance: 0, other: 0,
+})
+
 type Record_ = {
   category: string
   amount: number
@@ -295,27 +305,47 @@ export default function StatsPage() {
     setPieAnimKey(k => k + 1)
   }, [catStart, catEnd])
 
-  const monthlyData = monthFilteredRecords.reduce((acc: { month: string; amount: number }[], curr) => {
+  type MonthlyBucket = { month: string; amount: number } & Record<CategoryKey, number>
+  const monthlyData = monthFilteredRecords.reduce<MonthlyBucket[]>((acc, curr) => {
     const month = curr.date.substring(0, 7)
-    const found = acc.find(a => a.month === month)
-    if (found) found.amount += curr.amount
-    else acc.push({ month, amount: curr.amount })
+    let found = acc.find(a => a.month === month)
+    if (!found) {
+      found = { month, amount: 0, ...buildEmptyCategoryBuckets() }
+      acc.push(found)
+    }
+    const cat = normalizeCategoryKey(curr.category)
+    found[cat] += curr.amount
+    found.amount += curr.amount
     return acc
   }, []).sort((a, b) => a.month.localeCompare(b.month))
 
+  const monthlyCategoriesPresent: CategoryKey[] = CATEGORY_KEYS.filter(
+    cat => monthlyData.some(d => d[cat] > 0)
+  )
+
   // 年次統計: 1〜12月をすべて0で初期化してから集計
   const currentMonth = new Date().getMonth() + 1
-  const yearlyData = Array.from({ length: 12 }, (_, i) => {
+  type YearlyBucket = { month: number; monthStr: string; amount: number | null } & Record<CategoryKey, number>
+  const yearlyData: YearlyBucket[] = Array.from({ length: 12 }, (_, i) => {
     const month = i + 1
     const monthStr = `${selectedYear}-${String(month).padStart(2, "0")}`
-    const amount = yearFilteredRecords
-      .filter(r => r.date.startsWith(monthStr))
-      .reduce((sum, r) => sum + r.amount, 0)
+    const monthRecords = yearFilteredRecords.filter(r => r.date.startsWith(monthStr))
+    const buckets = buildEmptyCategoryBuckets()
+    let total = 0
+    monthRecords.forEach(r => {
+      const cat = normalizeCategoryKey(r.category)
+      buckets[cat] += r.amount
+      total += r.amount
+    })
 
     // 現在の年で未来の月の場合は null にする（線や点を描画しない）
     const isFuture = selectedYear === currentYear && month > currentMonth
-    return { month, monthStr, amount: isFuture ? null : amount }
+    return { month, monthStr, amount: isFuture ? null : total, ...buckets }
   })
+
+  const yearlyCategoriesPresent: CategoryKey[] = CATEGORY_KEYS.filter(
+    cat => yearlyData.some(d => d[cat] > 0)
+  )
 
   const yearlyTotal = yearFilteredRecords.reduce((sum, r) => sum + r.amount, 0)
 
@@ -381,6 +411,13 @@ export default function StatsPage() {
     }
     return `${year}年${monthNum}月`
   }
+  const categoryBarTooltipFormatter = (value: any, name: any): [string, string] => [
+    `¥${Number(value).toLocaleString()}`,
+    t(`categories.${name}`),
+  ]
+  const categoryLegendFormatter = (value: any) => (
+    <span className="text-xs font-bold text-slate-600 mr-2">{t(`categories.${value}`)}</span>
+  )
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
   // ローディング状態の表示
@@ -638,13 +675,16 @@ export default function StatsPage() {
                         <Line type="linear" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4, fill: '#3b82f6', strokeWidth: 2, stroke: '#fff' }} />
                       </LineChart>
                     ) : (
-                      <BarChart data={monthlyData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }} barCategoryGap="30%">
+                      <BarChart data={monthlyData} margin={{ top: 20, right: 30, left: 10, bottom: 4 }} barCategoryGap="30%">
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                         <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={monthFormatter} />
                         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                         <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} tickFormatter={(v: any) => v.toLocaleString()} />
-                        <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={expenditureTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
-                        <Bar dataKey="amount" radius={[4, 4, 0, 0]} fill="#3b82f6" />
+                        <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={categoryBarTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
+                        <Legend verticalAlign="bottom" iconType="circle" wrapperStyle={{ fontSize: 11, paddingTop: 4 }} formatter={categoryLegendFormatter} />
+                        {monthlyCategoriesPresent.map((cat, i, arr) => (
+                          <Bar key={cat} dataKey={cat} stackId="a" fill={activeCategoryMap[cat].color} radius={i === arr.length - 1 ? [4, 4, 0, 0] : 0} />
+                        ))}
                       </BarChart>
                     )}
                   </ResponsiveContainer>
@@ -752,19 +792,13 @@ export default function StatsPage() {
                     <Tooltip
                       cursor={false}
                       contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                      itemStyle={{ color: '#3b82f6' }}
-                      formatter={expenditureTooltipFormatter}
+                      formatter={categoryBarTooltipFormatter}
                       labelFormatter={monthTooltipLabelFormatter}
                     />
-                    <Bar dataKey="amount" radius={[4, 4, 0, 0]}>
-                      {yearlyData.map((entry, index) => (
-                        <Cell
-                          key={`bar-${index}`}
-                          fill={(entry.amount ?? 0) > 0 ? "#3b82f6" : "#e2e8f0"}
-                          fillOpacity={(entry.amount ?? 0) > 0 ? 1 : 0.6}
-                        />
-                      ))}
-                    </Bar>
+                    <Legend verticalAlign="bottom" iconType="circle" wrapperStyle={{ fontSize: 11, paddingTop: 4 }} formatter={categoryLegendFormatter} />
+                    {yearlyCategoriesPresent.map((cat, i, arr) => (
+                      <Bar key={cat} dataKey={cat} stackId="a" fill={activeCategoryMap[cat].color} radius={i === arr.length - 1 ? [4, 4, 0, 0] : 0} />
+                    ))}
                   </BarChart>
                 )}
               </ResponsiveContainer>
