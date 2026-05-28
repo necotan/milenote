@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { createClient } from "@/utils/supabase"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -207,13 +207,16 @@ export default function StatsPage() {
   const [selectedYear, setSelectedYear] = useState(currentYear)
 
   // 折れ線グラフの線の描画と点の出現を同期
-  const monthlyLineContainerRef = useRef<HTMLDivElement>(null)
-  const yearlyLineContainerRef = useRef<HTMLDivElement>(null)
+  // タブ切替時に DOM がマウントされたタイミングで測定を発火させるため、callback ref として state を使う
+  const [monthlyLineContainer, setMonthlyLineContainer] = useState<HTMLDivElement | null>(null)
+  const [yearlyLineContainer, setYearlyLineContainer] = useState<HTMLDivElement | null>(null)
   const [monthlyLineReady, setMonthlyLineReady] = useState(false)
   const [yearlyLineReady, setYearlyLineReady] = useState(false)
   const LINE_ANIM_DURATION_MS = 900
 
-  const supabase = createClient()
+  // createClient() は呼ぶたびに新しい BrowserClient を返すため、毎レンダーで supabase 参照が変わると
+  // useEffect([supabase]) が毎回発火して records が再フェッチされ、メモ化したチャートデータも参照が変わってしまう
+  const supabase = useMemo(() => createClient(), [])
   const { t, locale } = useTranslation()
 
   useEffect(() => {
@@ -257,14 +260,18 @@ export default function StatsPage() {
     return true
   })
 
-  const monthFilteredRecords = records.filter(r => {
+  // Recharts は data の参照同一性で内部アニメーション ID を決めるため、無関係な再レンダーで data 参照が変わると折れ線が再描画されてしまう
+  const monthFilteredRecords = useMemo(() => records.filter(r => {
     if (monthStart && r.date < monthStart) return false
     if (monthEnd && r.date > monthEnd) return false
     return true
-  })
+  }), [records, monthStart, monthEnd])
 
   // 年次統計用
-  const yearFilteredRecords = records.filter(r => r.date.startsWith(String(selectedYear)))
+  const yearFilteredRecords = useMemo(
+    () => records.filter(r => r.date.startsWith(String(selectedYear))),
+    [records, selectedYear],
+  )
 
   // グラフ切り替え処理
   const toggleMonthlyChart = () => {
@@ -307,10 +314,10 @@ export default function StatsPage() {
   }, [catStart, catEnd])
 
   // 折れ線グラフの実パス長を測定して CSS 変数に反映し、線と点のアニメーションを同期させる
+  // 初期マウント時に該当タブが非アクティブで DOM が無いケースに対応するため、container を state で受けてアタッチされたタイミングで測定する
   useEffect(() => {
     setMonthlyLineReady(false)
-    if (monthlyChartType !== "line") return
-    const container = monthlyLineContainerRef.current
+    const container = monthlyLineContainer
     if (!container) return
     let raf = 0
     let attempts = 0
@@ -328,12 +335,11 @@ export default function StatsPage() {
     }
     raf = requestAnimationFrame(measure)
     return () => { if (raf) cancelAnimationFrame(raf) }
-  }, [monthStart, monthEnd, monthlyChartType, records.length])
+  }, [monthlyLineContainer])
 
   useEffect(() => {
     setYearlyLineReady(false)
-    if (yearlyChartType !== "line") return
-    const container = yearlyLineContainerRef.current
+    const container = yearlyLineContainer
     if (!container) return
     let raf = 0
     let attempts = 0
@@ -351,64 +357,76 @@ export default function StatsPage() {
     }
     raf = requestAnimationFrame(measure)
     return () => { if (raf) cancelAnimationFrame(raf) }
-  }, [selectedYear, yearlyChartType, records.length])
+  }, [yearlyLineContainer])
 
   type MonthlyBucket = { month: string; amount: number } & Record<CategoryKey, number>
-  const monthlyData = monthFilteredRecords.reduce<MonthlyBucket[]>((acc, curr) => {
-    const month = curr.date.substring(0, 7)
-    let found = acc.find(a => a.month === month)
-    if (!found) {
-      found = { month, amount: 0, ...buildEmptyCategoryBuckets() }
-      acc.push(found)
-    }
-    const cat = normalizeCategoryKey(curr.category)
-    found[cat] += curr.amount
-    found.amount += curr.amount
-    return acc
-  }, []).sort((a, b) => a.month.localeCompare(b.month))
+  const monthlyData = useMemo<MonthlyBucket[]>(() => (
+    monthFilteredRecords.reduce<MonthlyBucket[]>((acc, curr) => {
+      const month = curr.date.substring(0, 7)
+      let found = acc.find(a => a.month === month)
+      if (!found) {
+        found = { month, amount: 0, ...buildEmptyCategoryBuckets() }
+        acc.push(found)
+      }
+      const cat = normalizeCategoryKey(curr.category)
+      found[cat] += curr.amount
+      found.amount += curr.amount
+      return acc
+    }, []).sort((a, b) => a.month.localeCompare(b.month))
+  ), [monthFilteredRecords])
 
-  const monthlyCategoriesPresent: CategoryKey[] = CATEGORY_KEYS.filter(
-    cat => monthlyData.some(d => d[cat] > 0)
+  const monthlyCategoriesPresent = useMemo<CategoryKey[]>(
+    () => CATEGORY_KEYS.filter(cat => monthlyData.some(d => d[cat] > 0)),
+    [monthlyData],
   )
 
   // 各行で実際にスタックの最上段になるカテゴリを記録（角丸描画のため）
-  const monthlyTopByRow = new Map<string, CategoryKey>()
-  monthlyData.forEach(row => {
-    let top: CategoryKey | null = null
-    CATEGORY_KEYS.forEach(cat => { if (row[cat] > 0) top = cat })
-    if (top) monthlyTopByRow.set(row.month, top)
-  })
+  const monthlyTopByRow = useMemo(() => {
+    const map = new Map<string, CategoryKey>()
+    monthlyData.forEach(row => {
+      let top: CategoryKey | null = null
+      CATEGORY_KEYS.forEach(cat => { if (row[cat] > 0) top = cat })
+      if (top) map.set(row.month, top)
+    })
+    return map
+  }, [monthlyData])
 
   // 年次統計: 1〜12月をすべて0で初期化してから集計
   const currentMonth = new Date().getMonth() + 1
   type YearlyBucket = { month: number; monthStr: string; amount: number | null } & Record<CategoryKey, number>
-  const yearlyData: YearlyBucket[] = Array.from({ length: 12 }, (_, i) => {
-    const month = i + 1
-    const monthStr = `${selectedYear}-${String(month).padStart(2, "0")}`
-    const monthRecords = yearFilteredRecords.filter(r => r.date.startsWith(monthStr))
-    const buckets = buildEmptyCategoryBuckets()
-    let total = 0
-    monthRecords.forEach(r => {
-      const cat = normalizeCategoryKey(r.category)
-      buckets[cat] += r.amount
-      total += r.amount
+  const yearlyData = useMemo<YearlyBucket[]>(() => (
+    Array.from({ length: 12 }, (_, i) => {
+      const month = i + 1
+      const monthStr = `${selectedYear}-${String(month).padStart(2, "0")}`
+      const monthRecords = yearFilteredRecords.filter(r => r.date.startsWith(monthStr))
+      const buckets = buildEmptyCategoryBuckets()
+      let total = 0
+      monthRecords.forEach(r => {
+        const cat = normalizeCategoryKey(r.category)
+        buckets[cat] += r.amount
+        total += r.amount
+      })
+
+      // 現在の年で未来の月の場合は null にする（線や点を描画しない）
+      const isFuture = selectedYear === currentYear && month > currentMonth
+      return { month, monthStr, amount: isFuture ? null : total, ...buckets }
     })
+  ), [yearFilteredRecords, selectedYear, currentYear, currentMonth])
 
-    // 現在の年で未来の月の場合は null にする（線や点を描画しない）
-    const isFuture = selectedYear === currentYear && month > currentMonth
-    return { month, monthStr, amount: isFuture ? null : total, ...buckets }
-  })
-
-  const yearlyCategoriesPresent: CategoryKey[] = CATEGORY_KEYS.filter(
-    cat => yearlyData.some(d => d[cat] > 0)
+  const yearlyCategoriesPresent = useMemo<CategoryKey[]>(
+    () => CATEGORY_KEYS.filter(cat => yearlyData.some(d => d[cat] > 0)),
+    [yearlyData],
   )
 
-  const yearlyTopByRow = new Map<string, CategoryKey>()
-  yearlyData.forEach(row => {
-    let top: CategoryKey | null = null
-    CATEGORY_KEYS.forEach(cat => { if (row[cat] > 0) top = cat })
-    if (top) yearlyTopByRow.set(String(row.month), top)
-  })
+  const yearlyTopByRow = useMemo(() => {
+    const map = new Map<string, CategoryKey>()
+    yearlyData.forEach(row => {
+      let top: CategoryKey | null = null
+      CATEGORY_KEYS.forEach(cat => { if (row[cat] > 0) top = cat })
+      if (top) map.set(String(row.month), top)
+    })
+    return map
+  }, [yearlyData])
 
   const yearlyTotal = yearFilteredRecords.reduce((sum, r) => sum + r.amount, 0)
 
@@ -442,34 +460,39 @@ export default function StatsPage() {
     return sum + liters * coefficient
   }, 0)
 
+  // Recharts の <XAxis>/<YAxis>/<Tooltip> 等は内部で memo 比較しており、tickFormatter / formatter の参照が
+  // 毎レンダーで変わると axis 設定が replaceXAxis として Redux に再 dispatch され、folded line の points 参照が
+  // 変わり useAnimationId が再発行 → JavascriptAnimate が remount → CSS lineDraw が再生されてしまう。
+  // そのため useCallback で安定化させる。
   // ロケール対応の月フォーマッター
-  const monthFormatter = (v: string) => {
+  const monthFormatter = useCallback((v: string) => {
     const monthNum = parseInt(v.split('-')[1], 10)
     if (locale === "en") {
       const names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
       return names[monthNum - 1]
     }
     return `${monthNum}月`
-  }
+  }, [locale])
 
-  const yearlyMonthFormatter = (m: number) => {
+  const yearlyMonthFormatter = useCallback((m: number) => {
     if (locale === "en") {
       const names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
       return names[m - 1]
     }
     return `${m}月`
-  }
+  }, [locale])
 
   // Recharts のコールバック型（PieLabelRenderProps / Formatter / LabelFormatter 等）は
   // 省略可能フィールドを含む複雑な union のため、本ファイル内では any を許容する
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  const yenTickFormatter = (v: any) => (v === 0 ? "0" : `¥${Number(v).toLocaleString()}`)
-  const expenditureTooltipFormatter = (value: any): [string, string] => [
+  const yenTickFormatter = useCallback((v: any) => (v === 0 ? "0" : `¥${Number(v).toLocaleString()}`), [])
+  const numberTickFormatter = useCallback((v: any) => Number(v).toLocaleString(), [])
+  const expenditureTooltipFormatter = useCallback((value: any): [string, string] => [
     `¥${Number(value).toLocaleString()}`,
     t("stats.expenditure"),
-  ]
-  const monthTooltipLabelFormatter = (label: any) => yearlyMonthFormatter(label)
-  const monthlyTooltipLabelFormatter = (label: any) => {
+  ], [t])
+  const monthTooltipLabelFormatter = useCallback((label: any) => yearlyMonthFormatter(label), [yearlyMonthFormatter])
+  const monthlyTooltipLabelFormatter = useCallback((label: any) => {
     const [year, month] = String(label).split("-")
     const monthNum = parseInt(month, 10)
     if (locale === "en") {
@@ -477,19 +500,22 @@ export default function StatsPage() {
       return `${names[monthNum - 1]} ${year}`
     }
     return `${year}年${monthNum}月`
-  }
-  const categoryBarTooltipFormatter = (value: any, name: any): [string, string] => [
+  }, [locale])
+  const categoryBarTooltipFormatter = useCallback((value: any, name: any): [string, string] => [
     `¥${Number(value).toLocaleString()}`,
     t(`categories.${name}`),
-  ]
-  const categoryLegendFormatter = (value: any) => (
+  ], [t])
+  const categoryLegendFormatter = useCallback((value: any) => (
     <span className="text-xs font-bold text-slate-600 mr-2">{t(`categories.${value}`)}</span>
-  )
+  ), [t])
   // 折れ線グラフのドット描画（線の進行に合わせて各点をフェードイン）
-  const yearlyLastValidIndex = yearlyData.reduce(
-    (acc, d, i) => (d.amount != null ? i : acc), -1,
+  // dot prop の参照が毎レンダーで変わると Recharts が内部で要素を作り直しアニメーションが再生されるため、useMemo で安定化する
+  const yearlyLastValidIndex = useMemo(
+    () => yearlyData.reduce((acc, d, i) => (d.amount != null ? i : acc), -1),
+    [yearlyData],
   )
-  const makeLineDot = (totalLastIndex: number) => {
+  const monthlyLineDot = useMemo(() => {
+    const totalLastIndex = monthlyData.length - 1
     const LineDot = (props: any) => {
       const { cx, cy, index, value } = props
       if (cx == null || cy == null || value == null) {
@@ -513,9 +539,33 @@ export default function StatsPage() {
     }
     LineDot.displayName = "LineDot"
     return LineDot
-  }
-  const monthlyLineDot = makeLineDot(monthlyData.length - 1)
-  const yearlyLineDot = makeLineDot(yearlyLastValidIndex)
+  }, [monthlyData.length])
+  const yearlyLineDot = useMemo(() => {
+    const totalLastIndex = yearlyLastValidIndex
+    const LineDot = (props: any) => {
+      const { cx, cy, index, value } = props
+      if (cx == null || cy == null || value == null) {
+        return <g key={`line-dot-${index}`} />
+      }
+      const denom = Math.max(totalLastIndex, 1)
+      const delay = (Math.min(index, totalLastIndex) / denom) * LINE_ANIM_DURATION_MS
+      return (
+        <circle
+          key={`line-dot-${index}`}
+          cx={cx}
+          cy={cy}
+          r={4}
+          fill="#3b82f6"
+          stroke="#fff"
+          strokeWidth={2}
+          className="line-dot-anim"
+          style={{ animationDelay: `${delay}ms` }}
+        />
+      )
+    }
+    LineDot.displayName = "LineDot"
+    return LineDot
+  }, [yearlyLastValidIndex])
 
   const makeStackedBarShape = (
     cat: CategoryKey,
@@ -536,6 +586,21 @@ export default function StatsPage() {
     StackedBarShape.displayName = "StackedBarShape"
     return StackedBarShape
   }
+  // shape prop の参照を毎レンダーで作り直すと、Recharts が同じ Bar を別物として扱い、もう一方のグラフの shape も含めて再生成されてしまうため per-category で memo 化する
+  const monthlyBarShapes = useMemo(() => {
+    const shapes: Partial<Record<CategoryKey, ReturnType<typeof makeStackedBarShape>>> = {}
+    monthlyCategoriesPresent.forEach(cat => {
+      shapes[cat] = makeStackedBarShape(cat, monthlyTopByRow, (p: { month: string }) => p.month)
+    })
+    return shapes
+  }, [monthlyCategoriesPresent, monthlyTopByRow])
+  const yearlyBarShapes = useMemo(() => {
+    const shapes: Partial<Record<CategoryKey, ReturnType<typeof makeStackedBarShape>>> = {}
+    yearlyCategoriesPresent.forEach(cat => {
+      shapes[cat] = makeStackedBarShape(cat, yearlyTopByRow, (p: { month: number }) => String(p.month))
+    })
+    return shapes
+  }, [yearlyCategoriesPresent, yearlyTopByRow])
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
   // ローディング状態の表示
@@ -821,7 +886,7 @@ export default function StatsPage() {
                 ) : (
                   <div
                     key={monthlyAnimKey}
-                    ref={monthlyChartType === "line" ? monthlyLineContainerRef : null}
+                    ref={monthlyChartType === "line" ? setMonthlyLineContainer : null}
                     className={`${monthlyChartType === "bar" ? "bar-anim" : "line-anim"}${monthlyChartType === "line" && monthlyLineReady ? " line-ready" : ""}`}
                     style={{ width: "100%", height: "100%" }}
                   >
@@ -830,8 +895,7 @@ export default function StatsPage() {
                         <LineChart data={monthlyData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }}>
                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                           <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={monthFormatter} padding={{ left: 30, right: 30 }} />
-                          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                          <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} domain={[0, 'auto']} tickFormatter={(v: any) => v.toLocaleString()} />
+                          <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
                           <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={expenditureTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
                           <Line type="linear" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={monthlyLineDot} isAnimationActive={false} />
                         </LineChart>
@@ -839,8 +903,7 @@ export default function StatsPage() {
                         <BarChart data={monthlyData} margin={{ top: 20, right: 30, left: 10, bottom: 4 }} barCategoryGap="30%">
                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                           <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={monthFormatter} />
-                          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                          <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} tickFormatter={(v: any) => v.toLocaleString()} />
+                          <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} tickFormatter={numberTickFormatter} />
                           <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={categoryBarTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
                           <Legend verticalAlign="bottom" iconType="circle" wrapperStyle={{ fontSize: 11, paddingTop: 4 }} formatter={categoryLegendFormatter} />
                           {monthlyCategoriesPresent.map((cat) => (
@@ -849,7 +912,7 @@ export default function StatsPage() {
                               dataKey={cat}
                               stackId="a"
                               fill={activeCategoryMap[cat].color}
-                              shape={makeStackedBarShape(cat, monthlyTopByRow, (p) => p.month)}
+                              shape={monthlyBarShapes[cat]}
                               isAnimationActive={false}
                             />
                           ))}
@@ -910,7 +973,7 @@ export default function StatsPage() {
             <CardContent className="h-64 px-2 pb-4 pt-0">
               <div
                 key={yearlyAnimKey}
-                ref={yearlyChartType === "line" ? yearlyLineContainerRef : null}
+                ref={yearlyChartType === "line" ? setYearlyLineContainer : null}
                 className={`${yearlyChartType === "bar" ? "bar-anim" : "line-anim"}${yearlyChartType === "line" && yearlyLineReady ? " line-ready" : ""}`}
                 style={{ width: "100%", height: "100%" }}
               >
@@ -977,7 +1040,7 @@ export default function StatsPage() {
                           dataKey={cat}
                           stackId="a"
                           fill={activeCategoryMap[cat].color}
-                          shape={makeStackedBarShape(cat, yearlyTopByRow, (p) => String(p.month))}
+                          shape={yearlyBarShapes[cat]}
                           isAnimationActive={false}
                         />
                       ))}
