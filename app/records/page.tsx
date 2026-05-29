@@ -97,6 +97,9 @@ const RecordForm = ({
   exitIc, setExitIc,
 }: any) => {
   const { t } = useTranslation()
+  // 選択中の車がEVのとき、給油フォームを充電(kWh建て)表示に切り替える
+  const selectedCar = cars.find((c: { id: string; fuel_type?: string }) => c.id === carId)
+  const isEv = selectedCar?.fuel_type === "EV"
   return (
   <Card className="border-none shadow-lg bg-white">
     <CardContent className="p-6 relative">
@@ -161,38 +164,38 @@ const RecordForm = ({
           <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4 space-y-4">
             <div className="flex items-center gap-2 mb-1">
               <Fuel size={15} className="text-slate-400" />
-              <span className="text-sm font-bold text-slate-600">{t("records.fuel_info")}</span>
+              <span className="text-sm font-bold text-slate-600">{isEv ? t("records.charge_info") : t("records.fuel_info")}</span>
             </div>
 
             {/* 単価 */}
             <div className="space-y-1">
-              <Label className="text-xs font-semibold text-slate-600">{t("records.unit_price")}</Label>
+              <Label className="text-xs font-semibold text-slate-600">{isEv ? t("records.unit_price_kwh") : t("records.unit_price")}</Label>
               <div className="relative">
                 <Input
                   type="number"
                   step="0.1"
                   value={fuelUnitPrice}
                   onChange={e => onFuelFieldChange("fuelUnitPrice", e.target.value)}
-                  placeholder="170"
+                  placeholder={isEv ? "30" : "170"}
                   className="bg-white border-slate-200 focus:border-slate-400 pr-12 placeholder:text-slate-300"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{t("records.unit_yen_per_l")}</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{isEv ? t("records.unit_yen_per_kwh") : t("records.unit_yen_per_l")}</span>
               </div>
             </div>
 
-            {/* リットル */}
+            {/* リットル / kWh */}
             <div className="space-y-1">
-              <Label className="text-xs font-semibold text-slate-600">{t("records.fuel_amount")}</Label>
+              <Label className="text-xs font-semibold text-slate-600">{isEv ? t("records.charge_amount") : t("records.fuel_amount")}</Label>
               <div className="relative">
                 <Input
                   type="number"
                   step="0.01"
                   value={fuelAmount}
                   onChange={e => onFuelFieldChange("fuelAmount", e.target.value)}
-                  placeholder="40.0"
+                  placeholder={isEv ? "30.0" : "40.0"}
                   className="bg-white border-slate-200 focus:border-slate-400 pr-8 placeholder:text-slate-300"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{t("records.unit_l")}</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{isEv ? t("records.unit_kwh") : t("records.unit_l")}</span>
               </div>
             </div>
 
@@ -336,7 +339,7 @@ function RecordsPageInner() {
 
       const { data: recordsData } = await supabase
         .from("records")
-        .select(`*, cars(name)`)
+        .select(`*, cars(name, fuel_type)`)
         .eq("user_id", user.id)
         .order("date", { ascending: false })
         .order("created_at", { ascending: false })
@@ -715,7 +718,7 @@ function RecordsPageInner() {
 
                       {record.category === "fuel" && record.fuel_amount && (
                         <p className="text-xs text-slate-500 mb-2">
-                          {t("records.fuel_amount_label")} <span className="font-bold text-slate-700">{record.fuel_amount} L</span>
+                          {record.cars?.fuel_type === "EV" ? t("records.charge_amount_label") : t("records.fuel_amount_label")} <span className="font-bold text-slate-700">{record.fuel_amount} {record.cars?.fuel_type === "EV" ? t("records.unit_kwh") : t("records.unit_l")}</span>
                         </p>
                       )}
                       {record.memo && (
