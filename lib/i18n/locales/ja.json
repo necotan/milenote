@@ -46,6 +46,7 @@
     "this_month_cost": "今月の費用",
     "vs_last_month": "※先月比",
     "record_fuel": "給油を記録",
+    "record_charge_label": "充電",
     "recent_records": "直近の記録",
     "no_records": "まだ記録がありません",
     "no_alerts": "表示するアラートはありません",

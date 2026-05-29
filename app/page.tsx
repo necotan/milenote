@@ -61,7 +61,7 @@ export default function Home() {
         if (userData?.display_name) setDisplayName(userData.display_name)
 
         const { data: carsData } = await supabase.from("cars").select("*").eq("user_id", user.id).eq("status", "active").eq("is_display_home", true)
-        const { data: recordsData } = await supabase.from("records").select("*").eq("user_id", user.id)
+        const { data: recordsData } = await supabase.from("records").select("*, cars(fuel_type)").eq("user_id", user.id)
 
         if (carsData) setCars(carsData)
         if (recordsData) setRecords(recordsData)
@@ -261,7 +261,7 @@ export default function Home() {
                           return (
                             <div key={r.id} className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <span className="text-[11px] font-bold text-slate-500">{t(`categories.${r.category}`)}</span>
+                                <span className="text-[11px] font-bold text-slate-500">{r.category === "fuel" && r.cars?.fuel_type === "EV" ? t("home.record_charge_label") : t(`categories.${r.category}`)}</span>
                                 <span className="text-[10px] text-slate-400">{r.date.replace(/-/g, '/')}</span>
                               </div>
                               <span className="text-[12px] font-black text-slate-700">¥{r.amount.toLocaleString()}</span>
