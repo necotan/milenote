@@ -15,7 +15,7 @@ import { useTranslation } from "@/lib/i18n"
 const CATEGORY_MAP_COLORFUL: Record<string, { color: string }> = {
   fuel: { color: "#3b82f6" },
   maintenance: { color: "#f97316" },
-  repair: { color: "#d97706" },
+  repair: { color: "#f43f5e" },
   custom: { color: "#a855f7" },
   highway: { color: "#6366f1" },
   tax: { color: "#ef4444" },

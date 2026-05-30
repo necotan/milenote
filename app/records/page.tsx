@@ -19,7 +19,7 @@ import RecurringTab from "@/components/RecurringTab"
 export const CATEGORIES: Record<string, any> = {
   fuel: { icon: Fuel, color: "text-blue-500", bg: "bg-blue-50" },
   maintenance: { icon: Wrench, color: "text-orange-500", bg: "bg-orange-50" },
-  repair: { icon: Hammer, color: "text-amber-600", bg: "bg-amber-50" },
+  repair: { icon: Hammer, color: "text-rose-500", bg: "bg-rose-50" },
   custom: { icon: Settings, color: "text-purple-500", bg: "bg-purple-50" },
   highway: { icon: Ticket, color: "text-indigo-500", bg: "bg-indigo-50" },
   tax: { icon: Receipt, color: "text-red-500", bg: "bg-red-50" },
