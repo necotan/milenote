@@ -299,7 +299,7 @@ export default function Home() {
                             <div className="flex items-center gap-1 text-[10px] text-slate-500 font-bold tracking-wide">
                               <CalendarDays size={10} /> {t("home.months_since_last", { months: alert.monthsPassed })}
                             </div>
-                            <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                            <div className="w-[80%] bg-slate-100 h-1.5 rounded-full overflow-hidden">
                               <div 
                                 className={`h-full transition-all duration-1000 ease-out ${alert.isUrgent ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : alert.progressPercent > 80 ? 'bg-orange-400' : 'bg-blue-400'}`} 
                                 style={{ width: `${alert.progressPercent}%` }}
@@ -350,7 +350,7 @@ export default function Home() {
                           <div className="flex items-center gap-1 text-[10px] text-slate-500 font-bold tracking-wide">
                             <CalendarDays size={10} /> {t("home.months_since_last", { months: alert.monthsPassed })}
                           </div>
-                          <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                          <div className="w-[80%] bg-slate-100 h-1.5 rounded-full overflow-hidden">
                             <div 
                               className={`h-full transition-all duration-1000 ease-out ${alert.isUrgent ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : alert.progressPercent > 80 ? 'bg-orange-400' : 'bg-blue-400'}`} 
                               style={{ width: `${alert.progressPercent}%` }}
@@ -387,7 +387,7 @@ export default function Home() {
                                 <div className={`p-3 rounded-2xl shrink-0 ${alert.isUrgent ? 'bg-red-50' : 'bg-slate-50'} ${alert.color}`}>
                                   <alert.icon size={24} />
                                 </div>
-                                <div className="min-w-0">
+                                <div className="min-w-0 flex-1">
                                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate">{alert.carName}</p>
                                   <div className={`mt-0.5 leading-tight ${alert.isUrgent ? 'text-red-600' : 'text-slate-800'}`}>
                                     <p className="text-[11px] font-bold tracking-wider">{t(`maintenance_items.${alert.maintName}`)}{alert.isOver ? t("home.alert_overdue") : t("home.alert_remaining")}</p>
@@ -397,7 +397,7 @@ export default function Home() {
                                     <div className="flex items-center gap-1 text-[10px] text-slate-500 font-bold tracking-wide">
                                       <CalendarDays size={10} /> {t("home.months_since_last", { months: alert.monthsPassed })}
                                     </div>
-                                    <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                    <div className="w-[80%] bg-slate-100 h-1.5 rounded-full overflow-hidden">
                                       <div 
                                         className={`h-full transition-all duration-1000 ease-out ${alert.isUrgent ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : alert.progressPercent > 80 ? 'bg-orange-400' : 'bg-blue-400'}`} 
                                         style={{ width: `${alert.progressPercent}%` }}
