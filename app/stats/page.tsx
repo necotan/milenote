@@ -540,7 +540,7 @@ export default function StatsPage() {
             gap: '8px 20px',
             listStyle: 'none',
             margin: 0,
-            padding: '8px 16px 12px',
+            padding: '20px 16px 12px',
           }}
         >
           {payload?.map((entry, index) => (
