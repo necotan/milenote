@@ -535,7 +535,7 @@ export default function StatsPage() {
         <ul
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(90px, max-content))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(70px, max-content))',
             justifyContent: 'center',
             gap: '8px 20px',
             listStyle: 'none',
