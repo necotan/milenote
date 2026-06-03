@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
+import { Switch } from "@/components/ui/switch"
 import { CarFront, Plus, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, AlertTriangle } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
@@ -60,6 +61,8 @@ export default function GaragePage() {
   const [firstRegistrationDate, setFirstRegistrationDate] = useState("")
   const [purchaseDate, setPurchaseDate] = useState("")
   const [purchaseOdo, setPurchaseOdo] = useState("")
+  const [purchasePrice, setPurchasePrice] = useState("")
+  const [includePriceInCost, setIncludePriceInCost] = useState(false)
   const [carStatus, setCarStatus] = useState<CarStatus>("active")
 
   // ウィッシュリスト追加フォームの状態管理
@@ -121,6 +124,7 @@ export default function GaragePage() {
     setName(""); setMaker(""); setModelCode(""); setYear("");
     setGrade(""); setColor(""); setFuelType("レギュラー"); setCurrentOdo("");
     setFirstRegistrationDate(""); setPurchaseDate(""); setPurchaseOdo("");
+    setPurchasePrice(""); setIncludePriceInCost(false);
     setCarStatus("active")
   }
 
@@ -137,6 +141,8 @@ export default function GaragePage() {
       first_registration_date: firstRegistrationDate ? `${firstRegistrationDate}-01` : null,
       purchase_date: purchaseDate || null,
       purchase_odo: parseInt(purchaseOdo) || 0,
+      purchase_price: parseInt(purchasePrice) || 0,
+      include_price_in_cost: includePriceInCost,
       status: carStatus,
     })
 
@@ -164,6 +170,8 @@ export default function GaragePage() {
     setFirstRegistrationDate(car.first_registration_date ? car.first_registration_date.substring(0, 7) : "")
     setPurchaseDate(car.purchase_date || "")
     setPurchaseOdo(car.purchase_odo ? String(car.purchase_odo) : "")
+    setPurchasePrice(car.purchase_price ? String(car.purchase_price) : "")
+    setIncludePriceInCost(!!car.include_price_in_cost)
     setCarStatus((CAR_STATUS_KEYS as readonly string[]).includes(car.status) ? (car.status as CarStatus) : "active")
   }
 
@@ -179,6 +187,8 @@ export default function GaragePage() {
       first_registration_date: firstRegistrationDate ? `${firstRegistrationDate}-01` : null,
       purchase_date: purchaseDate || null,
       purchase_odo: parseInt(purchaseOdo) || 0,
+      purchase_price: parseInt(purchasePrice) || 0,
+      include_price_in_cost: includePriceInCost,
       status: carStatus,
     }).eq("id", editCarId)
 
@@ -433,6 +443,7 @@ export default function GaragePage() {
                     <div className="space-y-2"><Label>{t("garage.first_registration")}</Label><Input type="month" value={firstRegistrationDate} onChange={(e) => setFirstRegistrationDate(e.target.value)} className="placeholder:text-slate-300 appearance-none h-8 min-h-0" /></div>
                     <div className="space-y-2"><Label>{t("common.delivery_date")}</Label><Input type="date" value={purchaseDate} onChange={(e) => setPurchaseDate(e.target.value)} className="placeholder:text-slate-300 appearance-none h-8 min-h-0" /></div>
                     <div className="space-y-2"><Label>{t("garage.purchase_odo")}</Label><Input type="number" placeholder="48000" value={purchaseOdo} onChange={(e) => setPurchaseOdo(e.target.value)} className="placeholder:text-slate-300" /></div>
+                    <div className="space-y-2"><Label>{t("garage.purchase_price")}</Label><Input type="number" placeholder="2500000" value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)} className="placeholder:text-slate-300" /></div>
                   </div>
                   <div className="space-y-2">
                     <Label>{t("garage.fuel_type")}</Label>
@@ -444,6 +455,13 @@ export default function GaragePage() {
                         ))}
                       </SelectContent>
                     </Select>
+                  </div>
+                  <div className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50/50 px-4 py-3">
+                    <div className="space-y-0.5 pr-3">
+                      <Label htmlFor="include-price" className="cursor-pointer">{t("garage.include_price_in_cost")}</Label>
+                      <p className="text-[11px] text-slate-400">{t("garage.include_price_in_cost_hint")}</p>
+                    </div>
+                    <Switch id="include-price" checked={includePriceInCost} onCheckedChange={setIncludePriceInCost} />
                   </div>
                   <div className="space-y-2">
                     <Label>{t("garage.status")}</Label>
@@ -508,7 +526,8 @@ export default function GaragePage() {
                       <div className="p-4">
                         <p className="text-[9px] font-bold text-slate-400 mb-1 uppercase tracking-widest">{t("common.total_cost")}</p>
                         <p className="text-lg font-black text-slate-800 tracking-wider">¥{
-                          records.filter(r => r.car_id === car.id).reduce((sum, r) => sum + r.amount, 0).toLocaleString()
+                          (records.filter(r => r.car_id === car.id).reduce((sum, r) => sum + r.amount, 0)
+                            + (car.include_price_in_cost ? (car.purchase_price || 0) : 0)).toLocaleString()
                         }</p>
                       </div>
                     </div>

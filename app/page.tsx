@@ -450,7 +450,8 @@ export default function Home() {
                       <div className="p-4">
                         <p className="text-[9px] font-bold text-slate-400 mb-1 uppercase tracking-widest">{t("common.total_cost")}</p>
                         <p className="text-lg font-black text-slate-800 tracking-wider">¥{
-                          records.filter(r => r.car_id === car.id).reduce((sum, r) => sum + r.amount, 0).toLocaleString()
+                          (records.filter(r => r.car_id === car.id).reduce((sum, r) => sum + r.amount, 0)
+                            + (car.include_price_in_cost ? (car.purchase_price || 0) : 0)).toLocaleString()
                         }</p>
                       </div>
                     </div>
