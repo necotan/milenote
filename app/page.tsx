@@ -1,11 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { createClient } from "@/utils/supabase"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Car, Wrench, AlertCircle, Droplets, Banknote, CarFront, RefreshCw, CalendarDays, BarChart3, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronUp, Fuel } from "lucide-react"
+import { Car, Wrench, AlertCircle, Droplets, Banknote, CarFront, RefreshCw, CalendarDays, BarChart3, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronUp, Fuel, Gauge } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
 
 const CATEGORY_MAP: Record<string, { color: string }> = {
@@ -47,12 +50,15 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [displayName, setDisplayName] = useState("")
   const [homeOrder, setHomeOrder] = useState<string[]>(["summary", "alerts", "cars"])
+  const [odoModalOpen, setOdoModalOpen] = useState(false)
+  const [odoCarId, setOdoCarId] = useState("")
+  const [odoValue, setOdoValue] = useState("")
+  const [odoSaving, setOdoSaving] = useState(false)
   const supabase = createClient()
   const { t, locale } = useTranslation()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
+  const fetchData = useCallback(async (showLoading = true) => {
+      if (showLoading) setLoading(true)
       const { data: { user } } = await supabase.auth.getUser()
 
       if (user) {
@@ -108,8 +114,10 @@ export default function Home() {
           setAlerts(generatedAlerts)
         }
       }
-      setLoading(false)
-    }
+      if (showLoading) setLoading(false)
+  }, [supabase])
+
+  useEffect(() => {
     fetchData()
 
     // localStorageから並び順を取得
@@ -119,7 +127,42 @@ export default function Home() {
         setHomeOrder(JSON.parse(savedOrder))
       } catch (e) {}
     }
-  }, [supabase])
+  }, [fetchData])
+
+  // ODO更新モーダルを開く
+  const openOdoModal = () => {
+    const first = cars[0]
+    if (!first) return
+    setOdoCarId(first.id)
+    setOdoValue(first.current_odo != null ? String(first.current_odo) : "")
+    setOdoModalOpen(true)
+  }
+
+  // モーダル内で対象車を変更したら、その車の現在ODOを入力欄へ反映
+  const handleOdoCarChange = (id: string) => {
+    setOdoCarId(id)
+    const c = cars.find(car => car.id === id)
+    setOdoValue(c && c.current_odo != null ? String(c.current_odo) : "")
+  }
+
+  const handleSaveOdo = async () => {
+    if (!odoCarId) return
+    const newOdo = parseInt(odoValue)
+    if (isNaN(newOdo) || newOdo < 0) {
+      toast.error(t("home.update_odo_invalid"))
+      return
+    }
+    setOdoSaving(true)
+    const { error } = await supabase.from("cars").update({ current_odo: newOdo }).eq("id", odoCarId)
+    if (error) {
+      toast.error(t("common.error_occurred") + ": " + error.message)
+    } else {
+      toast.success(t("home.update_odo_saved"))
+      setOdoModalOpen(false)
+      await fetchData(false)
+    }
+    setOdoSaving(false)
+  }
 
   const today = new Date()
 
@@ -235,14 +278,20 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* 給油を記録ボタン */}
+                  {/* 給油を記録・ODO更新ボタン */}
                   {cars.length > 0 && (
-                    <Link href="/records?action=add&category=fuel">
-                      <button className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 transition-colors group mt-1">
-                        <Fuel size={12} className="text-slate-400 group-hover:scale-110 transition-transform" />
-                        <span className="text-[10px] font-bold tracking-wider">{t("home.record_fuel")}</span>
+                    <div className="flex flex-col gap-1.5 mt-1 shrink-0">
+                      <Link href="/records?action=add&category=fuel">
+                        <button className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 transition-colors group">
+                          <Fuel size={12} className="text-slate-400 group-hover:scale-110 transition-transform" />
+                          <span className="text-[10px] font-bold tracking-wider">{t("home.record_fuel")}</span>
+                        </button>
+                      </Link>
+                      <button onClick={openOdoModal} className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 transition-colors group">
+                        <Gauge size={12} className="text-slate-400 group-hover:scale-110 transition-transform" />
+                        <span className="text-[10px] font-bold tracking-wider">{t("home.update_odo")}</span>
                       </button>
-                    </Link>
+                    </div>
                   )}
                 </div>
 
@@ -488,6 +537,63 @@ export default function Home() {
           )}
         </section>
       </div>
+
+      {/* ODO更新モーダル */}
+      {odoModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setOdoModalOpen(false)}>
+          <Card className="border-none shadow-2xl bg-white max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
+            <CardContent className="p-6 space-y-4">
+              <div className="flex items-center gap-3">
+                <Gauge size={22} className="text-slate-500" />
+                <h2 className="text-lg font-extrabold text-slate-800">{t("home.update_odo_title")}</h2>
+              </div>
+              <p className="text-xs text-slate-500 leading-relaxed">{t("home.update_odo_desc")}</p>
+
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-slate-500">{t("home.target_car")}</label>
+                {cars.length > 1 ? (
+                  <Select value={odoCarId} onValueChange={handleOdoCarChange}>
+                    <SelectTrigger className="w-full h-10">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {cars.map((car) => (
+                        <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <div className="flex h-10 items-center rounded-lg border border-slate-200 bg-slate-50 px-3 text-sm font-bold text-slate-700">
+                    {cars.find((car) => car.id === odoCarId)?.name || cars[0]?.name}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-slate-500">{t("common.odometer")}</label>
+                <div className="relative">
+                  <Input
+                    type="number"
+                    value={odoValue}
+                    onChange={(e) => setOdoValue(e.target.value)}
+                    className="h-10 pr-10 bg-white border-slate-200"
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 pointer-events-none">{t("common.km_unit")}</span>
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-1">
+                <Button variant="outline" className="flex-1 font-bold" onClick={() => setOdoModalOpen(false)}>
+                  {t("common.cancel")}
+                </Button>
+                <Button className="flex-1 font-bold" disabled={odoSaving} onClick={handleSaveOdo}>
+                  {odoSaving ? t("common.saving") : t("common.save")}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </main>
   )
 }
