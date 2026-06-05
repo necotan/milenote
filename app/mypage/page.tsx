@@ -232,9 +232,9 @@ export default function MyPage() {
           </div>
 
           {/* 下部：保存ボタンエリア */}
-          <div className="border-t border-slate-100 px-6 py-3 flex justify-between items-center">
-            <p className="text-[11px] text-slate-500 font-medium">{t("mypage.save_note")}</p>
-            <Button onClick={handleUpdate} disabled={saving} className="px-6 h-9 text-xs font-bold bg-slate-900 text-white hover:bg-slate-800 rounded-lg shadow-sm">
+          <div className="border-t border-slate-100 p-6 flex flex-col items-end gap-4 md:flex-row md:justify-between md:items-end md:gap-6">
+            <p className="w-full md:w-auto text-[11px] text-slate-500 font-medium">{t("mypage.save_note")}</p>
+            <Button onClick={handleUpdate} disabled={saving} className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 text-white hover:bg-slate-800 rounded-lg shadow-sm">
               {saving ? t("common.saving") : t("mypage.save_button")}
             </Button>
           </div>
@@ -297,9 +297,9 @@ export default function MyPage() {
           </div>
 
           {/* 下部：保存ボタンエリア */}
-          <div className="border-t border-slate-100 px-6 py-3 flex justify-between items-center">
-            <p className="text-[11px] text-slate-500 font-medium">{t("mypage.save_together_note")}</p>
-            <Button onClick={handleUpdate} disabled={saving} className="px-6 h-9 text-xs font-bold bg-slate-900 text-white hover:bg-slate-800 rounded-lg shadow-sm">
+          <div className="border-t border-slate-100 p-6 flex flex-col items-end gap-4 md:flex-row md:justify-between md:items-end md:gap-6">
+            <p className="w-full md:w-auto text-[11px] text-slate-500 font-medium">{t("mypage.save_together_note")}</p>
+            <Button onClick={handleUpdate} disabled={saving} className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 text-white hover:bg-slate-800 rounded-lg shadow-sm">
               {saving ? t("common.saving") : t("mypage.save_button")}
             </Button>
           </div>
@@ -446,9 +446,9 @@ export default function MyPage() {
           </div>
 
           {/* 下部：保存ボタンエリア */}
-          <div className="border-t border-slate-100 px-6 py-3 flex justify-between items-center">
-            <p className="text-[11px] text-slate-500 font-medium">{t("mypage.order_local_note")}</p>
-            <Button onClick={handleUpdate} disabled={saving} className="px-6 h-9 text-xs font-bold bg-slate-900 text-white hover:bg-slate-800 rounded-lg shadow-sm">
+          <div className="border-t border-slate-100 p-6 flex flex-col items-end gap-4 md:flex-row md:justify-between md:items-end md:gap-6">
+            <p className="w-full md:w-auto text-[11px] text-slate-500 font-medium">{t("mypage.order_local_note")}</p>
+            <Button onClick={handleUpdate} disabled={saving} className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 text-white hover:bg-slate-800 rounded-lg shadow-sm">
               {saving ? t("common.saving") : t("mypage.save_button")}
             </Button>
           </div>
