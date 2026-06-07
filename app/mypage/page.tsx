@@ -20,6 +20,8 @@ const DEFAULT_MAINT_SETTINGS = {
   "オイルフィルター交換": { km: 10000, months: 12 },
   "タイヤローテーション": { km: 5000, months: 6 },
   "バッテリー交換": { km: 30000, months: 24 },
+  "ブレーキパッド交換": { km: 50000, months: 48 },
+  "クーラント（冷却水）交換": { km: 40000, months: 24 },
 }
 
 export default function MyPage() {

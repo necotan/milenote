@@ -325,6 +325,8 @@
     "タイヤ交換": "Tire Change",
     "タイヤローテーション": "Tire Rotation",
     "バッテリー交換": "Battery",
+    "ブレーキパッド交換": "Brake Pads",
+    "クーラント（冷却水）交換": "Coolant",
     "スマートキー電池交換": "Key Battery",
     "ワイパーゴム交換": "Wiper Blades",
     "車検・法定点検": "Inspection",
@@ -352,7 +354,9 @@
     "オイル交換": "Oil Change",
     "オイルフィルター交換": "Oil Filter",
     "タイヤローテーション": "Tire Rotation",
-    "バッテリー交換": "Battery"
+    "バッテリー交換": "Battery",
+    "ブレーキパッド交換": "Brake Pads",
+    "クーラント（冷却水）交換": "Coolant"
   },
   "fuel_types": {
     "レギュラー": "Regular",
