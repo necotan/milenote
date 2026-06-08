@@ -46,9 +46,9 @@ export default function MyPage() {
         if (data) {
           setUsername(data.username || "")
           setDisplayName(data.display_name || "")
-          // DBに設定があれば読み込み、なければデフォルト
+          // デフォルトをベースにDBの保存値を上書きマージ（未保存の新項目はデフォルト値で表示）
           if (data.maint_settings) {
-            setMaintSettings(data.maint_settings)
+            setMaintSettings({ ...DEFAULT_MAINT_SETTINGS, ...data.maint_settings })
           }
         }
       }
