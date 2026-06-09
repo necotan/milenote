@@ -151,7 +151,10 @@ export default function MyPage() {
   const handleDragMove = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (!dragInfo.current) return
     const { startY, startIndex, step } = dragInfo.current
-    const offset = e.clientY - startY
+    // 先頭カードより上・末尾カードより下へはみ出さないよう移動量を制限する
+    const minOffset = -startIndex * step
+    const maxOffset = (homeOrder.length - 1 - startIndex) * step
+    const offset = Math.max(minOffset, Math.min(e.clientY - startY, maxOffset))
     setDragOffset(offset)
     const target = Math.max(0, Math.min(startIndex + Math.round(offset / step), homeOrder.length - 1))
     setTargetIndex(target)
