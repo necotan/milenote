@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useTranslation } from "@/lib/i18n"
 import { Eye, EyeOff } from "lucide-react"
+import Footer from "@/components/ui/Footer"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -29,7 +30,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-8 bg-white">
+    <div className="relative flex min-h-screen items-center justify-center p-8 bg-white">
       <div className="w-full max-w-sm">
         <div className="space-y-1 mb-6">
           <h1 className="text-2xl font-bold text-center">Milenote</h1>
@@ -59,6 +60,7 @@ export default function LoginPage() {
           </div>
         </form>
       </div>
+      <Footer className="absolute bottom-0 left-0 right-0 pb-6" />
     </div>
   )
 }

@@ -316,6 +316,93 @@
     "password_too_short": "Password must be at least 6 characters.",
     "invalid_user_id": "User ID can only contain letters, numbers, and underscores (_)."
   },
+  "footer": {
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "copyright": "Copyright (c) 2026 necotan"
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "back": "Back",
+    "last_updated": "Last updated",
+    "updated_date": "June 11, 2026",
+    "intro": "These Terms of Service (the \"Terms\") set out the conditions for using \"Milenote\" (the \"Service\"), a vehicle maintenance cost and expense management application provided by {{operator}} (the \"Operator\"). The Service is developed and provided primarily for personal use. Please read these Terms carefully before using the Service.",
+    "operator": "necotan",
+    "article": "Article {{n}}",
+    "articles": {
+      "applicability": {
+        "heading": "Applicability",
+        "body": "These Terms are intended to define the conditions for providing the Service and the rights and obligations between the Operator and users regarding the use of the Service, and apply to all relationships related to the use of the Service between users and the Operator."
+      },
+      "registration": {
+        "heading": "Registration",
+        "body": "Users may use the Service by creating an account by registering an email address and other information using the method prescribed by the Operator. Users are responsible for keeping their registration information accurate and up to date, and bear full responsibility for managing their account and password."
+      },
+      "prohibited": {
+        "heading": "Prohibited Conduct",
+        "body": "When using the Service, users must not engage in any act that violates laws or public order and morals, infringes the rights of the Operator, other users, or third parties, interferes with the functioning of the Service's servers or network, disrupts the operation of the Service, or is otherwise deemed inappropriate by the Operator."
+      },
+      "data": {
+        "heading": "Handling of Data and Backups",
+        "body": "The Service stores data entered by users, such as vehicle information and expense or maintenance cost records, in a database. The Service is intended for personal use, and the Operator does not provide users' data to third parties or use it beyond the scope necessary to provide the Service. To guard against the risk of data loss due to unexpected defects or failures, users are encouraged to regularly back up important data themselves."
+      },
+      "suspension": {
+        "heading": "Suspension and Changes to the Service",
+        "body": "The Operator may change the content of the Service or suspend, interrupt, or terminate all or part of the Service without prior notice to users if it determines that there is system maintenance, a failure, a specification change in an external service used by the Service (such as Next.js, Supabase, or Vercel), or other unavoidable circumstances. The Operator bears no obligation to provide permanent maintenance or updates for the Service."
+      },
+      "ip": {
+        "heading": "Intellectual Property and License",
+        "body": "The source code of the Service is published under the MIT License. The various open-source libraries used in the Service are subject to their respective license terms. Rights to the data entered by users into the Service belong to the users."
+      },
+      "disclaimer": {
+        "heading": "Disclaimer",
+        "body": "The Service is provided \"As-Is,\" and the Operator does not expressly or impliedly guarantee that the Service is free from defects in fact or law. The Operator shall not be liable for any damages incurred by users arising from the use of or inability to use the Service, loss of data, or otherwise in connection with the Service."
+      },
+      "changes": {
+        "heading": "Changes to the Terms",
+        "body": "The Operator may change these Terms at any time without notifying users when it deems necessary. The revised Terms shall take effect from the time they are posted within the Service."
+      }
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "back": "Back",
+    "last_updated": "Last updated",
+    "updated_date": "June 11, 2026",
+    "intro": "This Privacy Policy (the \"Policy\") describes how \"Milenote\" (the \"Service\"), a vehicle maintenance cost and expense management application provided by {{operator}} (the \"Operator\"), handles users' information.",
+    "operator": "necotan",
+    "article": "Section {{n}}",
+    "sections": {
+      "collection": {
+        "heading": "Information We Collect",
+        "body": "The Service collects the email address and User ID entered during account registration, as well as vehicle information, expense and maintenance cost records, recurring expense information, and similar data recorded by users through the use of the Service."
+      },
+      "usage": {
+        "heading": "Purpose of Use",
+        "body": "We use the collected information to provide and operate the Service, to store, display, and aggregate users' data, and to maintain and improve the Service. The Operator does not use the information beyond the scope necessary to achieve these purposes."
+      },
+      "external": {
+        "heading": "Use of External Services",
+        "body": "The Service uses Supabase as its database and authentication platform, and Vercel as its hosting environment. Users' information is stored and processed on these services. The handling of information on each service is subject to the privacy policy established by its respective provider."
+      },
+      "thirdparty": {
+        "heading": "Provision to Third Parties",
+        "body": "Except as required by law, the Operator does not provide users' personal information to third parties without obtaining the user's prior consent. The Service is intended for personal use, and the Operator does not intentionally provide or disclose the collected information externally."
+      },
+      "management": {
+        "heading": "Information Management",
+        "body": "The Operator takes appropriate security measures to prevent the leakage, loss, or damage of users' information. However, the Service is the product of individual development, and the Operator does not guarantee the complete preservation of data. Users are encouraged to back up important data themselves."
+      },
+      "disclosure": {
+        "heading": "Disclosure, Correction, and Deletion",
+        "body": "Users may view, correct, and delete their own data through operations within the Service. For requests such as deleting an account or stored data, please contact us through the GitHub repository where the Service's source code is published."
+      },
+      "changes": {
+        "heading": "Changes to the Privacy Policy",
+        "body": "The Operator may revise this Policy as necessary. The revised Policy shall take effect from the time it is posted within the Service."
+      }
+    }
+  },
   "categories": {
     "fuel": "Fuel",
     "maintenance": "Maint.",

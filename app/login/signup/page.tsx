@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useTranslation } from "@/lib/i18n"
 import { Eye, EyeOff, ArrowLeft, X } from "lucide-react"
+import Footer from "@/components/ui/Footer"
 
 export default function SignUpPage() {
   const [email, setEmail] = useState("")
@@ -193,6 +194,7 @@ export default function SignUpPage() {
           </div>
         </form>
       </div>
+      <Footer className="absolute bottom-0 left-0 right-0 pb-6" />
     </div>
   )
 }

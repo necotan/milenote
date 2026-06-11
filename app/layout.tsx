@@ -47,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session && !pathname.startsWith("/login")) {
+      if (!session && !pathname.startsWith("/login") && pathname !== "/terms" && pathname !== "/privacy") {
         router.push("/login");
       }
       setLoading(false);
@@ -55,7 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     checkUser();
   }, [pathname, router, supabase.auth]);
 
-  if (pathname.startsWith("/login")) {
+  if (pathname.startsWith("/login") || pathname === "/terms" || pathname === "/privacy") {
     return (
       <html lang="ja">
         <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-slate-50 tracking-wide`}>

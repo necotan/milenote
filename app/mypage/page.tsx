@@ -15,6 +15,7 @@ import { useTranslation } from "@/lib/i18n"
 import type { Locale } from "@/lib/i18n"
 import { recordsToCsv, downloadCsv, buildExportFilename } from "@/lib/csvExport"
 import type { ExportRecord } from "@/lib/csvExport"
+import Footer from "@/components/ui/Footer"
 
 const DEFAULT_MAINT_SETTINGS = {
   "オイル交換": { km: 5000, months: 6 },
@@ -596,6 +597,8 @@ export default function MyPage() {
           {t("common.logout")}
         </Button>
       </div>
+
+      <Footer className="pt-4 pb-8" />
     </main>
   )
 }
