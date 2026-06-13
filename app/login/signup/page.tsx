@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useTranslation } from "@/lib/i18n"
-import { Eye, EyeOff, ArrowLeft, X } from "lucide-react"
+import { Eye, EyeOff, X } from "lucide-react"
 import Footer from "@/components/ui/Footer"
 
 export default function SignUpPage() {
@@ -188,7 +188,6 @@ export default function SignUpPage() {
               onClick={() => router.push("/login")}
               className="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-600 transition-colors"
             >
-              <ArrowLeft size={16} />
               <span className="font-bold text-xs">{t("signup.back_to_login")}</span>
             </button>
           </div>
