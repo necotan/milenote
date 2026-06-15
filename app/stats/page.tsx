@@ -698,7 +698,7 @@ export default function StatsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-11 md:gap-8">
                 {/* 地球周セクション */}
                 <div className="flex items-center gap-4">
-                  <div className="bg-blue-50 p-4 rounded-full shadow-sm shrink-0">
+                  <div className="shrink-0">
                     <Globe className="text-blue-500 w-10 h-10" />
                   </div>
                   <div className="min-w-0">
