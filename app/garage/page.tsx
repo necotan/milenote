@@ -221,7 +221,9 @@ export default function GaragePage() {
     }
   }
 
-  // 車両の論理削除処理
+  // 車両の物理削除処理
+  // records / wishlists / recurring_costs は FK の ON DELETE CASCADE で車本体と一緒に削除される。
+  // Storage の車画像は FK では消えないため、削除前に明示的に削除する。
   const handleDeleteCar = async () => {
     if (!deleteCarTarget) return
     if (deleteCarConfirmName !== deleteCarTarget.name) {
@@ -229,7 +231,22 @@ export default function GaragePage() {
       return
     }
 
-    const { error } = await supabase.from("cars").update({ status: "deleted" }).eq("id", deleteCarTarget.id)
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    // Storage の車画像を削除する（過去にアップロードした孤立画像も car_id プレフィックスで一括削除）
+    const { data: files } = await supabase.storage.from("cars").list(user.id)
+    if (files && files.length > 0) {
+      const targets = files
+        .filter((f) => f.name.startsWith(`${deleteCarTarget.id}-`))
+        .map((f) => `${user.id}/${f.name}`)
+      if (targets.length > 0) {
+        await supabase.storage.from("cars").remove(targets)
+      }
+    }
+
+    // 車本体を物理削除する（紐づく records、wishlists、recurring_costs は CASCADE で削除）
+    const { error } = await supabase.from("cars").delete().eq("id", deleteCarTarget.id)
     if (error) {
       toast.error(t("common.delete_failed") + ": " + error.message)
     } else {
@@ -694,6 +711,12 @@ export default function GaragePage() {
                 <p className="text-sm text-slate-600">
                   <span className="font-bold text-slate-800">{t("garage.delete_car_message", { name: deleteCarTarget.name })}</span><br />
                   {t("garage.delete_car_warning")}
+                </p>
+                <p className="text-xs font-bold text-red-600 bg-red-50 rounded-lg px-3 py-2">
+                  {t("garage.delete_car_records_count", { count: records.filter((r) => r.car_id === deleteCarTarget.id).length })}
+                </p>
+                <p className="text-xs text-slate-500 bg-slate-50 rounded-lg px-3 py-2">
+                  {t("garage.delete_car_archive_hint")}
                 </p>
                 <div className="space-y-2">
                   <p className="text-xs font-bold text-slate-800">
