@@ -418,6 +418,7 @@
   "subcategories": {
     "オイル交換": "Oil Change",
     "オイルフィルター交換": "Oil Filter",
+    "ミッションオイル交換": "Transmission Oil Change",
     "タイヤ交換": "Tire Change",
     "タイヤローテーション": "Tire Rotation",
     "バッテリー交換": "Battery",
@@ -449,6 +450,7 @@
   "maintenance_items": {
     "オイル交換": "Oil Change",
     "オイルフィルター交換": "Oil Filter",
+    "ミッションオイル交換": "Transmission Oil Change",
     "タイヤローテーション": "Tire Rotation",
     "バッテリー交換": "Battery",
     "ブレーキパッド交換": "Brake Pads",

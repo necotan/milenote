@@ -20,6 +20,7 @@ import Footer from "@/components/ui/Footer"
 const DEFAULT_MAINT_SETTINGS = {
   "オイル交換": { km: 5000, months: 6 },
   "オイルフィルター交換": { km: 10000, months: 12 },
+  "ミッションオイル交換": { km: 40000, months: 24 },
   "タイヤローテーション": { km: 5000, months: 6 },
   "バッテリー交換": { km: 30000, months: 24 },
   "ブレーキパッド交換": { km: 50000, months: 48 },
