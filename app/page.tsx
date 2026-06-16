@@ -34,6 +34,9 @@ const DEFAULT_MAINT_SETTINGS = {
   "オイルフィルター交換": { km: 10000, months: 12 },
   "タイヤローテーション": { km: 5000, months: 6 },
   "バッテリー交換": { km: 30000, months: 24 },
+  "法定12ヶ月点検": { km: 0, months: 12, months_only: true },
+  "法定24ヶ月点検": { km: 0, months: 24, months_only: true },
+  "定期点検": { km: 0, months: 6, months_only: true },
 }
 
 const getGreeting = (t: (key: string) => string) => {
@@ -81,30 +84,42 @@ export default function Home() {
             Object.keys(maintSettings).forEach(maintName => {
               const setting = maintSettings[maintName]
               // 通知がオフの項目はアラートを生成しない（enabled未設定は後方互換でオン扱い）
-              if (setting.enabled === false) return;
+              if (setting.enabled === false) return
+              const isMonthsOnly = !!setting.months_only
               const style = MAINT_STYLE_CONFIG[maintName] || { icon: Wrench, color: "text-slate-500" }
               const maintRecords = recordsData.filter(r => r.car_id === car.id && r.sub_category === maintName).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
-              if (maintRecords.length === 0) return;
+              if (maintRecords.length === 0) return
 
               const lastRecord = maintRecords[0]
-              const kmRemaining = (lastRecord.odo_at_record + setting.km) - car.current_odo
               const lastDate = new Date(lastRecord.date)
               const monthsPassed = (now.getFullYear() - lastDate.getFullYear()) * 12 + (now.getMonth() - lastDate.getMonth())
-              const kmProgress = Math.min(100, Math.max(0, ((setting.km - kmRemaining) / setting.km) * 100))
+
+              let kmRemaining = Infinity
+              let kmProgress = 0
+              if (!isMonthsOnly && setting.km > 0) {
+                kmRemaining = (lastRecord.odo_at_record + setting.km) - car.current_odo
+                kmProgress = Math.min(100, Math.max(0, ((setting.km - kmRemaining) / setting.km) * 100))
+              }
+              const monthsRemaining = setting.months - monthsPassed
               const timeProgress = Math.min(100, Math.max(0, (monthsPassed / setting.months) * 100))
-              const progressPercent = Math.max(kmProgress, timeProgress)
-              const isUrgent = kmRemaining <= 0 || monthsPassed >= setting.months
+              const progressPercent = isMonthsOnly ? timeProgress : Math.max(kmProgress, timeProgress)
+              const isOver = isMonthsOnly ? monthsPassed >= setting.months : kmRemaining <= 0
+              const isUrgent = isOver || (!isMonthsOnly && kmRemaining <= 0) || monthsPassed >= setting.months
+              const displayValue = isMonthsOnly
+                ? Math.abs(monthsRemaining).toLocaleString()
+                : Math.abs(kmRemaining).toLocaleString()
 
               generatedAlerts.push({
                 id: `${car.id}-${maintName}`,
                 carName: car.name,
                 maintName: maintName,
-                kmValue: Math.abs(kmRemaining).toLocaleString(),
-                isOver: kmRemaining <= 0,
+                displayValue,
+                isMonthsOnly,
+                isOver,
                 monthsPassed: monthsPassed,
                 isUrgent: isUrgent,
-                remaining: kmRemaining,
+                remaining: isMonthsOnly ? -monthsRemaining : kmRemaining,
                 progressPercent: progressPercent,
                 icon: style.icon,
                 color: isUrgent ? "text-red-600" : style.color,
@@ -345,7 +360,7 @@ export default function Home() {
                           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate pr-16">{alert.carName}</p>
                           <div className={`mt-0.5 leading-tight ${alert.isUrgent ? 'text-red-600' : 'text-slate-800'}`}>
                             <p className="text-[11px] font-bold tracking-wider">{t(`maintenance_items.${alert.maintName}`)}{alert.isOver ? t("home.alert_overdue") : t("home.alert_remaining")}</p>
-                            <p className="text-lg font-black tracking-widest">{alert.kmValue}<span className="text-[10px] ml-0.5">{alert.isOver ? t("home.exceeded") : t("common.km_unit")}</span></p>
+                            <p className="text-lg font-black tracking-widest">{alert.displayValue}<span className="text-[10px] ml-0.5">{alert.isOver ? (alert.isMonthsOnly ? t("common.months_unit") : "") + t("home.exceeded") : (alert.isMonthsOnly ? t("common.months_unit") : t("common.km_unit"))}</span></p>
                           </div>
                           <div className="flex flex-col gap-2 mt-1.5">
                             <div className="flex items-center gap-1 text-[10px] text-slate-500 font-bold tracking-wide">
@@ -443,7 +458,7 @@ export default function Home() {
                                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate">{alert.carName}</p>
                                   <div className={`mt-0.5 leading-tight ${alert.isUrgent ? 'text-red-600' : 'text-slate-800'}`}>
                                     <p className="text-[11px] font-bold tracking-wider">{t(`maintenance_items.${alert.maintName}`)}{alert.isOver ? t("home.alert_overdue") : t("home.alert_remaining")}</p>
-                                    <p className="text-lg font-black tracking-widest">{alert.kmValue}<span className="text-[10px] ml-0.5">{alert.isOver ? t("home.exceeded") : t("common.km_unit")}</span></p>
+                                    <p className="text-lg font-black tracking-widest">{alert.displayValue}<span className="text-[10px] ml-0.5">{alert.isOver ? (alert.isMonthsOnly ? t("common.months_unit") : "") + t("home.exceeded") : (alert.isMonthsOnly ? t("common.months_unit") : t("common.km_unit"))}</span></p>
                                   </div>
                                   <div className="flex flex-col gap-2 mt-1.5">
                                     <div className="flex items-center gap-1 text-[10px] text-slate-500 font-bold tracking-wide">

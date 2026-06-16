@@ -408,6 +408,7 @@
   "categories": {
     "fuel": "Fuel",
     "maintenance": "Maint.",
+    "inspection": "Inspection",
     "repair": "Repair",
     "custom": "Custom",
     "highway": "Toll",
@@ -427,6 +428,9 @@
     "スマートキー電池交換": "Key Battery",
     "ワイパーゴム交換": "Wiper Blades",
     "車検・法定点検": "Inspection",
+    "法定12ヶ月点検": "12-Month Inspection",
+    "法定24ヶ月点検": "24-Month Inspection",
+    "定期点検": "Periodic Inspection",
     "洗車・コーティング": "Wash / Coating",
     "その他": "Other",
     "外装・エアロ": "Exterior / Aero",
@@ -454,7 +458,10 @@
     "タイヤローテーション": "Tire Rotation",
     "バッテリー交換": "Battery",
     "ブレーキパッド交換": "Brake Pads",
-    "クーラント（冷却水）交換": "Coolant"
+    "クーラント（冷却水）交換": "Coolant",
+    "法定12ヶ月点検": "12-Month Inspection",
+    "法定24ヶ月点検": "24-Month Inspection",
+    "定期点検": "Periodic Inspection"
   },
   "fuel_types": {
     "レギュラー": "Regular",

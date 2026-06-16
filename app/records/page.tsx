@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, Hammer } from "lucide-react"
+import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, Hammer, ClipboardList } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
@@ -19,6 +19,7 @@ import RecurringTab from "@/components/RecurringTab"
 export const CATEGORIES: Record<string, any> = {
   fuel: { icon: Fuel, color: "text-blue-500", bg: "bg-blue-50" },
   maintenance: { icon: Wrench, color: "text-orange-500", bg: "bg-orange-50" },
+  inspection: { icon: ClipboardList, color: "text-teal-500", bg: "bg-teal-50" },
   repair: { icon: Hammer, color: "text-rose-500", bg: "bg-rose-50" },
   custom: { icon: Settings, color: "text-purple-500", bg: "bg-purple-50" },
   highway: { icon: Ticket, color: "text-indigo-500", bg: "bg-indigo-50" },
@@ -32,6 +33,9 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
     "オイル交換", "オイルフィルター交換", "ミッションオイル交換", "タイヤ交換", "タイヤローテーション",
     "バッテリー交換", "ブレーキパッド交換", "クーラント（冷却水）交換",
     "スマートキー電池交換", "ワイパーゴム交換", "車検・法定点検", "洗車・コーティング", "その他"
+  ],
+  inspection: [
+    "法定12ヶ月点検", "法定24ヶ月点検", "定期点検", "その他"
   ],
   repair:[
     "故障修理", "板金・塗装", "事故対応・レッカー", "リコール対応", "その他"

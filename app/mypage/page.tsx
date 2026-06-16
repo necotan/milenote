@@ -25,6 +25,9 @@ const DEFAULT_MAINT_SETTINGS = {
   "バッテリー交換": { km: 30000, months: 24 },
   "ブレーキパッド交換": { km: 50000, months: 48 },
   "クーラント（冷却水）交換": { km: 40000, months: 24 },
+  "法定12ヶ月点検": { km: 0, months: 12, months_only: true },
+  "法定24ヶ月点検": { km: 0, months: 24, months_only: true },
+  "定期点検": { km: 0, months: 6, months_only: true },
 }
 
 export default function MyPage() {
@@ -343,6 +346,7 @@ export default function MyPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                 {Object.keys(DEFAULT_MAINT_SETTINGS).map((key) => {
                   const isEnabled = maintSettings[key]?.enabled !== false
+                  const isMonthsOnly = !!(DEFAULT_MAINT_SETTINGS as Record<string, { km: number; months: number; months_only?: boolean }>)[key]?.months_only
                   return (
                   <div key={key} className="space-y-2">
                     <div className="flex items-center justify-between">
@@ -353,17 +357,19 @@ export default function MyPage() {
                       </div>
                     </div>
                     <div className={`flex gap-3 transition-opacity ${isEnabled ? "" : "opacity-40"}`}>
-                      <div className="relative flex-1">
-                        <Input
-                          type="number"
-                          value={maintSettings[key]?.km || ""}
-                          onChange={(e) => handleMaintChange(key, "km", e.target.value)}
-                          disabled={!isEnabled}
-                          className="h-9 text-sm bg-white border-slate-200 pr-8 focus-visible:ring-1 focus-visible:ring-slate-300"
-                        />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 pointer-events-none">{t("common.km_unit")}</span>
-                      </div>
-                      <div className="relative flex-1">
+                      {!isMonthsOnly && (
+                        <div className="relative flex-1">
+                          <Input
+                            type="number"
+                            value={maintSettings[key]?.km || ""}
+                            onChange={(e) => handleMaintChange(key, "km", e.target.value)}
+                            disabled={!isEnabled}
+                            className="h-9 text-sm bg-white border-slate-200 pr-8 focus-visible:ring-1 focus-visible:ring-slate-300"
+                          />
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 pointer-events-none">{t("common.km_unit")}</span>
+                        </div>
+                      )}
+                      <div className={`relative ${isMonthsOnly ? "w-full" : "flex-1"}`}>
                         <Input
                           type="number"
                           value={maintSettings[key]?.months || ""}
