@@ -52,10 +52,13 @@ export default function GaragePage() {
   const [isAddingWish, setIsAddingWish] = useState(false)
   const [editWishId, setEditWishId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [savingCar, setSavingCar] = useState(false)
+  const [savingWish, setSavingWish] = useState(false)
 
   // 削除確認モーダル用
   const [deleteCarTarget, setDeleteCarTarget] = useState<any | null>(null)
   const [deleteCarConfirmName, setDeleteCarConfirmName] = useState("")
+  const [deletingCar, setDeletingCar] = useState(false)
 
   // 画像の位置、ズーム調整モーダル用
   const [adjustTarget, setAdjustTarget] = useState<any | null>(null)
@@ -151,27 +154,32 @@ export default function GaragePage() {
   // 新規車両の登録処理
   const handleAddCar = async (e: React.FormEvent) => {
     e.preventDefault()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    setSavingCar(true)
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
 
-    const { error } = await supabase.from("cars").insert({
-      user_id: user.id, name, maker, model_code: modelCode,
-      year: parseInt(year) || null, grade, color, fuel_type: fuelType,
-      current_odo: parseInt(currentOdo) || 0,
-      first_registration_date: firstRegistrationDate ? `${firstRegistrationDate}-01` : null,
-      purchase_date: purchaseDate || null,
-      purchase_odo: parseInt(purchaseOdo) || 0,
-      purchase_price: parseInt(purchasePrice) || 0,
-      include_price_in_cost: includePriceInCost,
-      status: carStatus,
-    })
+      const { error } = await supabase.from("cars").insert({
+        user_id: user.id, name, maker, model_code: modelCode,
+        year: parseInt(year) || null, grade, color, fuel_type: fuelType,
+        current_odo: parseInt(currentOdo) || 0,
+        first_registration_date: firstRegistrationDate ? `${firstRegistrationDate}-01` : null,
+        purchase_date: purchaseDate || null,
+        purchase_odo: parseInt(purchaseOdo) || 0,
+        purchase_price: parseInt(purchasePrice) || 0,
+        include_price_in_cost: includePriceInCost,
+        status: carStatus,
+      })
 
-    if (error) {
-      toast.error(t("common.error_occurred") + ": " + error.message)
-    } else {
-      toast.success(t("garage.car_registered"))
-      resetCarForm()
-      fetchData()
+      if (error) {
+        toast.error(t("common.error_occurred") + ": " + error.message)
+      } else {
+        toast.success(t("garage.car_registered"))
+        resetCarForm()
+        fetchData()
+      }
+    } finally {
+      setSavingCar(false)
     }
   }
 
@@ -200,24 +208,29 @@ export default function GaragePage() {
     e.preventDefault()
     if (!editCarId) return
 
-    const { error } = await supabase.from("cars").update({
-      name, maker, model_code: modelCode,
-      year: parseInt(year) || null, grade, color, fuel_type: fuelType,
-      current_odo: parseInt(currentOdo) || 0,
-      first_registration_date: firstRegistrationDate ? `${firstRegistrationDate}-01` : null,
-      purchase_date: purchaseDate || null,
-      purchase_odo: parseInt(purchaseOdo) || 0,
-      purchase_price: parseInt(purchasePrice) || 0,
-      include_price_in_cost: includePriceInCost,
-      status: carStatus,
-    }).eq("id", editCarId)
+    setSavingCar(true)
+    try {
+      const { error } = await supabase.from("cars").update({
+        name, maker, model_code: modelCode,
+        year: parseInt(year) || null, grade, color, fuel_type: fuelType,
+        current_odo: parseInt(currentOdo) || 0,
+        first_registration_date: firstRegistrationDate ? `${firstRegistrationDate}-01` : null,
+        purchase_date: purchaseDate || null,
+        purchase_odo: parseInt(purchaseOdo) || 0,
+        purchase_price: parseInt(purchasePrice) || 0,
+        include_price_in_cost: includePriceInCost,
+        status: carStatus,
+      }).eq("id", editCarId)
 
-    if (error) {
-      toast.error(t("common.error_occurred") + ": " + error.message)
-    } else {
-      toast.success(t("garage.car_updated"))
-      resetCarForm()
-      fetchData()
+      if (error) {
+        toast.error(t("common.error_occurred") + ": " + error.message)
+      } else {
+        toast.success(t("garage.car_updated"))
+        resetCarForm()
+        fetchData()
+      }
+    } finally {
+      setSavingCar(false)
     }
   }
 
@@ -231,29 +244,34 @@ export default function GaragePage() {
       return
     }
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    setDeletingCar(true)
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
 
-    // Storage の車画像を削除する（過去にアップロードした孤立画像も car_id プレフィックスで一括削除）
-    const { data: files } = await supabase.storage.from("cars").list(user.id)
-    if (files && files.length > 0) {
-      const targets = files
-        .filter((f) => f.name.startsWith(`${deleteCarTarget.id}-`))
-        .map((f) => `${user.id}/${f.name}`)
-      if (targets.length > 0) {
-        await supabase.storage.from("cars").remove(targets)
+      // Storage の車画像を削除する（過去にアップロードした孤立画像も car_id プレフィックスで一括削除）
+      const { data: files } = await supabase.storage.from("cars").list(user.id)
+      if (files && files.length > 0) {
+        const targets = files
+          .filter((f) => f.name.startsWith(`${deleteCarTarget.id}-`))
+          .map((f) => `${user.id}/${f.name}`)
+        if (targets.length > 0) {
+          await supabase.storage.from("cars").remove(targets)
+        }
       }
-    }
 
-    // 車本体を物理削除する（紐づく records、wishlists、recurring_costs は CASCADE で削除）
-    const { error } = await supabase.from("cars").delete().eq("id", deleteCarTarget.id)
-    if (error) {
-      toast.error(t("common.delete_failed") + ": " + error.message)
-    } else {
-      toast.success(t("garage.car_deleted", { name: deleteCarTarget.name }))
-      setDeleteCarTarget(null)
-      setDeleteCarConfirmName("")
-      fetchData()
+      // 車本体を物理削除する（紐づく records、wishlists、recurring_costs は CASCADE で削除）
+      const { error } = await supabase.from("cars").delete().eq("id", deleteCarTarget.id)
+      if (error) {
+        toast.error(t("common.delete_failed") + ": " + error.message)
+      } else {
+        toast.success(t("garage.car_deleted", { name: deleteCarTarget.name }))
+        setDeleteCarTarget(null)
+        setDeleteCarConfirmName("")
+        fetchData()
+      }
+    } finally {
+      setDeletingCar(false)
     }
   }
 
@@ -262,23 +280,28 @@ export default function GaragePage() {
     e.preventDefault()
     if (!wishCarId) return alert(t("records.select_car_alert"))
 
-    const { error } = await supabase.from("wishlists").insert({
-      car_id: wishCarId,
-      item_name: wishItemName,
-      genre: wishGenre,
-      price_estimate: parseInt(wishPrice) || 0,
-      url: wishUrl,
-      memo: wishMemo,
-      status: 'considering' // 初期状態は検討中
-    })
+    setSavingWish(true)
+    try {
+      const { error } = await supabase.from("wishlists").insert({
+        car_id: wishCarId,
+        item_name: wishItemName,
+        genre: wishGenre,
+        price_estimate: parseInt(wishPrice) || 0,
+        url: wishUrl,
+        memo: wishMemo,
+        status: 'considering' // 初期状態は検討中
+      })
 
-    if (error) {
-      toast.error(t("common.error_occurred") + ": " + error.message)
-    } else {
-      toast.success(t("garage.wish_added"))
-      setIsAddingWish(false)
-      setWishItemName(""); setWishGenre(""); setWishPrice(""); setWishUrl(""); setWishMemo("");
-      fetchData()
+      if (error) {
+        toast.error(t("common.error_occurred") + ": " + error.message)
+      } else {
+        toast.success(t("garage.wish_added"))
+        setIsAddingWish(false)
+        setWishItemName(""); setWishGenre(""); setWishPrice(""); setWishUrl(""); setWishMemo("");
+        fetchData()
+      }
+    } finally {
+      setSavingWish(false)
     }
   }
 
@@ -299,21 +322,26 @@ export default function GaragePage() {
     e.preventDefault()
     if (!editWishId) return
 
-    const { error } = await supabase.from("wishlists").update({
-      car_id: wishCarId,
-      item_name: wishItemName,
-      genre: wishGenre,
-      price_estimate: parseInt(wishPrice) || 0,
-      url: wishUrl,
-      memo: wishMemo,
-    }).eq("id", editWishId)
+    setSavingWish(true)
+    try {
+      const { error } = await supabase.from("wishlists").update({
+        car_id: wishCarId,
+        item_name: wishItemName,
+        genre: wishGenre,
+        price_estimate: parseInt(wishPrice) || 0,
+        url: wishUrl,
+        memo: wishMemo,
+      }).eq("id", editWishId)
 
-    if (error) {
-      toast.error(t("common.error_occurred") + ": " + error.message)
-    } else {
-      toast.success(t("garage.wish_updated"))
-      resetWishForm()
-      fetchData()
+      if (error) {
+        toast.error(t("common.error_occurred") + ": " + error.message)
+      } else {
+        toast.success(t("garage.wish_updated"))
+        resetWishForm()
+        fetchData()
+      }
+    } finally {
+      setSavingWish(false)
     }
   }
 
@@ -576,8 +604,8 @@ export default function GaragePage() {
                     </Select>
                   </div>
                   <div className="pt-4 flex justify-center">
-                    <Button type="submit" className="px-12 font-bold">
-                      {editCarId ? t("common.update") : t("common.register")}
+                    <Button type="submit" className="px-12 font-bold" disabled={savingCar}>
+                      {savingCar ? t("common.saving") : (editCarId ? t("common.update") : t("common.register"))}
                     </Button>
                   </div>
                 </form>
@@ -740,10 +768,10 @@ export default function GaragePage() {
                   <Button
                     variant="destructive"
                     className="flex-1 font-bold bg-red-600 border border-red-700 text-white hover:bg-red-700"
-                    disabled={deleteCarConfirmName !== deleteCarTarget.name}
+                    disabled={deleteCarConfirmName !== deleteCarTarget.name || deletingCar}
                     onClick={handleDeleteCar}
                   >
-                    {t("common.delete_action")}
+                    {deletingCar ? t("common.deleting") : t("common.delete_action")}
                   </Button>
                 </div>
               </CardContent>
@@ -882,8 +910,8 @@ export default function GaragePage() {
                   </div>
 
                   <div className="pt-4 flex justify-center">
-                    <Button type="submit" className="px-12 font-bold">
-                      {editWishId ? t("common.update") : t("common.add")}
+                    <Button type="submit" className="px-12 font-bold" disabled={savingWish}>
+                      {savingWish ? t("common.saving") : (editWishId ? t("common.update") : t("common.add"))}
                     </Button>
                   </div>
                 </form>
