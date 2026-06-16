@@ -86,9 +86,10 @@ const RecordSkeleton = () => (
 )
 
 // 新規追加 or 編集に使うフォームのJSX
-const RecordForm = ({ 
-  onSubmit, 
+const RecordForm = ({
+  onSubmit,
   submitLabel,
+  isSubmitting,
   resetForm,
   editRecordId,
   carId, setCarId,
@@ -261,7 +262,9 @@ const RecordForm = ({
         </div>
 
         <div className="pt-4 flex justify-center">
-          <Button type="submit" className="px-12 font-bold">{submitLabel}</Button>
+          <Button type="submit" className="px-12 font-bold" disabled={isSubmitting}>
+            {isSubmitting ? t("common.saving") : submitLabel}
+          </Button>
         </div>
       </form>
     </CardContent>
@@ -278,6 +281,7 @@ function RecordsPageInner() {
   const supabase = createClient()
   const { t, locale } = useTranslation()
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [carId, setCarId] = useState("")
   const [category, setCategory] = useState("fuel")
   const [subCategory, setSubCategory] = useState("")
@@ -439,36 +443,41 @@ function RecordsPageInner() {
     e.preventDefault()
     if (!carId) return alert(t("records.select_car_alert"))
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    setIsSubmitting(true)
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
 
-    const targetCar = cars.find(c => c.id === carId)
-    const fallbackOdo = targetCar ? targetCar.current_odo : 0
+      const targetCar = cars.find(c => c.id === carId)
+      const fallbackOdo = targetCar ? targetCar.current_odo : 0
 
-    let finalMemo = memo
-    if (category === "highway" && (entryIc || exitIc)) {
-      finalMemo = `${t("records.route_label")}${entryIc || t("records.not_entered")} ➡ ${exitIc || t("records.not_entered")}\n${memo}`
+      let finalMemo = memo
+      if (category === "highway" && (entryIc || exitIc)) {
+        finalMemo = `${t("records.route_label")}${entryIc || t("records.not_entered")} ➡ ${exitIc || t("records.not_entered")}\n${memo}`
+      }
+
+      const { error: recordError } = await supabase.from("records").insert({
+        user_id: user.id,
+        car_id: carId,
+        category,
+        sub_category: subCategory || null,
+        amount: parseInt(amount),
+        odo_at_record: odoAtRecord ? parseInt(odoAtRecord) : fallbackOdo,
+        fuel_amount: category === "fuel" ? parseFloat(fuelAmount) : null,
+        date,
+        memo: finalMemo,
+      })
+
+      if (recordError) return toast.error(t("common.error_occurred") + ": " + recordError.message)
+
+      await recalcCarOdo(carId)
+
+      toast.success(t("records.saved"))
+      resetForm()
+      fetchData()
+    } finally {
+      setIsSubmitting(false)
     }
-
-    const { error: recordError } = await supabase.from("records").insert({
-      user_id: user.id,
-      car_id: carId,
-      category,
-      sub_category: subCategory || null,
-      amount: parseInt(amount),
-      odo_at_record: odoAtRecord ? parseInt(odoAtRecord) : fallbackOdo,
-      fuel_amount: category === "fuel" ? parseFloat(fuelAmount) : null,
-      date,
-      memo: finalMemo,
-    })
-
-    if (recordError) return toast.error(t("common.error_occurred") + ": " + recordError.message)
-
-    await recalcCarOdo(carId)
-
-    toast.success(t("records.saved"))
-    resetForm()
-    fetchData()
   }
 
   // 記録編集モードの開始
@@ -525,32 +534,37 @@ function RecordsPageInner() {
     e.preventDefault()
     if (!editRecordId) return
 
-    const targetCar = cars.find(c => c.id === carId)
-    const fallbackOdo = targetCar ? targetCar.current_odo : 0
+    setIsSubmitting(true)
+    try {
+      const targetCar = cars.find(c => c.id === carId)
+      const fallbackOdo = targetCar ? targetCar.current_odo : 0
 
-    let finalMemo = memo
-    if (category === "highway" && (entryIc || exitIc)) {
-      finalMemo = `${t("records.route_label")}${entryIc || t("records.not_entered")} ➡ ${exitIc || t("records.not_entered")}\n${memo}`
-    }
+      let finalMemo = memo
+      if (category === "highway" && (entryIc || exitIc)) {
+        finalMemo = `${t("records.route_label")}${entryIc || t("records.not_entered")} ➡ ${exitIc || t("records.not_entered")}\n${memo}`
+      }
 
-    const { error } = await supabase.from("records").update({
-      car_id: carId,
-      category,
-      sub_category: subCategory || null,
-      amount: parseInt(amount),
-      odo_at_record: odoAtRecord ? parseInt(odoAtRecord) : fallbackOdo,
-      fuel_amount: category === "fuel" ? parseFloat(fuelAmount) : null,
-      date,
-      memo: finalMemo,
-    }).eq("id", editRecordId)
+      const { error } = await supabase.from("records").update({
+        car_id: carId,
+        category,
+        sub_category: subCategory || null,
+        amount: parseInt(amount),
+        odo_at_record: odoAtRecord ? parseInt(odoAtRecord) : fallbackOdo,
+        fuel_amount: category === "fuel" ? parseFloat(fuelAmount) : null,
+        date,
+        memo: finalMemo,
+      }).eq("id", editRecordId)
 
-    if (error) {
-      toast.error(t("common.error_occurred") + ": " + error.message)
-    } else {
-      await recalcCarOdo(carId)
-      toast.success(t("records.updated"))
-      resetForm()
-      fetchData()
+      if (error) {
+        toast.error(t("common.error_occurred") + ": " + error.message)
+      } else {
+        await recalcCarOdo(carId)
+        toast.success(t("records.updated"))
+        resetForm()
+        fetchData()
+      }
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -640,6 +654,7 @@ function RecordsPageInner() {
       {isAdding && <RecordForm 
           onSubmit={handleAddRecord} 
           submitLabel={t("records.save_record")}
+          isSubmitting={isSubmitting}
           resetForm={resetForm}
           editRecordId={editRecordId}
           carId={carId} setCarId={setCarId}
@@ -659,6 +674,7 @@ function RecordsPageInner() {
       {editRecordId && <RecordForm 
           onSubmit={handleUpdateRecord} 
           submitLabel={t("common.update")}
+          isSubmitting={isSubmitting}
           resetForm={resetForm}
           editRecordId={editRecordId}
           carId={carId} setCarId={setCarId}
