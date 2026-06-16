@@ -328,13 +328,12 @@ function RecordsPageInner() {
     ? records.filter(r => r.date.startsWith(selectedYearMonth))
     : records
 
-  useEffect(() => {
-    if (SUB_CATEGORIES[category]) {
-      setSubCategory(SUB_CATEGORIES[category][0])
-    } else {
-      setSubCategory("")
-    }
-  }, [category])
+  // カテゴリをユーザーが手動で切り替えたときだけサブカテゴリをデフォルト値にリセットする
+  // （編集開始時の setCategory にも反応してしまうと、保存済みのサブカテゴリが上書きされてしまうため）
+  const handleCategoryChange = (newCategory: string) => {
+    setCategory(newCategory)
+    setSubCategory(SUB_CATEGORIES[newCategory] ? SUB_CATEGORIES[newCategory][0] : "")
+  }
 
   const fetchData = async () => {
     setLoading(true)
@@ -364,7 +363,7 @@ function RecordsPageInner() {
   useEffect(() => {
     if (!loading && searchParams.get("action") === "add") {
       const cat = searchParams.get("category") || "fuel"
-      setCategory(cat)
+      handleCategoryChange(cat)
       setIsAdding(true)
       // スクロールをページ上部へ
       window.scrollTo({ top: 0, behavior: "smooth" })
@@ -414,6 +413,7 @@ function RecordsPageInner() {
     setAmount(""); setOdoAtRecord(""); setFuelAmount(""); setFuelUnitPrice(""); setMemo("")
     setEntryIc(""); setExitIc("")
     setCategory("fuel")
+    setSubCategory("")
     const firstCarId = cars.length === 1 ? cars[0].id : ""
     setCarId(firstCarId)
   }
@@ -644,7 +644,7 @@ function RecordsPageInner() {
           editRecordId={editRecordId}
           carId={carId} setCarId={setCarId}
           cars={cars}
-          category={category} setCategory={setCategory}
+          category={category} setCategory={handleCategoryChange}
           subCategory={subCategory} setSubCategory={setSubCategory}
           amount={amount} setAmount={setAmount}
           date={date} setDate={setDate}
@@ -663,7 +663,7 @@ function RecordsPageInner() {
           editRecordId={editRecordId}
           carId={carId} setCarId={setCarId}
           cars={cars}
-          category={category} setCategory={setCategory}
+          category={category} setCategory={handleCategoryChange}
           subCategory={subCategory} setSubCategory={setSubCategory}
           amount={amount} setAmount={setAmount}
           date={date} setDate={setDate}
