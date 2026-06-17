@@ -77,7 +77,7 @@ export default function SignUpPage() {
         alert(t("login.confirmation_sent"))
         router.push("/login")
       }
-    } catch (err) {
+    } catch {
       setErrorPopup(t("common.error_occurred"))
     }
 

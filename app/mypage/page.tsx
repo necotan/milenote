@@ -7,12 +7,11 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
-import { User, LogOut, Save, Settings, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3 } from "lucide-react"
+import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3 } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
-import type { Locale } from "@/lib/i18n"
 import { recordsToCsv, downloadCsv, buildExportFilename } from "@/lib/csvExport"
 import type { ExportRecord } from "@/lib/csvExport"
 import Footer from "@/components/ui/Footer"
@@ -67,7 +66,7 @@ export default function MyPage() {
     if (savedOrder) {
       try {
         setHomeOrder(JSON.parse(savedOrder))
-      } catch(e) {}
+      } catch {}
     }
 
     // グラフのカラーモード設定を取得
@@ -211,7 +210,7 @@ export default function MyPage() {
         toast.error(t("mypage.export_no_data"))
         return
       }
-      const csv = recordsToCsv(records, t, locale)
+      const csv = recordsToCsv(records, t)
       downloadCsv(buildExportFilename(), csv)
       toast.success(t("mypage.export_success"))
     } finally {

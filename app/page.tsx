@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useCallback } from "react"
 import { createClient } from "@/utils/supabase"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Car, Wrench, AlertCircle, Droplets, Banknote, CarFront, RefreshCw, CalendarDays, BarChart3, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronUp, Fuel, Gauge } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Wrench, Droplets, Banknote, CarFront, RefreshCw, CalendarDays, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronUp, Fuel, Gauge } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,15 +12,6 @@ import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
 import { getCarImageStyle } from "@/utils/carImage"
 
-const CATEGORY_MAP: Record<string, { color: string }> = {
-  fuel: { color: "#3b82f6" },
-  maintenance: { color: "#f97316" },
-  custom: { color: "#a855f7" },
-  highway: { color: "#6366f1" },
-  tax: { color: "#ef4444" },
-  insurance: { color: "#22c55e" },
-  other: { color: "#64748b" },
-}
 
 const MAINT_STYLE_CONFIG: Record<string, { icon: any; color: string }> = {
   "オイル交換": { icon: Droplets, color: "text-orange-500" },
@@ -141,7 +132,7 @@ export default function Home() {
     if (savedOrder) {
       try {
         setHomeOrder(JSON.parse(savedOrder))
-      } catch (e) {}
+      } catch {}
     }
   }, [fetchData])
 

@@ -1,5 +1,3 @@
-import type { Locale } from "@/lib/i18n"
-
 type TFunc = (key: string, params?: Record<string, string | number>) => string
 
 export type ExportRecord = {
@@ -25,7 +23,7 @@ function escapeCell(value: string | number | null | undefined): string {
 }
 
 // 記録配列をCSV文字列へ変換する（先頭にUTF-8 BOMを付与しExcelの文字化けを防ぐ）
-export function recordsToCsv(records: ExportRecord[], t: TFunc, _locale: Locale): string {
+export function recordsToCsv(records: ExportRecord[], t: TFunc): string {
   const header = [
     t("mypage.export_col_date"),
     t("mypage.export_col_car"),
