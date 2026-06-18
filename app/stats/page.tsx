@@ -10,7 +10,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   BarChart, Bar
 } from "recharts"
-import { Globe, Moon, PieChart as PieIcon, BarChart3, ChevronLeft, ChevronRight, CalendarDays, RotateCcw, LineChart as LineChartIcon, Fuel, Hash, Receipt, TrendingUp, Leaf, Droplet, Zap, BatteryCharging } from "lucide-react"
+import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, RotateCcw, LineChart as LineChartIcon, Fuel, Hash, Receipt, TrendingUp, Leaf, Droplet, Zap, BatteryCharging } from "lucide-react"
 import { useTranslation } from "@/lib/i18n"
 
 const CATEGORY_MAP_COLORFUL: Record<string, { color: string }> = {
@@ -195,9 +195,7 @@ export default function StatsPage() {
   const [catStart, setCatStart] = useState("")
   const [catEnd, setCatEnd] = useState("")
 
-  // 月別推移グラフ用フィルター
-  const [monthStart, setMonthStart] = useState("")
-  const [monthEnd, setMonthEnd] = useState("")
+  // 月別推移グラフ
   const [monthlyChartType, setMonthlyChartType] = useState<"line" | "bar">("line")
   const [yearlyChartType, setYearlyChartType] = useState<"line" | "bar">("bar")
   const [isColorful, setIsColorful] = useState(false)
@@ -207,9 +205,8 @@ export default function StatsPage() {
   const hasAnimatedPie = useRef(false)
   const isFirstCatFilter = useRef(true)
 
-  // 年次統計用
+  // 年別推移用
   const currentYear = new Date().getFullYear()
-  const [selectedYear, setSelectedYear] = useState(currentYear)
 
   // 折れ線グラフの線の描画と点の出現を同期
   // タブ切替時に DOM がマウントされたタイミングで測定を発火させるため、callback ref として state を使う
@@ -264,19 +261,6 @@ export default function StatsPage() {
     if (catEnd && r.date > catEnd) return false
     return true
   })
-
-  // Recharts は data の参照同一性で内部アニメーション ID を決めるため、無関係な再レンダーで data 参照が変わると折れ線が再描画されてしまう
-  const monthFilteredRecords = useMemo(() => records.filter(r => {
-    if (monthStart && r.date < monthStart) return false
-    if (monthEnd && r.date > monthEnd) return false
-    return true
-  }), [records, monthStart, monthEnd])
-
-  // 年次統計用
-  const yearFilteredRecords = useMemo(
-    () => records.filter(r => r.date.startsWith(String(selectedYear))),
-    [records, selectedYear],
-  )
 
   // グラフ切り替え処理
   const toggleMonthlyChart = () => {
@@ -364,21 +348,24 @@ export default function StatsPage() {
     return () => { if (raf) cancelAnimationFrame(raf) }
   }, [yearlyLineContainer])
 
+  // 直近6か月の枠を常に生成してから集計（記録が無い月も枠を表示する）
   type MonthlyBucket = { month: string; amount: number } & Record<CategoryKey, number>
-  const monthlyData = useMemo<MonthlyBucket[]>(() => (
-    monthFilteredRecords.reduce<MonthlyBucket[]>((acc, curr) => {
-      const month = curr.date.substring(0, 7)
-      let found = acc.find(a => a.month === month)
-      if (!found) {
-        found = { month, amount: 0, ...buildEmptyCategoryBuckets() }
-        acc.push(found)
-      }
-      const cat = normalizeCategoryKey(curr.category)
-      found[cat] += curr.amount
-      found.amount += curr.amount
-      return acc
-    }, []).sort((a, b) => a.month.localeCompare(b.month))
-  ), [monthFilteredRecords])
+  const monthlyData = useMemo<MonthlyBucket[]>(() => {
+    const now = new Date()
+    const months: MonthlyBucket[] = Array.from({ length: 6 }, (_, i) => {
+      const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1)
+      const month = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`
+      return { month, amount: 0, ...buildEmptyCategoryBuckets() }
+    })
+    records.forEach(r => {
+      const found = months.find(m => m.month === r.date.substring(0, 7))
+      if (!found) return
+      const cat = normalizeCategoryKey(r.category)
+      found[cat] += r.amount
+      found.amount += r.amount
+    })
+    return months
+  }, [records])
 
   const monthlyCategoriesPresent = useMemo<CategoryKey[]>(
     () => CATEGORY_KEYS.filter(cat => monthlyData.some(d => d[cat] > 0)),
@@ -396,27 +383,24 @@ export default function StatsPage() {
     return map
   }, [monthlyData])
 
-  // 年次統計: 1〜12月をすべて0で初期化してから集計
-  const currentMonth = new Date().getMonth() + 1
-  type YearlyBucket = { month: number; monthStr: string; amount: number | null } & Record<CategoryKey, number>
-  const yearlyData = useMemo<YearlyBucket[]>(() => (
-    Array.from({ length: 12 }, (_, i) => {
-      const month = i + 1
-      const monthStr = `${selectedYear}-${String(month).padStart(2, "0")}`
-      const monthRecords = yearFilteredRecords.filter(r => r.date.startsWith(monthStr))
-      const buckets = buildEmptyCategoryBuckets()
-      let total = 0
-      monthRecords.forEach(r => {
-        const cat = normalizeCategoryKey(r.category)
-        buckets[cat] += r.amount
-        total += r.amount
-      })
-
-      // 現在の年で未来の月の場合は null にする（線や点を描画しない）
-      const isFuture = selectedYear === currentYear && month > currentMonth
-      return { month, monthStr, amount: isFuture ? null : total, ...buckets }
+  // 直近3年（今年を含む過去3年）の枠を生成してから集計
+  type YearlyBucket = { year: number; amount: number } & Record<CategoryKey, number>
+  const yearlyData = useMemo<YearlyBucket[]>(() => {
+    const years: YearlyBucket[] = Array.from({ length: 3 }, (_, i) => ({
+      year: currentYear - (2 - i),
+      amount: 0,
+      ...buildEmptyCategoryBuckets(),
+    }))
+    records.forEach(r => {
+      const year = parseInt(r.date.substring(0, 4), 10)
+      const found = years.find(y => y.year === year)
+      if (!found) return
+      const cat = normalizeCategoryKey(r.category)
+      found[cat] += r.amount
+      found.amount += r.amount
     })
-  ), [yearFilteredRecords, selectedYear, currentYear, currentMonth])
+    return years
+  }, [records, currentYear])
 
   const yearlyCategoriesPresent = useMemo<CategoryKey[]>(
     () => CATEGORY_KEYS.filter(cat => yearlyData.some(d => d[cat] > 0)),
@@ -428,16 +412,26 @@ export default function StatsPage() {
     yearlyData.forEach(row => {
       let top: CategoryKey | null = null
       CATEGORY_KEYS.forEach(cat => { if (row[cat] > 0) top = cat })
-      if (top) map.set(String(row.month), top)
+      if (top) map.set(String(row.year), top)
     })
     return map
   }, [yearlyData])
 
-  const yearlyTotal = yearFilteredRecords.reduce((sum, r) => sum + r.amount, 0)
+  // 新しい年が上、前年比（増減額）を付与
+  const yearlyTableRows = useMemo(
+    () => yearlyData
+      .map((d, i) => ({
+        year: d.year,
+        amount: d.amount,
+        diff: i > 0 ? d.amount - yearlyData[i - 1].amount : null,
+      }))
+      .reverse(),
+    [yearlyData],
+  )
 
-  // グラフ再アニメーション用のキー（フィルター・年・グラフ種別・データ量が変わるたびに再マウントしてCSSアニメを発火させる）
-  const monthlyAnimKey = `${monthStart}|${monthEnd}|${monthlyChartType}|${monthlyData.length}`
-  const yearlyAnimKey = `${selectedYear}|${yearlyChartType}|${yearlyCategoriesPresent.length}`
+  // グラフ再アニメーション用のキー（グラフ種別、データ量が変わるたびに再マウントしてCSSアニメを発火させる）
+  const monthlyAnimKey = `${monthlyChartType}|${monthlyData.length}`
+  const yearlyAnimKey = `${yearlyChartType}|${yearlyCategoriesPresent.length}`
 
   // 走行距離スケール計算処理
   const earthCircumference = 40075
@@ -490,24 +484,21 @@ export default function StatsPage() {
     return `${monthNum}月`
   }, [locale])
 
-  const yearlyMonthFormatter = useCallback((m: number) => {
-    if (locale === "en") {
-      const names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-      return names[m - 1]
-    }
-    return `${m}月`
-  }, [locale])
+  // 年別推移の年フォーマッター（軸は数値のみ、Tooltipはロケールに応じて年表記）
+  const yearFormatter = useCallback((y: number) => String(y), [])
 
   // Recharts のコールバック型（PieLabelRenderProps / Formatter / LabelFormatter 等）は
   // 省略可能フィールドを含む複雑な union のため、本ファイル内では any を許容する
   /* eslint-disable @typescript-eslint/no-explicit-any */
-  const yenTickFormatter = useCallback((v: any) => (v === 0 ? "0" : `¥${Number(v).toLocaleString()}`), [])
   const numberTickFormatter = useCallback((v: any) => Number(v).toLocaleString(), [])
   const expenditureTooltipFormatter = useCallback((value: any): [string, string] => [
     `¥${Number(value).toLocaleString()}`,
     t("stats.expenditure"),
   ], [t])
-  const monthTooltipLabelFormatter = useCallback((label: any) => yearlyMonthFormatter(label), [yearlyMonthFormatter])
+  const yearTooltipLabelFormatter = useCallback(
+    (label: any) => (locale === "en" ? String(label) : `${label}年`),
+    [locale],
+  )
   const monthlyTooltipLabelFormatter = useCallback((label: any) => {
     const [year, month] = String(label).split("-")
     const monthNum = parseInt(month, 10)
@@ -649,7 +640,7 @@ export default function StatsPage() {
   const yearlyBarShapes = useMemo(() => {
     const shapes: Partial<Record<CategoryKey, ReturnType<typeof makeStackedBarShape>>> = {}
     yearlyCategoriesPresent.forEach(cat => {
-      shapes[cat] = makeStackedBarShape(cat, yearlyTopByRow, (p: { month: number }) => String(p.month))
+      shapes[cat] = makeStackedBarShape(cat, yearlyTopByRow, (p: { year: number }) => String(p.year))
     })
     return shapes
   }, [yearlyCategoriesPresent, yearlyTopByRow])
@@ -963,170 +954,94 @@ export default function StatsPage() {
                   {monthlyChartType === "line" ? <BarChart3 size={16} /> : <LineChartIcon size={16} />}
                 </button>
               </CardHeader>
-              <PeriodFilter
-                start={monthStart} end={monthEnd}
-                onStartChange={setMonthStart} onEndChange={setMonthEnd}
-                onReset={() => { setMonthStart(""); setMonthEnd("") }}
-                labelFrom={t("stats.from")}
-                labelTo={t("stats.to")}
-                labelReset={t("stats.reset_filter")}
-              />
               <CardContent className="h-80 p-4 pt-0">
-                {monthlyData.length === 0 ? (
+                {records.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-slate-300 gap-2">
                     <BarChart3 size={40} strokeWidth={1.5} />
                     <p className="text-sm font-medium">{t("stats.no_data")}</p>
                   </div>
                 ) : (
-                  <div
-                    key={monthlyAnimKey}
-                    ref={monthlyChartType === "line" ? setMonthlyLineContainer : null}
-                    className={`${monthlyChartType === "bar" ? "bar-anim" : "line-anim"}${monthlyChartType === "line" && monthlyLineReady ? " line-ready" : ""}`}
-                    style={{ width: "100%", height: "100%" }}
-                  >
-                    <ResponsiveContainer width="100%" height="100%">
-                      {monthlyChartType === "line" ? (
-                        <LineChart data={monthlyData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }}>
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                          <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={monthFormatter} padding={{ left: 30, right: 30 }} />
-                          <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
-                          <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={expenditureTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
-                          <Line type="linear" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={monthlyLineDot} isAnimationActive={false} />
-                        </LineChart>
-                      ) : (
-                        <BarChart data={monthlyData} margin={{ top: 20, right: 30, left: 10, bottom: 4 }} barCategoryGap="30%">
-                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                          <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={monthFormatter} />
-                          <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} tickFormatter={numberTickFormatter} />
-                          <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={categoryBarTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
-                          <Legend verticalAlign="bottom" content={renderGridLegend(renderCategoryLegendLabel)} />
-                          {monthlyCategoriesPresent.map((cat) => (
-                            <Bar
-                              key={cat}
-                              dataKey={cat}
-                              stackId="a"
-                              fill={activeCategoryMap[cat].color}
-                              shape={monthlyBarShapes[cat]}
-                              isAnimationActive={false}
-                            />
-                          ))}
-                        </BarChart>
-                      )}
-                    </ResponsiveContainer>
-                  </div>
+                <div
+                  key={monthlyAnimKey}
+                  ref={monthlyChartType === "line" ? setMonthlyLineContainer : null}
+                  className={`${monthlyChartType === "bar" ? "bar-anim" : "line-anim"}${monthlyChartType === "line" && monthlyLineReady ? " line-ready" : ""}`}
+                  style={{ width: "100%", height: "100%" }}
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    {monthlyChartType === "line" ? (
+                      <LineChart data={monthlyData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                        <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={monthFormatter} padding={{ left: 30, right: 30 }} />
+                        <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
+                        <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={expenditureTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
+                        <Line type="linear" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={monthlyLineDot} isAnimationActive={false} />
+                      </LineChart>
+                    ) : (
+                      <BarChart data={monthlyData} margin={{ top: 20, right: 30, left: 10, bottom: 4 }} barCategoryGap="30%" maxBarSize={56}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                        <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={monthFormatter} />
+                        <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} tickFormatter={numberTickFormatter} />
+                        <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={categoryBarTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
+                        <Legend verticalAlign="bottom" content={renderGridLegend(renderCategoryLegendLabel)} />
+                        {monthlyCategoriesPresent.map((cat) => (
+                          <Bar
+                            key={cat}
+                            dataKey={cat}
+                            stackId="a"
+                            fill={activeCategoryMap[cat].color}
+                            shape={monthlyBarShapes[cat]}
+                            isAnimationActive={false}
+                          />
+                        ))}
+                      </BarChart>
+                    )}
+                  </ResponsiveContainer>
+                </div>
                 )}
               </CardContent>
             </Card>
           </div>
 
-          {/* 年次統計セクション */}
+          {/* 年別推移セクション */}
           <Card className="border-none shadow-sm bg-white">
             <CardHeader className="p-4 pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600">
-                  <CalendarDays size={16} /> {t("stats.yearly_stats")}
+                  <CalendarDays size={16} /> {t("stats.yearly_trend")}
                 </CardTitle>
-                {/* 年切替ナビとグラフ切り替えボタン */}
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={toggleYearlyChart}
-                    className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
-                    aria-label="Toggle chart type"
-                    title="グラフの種類を切り替え"
-                  >
-                    {yearlyChartType === "line" ? <BarChart3 size={16} /> : <LineChartIcon size={16} />}
-                  </button>
-                  <div className="flex items-center gap-1 border-l border-slate-200 pl-3">
-                    <button
-                      onClick={() => setSelectedYear(y => y - 1)}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-800"
-                      aria-label="前の年"
-                    >
-                      <ChevronLeft size={16} />
-                    </button>
-                    <span className="text-sm font-black text-slate-800 min-w-[60px] text-center tabular-nums">
-                      {locale === "en" ? selectedYear : `${selectedYear}年`}
-                    </span>
-                    <button
-                      onClick={() => setSelectedYear(y => y + 1)}
-                      disabled={selectedYear >= currentYear}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-800 disabled:opacity-30 disabled:cursor-not-allowed"
-                      aria-label="次の年"
-                    >
-                      <ChevronRight size={16} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-              {/* 年合計 */}
-              <div className="flex items-baseline gap-2.5 mt-2">
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest">{t("stats.yearly_total")}</span>
-                <span className="text-2xl font-bold text-slate-800 tracking-widest tabular-nums">¥{yearlyTotal.toLocaleString()}</span>
+                {/* グラフ切り替えボタン */}
+                <button
+                  onClick={toggleYearlyChart}
+                  className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                  aria-label="Toggle chart type"
+                  title="グラフの種類を切り替え"
+                >
+                  {yearlyChartType === "line" ? <BarChart3 size={16} /> : <LineChartIcon size={16} />}
+                </button>
               </div>
             </CardHeader>
-            <CardContent className="h-64 px-2 pb-4 pt-0">
+            <CardContent className="px-2 pb-4 pt-0 lg:flex lg:items-center lg:gap-10 lg:px-6">
+              {/* グラフ */}
               <div
                 key={yearlyAnimKey}
                 ref={yearlyChartType === "line" ? setYearlyLineContainer : null}
-                className={`${yearlyChartType === "bar" ? "bar-anim" : "line-anim"}${yearlyChartType === "line" && yearlyLineReady ? " line-ready" : ""}`}
-                style={{ width: "100%", height: "100%" }}
+                className={`h-64 w-full lg:flex-1 lg:min-w-0 ${yearlyChartType === "bar" ? "bar-anim" : "line-anim"}${yearlyChartType === "line" && yearlyLineReady ? " line-ready" : ""}`}
               >
                 <ResponsiveContainer width="100%" height="100%">
                   {yearlyChartType === "line" ? (
-                    <LineChart data={yearlyData} margin={{ top: 20, right: 16, left: 8, bottom: 4 }}>
+                    <LineChart data={yearlyData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis
-                        dataKey="month"
-                        fontSize={10}
-                        axisLine={false}
-                        tickLine={false}
-                        dy={8}
-                        tick={{ fill: '#94a3b8' }}
-                        tickFormatter={yearlyMonthFormatter}
-                      />
-                      <YAxis
-                        fontSize={10}
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fill: '#94a3b8' }}
-                        width={70}
-                        tickFormatter={yenTickFormatter}
-                      />
-                      <Tooltip
-                        cursor={false}
-                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                        itemStyle={{ color: '#3b82f6' }}
-                        formatter={expenditureTooltipFormatter}
-                        labelFormatter={monthTooltipLabelFormatter}
-                      />
+                      <XAxis dataKey="year" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={yearFormatter} padding={{ left: 30, right: 30 }} />
+                      <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
+                      <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={expenditureTooltipFormatter} labelFormatter={yearTooltipLabelFormatter} />
                       <Line type="linear" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={yearlyLineDot} isAnimationActive={false} />
                     </LineChart>
                   ) : (
-                    <BarChart data={yearlyData} margin={{ top: 20, right: 16, left: 8, bottom: 4 }} barCategoryGap="30%">
+                    <BarChart data={yearlyData} margin={{ top: 20, right: 30, left: 10, bottom: 4 }} barCategoryGap="30%" maxBarSize={56}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis
-                        dataKey="month"
-                        fontSize={10}
-                        axisLine={false}
-                        tickLine={false}
-                        dy={8}
-                        tick={{ fill: '#94a3b8' }}
-                        tickFormatter={yearlyMonthFormatter}
-                      />
-                      <YAxis
-                        fontSize={10}
-                        axisLine={false}
-                        tickLine={false}
-                        tick={{ fill: '#94a3b8' }}
-                        width={70}
-                        tickFormatter={yenTickFormatter}
-                      />
-                      <Tooltip
-                        cursor={false}
-                        contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                        formatter={categoryBarTooltipFormatter}
-                        labelFormatter={monthTooltipLabelFormatter}
-                      />
+                      <XAxis dataKey="year" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={yearFormatter} />
+                      <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} tickFormatter={numberTickFormatter} />
+                      <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={categoryBarTooltipFormatter} labelFormatter={yearTooltipLabelFormatter} />
                       <Legend verticalAlign="bottom" content={renderGridLegend(renderCategoryLegendLabel)} />
                       {yearlyCategoriesPresent.map((cat) => (
                         <Bar
@@ -1141,6 +1056,41 @@ export default function StatsPage() {
                     </BarChart>
                   )}
                 </ResponsiveContainer>
+              </div>
+              {/* テーブル */}
+              <div className="mt-4 px-2 lg:mt-0 lg:w-[40%] lg:shrink-0 lg:pl-0 lg:pr-6">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-slate-100 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                      <th className="pb-2.5 pr-3 text-left font-semibold">{t("stats.col_year")}</th>
+                      <th className="pb-2.5 px-3 text-right font-semibold">{t("stats.total")}</th>
+                      <th className="pb-2.5 pl-3 text-right font-semibold">{t("stats.col_yoy")}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {yearlyTableRows.map(row => (
+                      <tr key={row.year}>
+                        <td className="py-4 pr-3 text-[15px] font-bold text-slate-700 tabular-nums">
+                          {locale === "en" ? row.year : `${row.year}年`}
+                        </td>
+                        <td className="py-4 px-3 text-right text-sm font-bold text-slate-800 tabular-nums">
+                          ¥{row.amount.toLocaleString()}
+                        </td>
+                        <td className="py-4 pl-3 text-right text-xs tabular-nums">
+                          {row.diff === null ? (
+                            <span className="text-slate-300">—</span>
+                          ) : row.diff > 0 ? (
+                            <span className="font-semibold text-rose-500">+¥{row.diff.toLocaleString()}</span>
+                          ) : row.diff < 0 ? (
+                            <span className="font-semibold text-emerald-500">-¥{Math.abs(row.diff).toLocaleString()}</span>
+                          ) : (
+                            <span className="text-slate-400">±¥0</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </CardContent>
           </Card>
