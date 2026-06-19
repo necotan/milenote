@@ -672,13 +672,13 @@ export default function StatsPage() {
 
       <Tabs defaultValue="cost" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-4">
-          <TabsTrigger value="distance" className="font-bold">
-            <Globe size={14} className="mr-1.5" />
-            {t("stats.tab_distance")}
-          </TabsTrigger>
           <TabsTrigger value="cost" className="font-bold">
             <BarChart3 size={14} className="mr-1.5" />
             {t("stats.tab_cost")}
+          </TabsTrigger>
+          <TabsTrigger value="distance" className="font-bold">
+            <Globe size={14} className="mr-1.5" />
+            {t("stats.tab_distance")}
           </TabsTrigger>
         </TabsList>
 
