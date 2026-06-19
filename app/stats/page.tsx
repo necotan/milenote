@@ -19,6 +19,7 @@ const CATEGORY_MAP_COLORFUL: Record<string, { color: string }> = {
   inspection: { color: "#14b8a6" },
   repair: { color: "#f43f5e" },
   custom: { color: "#a855f7" },
+  carwash: { color: "#06b6d4" },
   highway: { color: "#6366f1" },
   tax: { color: "#ef4444" },
   insurance: { color: "#22c55e" },
@@ -31,20 +32,21 @@ const CATEGORY_MAP_BLUE: Record<string, { color: string }> = {
   inspection: { color: "#0f766e" },
   repair: { color: "#0d9488" },
   custom: { color: "#6366f1" },
+  carwash: { color: "#0891b2" },
   highway: { color: "#38bdf8" },
   tax: { color: "#1e3a8a" },
   insurance: { color: "#818cf8" },
   other: { color: "#cbd5e1" },
 }
 
-const CATEGORY_KEYS = ["fuel", "maintenance", "inspection", "repair", "custom", "highway", "tax", "insurance", "other"] as const
+const CATEGORY_KEYS = ["fuel", "maintenance", "inspection", "repair", "custom", "carwash", "highway", "tax", "insurance", "other"] as const
 type CategoryKey = typeof CATEGORY_KEYS[number]
 
 const normalizeCategoryKey = (cat: string): CategoryKey =>
   (CATEGORY_KEYS as readonly string[]).includes(cat) ? (cat as CategoryKey) : "other"
 
 const buildEmptyCategoryBuckets = (): Record<CategoryKey, number> => ({
-  fuel: 0, maintenance: 0, inspection: 0, repair: 0, custom: 0, highway: 0, tax: 0, insurance: 0, other: 0,
+  fuel: 0, maintenance: 0, inspection: 0, repair: 0, custom: 0, carwash: 0, highway: 0, tax: 0, insurance: 0, other: 0,
 })
 
 type Record_ = {

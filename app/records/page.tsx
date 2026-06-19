@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, Hammer, ClipboardList } from "lucide-react"
+import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, Hammer, ClipboardList, Droplets } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
@@ -22,6 +22,7 @@ export const CATEGORIES: Record<string, any> = {
   inspection: { icon: ClipboardList, color: "text-teal-500", bg: "bg-teal-50" },
   repair: { icon: Hammer, color: "text-rose-500", bg: "bg-rose-50" },
   custom: { icon: Settings, color: "text-purple-500", bg: "bg-purple-50" },
+  carwash: { icon: Droplets, color: "text-cyan-500", bg: "bg-cyan-50" },
   highway: { icon: Ticket, color: "text-indigo-500", bg: "bg-indigo-50" },
   tax: { icon: Receipt, color: "text-red-500", bg: "bg-red-50" },
   insurance: { icon: Shield, color: "text-green-500", bg: "bg-green-50" },
@@ -41,8 +42,11 @@ export const SUB_CATEGORIES: Record<string, string[]> = {
     "故障修理", "板金・塗装", "事故対応・レッカー", "リコール対応", "その他"
   ],
   custom:[
-    "外装・エアロ", "内装・インテリア", "吸排気系（マフラー等）", 
+    "外装・エアロ", "内装・インテリア", "吸排気系（マフラー等）",
     "足回り（ホイール・車高調等）", "電装系（オーディオ等）", "その他"
+  ],
+  carwash:[
+    "洗車機", "手洗い洗車", "コーティング", "室内クリーニング", "洗車用品", "その他"
   ],
   insurance: [
     "自賠責保険", "任意保険", "その他"
