@@ -670,7 +670,7 @@ export default function StatsPage() {
         <p className="text-xs font-bold text-slate-400 tracking-wider mt-1">{t("stats.subtitle")}</p>
       </header>
 
-      <Tabs defaultValue="distance" className="w-full">
+      <Tabs defaultValue="cost" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-4">
           <TabsTrigger value="distance" className="font-bold">
             <Globe size={14} className="mr-1.5" />
