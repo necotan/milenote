@@ -371,17 +371,17 @@ export default function Home() {
                     {alerts.length > 1 && (
                       <button
                         onClick={() => setShowAllAlerts(v => !v)}
-                        className={`absolute top-3 right-3 z-10 flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold border transition-all ${
+                        className={`absolute top-3 right-3 z-10 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border text-[10px] font-bold tracking-wider transition-colors group ${
                           showAllAlerts
                             ? 'bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200'
                             : 'bg-white text-slate-400 border-slate-100 shadow-sm hover:shadow hover:text-slate-600'
                         } ${alerts.length <= 4 ? 'lg:hidden' : ''}`}
                       >
                         {showAllAlerts ? (
-                          <><ChevronUp size={11} /> {t("common.close")}</>
+                          <><ChevronUp size={11} className="text-slate-400 group-hover:scale-110 transition-transform" /> {t("common.close")}</>
                         ) : (
                           <>
-                            <ChevronDown size={11} />
+                            <ChevronDown size={11} className="text-slate-400 group-hover:scale-110 transition-transform" />
                             <span className="lg:hidden">{t("home.more_items", { count: alerts.length - 1 })}</span>
                             <span className="hidden lg:inline">{t("home.more_items", { count: alerts.length - 4 })}</span>
                           </>
