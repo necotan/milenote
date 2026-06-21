@@ -218,21 +218,21 @@ const RecurringCardSkeleton = () => (
     {[...Array(3)].map((_, i) => (
       <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden relative">
         <div className="absolute top-3 right-3 flex items-center gap-1">
-          <div className="h-7 w-7 bg-slate-100 rounded-lg animate-pulse" />
-          <div className="h-7 w-7 bg-slate-100 rounded-lg animate-pulse" />
-          <div className="h-7 w-7 bg-slate-100 rounded-lg animate-pulse" />
+          <div className="h-7 w-7 bg-slate-100 rounded-lg skeleton" />
+          <div className="h-7 w-7 bg-slate-100 rounded-lg skeleton" />
+          <div className="h-7 w-7 bg-slate-100 rounded-lg skeleton" />
         </div>
         <div className="p-4 flex gap-3 items-start">
-          <div className="w-12 h-12 rounded-full bg-slate-100 animate-pulse shrink-0 mt-1" />
+          <div className="w-12 h-12 rounded-full bg-slate-100 skeleton shrink-0 mt-1" />
           <div className="flex-1 min-w-0 pr-24 space-y-2">
-            <div className="h-6 w-32 bg-slate-100 rounded-lg animate-pulse" />
+            <div className="h-6 w-32 bg-slate-100 rounded-lg skeleton" />
             <div className="flex gap-1.5">
-              <div className="h-5 w-14 bg-slate-100 rounded-md animate-pulse" />
-              <div className="h-5 w-20 bg-slate-100 rounded-md animate-pulse" />
-              <div className="h-5 w-16 bg-slate-100 rounded-md animate-pulse" />
+              <div className="h-5 w-14 bg-slate-100 rounded-md skeleton" />
+              <div className="h-5 w-20 bg-slate-100 rounded-md skeleton" />
+              <div className="h-5 w-16 bg-slate-100 rounded-md skeleton" />
             </div>
-            <div className="h-3 w-24 bg-slate-100 rounded animate-pulse" />
-            <div className="h-3 w-40 bg-slate-100 rounded animate-pulse" />
+            <div className="h-3 w-24 bg-slate-100 rounded skeleton" />
+            <div className="h-3 w-40 bg-slate-100 rounded skeleton" />
           </div>
         </div>
       </div>

@@ -69,19 +69,19 @@ const RecordSkeleton = () => (
       <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden">
         <div className="p-4 flex gap-4 items-start">
           {/* アイコン */}
-          <div className="w-12 h-12 rounded-full bg-slate-100 animate-pulse shrink-0 mt-1" />
+          <div className="w-12 h-12 rounded-full bg-slate-100 skeleton shrink-0 mt-1" />
           <div className="flex-1 min-w-0 pr-14 space-y-2">
             {/* 金額 */}
-            <div className="h-6 w-28 bg-slate-100 rounded-lg animate-pulse" />
+            <div className="h-6 w-28 bg-slate-100 rounded-lg skeleton" />
             {/* タグ */}
             <div className="flex gap-2">
-              <div className="h-5 w-16 bg-slate-100 rounded-md animate-pulse" />
-              <div className="h-5 w-20 bg-slate-100 rounded-md animate-pulse" />
+              <div className="h-5 w-16 bg-slate-100 rounded-md skeleton" />
+              <div className="h-5 w-20 bg-slate-100 rounded-md skeleton" />
             </div>
             {/* 車名・ODO */}
-            <div className="h-4 w-36 bg-slate-100 rounded animate-pulse" />
+            <div className="h-4 w-36 bg-slate-100 rounded skeleton" />
             {/* 日付 */}
-            <div className="h-3 w-24 bg-slate-100 rounded animate-pulse" />
+            <div className="h-3 w-24 bg-slate-100 rounded skeleton" />
           </div>
         </div>
       </div>

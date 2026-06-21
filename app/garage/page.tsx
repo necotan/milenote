@@ -519,16 +519,16 @@ export default function GaragePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
             {[...Array(2)].map((_, i) => (
               <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div className="h-48 bg-slate-100 animate-pulse" />
+                <div className="h-48 bg-slate-100 skeleton" />
                 <div className="p-4 space-y-2">
-                  <div className="h-7 w-36 bg-slate-100 rounded-lg animate-pulse" />
-                  <div className="h-3 w-48 bg-slate-100 rounded animate-pulse" />
+                  <div className="h-7 w-36 bg-slate-100 rounded-lg skeleton" />
+                  <div className="h-3 w-48 bg-slate-100 rounded skeleton" />
                 </div>
                 <div className="grid grid-cols-2 divide-x divide-slate-100 border-t border-slate-100">
                   {[...Array(4)].map((_, j) => (
                     <div key={j} className="p-4 space-y-2">
-                      <div className="h-2.5 w-16 bg-slate-100 rounded animate-pulse" />
-                      <div className="h-5 w-20 bg-slate-100 rounded animate-pulse" />
+                      <div className="h-2.5 w-16 bg-slate-100 rounded skeleton" />
+                      <div className="h-5 w-20 bg-slate-100 rounded skeleton" />
                     </div>
                   ))}
                 </div>

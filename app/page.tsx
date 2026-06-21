@@ -195,16 +195,16 @@ export default function Home() {
   if (loading) return (
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
-        <div className="h-8 w-20 bg-slate-100 rounded-lg animate-pulse" />
+        <div className="h-8 w-20 bg-slate-100 rounded-lg skeleton" />
       </header>
       <div className="flex flex-col lg:grid lg:grid-cols-3 lg:gap-8 lg:items-start gap-6">
         <div className="lg:col-span-2 space-y-6" style={{ order: homeOrder.indexOf("summary") }}>
           {/* サマリーカードスケルトン */}
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-white rounded-xl shadow-sm p-4 space-y-2">
-              <div className="h-3 w-20 bg-slate-100 rounded animate-pulse" />
-              <div className="h-7 w-28 bg-slate-100 rounded-lg animate-pulse" />
-              <div className="h-3 w-16 bg-slate-100 rounded animate-pulse" />
+              <div className="h-3 w-20 bg-slate-100 rounded skeleton" />
+              <div className="h-7 w-28 bg-slate-100 rounded-lg skeleton" />
+              <div className="h-3 w-16 bg-slate-100 rounded skeleton" />
             </div>
           </div>
         </div>
@@ -213,12 +213,12 @@ export default function Home() {
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
             {[...Array(2)].map((_, i) => (
               <div key={i} className="bg-white rounded-xl shadow-sm p-4 flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-slate-100 animate-pulse shrink-0" />
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 skeleton shrink-0" />
                 <div className="flex-1 space-y-2">
-                  <div className="h-3 w-20 bg-slate-100 rounded animate-pulse" />
-                  <div className="h-3 w-24 bg-slate-100 rounded animate-pulse" />
-                  <div className="h-6 w-28 bg-slate-100 rounded-lg animate-pulse" />
-                  <div className="h-2 w-full bg-slate-100 rounded-full animate-pulse" />
+                  <div className="h-3 w-20 bg-slate-100 rounded skeleton" />
+                  <div className="h-3 w-24 bg-slate-100 rounded skeleton" />
+                  <div className="h-6 w-28 bg-slate-100 rounded-lg skeleton" />
+                  <div className="h-2 w-full bg-slate-100 rounded-full skeleton" />
                 </div>
               </div>
             ))}
@@ -227,16 +227,16 @@ export default function Home() {
         {/* 愛車カードスケルトン */}
         <div className="lg:col-span-1" style={{ order: homeOrder.indexOf("cars") }}>
           <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div className="h-48 bg-slate-100 animate-pulse" />
+            <div className="h-48 bg-slate-100 skeleton" />
             <div className="p-4 space-y-2">
-              <div className="h-7 w-36 bg-slate-100 rounded-lg animate-pulse" />
-              <div className="h-3 w-48 bg-slate-100 rounded animate-pulse" />
+              <div className="h-7 w-36 bg-slate-100 rounded-lg skeleton" />
+              <div className="h-3 w-48 bg-slate-100 rounded skeleton" />
             </div>
             <div className="grid grid-cols-2 divide-x divide-slate-100 border-t border-slate-100">
               {[...Array(4)].map((_, i) => (
                 <div key={i} className="p-4 space-y-2">
-                  <div className="h-2.5 w-16 bg-slate-100 rounded animate-pulse" />
-                  <div className="h-5 w-20 bg-slate-100 rounded animate-pulse" />
+                  <div className="h-2.5 w-16 bg-slate-100 rounded skeleton" />
+                  <div className="h-5 w-20 bg-slate-100 rounded skeleton" />
                 </div>
               ))}
             </div>

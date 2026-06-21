@@ -652,13 +652,13 @@ export default function StatsPage() {
   if (loading) return (
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2">
-        <div className="h-8 w-16 bg-slate-100 rounded-lg animate-pulse" />
+        <div className="h-8 w-16 bg-slate-100 rounded-lg skeleton" />
       </header>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {[...Array(2)].map((_, i) => (
           <div key={i} className="bg-white rounded-xl shadow-sm p-4 space-y-3">
-            <div className="h-4 w-28 bg-slate-100 rounded animate-pulse" />
-            <div className="h-64 bg-slate-100 rounded-lg animate-pulse" />
+            <div className="h-4 w-28 bg-slate-100 rounded skeleton" />
+            <div className="h-64 bg-slate-100 rounded-lg skeleton" />
           </div>
         ))}
       </div>
