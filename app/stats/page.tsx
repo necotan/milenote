@@ -12,6 +12,7 @@ import {
 } from "recharts"
 import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, RotateCcw, LineChart as LineChartIcon, Fuel, Hash, Receipt, TrendingUp, Leaf, Droplet, Zap, BatteryCharging } from "lucide-react"
 import { useTranslation } from "@/lib/i18n"
+import { usePageLoadingGate } from "@/lib/loadingGate"
 
 const CATEGORY_MAP_COLORFUL: Record<string, { color: string }> = {
   fuel: { color: "#3b82f6" },
@@ -222,6 +223,9 @@ export default function StatsPage() {
   // useEffect([supabase]) が毎回発火して records が再フェッチされ、メモ化したチャートデータも参照が変わってしまう
   const supabase = useMemo(() => createClient(), [])
   const { t, locale } = useTranslation()
+
+  // 初回ローディング画面とデータ取得を連動させる
+  usePageLoadingGate(!loading)
 
   useEffect(() => {
     const fetchData = async () => {

@@ -13,6 +13,7 @@ import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, P
 import Link from "next/link"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
+import { usePageLoadingGate } from "@/lib/loadingGate"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import RecurringTab from "@/components/RecurringTab"
 
@@ -284,6 +285,9 @@ function RecordsPageInner() {
   const [editRecordId, setEditRecordId] = useState<string | null>(null)
   const supabase = createClient()
   const { t, locale } = useTranslation()
+
+  // 初回ローディング画面とデータ取得を連動させる
+  usePageLoadingGate(!loading)
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [carId, setCarId] = useState("")

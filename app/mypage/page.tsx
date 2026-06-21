@@ -12,6 +12,7 @@ import { Switch } from "@/components/ui/switch"
 import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3 } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
+import { usePageLoadingGate } from "@/lib/loadingGate"
 import { recordsToCsv, downloadCsv, buildExportFilename } from "@/lib/csvExport"
 import type { ExportRecord } from "@/lib/csvExport"
 import Footer from "@/components/ui/Footer"
@@ -41,6 +42,9 @@ export default function MyPage() {
   const router = useRouter()
   const supabase = createClient()
   const { t, locale, setLocale } = useTranslation()
+
+  // 初回ローディング画面とデータ取得を連動させる
+  usePageLoadingGate(!loading)
 
   useEffect(() => {
     const fetchProfile = async () => {

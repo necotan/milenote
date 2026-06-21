@@ -11,7 +11,7 @@
     "register": "Register",
     "update": "Update",
     "add": "Add",
-    "loading": "Loading...",
+    "loading_text": "Loading",
     "error_occurred": "An error occurred",
     "delete_failed": "Failed to delete",
     "logout": "Log out",

@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
+import { usePageLoadingGate } from "@/lib/loadingGate"
 import { getCarImageStyle } from "@/utils/carImage"
 
 
@@ -51,6 +52,9 @@ export default function Home() {
   const [odoSaving, setOdoSaving] = useState(false)
   const supabase = createClient()
   const { t, locale } = useTranslation()
+
+  // 初回ローディング画面とデータ取得を連動させる
+  usePageLoadingGate(!loading)
 
   const fetchData = useCallback(async (showLoading = true) => {
       if (showLoading) setLoading(true)

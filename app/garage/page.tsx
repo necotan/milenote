@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch"
 import { CarFront, Plus, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, AlertTriangle, Move } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
+import { usePageLoadingGate } from "@/lib/loadingGate"
 import {
   getCarImageStyle,
   clampImagePosition,
@@ -71,6 +72,9 @@ export default function GaragePage() {
 
   const supabase = createClient()
   const { t, locale } = useTranslation()
+
+  // 初回ローディング画面とデータ取得を連動させる
+  usePageLoadingGate(!loading)
 
   // 車両追加フォームの状態管理
   const [name, setName] = useState("")

@@ -159,3 +159,50 @@
     transform: translateX(100%);
   }
 }
+
+/* ローディング画面のオープニングセレモニーアニメーション */
+/* 回転中心(50,50)を transform に直接書き込み、ブラウザ差で針が中心からずれて見えるのを防ぐ */
+.meter-needle {
+  animation: meter-sweep 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@keyframes meter-sweep {
+  0% {
+    transform: translate(50px, 50px) rotate(-120deg) translate(-50px, -50px);
+  }
+  35% {
+    transform: translate(50px, 50px) rotate(120deg) translate(-50px, -50px);
+  }
+  50% {
+    transform: translate(50px, 50px) rotate(120deg) translate(-50px, -50px);
+  }
+  85% {
+    transform: translate(50px, 50px) rotate(-120deg) translate(-50px, -50px);
+  }
+  100% {
+    transform: translate(50px, 50px) rotate(-120deg) translate(-50px, -50px);
+  }
+}
+
+/* スイープに合わせてアークを描画 */
+.meter-arc {
+  stroke-dasharray: 160;
+  stroke-dashoffset: 160;
+  animation: meter-arc-draw 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@keyframes meter-arc-draw {
+  0% {
+    stroke-dashoffset: 160;
+  }
+  35% {
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dashoffset: 0;
+  }
+  85% {
+    stroke-dashoffset: 160;
+  }
+  100% {
+    stroke-dashoffset: 160;
+  }
+}
