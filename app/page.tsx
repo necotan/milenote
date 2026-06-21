@@ -378,7 +378,7 @@ export default function Home() {
                         className={`absolute top-3 right-3 z-10 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border text-[10px] font-bold tracking-wider transition-colors group ${
                           showAllAlerts
                             ? 'bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200'
-                            : 'bg-white text-slate-400 border-slate-100 shadow-sm hover:shadow hover:text-slate-600'
+                            : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'
                         } ${alerts.length <= 4 ? 'lg:hidden' : ''}`}
                       >
                         {showAllAlerts ? (
