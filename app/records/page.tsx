@@ -723,14 +723,14 @@ function RecordsPageInner() {
                   <div className="absolute top-3 right-3 flex items-center gap-1">
                     <button
                       onClick={() => handleStartEdit(record)}
-                      className="p-1.5 rounded-lg text-slate-300 hover:text-blue-500 hover:bg-blue-50 transition-colors"
+                      className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                       title={t("common.edit")}
                     >
                       <Pencil size={14} />
                     </button>
                     <button
                       onClick={() => handleDeleteRecord(record.id)}
-                      className="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+                      className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
                       title={t("common.delete")}
                     >
                       <Trash2 size={14} />

@@ -293,13 +293,13 @@ export default function Home() {
                   {cars.length > 0 && (
                     <div className="flex flex-col gap-1.5 mt-1 shrink-0">
                       <Link href="/records?action=add&category=fuel">
-                        <button className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 transition-colors group">
-                          <Fuel size={12} className="text-slate-400 group-hover:scale-110 transition-transform" />
+                        <button className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-50 text-slate-600 transition-colors group">
+                          <Fuel size={12} className="text-slate-500 group-hover:scale-110 transition-transform" />
                           <span className="text-[10px] font-bold tracking-wider">{t("home.record_fuel")}</span>
                         </button>
                       </Link>
-                      <button onClick={openOdoModal} className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-500 transition-colors group">
-                        <Gauge size={12} className="text-slate-400 group-hover:scale-110 transition-transform" />
+                      <button onClick={openOdoModal} className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 hover:bg-slate-50 text-slate-600 transition-colors group">
+                        <Gauge size={12} className="text-slate-500 group-hover:scale-110 transition-transform" />
                         <span className="text-[10px] font-bold tracking-wider">{t("home.update_odo")}</span>
                       </button>
                     </div>
@@ -377,15 +377,15 @@ export default function Home() {
                         onClick={() => setShowAllAlerts(v => !v)}
                         className={`absolute top-3 right-3 z-10 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border text-[10px] font-bold tracking-wider transition-colors group ${
                           showAllAlerts
-                            ? 'bg-slate-100 text-slate-500 border-slate-200 hover:bg-slate-200'
-                            : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'
+                            ? 'bg-slate-100 text-slate-600 border-slate-300 hover:bg-slate-200'
+                            : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-50'
                         } ${alerts.length <= 4 ? 'lg:hidden' : ''}`}
                       >
                         {showAllAlerts ? (
-                          <><ChevronUp size={11} className="text-slate-400 group-hover:scale-110 transition-transform" /> {t("common.close")}</>
+                          <><ChevronUp size={11} className="text-slate-500 group-hover:scale-110 transition-transform" /> {t("common.close")}</>
                         ) : (
                           <>
-                            <ChevronDown size={11} className="text-slate-400 group-hover:scale-110 transition-transform" />
+                            <ChevronDown size={11} className="text-slate-500 group-hover:scale-110 transition-transform" />
                             <span className="lg:hidden">{t("home.more_items", { count: alerts.length - 1 })}</span>
                             <span className="hidden lg:inline">{t("home.more_items", { count: alerts.length - 4 })}</span>
                           </>

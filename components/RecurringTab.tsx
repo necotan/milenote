@@ -501,13 +501,13 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                   </button>
                   <button
                     onClick={() => handleStartEdit(cost)}
-                    className="p-1.5 rounded-lg text-slate-300 hover:text-blue-500 hover:bg-blue-50 transition-colors"
+                    className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   >
                     <Pencil size={14} />
                   </button>
                   <button
                     onClick={() => handleDelete(cost.id)}
-                    className="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors"
+                    className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
                   >
                     <Trash2 size={14} />
                   </button>

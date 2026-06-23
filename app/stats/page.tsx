@@ -953,7 +953,7 @@ export default function StatsPage() {
                 </CardTitle>
                 <button
                   onClick={toggleMonthlyChart}
-                  className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                  className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   aria-label="Toggle chart type"
                   title="グラフの種類を切り替え"
                 >
@@ -1018,7 +1018,7 @@ export default function StatsPage() {
                 {/* グラフ切り替えボタン */}
                 <button
                   onClick={toggleYearlyChart}
-                  className="p-1.5 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                  className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   aria-label="Toggle chart type"
                   title="グラフの種類を切り替え"
                 >
