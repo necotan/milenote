@@ -490,10 +490,10 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                 <div className="absolute top-3 right-3 flex items-center gap-1 z-10">
                   <button
                     onClick={() => toggleActive(cost.id, cost.is_active)}
-                    className={`p-1.5 rounded-lg transition-colors ${
+                    className={`p-1.5 rounded-lg border transition-colors ${
                       cost.is_active
-                        ? 'text-slate-300 hover:text-slate-500 hover:bg-slate-100'
-                        : 'text-slate-300 hover:text-green-500 hover:bg-green-50'
+                        ? 'border-slate-300 text-slate-500 hover:text-slate-700 hover:border-slate-400 hover:bg-slate-100'
+                        : 'border-slate-300 text-slate-500 hover:text-green-500 hover:border-green-300 hover:bg-green-50'
                     }`}
                     title={cost.is_active ? t("records.pause_recurring") : t("records.resume_recurring")}
                   >
