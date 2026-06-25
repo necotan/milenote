@@ -11,11 +11,24 @@ export type ExportRecord = {
   cars: { name: string; fuel_type: string | null } | null
 }
 
+// 数式インジェクション対策
+// Excel/Googleスプレッドシートはセル先頭が = + - @ タブ 改行 の場合に数式として解釈するため、先頭に ' を付けてテキストとして扱わせる
+function neutralizeFormula(str: string): string {
+  if (/^[=+\-@\t\r\n]/.test(str)) {
+    return `'${str}`
+  }
+  return str
+}
+
 // CSVの1セルをエスケープする
+// 文字列セルは先に数式インジェクションを無害化する。数値セルは集計に使うため無害化しない
 // カンマ・ダブルクォート・改行を含む場合はダブルクォートで囲み、内部の " は "" にする
 function escapeCell(value: string | number | null | undefined): string {
   if (value === null || value === undefined) return ""
-  const str = String(value)
+  let str = String(value)
+  if (typeof value !== "number") {
+    str = neutralizeFormula(str)
+  }
   if (/[",\r\n]/.test(str)) {
     return `"${str.replace(/"/g, '""')}"`
   }
