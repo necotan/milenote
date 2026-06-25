@@ -24,6 +24,7 @@ import {
   MIN_IMAGE_SCALE,
   MAX_IMAGE_SCALE,
 } from "@/utils/carImage"
+import { stripImageMetadata } from "@/utils/stripImageMetadata"
 
 const WISHLIST_GENRE_KEYS = [
   "ホイール", "マフラー・吸排気", "エアロ・外装", "足回り・車高調", "インテリア・内装", "その他"
@@ -399,12 +400,23 @@ export default function GaragePage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
+    // public バケットに保存するため、アップロード前に EXIF情報 を除去する
+    let cleanedFile: File
+    try {
+      cleanedFile = (await stripImageMetadata(file)).file
+    } catch {
+      toast.dismiss(toastId)
+      toast.error(t("garage.upload_failed"))
+      return
+    }
+
     // Storageにアップロード
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${carId}-${Date.now()}.${fileExt}` // 重複しないファイル名を生成
+    const fileName = `${carId}-${Date.now()}.jpg` // メタデータ除去後は常に jpg で重複しないファイル名を生成
     const filePath = `${user.id}/${fileName}` // ユーザーごとのフォルダに保存
 
-    const { error: uploadError } = await supabase.storage.from('cars').upload(filePath, file)
+    const { error: uploadError } = await supabase.storage
+      .from('cars')
+      .upload(filePath, cleanedFile, { contentType: cleanedFile.type })
 
     if (uploadError) {
       toast.dismiss(toastId)
