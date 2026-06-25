@@ -25,6 +25,7 @@ import {
   MAX_IMAGE_SCALE,
 } from "@/utils/carImage"
 import { stripImageMetadata } from "@/utils/stripImageMetadata"
+import { getSafeExternalUrl } from "@/utils/safeUrl"
 
 const WISHLIST_GENRE_KEYS = [
   "ホイール", "マフラー・吸排気", "エアロ・外装", "足回り・車高調", "インテリア・内装", "その他"
@@ -946,6 +947,8 @@ export default function GaragePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {wishlists.map((wish) => {
                 const statusStyle = getStatusStyle(wish.status)
+                // http(s) 以外のスキームは弾き、安全なURLのみリンク化
+                const safeUrl = getSafeExternalUrl(wish.url)
                 return (
                   <Card key={wish.id} className="border border-slate-100 shadow-sm bg-white overflow-hidden relative">
                     {/* 編集・削除ボタン（右上に常時表示） */}
@@ -989,8 +992,8 @@ export default function GaragePage() {
                       </div>
 
                       <div className="flex items-center justify-between mt-2 pt-3 border-t border-slate-50">
-                        {wish.url ? (
-                          <a href={wish.url} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-blue-500 hover:text-blue-700 flex items-center gap-1 transition-colors">
+                        {safeUrl ? (
+                          <a href={safeUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-blue-500 hover:text-blue-700 flex items-center gap-1 transition-colors">
                             <ExternalLink size={12} /> {t("garage.open_link")}
                           </a>
                         ) : (
