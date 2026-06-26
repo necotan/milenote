@@ -374,7 +374,7 @@
     "title": "Privacy Policy",
     "back": "Back",
     "last_updated": "Last updated",
-    "updated_date": "June 11, 2026",
+    "updated_date": "June 26, 2026",
     "intro": "This Privacy Policy (the \"Policy\") describes how \"Milenote\" (the \"Service\"), a vehicle maintenance cost and expense management application provided by {{operator}} (the \"Operator\"), handles users' information.",
     "operator": "necotan",
     "article": "Section {{n}}",
@@ -390,6 +390,10 @@
       "external": {
         "heading": "Use of External Services",
         "body": "The Service uses Supabase as its database and authentication platform, and Vercel as its hosting environment. Users' information is stored and processed on these services. The handling of information on each service is subject to the privacy policy established by its respective provider."
+      },
+      "images": {
+        "heading": "Handling of Vehicle Images",
+        "body": "Vehicle images uploaded by users are stored in public storage. As a result, any third party who knows an image's URL may be able to view that image even without logging in. Metadata such as location information (GPS) within the image is automatically removed at upload, but the subjects captured in the image (such as license plates or surrounding scenery) remain as part of the image itself. Please refrain from uploading images containing information you do not want disclosed to third parties."
       },
       "thirdparty": {
         "heading": "Provision to Third Parties",

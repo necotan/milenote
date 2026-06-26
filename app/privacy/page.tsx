@@ -10,7 +10,7 @@ export default function PrivacyPage() {
   const { t } = useTranslation()
 
   // 条項の見出し、本文をまとめて描画
-  const sections = ["collection", "usage", "external", "thirdparty", "management", "disclosure", "changes"]
+  const sections = ["collection", "usage", "external", "images", "thirdparty", "management", "disclosure", "changes"]
 
   // 導入文中の運営者名をGitHubリンクに置き換えて描画
   const [introBefore, introAfter] = t("privacy.intro").split("{{operator}}")
