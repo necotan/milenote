@@ -523,11 +523,11 @@ export default function GaragePage() {
       </header>
 
       <Tabs defaultValue="mycars" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-6 bg-slate-100 p-1">
-          <TabsTrigger value="mycars" className="flex items-center gap-2 font-bold text-[11px] uppercase tracking-wider">
+        <TabsList className="grid w-full grid-cols-2 mb-6 bg-slate-100 p-[3px]">
+          <TabsTrigger value="mycars" className="flex items-center gap-2 font-bold uppercase tracking-wider">
             <CarFront size={14} /> {t("garage.my_cars")}
           </TabsTrigger>
-          <TabsTrigger value="wishlist" className="flex items-center gap-2 font-bold text-[11px] uppercase tracking-wider">
+          <TabsTrigger value="wishlist" className="flex items-center gap-2 font-bold uppercase tracking-wider">
             <ListTodo size={14} /> {t("garage.wishlist")}
           </TabsTrigger>
         </TabsList>

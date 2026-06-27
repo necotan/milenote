@@ -5,6 +5,7 @@ import type { ReactElement } from "react"
 import { createClient } from "@/utils/supabase"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Label, Legend,
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -184,44 +185,6 @@ function StatRow({
         <span className="text-lg font-bold text-slate-800 tabular-nums tracking-wider">{value}</span>
         {unit && <span className="text-xs font-bold text-slate-400">{unit}</span>}
       </div>
-    </div>
-  )
-}
-
-function ChartTypeToggle({
-  value, onChange, lineLabel, barLabel,
-}: {
-  value: "line" | "bar"
-  onChange: (type: "line" | "bar") => void
-  lineLabel: string
-  barLabel: string
-}) {
-  const options: { type: "line" | "bar"; label: string; Icon: typeof LineChartIcon }[] = [
-    { type: "line", label: lineLabel, Icon: LineChartIcon },
-    { type: "bar", label: barLabel, Icon: BarChart3 },
-  ]
-  return (
-    <div className="inline-flex items-center gap-0.5 rounded-lg border border-slate-200 bg-slate-100 p-0.5">
-      {options.map(({ type, label, Icon }) => {
-        const active = value === type
-        return (
-          <button
-            key={type}
-            type="button"
-            onClick={() => onChange(type)}
-            aria-pressed={active}
-            title={label}
-            className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold transition-colors ${
-              active
-                ? "bg-white text-slate-800 shadow-sm"
-                : "text-slate-400 hover:text-slate-600"
-            }`}
-          >
-            <Icon size={14} />
-            {label}
-          </button>
-        )
-      })}
     </div>
   )
 }
@@ -987,11 +950,13 @@ export default function StatsPage() {
                 <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600">
                   <BarChart3 size={16} /> {t("stats.monthly_trend")}
                 </CardTitle>
-                <ChartTypeToggle
+                <SegmentedToggle
                   value={monthlyChartType}
                   onChange={selectMonthlyChart}
-                  lineLabel={t("stats.chart_line")}
-                  barLabel={t("stats.chart_bar")}
+                  options={[
+                    { value: "line", label: t("stats.chart_line"), icon: <LineChartIcon size={14} /> },
+                    { value: "bar", label: t("stats.chart_bar"), icon: <BarChart3 size={14} /> },
+                  ]}
                 />
               </CardHeader>
               <CardContent className="h-80 p-4 pt-0">
@@ -1050,11 +1015,13 @@ export default function StatsPage() {
                   <CalendarDays size={16} /> {t("stats.yearly_trend")}
                 </CardTitle>
                 {/* グラフ切り替えボタン */}
-                <ChartTypeToggle
+                <SegmentedToggle
                   value={yearlyChartType}
                   onChange={selectYearlyChart}
-                  lineLabel={t("stats.chart_line")}
-                  barLabel={t("stats.chart_bar")}
+                  options={[
+                    { value: "line", label: t("stats.chart_line"), icon: <LineChartIcon size={14} /> },
+                    { value: "bar", label: t("stats.chart_bar"), icon: <BarChart3 size={14} /> },
+                  ]}
                 />
               </div>
             </CardHeader>

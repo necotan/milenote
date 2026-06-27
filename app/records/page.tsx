@@ -15,6 +15,7 @@ import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
 import RecurringTab from "@/components/RecurringTab"
 
 export const CATEGORIES: Record<string, any> = {
@@ -621,20 +622,14 @@ function RecordsPageInner() {
             {!isAdding && !editRecordId && (
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="flex gap-1 bg-slate-100 rounded-lg p-1">
-                    <button
-                      onClick={() => setViewMode("month")}
-                      className={`px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${viewMode === "month" ? "bg-white shadow-sm text-slate-800" : "text-slate-500 hover:text-slate-700"}`}
-                    >
-                      {t("records.view_by_month")}
-                    </button>
-                    <button
-                      onClick={() => setViewMode("all")}
-                      className={`px-3 py-1.5 text-xs font-bold rounded-md transition-colors ${viewMode === "all" ? "bg-white shadow-sm text-slate-800" : "text-slate-500 hover:text-slate-700"}`}
-                    >
-                      {t("records.view_all")}
-                    </button>
-                  </div>
+                  <SegmentedToggle
+                    value={viewMode}
+                    onChange={setViewMode}
+                    options={[
+                      { value: "month", label: t("records.view_by_month") },
+                      { value: "all", label: t("records.view_all") },
+                    ]}
+                  />
                   <Button onClick={() => setIsAdding(true)} size="sm" className="font-bold">
                     <Plus className="mr-1 h-4 w-4" /> {t("records.add_record")}
                   </Button>
