@@ -955,7 +955,7 @@ export default function StatsPage() {
                   onClick={toggleMonthlyChart}
                   className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   aria-label="Toggle chart type"
-                  title="グラフの種類を切り替え"
+                  title={t("stats.toggle_chart_type")}
                 >
                   {monthlyChartType === "line" ? <BarChart3 size={16} /> : <LineChartIcon size={16} />}
                 </button>
@@ -1020,7 +1020,7 @@ export default function StatsPage() {
                   onClick={toggleYearlyChart}
                   className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   aria-label="Toggle chart type"
-                  title="グラフの種類を切り替え"
+                  title={t("stats.toggle_chart_type")}
                 >
                   {yearlyChartType === "line" ? <BarChart3 size={16} /> : <LineChartIcon size={16} />}
                 </button>

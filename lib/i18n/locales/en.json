@@ -211,6 +211,7 @@
     "analysis": "Analysis",
     "category_breakdown": "By Category",
     "monthly_trend": "Monthly Trend",
+    "toggle_chart_type": "Toggle chart type",
     "total": "Total",
     "amount": "Amount",
     "expenditure": "Spent",
