@@ -188,6 +188,44 @@ function StatRow({
   )
 }
 
+function ChartTypeToggle({
+  value, onChange, lineLabel, barLabel,
+}: {
+  value: "line" | "bar"
+  onChange: (type: "line" | "bar") => void
+  lineLabel: string
+  barLabel: string
+}) {
+  const options: { type: "line" | "bar"; label: string; Icon: typeof LineChartIcon }[] = [
+    { type: "line", label: lineLabel, Icon: LineChartIcon },
+    { type: "bar", label: barLabel, Icon: BarChart3 },
+  ]
+  return (
+    <div className="inline-flex items-center gap-0.5 rounded-lg border border-slate-200 bg-slate-100 p-0.5">
+      {options.map(({ type, label, Icon }) => {
+        const active = value === type
+        return (
+          <button
+            key={type}
+            type="button"
+            onClick={() => onChange(type)}
+            aria-pressed={active}
+            title={label}
+            className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold transition-colors ${
+              active
+                ? "bg-white text-slate-800 shadow-sm"
+                : "text-slate-400 hover:text-slate-600"
+            }`}
+          >
+            <Icon size={14} />
+            {label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 export default function StatsPage() {
   const [records, setRecords] = useState<Record_[]>([])
   const [carFuelTypes, setCarFuelTypes] = useState<Map<string, string>>(new Map())
@@ -269,16 +307,14 @@ export default function StatsPage() {
   })
 
   // グラフ切り替え処理
-  const toggleMonthlyChart = () => {
-    const nextType = monthlyChartType === "line" ? "bar" : "line"
-    setMonthlyChartType(nextType)
-    localStorage.setItem("milenote_monthly_chart", nextType)
+  const selectMonthlyChart = (type: "line" | "bar") => {
+    setMonthlyChartType(type)
+    localStorage.setItem("milenote_monthly_chart", type)
   }
 
-  const toggleYearlyChart = () => {
-    const nextType = yearlyChartType === "line" ? "bar" : "line"
-    setYearlyChartType(nextType)
-    localStorage.setItem("milenote_yearly_chart", nextType)
+  const selectYearlyChart = (type: "line" | "bar") => {
+    setYearlyChartType(type)
+    localStorage.setItem("milenote_yearly_chart", type)
   }
 
   // データ集計処理
@@ -951,14 +987,12 @@ export default function StatsPage() {
                 <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600">
                   <BarChart3 size={16} /> {t("stats.monthly_trend")}
                 </CardTitle>
-                <button
-                  onClick={toggleMonthlyChart}
-                  className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
-                  aria-label="Toggle chart type"
-                  title={t("stats.toggle_chart_type")}
-                >
-                  {monthlyChartType === "line" ? <BarChart3 size={16} /> : <LineChartIcon size={16} />}
-                </button>
+                <ChartTypeToggle
+                  value={monthlyChartType}
+                  onChange={selectMonthlyChart}
+                  lineLabel={t("stats.chart_line")}
+                  barLabel={t("stats.chart_bar")}
+                />
               </CardHeader>
               <CardContent className="h-80 p-4 pt-0">
                 {records.length === 0 ? (
@@ -1016,14 +1050,12 @@ export default function StatsPage() {
                   <CalendarDays size={16} /> {t("stats.yearly_trend")}
                 </CardTitle>
                 {/* グラフ切り替えボタン */}
-                <button
-                  onClick={toggleYearlyChart}
-                  className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
-                  aria-label="Toggle chart type"
-                  title={t("stats.toggle_chart_type")}
-                >
-                  {yearlyChartType === "line" ? <BarChart3 size={16} /> : <LineChartIcon size={16} />}
-                </button>
+                <ChartTypeToggle
+                  value={yearlyChartType}
+                  onChange={selectYearlyChart}
+                  lineLabel={t("stats.chart_line")}
+                  barLabel={t("stats.chart_bar")}
+                />
               </div>
             </CardHeader>
             <CardContent className="px-2 pb-4 pt-0 lg:flex lg:items-center lg:gap-10 lg:px-6">
