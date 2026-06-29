@@ -433,7 +433,7 @@ export default function Home() {
                         maxHeight: showAllAlerts ? `${alerts.length * 200}px` : '0px'
                       }}
                     >
-                      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4 pt-2">
+                      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
                         {alerts.slice(1).map((alert, i) => {
                           const originalIndex = i + 1;
                           const isPcAlwaysVisible = originalIndex < 4;
