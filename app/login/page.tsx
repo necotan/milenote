@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useTranslation } from "@/lib/i18n"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff, X } from "lucide-react"
 import Footer from "@/components/ui/Footer"
 
 export default function LoginPage() {
@@ -15,6 +15,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [errorPopup, setErrorPopup] = useState<string | null>(null)
   const router = useRouter()
   const supabase = createClient()
   const { t } = useTranslation()
@@ -24,13 +25,38 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) alert(error.message)
+    // 生のエラー文言は出さず、汎用メッセージを表示
+    if (error) setErrorPopup(t("login.login_failed"))
     else router.push("/")
     setLoading(false)
   }
 
   return (
     <div className="relative flex min-h-screen items-center justify-center p-8 bg-white">
+      {/* エラーポップアップ */}
+      {errorPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
+            <div className="flex items-start justify-between mb-3">
+              <h3 className="text-sm font-bold text-slate-800">{t("login.error_title")}</h3>
+              <button
+                onClick={() => setErrorPopup(null)}
+                className="text-slate-400 hover:text-slate-600 transition-colors -mt-1 -mr-1"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <p className="text-sm text-slate-600 leading-relaxed">{errorPopup}</p>
+            <Button
+              className="w-full mt-4 font-bold"
+              onClick={() => setErrorPopup(null)}
+            >
+              OK
+            </Button>
+          </div>
+        </div>
+      )}
+
       <div className="w-full max-w-sm">
         <div className="space-y-1 mb-6">
           <h1 className="text-2xl font-bold text-center">Milenote</h1>

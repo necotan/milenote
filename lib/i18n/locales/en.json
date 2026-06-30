@@ -309,7 +309,9 @@
     "processing": "Processing...",
     "login": "Log In",
     "signup": "Create Account",
-    "confirmation_sent": "Confirmation email sent! Click the link in the email to complete registration."
+    "confirmation_sent": "Confirmation email sent! Click the link in the email to complete registration.",
+    "error_title": "Login Error",
+    "login_failed": "Incorrect email or password."
   },
   "signup": {
     "subtitle": "Create a new account",
