@@ -266,9 +266,9 @@ export default function Home() {
 
                 {/* トップ：今月の費用 + 給油ボタン */}
                 <div className="p-4 flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-[10px] font-bold text-slate-400 flex items-center gap-1 uppercase tracking-widest mb-1">
-                      <Banknote size={10} /> {t("home.this_month_cost")}
+                  <div className="-mt-1">
+                    <p className="text-sm font-bold text-slate-600 flex items-center gap-1 uppercase tracking-widest mb-1">
+                      <Banknote size={14} /> {t("home.this_month_cost")}
                     </p>
                     <p className="text-2xl font-black text-slate-800 tracking-wider">¥{thisMonthCost.toLocaleString()}</p>
                     <div className="flex items-center gap-1.5 mt-1">
