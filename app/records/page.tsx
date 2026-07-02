@@ -17,6 +17,7 @@ import { usePageLoadingGate } from "@/lib/loadingGate"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
 import RecurringTab from "@/components/RecurringTab"
+import { SUB_CATEGORIES, toSubCategorySlug } from "@/lib/subcategories"
 
 export const CATEGORIES: Record<string, any> = {
   fuel: { icon: Fuel, color: "text-blue-500", bg: "bg-blue-50" },
@@ -29,36 +30,6 @@ export const CATEGORIES: Record<string, any> = {
   tax: { icon: Receipt, color: "text-red-500", bg: "bg-red-50" },
   insurance: { icon: Shield, color: "text-green-500", bg: "bg-green-50" },
   other: { icon: FileText, color: "text-slate-500", bg: "bg-slate-50" },
-}
-
-export const SUB_CATEGORIES: Record<string, string[]> = {
-  maintenance:[
-    "オイル交換", "オイルフィルター交換", "ミッションオイル交換", "タイヤ交換", "タイヤローテーション",
-    "バッテリー交換", "ブレーキパッド交換", "クーラント（冷却水）交換",
-    "スマートキー電池交換", "ワイパーゴム交換", "車検・法定点検", "洗車・コーティング", "その他"
-  ],
-  inspection: [
-    "法定12ヶ月点検", "法定24ヶ月点検", "定期点検", "その他"
-  ],
-  repair:[
-    "故障修理", "板金・塗装", "事故対応・レッカー", "リコール対応", "その他"
-  ],
-  custom:[
-    "外装・エアロ", "内装・インテリア", "吸排気系（マフラー等）",
-    "足回り（ホイール・車高調等）", "電装系（オーディオ等）", "その他"
-  ],
-  carwash:[
-    "洗車機", "手洗い洗車", "コーティング", "室内クリーニング", "洗車用品", "その他"
-  ],
-  insurance: [
-    "自賠責保険", "任意保険", "その他"
-  ],
-  tax: [
-    "自動車税", "軽自動車税", "重量税", "その他"
-  ],
-  other: [
-    "駐車場・コインパーキング", "ローン・リース代", "カー用品・小物", "ロードサービス", "その他"
-  ]
 }
 
 // 給油フォーム内の自動計算ハンドラー（コンポーネント外に定義）
@@ -495,7 +466,7 @@ function RecordsPageInner() {
     setIsAdding(false)
     setCarId(record.car_id)
     setCategory(record.category)
-    setSubCategory(record.sub_category || "")
+    setSubCategory(toSubCategorySlug(record.sub_category) || "")
     setAmount(String(record.amount))
     setOdoAtRecord(record.odo_at_record ? String(record.odo_at_record) : "")
     const liters = record.fuel_amount ? parseFloat(record.fuel_amount) : null
@@ -745,7 +716,7 @@ function RecordsPageInner() {
                         <span className="bg-slate-100 px-2 py-1 rounded-md">{t(`categories.${record.category}`)}</span>
                         {record.sub_category && (
                           <span className="border border-slate-200 text-slate-600 px-2 py-1 rounded-md">
-                            {t(`subcategories.${record.sub_category}`)}
+                            {t(`subcategories.${toSubCategorySlug(record.sub_category)}`)}
                           </span>
                         )}
                       </div>

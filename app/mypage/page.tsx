@@ -16,18 +16,19 @@ import { usePageLoadingGate } from "@/lib/loadingGate"
 import { recordsToCsv, downloadCsv, buildExportFilename } from "@/lib/csvExport"
 import type { ExportRecord } from "@/lib/csvExport"
 import Footer from "@/components/ui/Footer"
+import { normalizeMaintSettingsKeys } from "@/lib/subcategories"
 
 const DEFAULT_MAINT_SETTINGS = {
-  "オイル交換": { km: 5000, months: 6 },
-  "オイルフィルター交換": { km: 10000, months: 12 },
-  "ミッションオイル交換": { km: 40000, months: 24 },
-  "タイヤローテーション": { km: 5000, months: 6 },
-  "バッテリー交換": { km: 30000, months: 24 },
-  "ブレーキパッド交換": { km: 50000, months: 48 },
-  "クーラント（冷却水）交換": { km: 40000, months: 24 },
-  "法定12ヶ月点検": { km: 0, months: 12, months_only: true },
-  "法定24ヶ月点検": { km: 0, months: 24, months_only: true },
-  "定期点検": { km: 0, months: 6, months_only: true },
+  "oil_change": { km: 5000, months: 6 },
+  "oil_filter_change": { km: 10000, months: 12 },
+  "transmission_oil_change": { km: 40000, months: 24 },
+  "tire_rotation": { km: 5000, months: 6 },
+  "battery_change": { km: 30000, months: 24 },
+  "brake_pad_change": { km: 50000, months: 48 },
+  "coolant_change": { km: 40000, months: 24 },
+  "inspection_12m": { km: 0, months: 12, months_only: true },
+  "inspection_24m": { km: 0, months: 24, months_only: true },
+  "periodic_inspection": { km: 0, months: 6, months_only: true },
 }
 
 export default function MyPage() {
@@ -57,7 +58,7 @@ export default function MyPage() {
           setDisplayName(data.display_name || "")
           // デフォルトをベースにDBの保存値を上書きマージ（未保存の新項目はデフォルト値で表示）
           if (data.maint_settings) {
-            setMaintSettings({ ...DEFAULT_MAINT_SETTINGS, ...data.maint_settings })
+            setMaintSettings({ ...DEFAULT_MAINT_SETTINGS, ...normalizeMaintSettingsKeys(data.maint_settings) })
           }
         }
       }

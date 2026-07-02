@@ -11,7 +11,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Plus, X, Pencil, Trash2, Pause, Play, ChevronDown, ChevronUp, Info, RepeatIcon } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
-import { CATEGORIES, SUB_CATEGORIES } from "@/app/records/page"
+import { CATEGORIES } from "@/app/records/page"
+import { SUB_CATEGORIES, toSubCategorySlug } from "@/lib/subcategories"
 
 // 頻度の選択肢
 const FREQUENCY_OPTIONS = [
@@ -395,7 +396,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
     setIsAdding(false)
     setCarId(cost.car_id)
     setCategory(cost.category)
-    setSubCategory(cost.sub_category || "")
+    setSubCategory(toSubCategorySlug(cost.sub_category) || "")
     setAmount(String(cost.amount))
     setFrequency(cost.frequency)
     setNextBillingDate(cost.next_billing_date)
@@ -533,7 +534,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                       </span>
                       {cost.sub_category && (
                         <span className="text-[10px] font-bold border border-slate-200 text-slate-600 px-2 py-1 rounded-md whitespace-nowrap">
-                          {t(`subcategories.${cost.sub_category}`)}
+                          {t(`subcategories.${toSubCategorySlug(cost.sub_category)}`)}
                         </span>
                       )}
                       <StatusBadge isActive={cost.is_active} />

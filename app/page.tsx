@@ -12,23 +12,24 @@ import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { getCarImageStyle } from "@/utils/carImage"
+import { toSubCategorySlug, normalizeMaintSettingsKeys } from "@/lib/subcategories"
 
 
 const MAINT_STYLE_CONFIG: Record<string, { icon: any; color: string }> = {
-  "オイル交換": { icon: Droplets, color: "text-orange-500" },
-  "オイルフィルター交換": { icon: RefreshCw, color: "text-blue-500" },
-  "タイヤローテーション": { icon: RefreshCw, color: "text-green-500" },
-  "バッテリー交換": { icon: RefreshCw, color: "text-red-500" },
+  "oil_change": { icon: Droplets, color: "text-orange-500" },
+  "oil_filter_change": { icon: RefreshCw, color: "text-blue-500" },
+  "tire_rotation": { icon: RefreshCw, color: "text-green-500" },
+  "battery_change": { icon: RefreshCw, color: "text-red-500" },
 }
 
 const DEFAULT_MAINT_SETTINGS = {
-  "オイル交換": { km: 5000, months: 6 },
-  "オイルフィルター交換": { km: 10000, months: 12 },
-  "タイヤローテーション": { km: 5000, months: 6 },
-  "バッテリー交換": { km: 30000, months: 24 },
-  "法定12ヶ月点検": { km: 0, months: 12, months_only: true },
-  "法定24ヶ月点検": { km: 0, months: 24, months_only: true },
-  "定期点検": { km: 0, months: 6, months_only: true },
+  "oil_change": { km: 5000, months: 6 },
+  "oil_filter_change": { km: 10000, months: 12 },
+  "tire_rotation": { km: 5000, months: 6 },
+  "battery_change": { km: 30000, months: 24 },
+  "inspection_12m": { km: 0, months: 12, months_only: true },
+  "inspection_24m": { km: 0, months: 24, months_only: true },
+  "periodic_inspection": { km: 0, months: 6, months_only: true },
 }
 
 const getGreeting = (t: (key: string) => string) => {
@@ -62,7 +63,10 @@ export default function Home() {
 
       if (user) {
         const { data: userData } = await supabase.from("users").select("maint_settings, display_name").eq("id", user.id).single()
-        const maintSettings = userData?.maint_settings || DEFAULT_MAINT_SETTINGS
+        type MaintSetting = { km: number; months: number; months_only?: boolean; enabled?: boolean }
+        const normalizedMaintSettings = normalizeMaintSettingsKeys<MaintSetting>(userData?.maint_settings)
+        const maintSettings: Record<string, MaintSetting> =
+          Object.keys(normalizedMaintSettings).length > 0 ? normalizedMaintSettings : DEFAULT_MAINT_SETTINGS
         if (userData?.display_name) setDisplayName(userData.display_name)
 
         const { data: carsData } = await supabase.from("cars").select("*").eq("user_id", user.id).eq("status", "active").eq("is_display_home", true)
@@ -82,7 +86,7 @@ export default function Home() {
               if (setting.enabled === false) return
               const isMonthsOnly = !!setting.months_only
               const style = MAINT_STYLE_CONFIG[maintName] || { icon: Wrench, color: "text-slate-500" }
-              const maintRecords = recordsData.filter(r => r.car_id === car.id && r.sub_category === maintName).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+              const maintRecords = recordsData.filter(r => r.car_id === car.id && toSubCategorySlug(r.sub_category) === maintName).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
               if (maintRecords.length === 0) return
 
