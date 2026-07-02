@@ -12,7 +12,6 @@ import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { getCarImageStyle } from "@/utils/carImage"
-import { toSubCategorySlug, normalizeMaintSettingsKeys } from "@/lib/subcategories"
 
 
 const MAINT_STYLE_CONFIG: Record<string, { icon: any; color: string }> = {
@@ -64,9 +63,8 @@ export default function Home() {
       if (user) {
         const { data: userData } = await supabase.from("users").select("maint_settings, display_name").eq("id", user.id).single()
         type MaintSetting = { km: number; months: number; months_only?: boolean; enabled?: boolean }
-        const normalizedMaintSettings = normalizeMaintSettingsKeys<MaintSetting>(userData?.maint_settings)
         const maintSettings: Record<string, MaintSetting> =
-          Object.keys(normalizedMaintSettings).length > 0 ? normalizedMaintSettings : DEFAULT_MAINT_SETTINGS
+          userData?.maint_settings && Object.keys(userData.maint_settings).length > 0 ? userData.maint_settings : DEFAULT_MAINT_SETTINGS
         if (userData?.display_name) setDisplayName(userData.display_name)
 
         const { data: carsData } = await supabase.from("cars").select("*").eq("user_id", user.id).eq("status", "active").eq("is_display_home", true)
@@ -86,7 +84,7 @@ export default function Home() {
               if (setting.enabled === false) return
               const isMonthsOnly = !!setting.months_only
               const style = MAINT_STYLE_CONFIG[maintName] || { icon: Wrench, color: "text-slate-500" }
-              const maintRecords = recordsData.filter(r => r.car_id === car.id && toSubCategorySlug(r.sub_category) === maintName).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+              const maintRecords = recordsData.filter(r => r.car_id === car.id && r.sub_category === maintName).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
               if (maintRecords.length === 0) return
 

@@ -1,5 +1,3 @@
-import { toSubCategorySlug } from "@/lib/subcategories"
-
 type TFunc = (key: string, params?: Record<string, string | number>) => string
 
 export type ExportRecord = {
@@ -59,7 +57,7 @@ export function recordsToCsv(records: ExportRecord[], t: TFunc): string {
       r.date.replace(/-/g, "/"),
       r.cars?.name ?? "",
       t(`categories.${r.category}`),
-      r.sub_category ? t(`subcategories.${toSubCategorySlug(r.sub_category)}`) : "",
+      r.sub_category ? t(`subcategories.${r.sub_category}`) : "",
       r.amount,
       r.odo_at_record ?? "",
       fuel,

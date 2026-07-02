@@ -16,7 +16,6 @@ import { usePageLoadingGate } from "@/lib/loadingGate"
 import { recordsToCsv, downloadCsv, buildExportFilename } from "@/lib/csvExport"
 import type { ExportRecord } from "@/lib/csvExport"
 import Footer from "@/components/ui/Footer"
-import { normalizeMaintSettingsKeys } from "@/lib/subcategories"
 
 const DEFAULT_MAINT_SETTINGS = {
   "oil_change": { km: 5000, months: 6 },
@@ -58,7 +57,7 @@ export default function MyPage() {
           setDisplayName(data.display_name || "")
           // デフォルトをベースにDBの保存値を上書きマージ（未保存の新項目はデフォルト値で表示）
           if (data.maint_settings) {
-            setMaintSettings({ ...DEFAULT_MAINT_SETTINGS, ...normalizeMaintSettingsKeys(data.maint_settings) })
+            setMaintSettings({ ...DEFAULT_MAINT_SETTINGS, ...data.maint_settings })
           }
         }
       }

@@ -17,7 +17,7 @@ import { usePageLoadingGate } from "@/lib/loadingGate"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
 import RecurringTab from "@/components/RecurringTab"
-import { SUB_CATEGORIES, toSubCategorySlug } from "@/lib/subcategories"
+import { SUB_CATEGORIES } from "@/lib/subcategories"
 
 export const CATEGORIES: Record<string, any> = {
   fuel: { icon: Fuel, color: "text-blue-500", bg: "bg-blue-50" },
@@ -466,7 +466,7 @@ function RecordsPageInner() {
     setIsAdding(false)
     setCarId(record.car_id)
     setCategory(record.category)
-    setSubCategory(toSubCategorySlug(record.sub_category) || "")
+    setSubCategory(record.sub_category || "")
     setAmount(String(record.amount))
     setOdoAtRecord(record.odo_at_record ? String(record.odo_at_record) : "")
     const liters = record.fuel_amount ? parseFloat(record.fuel_amount) : null
@@ -716,7 +716,7 @@ function RecordsPageInner() {
                         <span className="bg-slate-100 px-2 py-1 rounded-md">{t(`categories.${record.category}`)}</span>
                         {record.sub_category && (
                           <span className="border border-slate-200 text-slate-600 px-2 py-1 rounded-md">
-                            {t(`subcategories.${toSubCategorySlug(record.sub_category)}`)}
+                            {t(`subcategories.${record.sub_category}`)}
                           </span>
                         )}
                       </div>
