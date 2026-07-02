@@ -11,6 +11,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   BarChart, Bar
 } from "recharts"
+import type { TooltipContentProps } from "recharts"
 import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, RotateCcw, LineChart as LineChartIcon, Fuel, Hash, Receipt, TrendingUp, Leaf, Droplet, Zap, BatteryCharging } from "lucide-react"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
@@ -513,10 +514,6 @@ export default function StatsPage() {
     }
     return `${year}年${monthNum}月`
   }, [locale])
-  const categoryBarTooltipFormatter = useCallback((value: any, name: any): [string, string] => [
-    `¥${Number(value).toLocaleString()}`,
-    t(`categories.${name}`),
-  ], [t])
   // 凡例ラベルの整形（カテゴリキーを翻訳して表示）
   const renderCategoryLegendLabel = useCallback((value: string) => (
     <span className="text-xs font-bold text-slate-600">{t(`categories.${value}`)}</span>
@@ -555,6 +552,46 @@ export default function StatsPage() {
       return GridLegend
     },
     [],
+  )
+  // 積み上げ棒グラフの詳細ポップアップ
+  // 0円の項目を除外して高さを抑える
+  const renderStackedBarTooltip = useCallback(
+    (labelFormatter: (label: string) => string) => {
+      const StackedBarTooltip = ({ active, payload, label }: TooltipContentProps) => {
+        if (!active || !payload) return null
+        const items = payload.filter((entry) => Number(entry.value) > 0)
+        return (
+          <div
+            style={{
+              background: '#fff',
+              borderRadius: 8,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              padding: '10px 14px',
+            }}
+          >
+            <p className="mb-1.5 text-xs font-bold text-slate-500">{labelFormatter(String(label))}</p>
+            {items.length === 0 ? (
+              <p className="text-xs text-slate-400">{t("stats.no_data")}</p>
+            ) : (
+              <ul className="flex flex-col gap-1">
+                {items.map((entry, index) => (
+                  <li key={`tooltip-item-${index}`} className="flex items-center gap-1.5 text-xs">
+                    <span
+                      className="inline-block shrink-0 rounded-full"
+                      style={{ width: 6, height: 6, backgroundColor: entry.color }}
+                    />
+                    <span className="text-slate-500">{t(`categories.${String(entry.dataKey)}`)}</span>
+                    <span className="ml-auto font-bold text-slate-700">¥{Number(entry.value).toLocaleString()}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )
+      }
+      return StackedBarTooltip
+    },
+    [t],
   )
   // 折れ線グラフのドット描画（線の進行に合わせて各点をフェードイン）
   // dot prop の参照が毎レンダーで変わると Recharts が内部で要素を作り直しアニメーションが再生されるため、useMemo で安定化する
@@ -986,7 +1023,7 @@ export default function StatsPage() {
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                         <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={monthFormatter} />
                         <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} tickFormatter={numberTickFormatter} />
-                        <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={categoryBarTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
+                        <Tooltip content={renderStackedBarTooltip(monthlyTooltipLabelFormatter)} />
                         <Legend verticalAlign="bottom" content={renderGridLegend(renderCategoryLegendLabel)} />
                         {monthlyCategoriesPresent.map((cat) => (
                           <Bar
@@ -1046,7 +1083,7 @@ export default function StatsPage() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                       <XAxis dataKey="year" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={yearFormatter} />
                       <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} tickFormatter={numberTickFormatter} />
-                      <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={categoryBarTooltipFormatter} labelFormatter={yearTooltipLabelFormatter} />
+                      <Tooltip content={renderStackedBarTooltip(yearTooltipLabelFormatter)} />
                       <Legend verticalAlign="bottom" content={renderGridLegend(renderCategoryLegendLabel)} />
                       {yearlyCategoriesPresent.map((cat) => (
                         <Bar
