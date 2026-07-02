@@ -47,4 +47,5 @@ supabase/.branches
 # AI conversation history
 /docs
 /.ai
+/.claude
 CLAUDE.md
