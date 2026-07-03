@@ -15,7 +15,6 @@ import type { TooltipContentProps } from "recharts"
 import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, RotateCcw, LineChart as LineChartIcon, Fuel, Hash, Receipt, TrendingUp, Leaf, Droplet, Zap, BatteryCharging } from "lucide-react"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
-import { toFuelTypeSlug } from "@/lib/fuelTypes"
 
 const CATEGORY_MAP_COLORFUL: Record<string, { color: string }> = {
   fuel: { color: "#3b82f6" },
@@ -243,7 +242,7 @@ export default function StatsPage() {
           setTotalOdo(maxOdo)
           const fuelTypeMap = new Map<string, string>()
           carsData.forEach((c: { id: string; fuel_type: string | null }) => {
-            if (c.fuel_type) fuelTypeMap.set(c.id, toFuelTypeSlug(c.fuel_type))
+            if (c.fuel_type) fuelTypeMap.set(c.id, c.fuel_type)
           })
           setCarFuelTypes(fuelTypeMap)
         }

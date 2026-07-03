@@ -12,7 +12,6 @@ import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { getCarImageStyle } from "@/utils/carImage"
-import { toFuelTypeSlug } from "@/lib/fuelTypes"
 
 
 const MAINT_STYLE_CONFIG: Record<string, { icon: any; color: string }> = {
@@ -326,7 +325,7 @@ export default function Home() {
                           return (
                             <div key={r.id} className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <span className="text-[11px] font-bold text-slate-500">{r.category === "fuel" && toFuelTypeSlug(r.cars?.fuel_type) === "ev" ? t("home.record_charge_label") : t(`categories.${r.category}`)}</span>
+                                <span className="text-[11px] font-bold text-slate-500">{r.category === "fuel" && r.cars?.fuel_type === "ev" ? t("home.record_charge_label") : t(`categories.${r.category}`)}</span>
                                 <span className="text-[10px] text-slate-400">{r.date.replace(/-/g, '/')}</span>
                               </div>
                               <span className="text-[12px] font-black text-slate-700">¥{r.amount.toLocaleString()}</span>

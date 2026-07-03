@@ -483,11 +483,6 @@
     "periodic_inspection": "Periodic Inspection"
   },
   "fuel_types": {
-    "レギュラー": "Regular",
-    "ハイオク": "Premium",
-    "軽油": "Diesel",
-    "EV": "EV (Electric)",
-    "その他": "Other",
     "regular": "Regular",
     "premium": "Premium",
     "diesel": "Diesel",

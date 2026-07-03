@@ -18,7 +18,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
 import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES } from "@/lib/subcategories"
-import { toFuelTypeSlug } from "@/lib/fuelTypes"
 
 export const CATEGORIES: Record<string, any> = {
   fuel: { icon: Fuel, color: "text-blue-500", bg: "bg-blue-50" },
@@ -87,7 +86,7 @@ const RecordForm = ({
   const { t } = useTranslation()
   // 選択中の車がEVのとき、給油フォームを充電(kWh建て)表示に切り替える
   const selectedCar = cars.find((c: { id: string; fuel_type?: string }) => c.id === carId)
-  const isEv = toFuelTypeSlug(selectedCar?.fuel_type) === "ev"
+  const isEv = selectedCar?.fuel_type === "ev"
   return (
   <Card className="border-none shadow-lg bg-white">
     <CardContent className="p-6 relative">
@@ -735,7 +734,7 @@ function RecordsPageInner() {
 
                       {record.category === "fuel" && record.fuel_amount && (
                         <p className="text-xs text-slate-500 mb-2">
-                          {toFuelTypeSlug(record.cars?.fuel_type) === "ev" ? t("records.charge_amount_label") : t("records.fuel_amount_label")} <span className="font-bold text-slate-700">{record.fuel_amount} {toFuelTypeSlug(record.cars?.fuel_type) === "ev" ? t("records.unit_kwh") : t("records.unit_l")}</span>
+                          {record.cars?.fuel_type === "ev" ? t("records.charge_amount_label") : t("records.fuel_amount_label")} <span className="font-bold text-slate-700">{record.fuel_amount} {record.cars?.fuel_type === "ev" ? t("records.unit_kwh") : t("records.unit_l")}</span>
                         </p>
                       )}
                       {record.memo && (

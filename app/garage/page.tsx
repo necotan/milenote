@@ -27,7 +27,7 @@ import {
 import { stripImageMetadata } from "@/utils/stripImageMetadata"
 import { getSafeExternalUrl } from "@/utils/safeUrl"
 import { WISHLIST_GENRES } from "@/lib/wishlistGenres"
-import { FUEL_TYPES, toFuelTypeSlug } from "@/lib/fuelTypes"
+import { FUEL_TYPES } from "@/lib/fuelTypes"
 
 const CAR_STATUS_KEYS = ["pending", "active", "archived", "archived_excluded"] as const
 type CarStatus = typeof CAR_STATUS_KEYS[number]
@@ -195,7 +195,7 @@ export default function GaragePage() {
     setYear(car.year ? String(car.year) : "")
     setGrade(car.grade || "")
     setColor(car.color || "")
-    setFuelType(toFuelTypeSlug(car.fuel_type) || "regular")
+    setFuelType(car.fuel_type || "regular")
     setCurrentOdo(car.current_odo ? String(car.current_odo) : "")
     setFirstRegistrationDate(car.first_registration_date ? car.first_registration_date.substring(0, 7) : "")
     setPurchaseDate(car.purchase_date || "")
