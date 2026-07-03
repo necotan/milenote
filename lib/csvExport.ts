@@ -1,3 +1,5 @@
+import { toFuelTypeSlug } from "@/lib/fuelTypes"
+
 type TFunc = (key: string, params?: Record<string, string | number>) => string
 
 export type ExportRecord = {
@@ -49,7 +51,7 @@ export function recordsToCsv(records: ExportRecord[], t: TFunc): string {
   ]
 
   const rows = records.map((r) => {
-    const isEv = r.cars?.fuel_type === "EV"
+    const isEv = toFuelTypeSlug(r.cars?.fuel_type) === "ev"
     const fuel = r.fuel_amount != null
       ? `${r.fuel_amount}${isEv ? t("records.unit_kwh") : t("records.unit_l")}`
       : ""

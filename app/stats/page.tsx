@@ -15,6 +15,7 @@ import type { TooltipContentProps } from "recharts"
 import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, RotateCcw, LineChart as LineChartIcon, Fuel, Hash, Receipt, TrendingUp, Leaf, Droplet, Zap, BatteryCharging } from "lucide-react"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
+import { toFuelTypeSlug } from "@/lib/fuelTypes"
 
 const CATEGORY_MAP_COLORFUL: Record<string, { color: string }> = {
   fuel: { color: "#3b82f6" },
@@ -63,11 +64,11 @@ type Record_ = {
 // 燃料種別ごとのCO₂排出係数 (kg-CO₂/L)
 // EVは走行時排出ゼロ、その他/未設定はガソリン相当として扱う
 const CO2_COEFFICIENT: Record<string, number> = {
-  "レギュラー": 2.32,
-  "ハイオク": 2.32,
-  "軽油": 2.62,
-  "EV": 0,
-  "その他": 2.32,
+  "regular": 2.32,
+  "premium": 2.32,
+  "diesel": 2.62,
+  "ev": 0,
+  "other": 2.32,
 }
 const CO2_COEFFICIENT_DEFAULT = 2.32
 
@@ -242,7 +243,7 @@ export default function StatsPage() {
           setTotalOdo(maxOdo)
           const fuelTypeMap = new Map<string, string>()
           carsData.forEach((c: { id: string; fuel_type: string | null }) => {
-            if (c.fuel_type) fuelTypeMap.set(c.id, c.fuel_type)
+            if (c.fuel_type) fuelTypeMap.set(c.id, toFuelTypeSlug(c.fuel_type))
           })
           setCarFuelTypes(fuelTypeMap)
         }
@@ -447,7 +448,7 @@ export default function StatsPage() {
   const remainingMoonDist = Math.max(distanceToMoon - totalOdo, 0)
 
   // 給油系統計（EV車の充電記録は別集計するためここでは除外）
-  const isEvRecord = (r: Record_) => (r.car_id ? carFuelTypes.get(r.car_id) : null) === "EV"
+  const isEvRecord = (r: Record_) => (r.car_id ? carFuelTypes.get(r.car_id) : null) === "ev"
   const fuelRecords = records.filter(r => r.category === "fuel" && !isEvRecord(r))
   const totalFuelAmount = fuelRecords.reduce((sum, r) => {
     const liters = r.fuel_amount ? parseFloat(String(r.fuel_amount)) : 0

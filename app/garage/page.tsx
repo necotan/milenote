@@ -27,8 +27,7 @@ import {
 import { stripImageMetadata } from "@/utils/stripImageMetadata"
 import { getSafeExternalUrl } from "@/utils/safeUrl"
 import { WISHLIST_GENRES } from "@/lib/wishlistGenres"
-
-const FUEL_TYPE_KEYS = ["レギュラー", "ハイオク", "軽油", "EV", "その他"]
+import { FUEL_TYPES, toFuelTypeSlug } from "@/lib/fuelTypes"
 
 const CAR_STATUS_KEYS = ["pending", "active", "archived", "archived_excluded"] as const
 type CarStatus = typeof CAR_STATUS_KEYS[number]
@@ -82,7 +81,7 @@ export default function GaragePage() {
   const [year, setYear] = useState("")
   const [grade, setGrade] = useState("")
   const [color, setColor] = useState("")
-  const [fuelType, setFuelType] = useState("レギュラー")
+  const [fuelType, setFuelType] = useState("regular")
   const [currentOdo, setCurrentOdo] = useState("")
   const [firstRegistrationDate, setFirstRegistrationDate] = useState("")
   const [purchaseDate, setPurchaseDate] = useState("")
@@ -148,7 +147,7 @@ export default function GaragePage() {
     setIsAddingCar(false)
     setEditCarId(null)
     setName(""); setMaker(""); setModelCode(""); setYear("");
-    setGrade(""); setColor(""); setFuelType("レギュラー"); setCurrentOdo("");
+    setGrade(""); setColor(""); setFuelType("regular"); setCurrentOdo("");
     setFirstRegistrationDate(""); setPurchaseDate(""); setPurchaseOdo("");
     setPurchasePrice(""); setIncludePriceInCost(false);
     setCarStatus("active")
@@ -196,7 +195,7 @@ export default function GaragePage() {
     setYear(car.year ? String(car.year) : "")
     setGrade(car.grade || "")
     setColor(car.color || "")
-    setFuelType(car.fuel_type || "レギュラー")
+    setFuelType(toFuelTypeSlug(car.fuel_type) || "regular")
     setCurrentOdo(car.current_odo ? String(car.current_odo) : "")
     setFirstRegistrationDate(car.first_registration_date ? car.first_registration_date.substring(0, 7) : "")
     setPurchaseDate(car.purchase_date || "")
@@ -593,7 +592,7 @@ export default function GaragePage() {
                     <Select value={fuelType} onValueChange={setFuelType}>
                       <SelectTrigger><SelectValue placeholder={t("garage.select_fuel_type")} /></SelectTrigger>
                       <SelectContent>
-                        {FUEL_TYPE_KEYS.map(key => (
+                        {FUEL_TYPES.map(key => (
                           <SelectItem key={key} value={key}>{t(`fuel_types.${key}`)}</SelectItem>
                         ))}
                       </SelectContent>

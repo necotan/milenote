@@ -487,7 +487,12 @@
     "ハイオク": "Premium",
     "軽油": "Diesel",
     "EV": "EV (Electric)",
-    "その他": "Other"
+    "その他": "Other",
+    "regular": "Regular",
+    "premium": "Premium",
+    "diesel": "Diesel",
+    "ev": "EV (Electric)",
+    "other": "Other"
   },
   "wishlist_genres": {
     "wheels": "Wheels",
