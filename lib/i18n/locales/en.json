@@ -470,18 +470,6 @@
     "car_goods": "Accessories",
     "road_service": "Roadside Assistance"
   },
-  "maintenance_items": {
-    "oil_change": "Oil Change",
-    "oil_filter_change": "Oil Filter",
-    "transmission_oil_change": "Transmission Oil Change",
-    "tire_rotation": "Tire Rotation",
-    "battery_change": "Battery",
-    "brake_pad_change": "Brake Pads",
-    "coolant_change": "Coolant",
-    "inspection_12m": "12-Month Inspection",
-    "inspection_24m": "24-Month Inspection",
-    "periodic_inspection": "Periodic Inspection"
-  },
   "fuel_types": {
     "regular": "Regular",
     "premium": "Premium",

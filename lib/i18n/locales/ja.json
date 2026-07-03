@@ -470,18 +470,6 @@
     "car_goods": "カー用品・小物",
     "road_service": "ロードサービス"
   },
-  "maintenance_items": {
-    "oil_change": "オイル交換",
-    "oil_filter_change": "オイルフィルター交換",
-    "transmission_oil_change": "ミッションオイル交換",
-    "tire_rotation": "タイヤローテーション",
-    "battery_change": "バッテリー交換",
-    "brake_pad_change": "ブレーキパッド交換",
-    "coolant_change": "クーラント（冷却水）交換",
-    "inspection_12m": "法定12ヶ月点検",
-    "inspection_24m": "法定24ヶ月点検",
-    "periodic_inspection": "定期点検"
-  },
   "fuel_types": {
     "regular": "レギュラー",
     "premium": "ハイオク",

@@ -353,7 +353,7 @@ export default function MyPage() {
                   return (
                   <div key={key} className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label className={`text-xs font-bold ${isEnabled ? "text-slate-700" : "text-slate-400"}`}>{t(`maintenance_items.${key}`)}</Label>
+                      <Label className={`text-xs font-bold ${isEnabled ? "text-slate-700" : "text-slate-400"}`}>{t(`subcategories.${key}`)}</Label>
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-bold text-slate-400">{isEnabled ? t("mypage.notify_on") : t("mypage.notify_off")}</span>
                         <Switch checked={isEnabled} onCheckedChange={(v) => handleMaintToggle(key, v)} />
