@@ -26,10 +26,7 @@ import {
 } from "@/utils/carImage"
 import { stripImageMetadata } from "@/utils/stripImageMetadata"
 import { getSafeExternalUrl } from "@/utils/safeUrl"
-
-const WISHLIST_GENRE_KEYS = [
-  "ホイール", "マフラー・吸排気", "エアロ・外装", "足回り・車高調", "インテリア・内装", "その他"
-]
+import { WISHLIST_GENRES, toWishlistGenreSlug } from "@/lib/wishlistGenres"
 
 const FUEL_TYPE_KEYS = ["レギュラー", "ハイオク", "軽油", "EV", "その他"]
 
@@ -317,7 +314,7 @@ export default function GaragePage() {
     setIsAddingWish(false)
     setWishCarId(wish.car_id)
     setWishItemName(wish.item_name)
-    setWishGenre(wish.genre || "")
+    setWishGenre(toWishlistGenreSlug(wish.genre) || "")
     setWishPrice(wish.price_estimate ? String(wish.price_estimate) : "")
     setWishUrl(wish.url || "")
     setWishMemo(wish.memo || "")
@@ -897,7 +894,7 @@ export default function GaragePage() {
                       <Select value={wishGenre} onValueChange={setWishGenre} required>
                         <SelectTrigger><SelectValue placeholder={t("garage.genre")} /></SelectTrigger>
                         <SelectContent>
-                          {WISHLIST_GENRE_KEYS.map(key => (
+                          {WISHLIST_GENRES.map(key => (
                             <SelectItem key={key} value={key}>{t(`wishlist_genres.${key}`)}</SelectItem>
                           ))}
                         </SelectContent>
@@ -972,7 +969,7 @@ export default function GaragePage() {
                       <div>
                         <div className="flex justify-between items-start mb-2 pr-16">
                           <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-sm">
-                            {t(`wishlist_genres.${wish.genre}`)} / {wish.cars.name}
+                            {t(`wishlist_genres.${toWishlistGenreSlug(wish.genre)}`)} / {wish.cars.name}
                           </span>
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusStyle}`}>
                             {t(`wishlist_statuses.${wish.status}`)}

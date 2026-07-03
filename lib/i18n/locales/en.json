@@ -495,7 +495,13 @@
     "エアロ・外装": "Aero / Exterior",
     "足回り・車高調": "Suspension",
     "インテリア・内装": "Interior",
-    "その他": "Other"
+    "その他": "Other",
+    "wheels": "Wheels",
+    "exhaust_intake": "Exhaust / Intake",
+    "aero_exterior": "Aero / Exterior",
+    "suspension": "Suspension",
+    "interior": "Interior",
+    "other": "Other"
   },
   "wishlist_statuses": {
     "considering": "Considering",
