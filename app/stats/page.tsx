@@ -13,6 +13,7 @@ import {
 } from "recharts"
 import type { TooltipContentProps } from "recharts"
 import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, RotateCcw, LineChart as LineChartIcon, Fuel, Hash, Receipt, TrendingUp, Leaf, Droplet, Zap, BatteryCharging } from "lucide-react"
+import { useTheme } from "next-themes"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 
@@ -71,7 +72,7 @@ const CO2_COEFFICIENT: Record<string, number> = {
 }
 const CO2_COEFFICIENT_DEFAULT = 2.32
 
-const createCustomizedLabel = (t: (key: string, params?: Record<string, string | number>) => string, locale: string) => {
+const createCustomizedLabel = (t: (key: string, params?: Record<string, string | number>) => string, locale: string, fillColor: string) => {
   // Recharts の PieLabel 型は省略可能フィールドを含む複雑な union のため any を許容
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const PieCustomLabel = (props: any) => {
@@ -100,7 +101,7 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
       <text
         x={x}
         y={y}
-        fill="#64748b"
+        fill={fillColor}
         textAnchor={textAnchor as "start" | "middle" | "end"}
         dominantBaseline="central"
         fontSize={10}
@@ -130,7 +131,7 @@ function PeriodFilter({
   return (
     <div className="flex flex-wrap items-center gap-2 px-4 pb-3">
       <div className="flex items-center gap-1.5">
-        <div className="flex items-center gap-1 text-slate-500">
+        <div className="flex items-center gap-1 text-slate-500 dark:text-muted-foreground">
           <CalendarDays size={14} />
           <span className="text-xs font-semibold">{labelFrom}</span>
         </div>
@@ -138,25 +139,25 @@ function PeriodFilter({
           type="date"
           value={start}
           onChange={e => onStartChange(e.target.value)}
-          className="text-xs border border-slate-200 rounded-md px-1.5 py-1 text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-400 transition-all w-[110px]"
+          className="text-xs border border-slate-200 dark:border-border rounded-md px-1.5 py-1 text-slate-700 dark:text-foreground bg-white dark:bg-card focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-400 transition-all w-[110px]"
         />
       </div>
 
       <div className="flex items-center gap-1.5">
-        <span className="text-slate-300 text-xs">—</span>
-        <span className="text-xs font-semibold text-slate-500">{labelTo}</span>
+        <span className="text-slate-300 dark:text-muted-foreground text-xs">—</span>
+        <span className="text-xs font-semibold text-slate-500 dark:text-muted-foreground">{labelTo}</span>
         <input
           type="date"
           value={end}
           onChange={e => onEndChange(e.target.value)}
-          className="text-xs border border-slate-200 rounded-md px-1.5 py-1 text-slate-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-400 transition-all w-[110px]"
+          className="text-xs border border-slate-200 dark:border-border rounded-md px-1.5 py-1 text-slate-700 dark:text-foreground bg-white dark:bg-card focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-400 transition-all w-[110px]"
         />
       </div>
 
       {(start || end) && (
         <button
           onClick={onReset}
-          className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 hover:text-red-400 transition-colors px-2 py-1 rounded hover:bg-red-50 ml-auto"
+          className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 dark:text-muted-foreground hover:text-red-400 transition-colors px-2 py-1 rounded hover:bg-red-50 ml-auto"
         >
           <RotateCcw size={12} />
           {labelReset}
@@ -180,11 +181,11 @@ function StatRow({
     <div className="flex items-center justify-between py-2.5">
       <div className="flex items-center gap-2">
         <Icon size={16} className={iconColor} />
-        <span className="text-sm font-semibold text-slate-600">{label}</span>
+        <span className="text-sm font-semibold text-slate-600 dark:text-muted-foreground">{label}</span>
       </div>
       <div className="flex items-baseline gap-1">
-        <span className="text-lg font-bold text-slate-800 tabular-nums tracking-wider">{value}</span>
-        {unit && <span className="text-xs font-bold text-slate-400">{unit}</span>}
+        <span className="text-lg font-bold text-slate-800 dark:text-foreground tabular-nums tracking-wider">{value}</span>
+        {unit && <span className="text-xs font-bold text-slate-400 dark:text-muted-foreground">{unit}</span>}
       </div>
     </div>
   )
@@ -228,6 +229,20 @@ export default function StatsPage() {
 
   // 初回ローディング画面とデータ取得を連動させる
   usePageLoadingGate(!loading)
+
+  // グリッド線、軸目盛り、円グラフの区切り線、ツールチップ背景などの構造部分だけをテーマに応じて出し分ける
+  const { resolvedTheme } = useTheme()
+  const isDark = resolvedTheme === "dark"
+  const chartChrome = useMemo(() => ({
+    gridStroke: isDark ? "#334155" : "#f1f5f9",
+    axisTick: isDark ? "#64748b" : "#94a3b8",
+    sliceStroke: isDark ? "#18181b" : "#ffffff",
+    dotStroke: isDark ? "#18181b" : "#ffffff",
+    tooltipBg: isDark ? "#1e293b" : "#ffffff",
+    labelLineStroke: isDark ? "#475569" : "#cbd5e1",
+    pieLabelFill: isDark ? "#94a3b8" : "#64748b",
+    cursorFill: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)",
+  }), [isDark])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -516,11 +531,11 @@ export default function StatsPage() {
   }, [locale])
   // 凡例ラベルの整形（カテゴリキーを翻訳して表示）
   const renderCategoryLegendLabel = useCallback((value: string) => (
-    <span className="text-xs font-bold text-slate-600">{t(`categories.${value}`)}</span>
+    <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t(`categories.${value}`)}</span>
   ), [t])
   // 凡例ラベルの整形
   const renderRawLegendLabel = useCallback((value: string) => (
-    <span className="text-xs font-bold text-slate-600">{value}</span>
+    <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{value}</span>
   ), [])
   // 凡例を列揃えのグリッドで描画し、ブロック全体を中央寄せする
   // formatLabel でラベルの整形方法を切り替える
@@ -563,15 +578,15 @@ export default function StatsPage() {
         return (
           <div
             style={{
-              background: '#fff',
+              background: chartChrome.tooltipBg,
               borderRadius: 8,
               boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
               padding: '10px 14px',
             }}
           >
-            <p className="mb-1.5 text-xs font-bold text-slate-500">{labelFormatter(String(label))}</p>
+            <p className="mb-1.5 text-xs font-bold text-slate-500 dark:text-muted-foreground">{labelFormatter(String(label))}</p>
             {items.length === 0 ? (
-              <p className="text-xs text-slate-400">{t("stats.no_data")}</p>
+              <p className="text-xs text-slate-400 dark:text-muted-foreground">{t("stats.no_data")}</p>
             ) : (
               <ul className="flex flex-col gap-1">
                 {items.map((entry, index) => (
@@ -580,8 +595,8 @@ export default function StatsPage() {
                       className="inline-block shrink-0 rounded-full"
                       style={{ width: 6, height: 6, backgroundColor: entry.color }}
                     />
-                    <span className="text-slate-500">{t(`categories.${String(entry.dataKey)}`)}</span>
-                    <span className="ml-auto font-bold text-slate-700">¥{Number(entry.value).toLocaleString()}</span>
+                    <span className="text-slate-500 dark:text-muted-foreground">{t(`categories.${String(entry.dataKey)}`)}</span>
+                    <span className="ml-auto font-bold text-slate-700 dark:text-foreground">¥{Number(entry.value).toLocaleString()}</span>
                   </li>
                 ))}
               </ul>
@@ -591,7 +606,7 @@ export default function StatsPage() {
       }
       return StackedBarTooltip
     },
-    [t],
+    [t, chartChrome.tooltipBg],
   )
   // 折れ線グラフのドット描画（線の進行に合わせて各点をフェードイン）
   // dot prop の参照が毎レンダーで変わると Recharts が内部で要素を作り直しアニメーションが再生されるため、useMemo で安定化する
@@ -615,7 +630,7 @@ export default function StatsPage() {
           cy={cy}
           r={4}
           fill="#3b82f6"
-          stroke="#fff"
+          stroke={chartChrome.dotStroke}
           strokeWidth={2}
           className="line-dot-anim"
           style={{ animationDelay: `${delay}ms` }}
@@ -624,7 +639,7 @@ export default function StatsPage() {
     }
     LineDot.displayName = "LineDot"
     return LineDot
-  }, [monthlyData.length])
+  }, [monthlyData.length, chartChrome.dotStroke])
   const yearlyLineDot = useMemo(() => {
     const totalLastIndex = yearlyLastValidIndex
     const LineDot = (props: any) => {
@@ -641,7 +656,7 @@ export default function StatsPage() {
           cy={cy}
           r={4}
           fill="#3b82f6"
-          stroke="#fff"
+          stroke={chartChrome.dotStroke}
           strokeWidth={2}
           className="line-dot-anim"
           style={{ animationDelay: `${delay}ms` }}
@@ -650,7 +665,7 @@ export default function StatsPage() {
     }
     LineDot.displayName = "LineDot"
     return LineDot
-  }, [yearlyLastValidIndex])
+  }, [yearlyLastValidIndex, chartChrome.dotStroke])
 
   const makeStackedBarShape = (
     cat: CategoryKey,
@@ -692,13 +707,13 @@ export default function StatsPage() {
   if (loading) return (
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2">
-        <div className="h-8 w-16 bg-slate-100 rounded-lg skeleton" />
+        <div className="h-8 w-16 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
       </header>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {[...Array(2)].map((_, i) => (
-          <div key={i} className="bg-white rounded-xl shadow-sm p-4 space-y-3">
-            <div className="h-4 w-28 bg-slate-100 rounded skeleton" />
-            <div className="h-64 bg-slate-100 rounded-lg skeleton" />
+          <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm p-4 space-y-3">
+            <div className="h-4 w-28 bg-slate-100 dark:bg-muted rounded skeleton" />
+            <div className="h-64 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
           </div>
         ))}
       </div>
@@ -708,8 +723,8 @@ export default function StatsPage() {
   return (
     <main className="p-4 space-y-6 max-w-5xl mx-auto pb-20">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">{t("stats.title")}</h1>
-        <p className="text-xs font-bold text-slate-400 tracking-wider mt-1">{t("stats.subtitle")}</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
+        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
       </header>
 
       <Tabs defaultValue="cost" className="w-full">
@@ -728,7 +743,7 @@ export default function StatsPage() {
         <TabsContent value="distance" className="space-y-6 outline-none">
 
           {/* ヒーローバナー：地球周、月進捗 */}
-          <Card className="border-none shadow-sm overflow-hidden bg-white">
+          <Card className="border-none shadow-sm overflow-hidden bg-white dark:bg-card">
             <CardContent className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-11 md:gap-8">
                 {/* 地球周セクション */}
@@ -737,31 +752,31 @@ export default function StatsPage() {
                     <Globe className="text-blue-500 w-10 h-10" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-2xl font-black text-slate-800 tracking-wide tabular-nums">
+                    <h3 className="text-2xl font-black text-slate-800 dark:text-foreground tracking-wide tabular-nums">
                       {t("stats.earth_rounds", { rounds: earthRounds })}
                     </h3>
-                    <p className="text-[10px] text-slate-500 mt-1 font-medium tracking-wide">
-                      {t("stats.total_odo")}: <span className="font-bold text-slate-700 tabular-nums">{totalOdo.toLocaleString()}</span> {t("stats.unit_km")}
+                    <p className="text-[10px] text-slate-500 dark:text-muted-foreground mt-1 font-medium tracking-wide">
+                      {t("stats.total_odo")}: <span className="font-bold text-slate-700 dark:text-foreground tabular-nums">{totalOdo.toLocaleString()}</span> {t("stats.unit_km")}
                     </p>
                   </div>
                 </div>
 
                 {/* 月進捗セクション */}
-                <div className="space-y-3 md:border-l md:border-slate-100 md:pl-8">
+                <div className="space-y-3 md:border-l md:border-slate-100 dark:border-border md:pl-8">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Moon className="text-yellow-500 w-5 h-5" />
-                      <span className="font-bold text-slate-700 text-sm">{t("stats.moon_progress")}</span>
+                      <span className="font-bold text-slate-700 dark:text-foreground text-sm">{t("stats.moon_progress")}</span>
                     </div>
-                    <span className="text-sm font-black text-slate-800 tabular-nums">{moonPercent}%</span>
+                    <span className="text-sm font-black text-slate-800 dark:text-foreground tabular-nums">{moonPercent}%</span>
                   </div>
-                  <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                  <div className="w-full bg-slate-100 dark:bg-muted h-2.5 rounded-full overflow-hidden">
                     <div
                       className="bg-gradient-to-r from-blue-500 to-purple-500 h-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(59,130,246,0.5)]"
                       style={{ width: `${moonPercent}%` }}
                     ></div>
                   </div>
-                  <p className="text-[10px] text-center text-slate-500 font-medium">
+                  <p className="text-[10px] text-center text-slate-500 dark:text-muted-foreground font-medium">
                     {t("stats.moon_remaining", { distance: remainingMoonDist.toLocaleString() })}
                   </p>
                 </div>
@@ -770,14 +785,14 @@ export default function StatsPage() {
           </Card>
 
           {/* 給油サマリーカード */}
-          <Card className="border-none shadow-sm bg-white">
+          <Card className="border-none shadow-sm bg-white dark:bg-card">
             <CardHeader className="p-4 pb-2">
-              <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600">
+              <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                 <Fuel size={16} /> {t("stats.fuel_summary")}
               </CardTitle>
             </CardHeader>
             <CardContent className="px-4 pb-4 pt-0">
-              <div className="divide-y divide-slate-100">
+              <div className="divide-y divide-slate-100 dark:divide-border">
                 <StatRow
                   icon={Droplet}
                   iconColor="text-blue-500"
@@ -808,7 +823,7 @@ export default function StatsPage() {
                 />
               </div>
               {/* CO₂セクション */}
-              <div className="mt-2 pt-1 border-t-2 border-slate-100">
+              <div className="mt-2 pt-1 border-t-2 border-slate-100 dark:border-border">
                 <StatRow
                   icon={Leaf}
                   iconColor="text-green-500"
@@ -816,21 +831,21 @@ export default function StatsPage() {
                   value={Math.round(co2Emission).toLocaleString()}
                   unit={t("stats.unit_kg")}
                 />
-                <p className="text-[10px] text-slate-400 pl-6">{t("stats.co2_note")}</p>
+                <p className="text-[10px] text-slate-400 dark:text-muted-foreground pl-6">{t("stats.co2_note")}</p>
               </div>
             </CardContent>
           </Card>
 
           {/* 充電サマリーカード（EV車の充電記録がある場合のみ表示） */}
           {chargeCount > 0 && (
-            <Card className="border-none shadow-sm bg-white">
+            <Card className="border-none shadow-sm bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600">
+                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                   <BatteryCharging size={16} /> {t("stats.charge_summary")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4 pt-0">
-                <div className="divide-y divide-slate-100">
+                <div className="divide-y divide-slate-100 dark:divide-border">
                   <StatRow
                     icon={Zap}
                     iconColor="text-sky-500"
@@ -917,9 +932,9 @@ export default function StatsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
             {/* カテゴリ別内訳 */}
-            <Card className="border-none shadow-sm bg-white">
+            <Card className="border-none shadow-sm bg-white dark:bg-card">
               <CardHeader className="p-4 pb-0">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600">
+                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                   <PieIcon size={16} /> {t("stats.category_breakdown")}
                 </CardTitle>
               </CardHeader>
@@ -933,7 +948,7 @@ export default function StatsPage() {
               />
               <CardContent className="h-80 p-0">
                 {categoryData.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-slate-300 gap-2">
+                  <div className="h-full flex flex-col items-center justify-center text-slate-300 dark:text-muted-foreground gap-2">
                     <PieIcon size={40} strokeWidth={1.5} />
                     <p className="text-sm font-medium">{t("stats.no_data")}</p>
                   </div>
@@ -964,14 +979,14 @@ export default function StatsPage() {
                     <div key={pieAnimKey} className="pie-anim" style={{ width: "100%", height: "100%" }}>
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
-                          <Pie data={categoryData} cx="50%" cy="45%" innerRadius={60} outerRadius={80} dataKey="value" stroke="#ffffff" strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale)} labelLine={{ stroke: '#cbd5e1', strokeWidth: 1 }}>
+                          <Pie data={categoryData} cx="50%" cy="45%" innerRadius={60} outerRadius={80} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill)} labelLine={{ stroke: chartChrome.labelLineStroke, strokeWidth: 1 }}>
                             {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
-                            <Label value={`¥${totalAmount.toLocaleString()}`} position="center" dy={-8} className="text-base font-black fill-slate-800" />
-                            <Label value={t("stats.total")} position="center" dy={8} className="text-[10px] font-bold fill-slate-400" />
+                            <Label value={`¥${totalAmount.toLocaleString()}`} position="center" dy={-8} className="text-base font-black fill-slate-800 dark:fill-foreground" />
+                            <Label value={t("stats.total")} position="center" dy={8} className="text-[10px] font-bold fill-slate-400 dark:fill-muted-foreground" />
                           </Pie>
                           {/* Recharts のコールバック型が複雑なため any を許容 */}
                           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                          <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={(value: any) => [`¥${Number(value).toLocaleString()}`, t("stats.amount")]} />
+                          <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} formatter={(value: any) => [`¥${Number(value).toLocaleString()}`, t("stats.amount")]} />
                           <Legend verticalAlign="bottom" content={renderGridLegend(renderRawLegendLabel)} />
                         </PieChart>
                       </ResponsiveContainer>
@@ -982,9 +997,9 @@ export default function StatsPage() {
             </Card>
 
             {/* 月別出費推移 */}
-            <Card className="border-none shadow-sm bg-white">
+            <Card className="border-none shadow-sm bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600">
+                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                   <BarChart3 size={16} /> {t("stats.monthly_trend")}
                 </CardTitle>
                 <SegmentedToggle
@@ -998,7 +1013,7 @@ export default function StatsPage() {
               </CardHeader>
               <CardContent className="h-80 p-4 pt-0">
                 {records.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-slate-300 gap-2">
+                  <div className="h-full flex flex-col items-center justify-center text-slate-300 dark:text-muted-foreground gap-2">
                     <BarChart3 size={40} strokeWidth={1.5} />
                     <p className="text-sm font-medium">{t("stats.no_data")}</p>
                   </div>
@@ -1012,18 +1027,18 @@ export default function StatsPage() {
                   <ResponsiveContainer width="100%" height="100%">
                     {monthlyChartType === "line" ? (
                       <LineChart data={monthlyData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                        <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={monthFormatter} padding={{ left: 30, right: 30 }} />
-                        <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
-                        <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={expenditureTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
+                        <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: chartChrome.axisTick }} tickFormatter={monthFormatter} padding={{ left: 30, right: 30 }} />
+                        <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
+                        <Tooltip cursor={{ stroke: chartChrome.gridStroke }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} formatter={expenditureTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
                         <Line type="linear" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={monthlyLineDot} isAnimationActive={false} />
                       </LineChart>
                     ) : (
                       <BarChart data={monthlyData} margin={{ top: 20, right: 30, left: 10, bottom: 4 }} barCategoryGap="30%" maxBarSize={56}>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                        <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={monthFormatter} />
-                        <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} tickFormatter={numberTickFormatter} />
-                        <Tooltip content={renderStackedBarTooltip(monthlyTooltipLabelFormatter)} />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
+                        <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: chartChrome.axisTick }} tickFormatter={monthFormatter} />
+                        <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} tickFormatter={numberTickFormatter} />
+                        <Tooltip cursor={{ fill: chartChrome.cursorFill }} content={renderStackedBarTooltip(monthlyTooltipLabelFormatter)} />
                         <Legend verticalAlign="bottom" content={renderGridLegend(renderCategoryLegendLabel)} />
                         {monthlyCategoriesPresent.map((cat) => (
                           <Bar
@@ -1045,10 +1060,10 @@ export default function StatsPage() {
           </div>
 
           {/* 年別推移セクション */}
-          <Card className="border-none shadow-sm bg-white">
+          <Card className="border-none shadow-sm bg-white dark:bg-card">
             <CardHeader className="p-4 pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600">
+                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                   <CalendarDays size={16} /> {t("stats.yearly_trend")}
                 </CardTitle>
                 {/* グラフ切り替えボタン */}
@@ -1072,18 +1087,18 @@ export default function StatsPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   {yearlyChartType === "line" ? (
                     <LineChart data={yearlyData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis dataKey="year" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={yearFormatter} padding={{ left: 30, right: 30 }} />
-                      <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
-                      <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} formatter={expenditureTooltipFormatter} labelFormatter={yearTooltipLabelFormatter} />
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
+                      <XAxis dataKey="year" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: chartChrome.axisTick }} tickFormatter={yearFormatter} padding={{ left: 30, right: 30 }} />
+                      <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
+                      <Tooltip cursor={{ stroke: chartChrome.gridStroke }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} formatter={expenditureTooltipFormatter} labelFormatter={yearTooltipLabelFormatter} />
                       <Line type="linear" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={yearlyLineDot} isAnimationActive={false} />
                     </LineChart>
                   ) : (
                     <BarChart data={yearlyData} margin={{ top: 20, right: 30, left: 10, bottom: 4 }} barCategoryGap="30%" maxBarSize={56}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis dataKey="year" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: '#94a3b8' }} tickFormatter={yearFormatter} />
-                      <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: '#94a3b8' }} width={65} tickFormatter={numberTickFormatter} />
-                      <Tooltip content={renderStackedBarTooltip(yearTooltipLabelFormatter)} />
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
+                      <XAxis dataKey="year" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: chartChrome.axisTick }} tickFormatter={yearFormatter} />
+                      <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} tickFormatter={numberTickFormatter} />
+                      <Tooltip cursor={{ fill: chartChrome.cursorFill }} content={renderStackedBarTooltip(yearTooltipLabelFormatter)} />
                       <Legend verticalAlign="bottom" content={renderGridLegend(renderCategoryLegendLabel)} />
                       {yearlyCategoriesPresent.map((cat) => (
                         <Bar
@@ -1103,30 +1118,30 @@ export default function StatsPage() {
               <div className="mt-4 px-2 lg:mt-0 lg:w-[40%] lg:shrink-0 lg:pl-0 lg:pr-6">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-slate-100 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                    <tr className="border-b border-slate-100 dark:border-border text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-muted-foreground">
                       <th className="pb-2.5 pr-3 text-left font-semibold">{t("stats.col_year")}</th>
                       <th className="pb-2.5 px-3 text-right font-semibold">{t("stats.total")}</th>
                       <th className="pb-2.5 pl-3 text-right font-semibold">{t("stats.col_yoy")}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-100 dark:divide-border">
                     {yearlyTableRows.map(row => (
                       <tr key={row.year}>
-                        <td className="py-4 pr-3 text-[15px] font-bold text-slate-700 tabular-nums">
+                        <td className="py-4 pr-3 text-[15px] font-bold text-slate-700 dark:text-foreground tabular-nums">
                           {locale === "en" ? row.year : `${row.year}年`}
                         </td>
-                        <td className="py-4 px-3 text-right text-sm font-bold text-slate-800 tabular-nums">
+                        <td className="py-4 px-3 text-right text-sm font-bold text-slate-800 dark:text-foreground tabular-nums">
                           ¥{row.amount.toLocaleString()}
                         </td>
                         <td className="py-4 pl-3 text-right text-xs tabular-nums">
                           {row.diff === null ? (
-                            <span className="text-slate-300">—</span>
+                            <span className="text-slate-300 dark:text-muted-foreground">—</span>
                           ) : row.diff > 0 ? (
                             <span className="font-semibold text-rose-500">+¥{row.diff.toLocaleString()}</span>
                           ) : row.diff < 0 ? (
                             <span className="font-semibold text-emerald-500">-¥{Math.abs(row.diff).toLocaleString()}</span>
                           ) : (
-                            <span className="text-slate-400">±¥0</span>
+                            <span className="text-slate-400 dark:text-muted-foreground">±¥0</span>
                           )}
                         </td>
                       </tr>

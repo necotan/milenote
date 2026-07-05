@@ -47,12 +47,12 @@ export function SegmentedToggle<T extends string>({
   return (
     <div
       ref={containerRef}
-      className={cn("relative inline-flex items-center rounded-full bg-slate-100 p-[3px]", className)}
+      className={cn("relative inline-flex items-center rounded-full bg-slate-100 dark:bg-muted p-[3px]", className)}
     >
       <span
         ref={indicatorRef}
         aria-hidden
-        className="pointer-events-none absolute top-[3px] bottom-[3px] rounded-full border border-slate-400 bg-white opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        className="pointer-events-none absolute top-[3px] bottom-[3px] rounded-full border border-slate-400 dark:border-surface-border bg-white dark:bg-surface-3 opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
       />
       {options.map((option) => {
         const active = option.value === value
@@ -66,7 +66,7 @@ export function SegmentedToggle<T extends string>({
             title={option.label}
             className={cn(
               "relative z-10 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold transition-colors",
-              active ? "text-slate-800" : "text-slate-500 hover:text-slate-700"
+              active ? "text-slate-800 dark:text-foreground" : "text-slate-500 hover:text-slate-700 dark:text-muted-foreground dark:hover:text-foreground"
             )}
           >
             {option.icon}

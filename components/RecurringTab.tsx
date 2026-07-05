@@ -30,27 +30,27 @@ const AutoRecordBanner = () => {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 overflow-hidden mb-5">
+    <div className="rounded-xl border border-blue-200 dark:border-blue-900 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 overflow-hidden mb-5">
       <button
         type="button"
         onClick={() => setOpen(v => !v)}
-        className="w-full flex items-center gap-2.5 px-4 py-3 text-left hover:bg-white/30 transition-colors"
+        className="w-full flex items-center gap-2.5 px-4 py-3 text-left hover:bg-white/30 dark:hover:bg-card/30 transition-colors"
       >
-        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100">
-          <Info size={13} className="text-blue-600 shrink-0" />
+        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/60">
+          <Info size={13} className="text-blue-600 dark:text-blue-300 shrink-0" />
         </div>
-        <span className="flex-1 text-sm font-semibold text-blue-800">
+        <span className="flex-1 text-sm font-semibold text-blue-800 dark:text-blue-200">
           {t("records.recurring_banner_title")}
         </span>
         {open
-          ? <ChevronUp size={15} className="text-blue-400 shrink-0" />
-          : <ChevronDown size={15} className="text-blue-400 shrink-0" />
+          ? <ChevronUp size={15} className="text-blue-400 dark:text-blue-300 shrink-0" />
+          : <ChevronDown size={15} className="text-blue-400 dark:text-blue-300 shrink-0" />
         }
       </button>
       {open && (
         <div className="px-4 pb-4 pt-0">
-          <div className="border-t border-blue-100 pt-3">
-            <p className="text-xs text-blue-700 leading-relaxed">
+          <div className="border-t border-blue-100 dark:border-blue-900 pt-3">
+            <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
               {t("records.recurring_banner_body")}
             </p>
           </div>
@@ -72,15 +72,15 @@ const RecurringForm = ({
   const { t } = useTranslation()
 
   return (
-    <Card className="border-none shadow-lg bg-white mb-6">
+    <Card className="border-none shadow-lg bg-white dark:bg-card mb-6">
       <CardContent className="p-6 relative">
-        <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400" onClick={resetForm}>
+        <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetForm}>
           <X className="h-4 w-4" />
         </Button>
-        <h2 className="text-xl font-extrabold text-slate-800 mb-1">
+        <h2 className="text-xl font-extrabold text-slate-800 dark:text-foreground mb-1">
           {isEdit ? t("records.edit_recurring") : t("records.add_recurring")}
         </h2>
-        <p className="text-xs text-slate-400 mb-6 flex items-center gap-1">
+        <p className="text-xs text-slate-400 dark:text-muted-foreground mb-6 flex items-center gap-1">
           <RepeatIcon size={11} />
           {t("records.recurring_form_hint")}
         </p>
@@ -127,8 +127,8 @@ const RecurringForm = ({
           )}
 
           {/* --- 支払情報セクション --- */}
-          <div className="rounded-xl bg-slate-50 border border-slate-200 p-4 space-y-4">
-            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">支払情報</p>
+          <div className="rounded-xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
+            <p className="text-[11px] font-bold text-slate-400 dark:text-muted-foreground uppercase tracking-wider">支払情報</p>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
@@ -138,13 +138,13 @@ const RecurringForm = ({
                   onChange={e => setAmount(e.target.value)}
                   required
                   placeholder="5000"
-                  className="bg-white"
+                  className="bg-white dark:bg-card"
                 />
               </div>
               <div className="space-y-2">
                 <Label>{t("records.frequency")} <span className="text-red-500">{t("common.required")}</span></Label>
                 <Select value={frequency} onValueChange={setFrequency}>
-                  <SelectTrigger className="w-full bg-white"><SelectValue placeholder={t("records.frequency")} /></SelectTrigger>
+                  <SelectTrigger className="w-full bg-white dark:bg-card"><SelectValue placeholder={t("records.frequency")} /></SelectTrigger>
                   <SelectContent>
                     {FREQUENCY_OPTIONS.map(opt => (
                       <SelectItem key={opt.value} value={opt.value}>{t(opt.labelKey)}</SelectItem>
@@ -164,10 +164,10 @@ const RecurringForm = ({
                 value={nextBillingDate}
                 onChange={e => setNextBillingDate(e.target.value)}
                 required
-                className="bg-white"
+                className="bg-white dark:bg-card"
               />
               {!isEdit && (
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-slate-400 dark:text-muted-foreground">
                   ※ 過去の日付を設定すると、保存時に過去分がまとめて自動記録されます
                 </p>
               )}
@@ -193,14 +193,14 @@ const StatusBadge = ({ isActive }: { isActive: boolean }) => {
   const { t } = useTranslation()
   if (isActive) {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md bg-green-100 text-green-700 whitespace-nowrap shrink-0">
+      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 whitespace-nowrap shrink-0">
         <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shrink-0" />
         {t("records.status_active")}
       </span>
     )
   }
   return (
-    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md bg-red-100 text-red-700 whitespace-nowrap shrink-0">
+    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 whitespace-nowrap shrink-0">
       <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
       {t("records.status_paused")}
     </span>
@@ -217,23 +217,23 @@ const getFrequencyLabel = (freq: string, t: (key: string) => string): string => 
 const RecurringCardSkeleton = () => (
   <div className="space-y-3">
     {[...Array(3)].map((_, i) => (
-      <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden relative">
+      <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm overflow-hidden relative">
         <div className="absolute top-3 right-3 flex items-center gap-1">
-          <div className="h-7 w-7 bg-slate-100 rounded-lg skeleton" />
-          <div className="h-7 w-7 bg-slate-100 rounded-lg skeleton" />
-          <div className="h-7 w-7 bg-slate-100 rounded-lg skeleton" />
+          <div className="h-7 w-7 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+          <div className="h-7 w-7 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+          <div className="h-7 w-7 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
         </div>
         <div className="p-4 flex gap-3 items-start">
-          <div className="w-12 h-12 rounded-full bg-slate-100 skeleton shrink-0 mt-1" />
+          <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-muted skeleton shrink-0 mt-1" />
           <div className="flex-1 min-w-0 pr-24 space-y-2">
-            <div className="h-6 w-32 bg-slate-100 rounded-lg skeleton" />
+            <div className="h-6 w-32 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
             <div className="flex gap-1.5">
-              <div className="h-5 w-14 bg-slate-100 rounded-md skeleton" />
-              <div className="h-5 w-20 bg-slate-100 rounded-md skeleton" />
-              <div className="h-5 w-16 bg-slate-100 rounded-md skeleton" />
+              <div className="h-5 w-14 bg-slate-100 dark:bg-muted rounded-md skeleton" />
+              <div className="h-5 w-20 bg-slate-100 dark:bg-muted rounded-md skeleton" />
+              <div className="h-5 w-16 bg-slate-100 dark:bg-muted rounded-md skeleton" />
             </div>
-            <div className="h-3 w-24 bg-slate-100 rounded skeleton" />
-            <div className="h-3 w-40 bg-slate-100 rounded skeleton" />
+            <div className="h-3 w-24 bg-slate-100 dark:bg-muted rounded skeleton" />
+            <div className="h-3 w-40 bg-slate-100 dark:bg-muted rounded skeleton" />
           </div>
         </div>
       </div>
@@ -246,11 +246,11 @@ const EmptyState = ({ onAdd }: { onAdd: () => void }) => {
   const { t } = useTranslation()
   return (
     <div className="flex flex-col items-center py-14 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-muted flex items-center justify-center mb-4">
         <RepeatIcon size={28} className="text-slate-300" />
       </div>
-      <p className="text-slate-600 font-semibold mb-1">{t("records.no_recurring")}</p>
-      <p className="text-sm text-slate-400 mb-6 w-[260px]">{t("records.no_recurring_desc")}</p>
+      <p className="text-slate-600 dark:text-muted-foreground font-semibold mb-1">{t("records.no_recurring")}</p>
+      <p className="text-sm text-slate-400 dark:text-muted-foreground mb-6 w-[260px]">{t("records.no_recurring_desc")}</p>
       <Button onClick={onAdd} size="sm" className="font-bold gap-1.5">
         <Plus size={14} />
         {t("records.add_recurring")}
@@ -484,7 +484,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
           return (
             <Card
               key={cost.id}
-              className={`border-none shadow-sm overflow-hidden transition-opacity relative ${cost.is_active ? 'bg-white' : 'bg-slate-50 opacity-60'}`}
+              className={`border-none shadow-sm overflow-hidden transition-opacity relative ${cost.is_active ? 'bg-white dark:bg-card' : 'bg-slate-50 dark:bg-muted opacity-60'}`}
             >
               <CardContent className="p-0">
                 {/* アクションボタン（右上に常時表示） */}
@@ -493,8 +493,8 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                     onClick={() => toggleActive(cost.id, cost.is_active)}
                     className={`p-1.5 rounded-lg border transition-colors ${
                       cost.is_active
-                        ? 'border-slate-300 text-slate-500 hover:text-slate-700 hover:border-slate-400 hover:bg-slate-100'
-                        : 'border-slate-300 text-slate-500 hover:text-green-500 hover:border-green-300 hover:bg-green-50'
+                        ? 'border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-slate-700 hover:border-slate-400 hover:bg-slate-100 dark:hover:bg-muted'
+                        : 'border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-green-500 hover:border-green-300 hover:bg-green-50'
                     }`}
                     title={cost.is_active ? t("records.pause_recurring") : t("records.resume_recurring")}
                   >
@@ -502,13 +502,13 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                   </button>
                   <button
                     onClick={() => handleStartEdit(cost)}
-                    className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                    className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   >
                     <Pencil size={14} />
                   </button>
                   <button
                     onClick={() => handleDelete(cost.id)}
-                    className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
+                    className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -520,20 +520,20 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                   </div>
                   <div className="flex-1 min-w-0 pr-24">
                     {/* 金額 */}
-                    <h3 className="font-bold text-slate-800 text-lg mb-1">
+                    <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1">
                       ¥{cost.amount.toLocaleString()}
-                      <span className="text-xs text-slate-400 font-medium ml-1">
+                      <span className="text-xs text-slate-400 dark:text-muted-foreground font-medium ml-1">
                         / {getFrequencyLabel(cost.frequency, t)}
                       </span>
                     </h3>
 
                     {/* ジャンルタグ + ステータスバッジ */}
                     <div className="flex items-center gap-1.5 mb-2">
-                      <span className="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded-md whitespace-nowrap">
+                      <span className="text-[10px] font-bold bg-slate-100 dark:bg-muted text-slate-500 dark:text-muted-foreground px-2 py-1 rounded-md whitespace-nowrap">
                         {t(`categories.${cost.category}`)}
                       </span>
                       {cost.sub_category && (
-                        <span className="text-[10px] font-bold border border-slate-200 text-slate-600 px-2 py-1 rounded-md whitespace-nowrap">
+                        <span className="text-[10px] font-bold border border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground px-2 py-1 rounded-md whitespace-nowrap">
                           {t(`subcategories.${cost.sub_category}`)}
                         </span>
                       )}
@@ -541,17 +541,17 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                     </div>
 
                     {/* 車名 */}
-                    <div className="text-[11px] text-slate-500 font-bold mb-2">
+                    <div className="text-[11px] text-slate-500 dark:text-muted-foreground font-bold mb-2">
                       {cost.cars.name}
                     </div>
 
                     {/* 次回支払日 */}
-                    <p className="text-[11px] font-medium text-slate-400 mb-2">
+                    <p className="text-[11px] font-medium text-slate-400 dark:text-muted-foreground mb-2">
                       {t("records.next_billing_date")}: {cost.next_billing_date.replace(/-/g, '/')}
                     </p>
 
                     {cost.memo && (
-                      <p className="text-sm text-slate-600 bg-slate-50 p-2 rounded-md whitespace-pre-wrap inline-block mt-1 w-full">
+                      <p className="text-sm text-slate-600 dark:text-muted-foreground bg-slate-50 dark:bg-muted p-2 rounded-md whitespace-pre-wrap inline-block mt-1 w-full">
                         {cost.memo}
                       </p>
                     )}

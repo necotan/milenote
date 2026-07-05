@@ -503,23 +503,23 @@ export default function GaragePage() {
   // ステータスの色を定義
   const getStatusStyle = (status: string) => {
     switch (status) {
-      case 'considering': return "bg-slate-100 text-slate-600 border-slate-200"
-      case 'purchased': return "bg-blue-50 text-blue-600 border-blue-200"
-      case 'installed': return "bg-green-50 text-green-600 border-green-200"
-      case 'given_up': return "bg-slate-50 text-slate-400 border-slate-200 opacity-60"
-      default: return "bg-slate-100"
+      case 'considering': return "bg-slate-100 dark:bg-muted text-slate-600 dark:text-muted-foreground border-slate-200 dark:border-border"
+      case 'purchased': return "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-300 border-blue-200 dark:border-blue-900"
+      case 'installed': return "bg-green-50 dark:bg-green-950/40 text-green-600 dark:text-green-300 border-green-200 dark:border-green-900"
+      case 'given_up': return "bg-slate-50 dark:bg-muted text-slate-400 dark:text-muted-foreground border-slate-200 dark:border-border opacity-60"
+      default: return "bg-slate-100 dark:bg-muted"
     }
   }
 
   return (
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">{t("garage.title")}</h1>
-        <p className="text-xs font-bold text-slate-400 tracking-wider mt-1">{t("garage.subtitle")}</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("garage.title")}</h1>
+        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("garage.subtitle")}</p>
       </header>
 
       <Tabs defaultValue="mycars" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-6 bg-slate-100 p-[3px]">
+        <TabsList className="grid w-full grid-cols-2 mb-6 bg-slate-100 dark:bg-muted p-[3px]">
           <TabsTrigger value="mycars" className="flex items-center gap-2 font-bold uppercase tracking-wider">
             <CarFront size={14} /> {t("garage.my_cars")}
           </TabsTrigger>
@@ -531,17 +531,17 @@ export default function GaragePage() {
         {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
             {[...Array(2)].map((_, i) => (
-              <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div className="h-48 bg-slate-100 skeleton" />
+              <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm overflow-hidden">
+                <div className="h-48 bg-slate-100 dark:bg-muted skeleton" />
                 <div className="p-4 space-y-2">
-                  <div className="h-7 w-36 bg-slate-100 rounded-lg skeleton" />
-                  <div className="h-3 w-48 bg-slate-100 rounded skeleton" />
+                  <div className="h-7 w-36 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+                  <div className="h-3 w-48 bg-slate-100 dark:bg-muted rounded skeleton" />
                 </div>
-                <div className="grid grid-cols-2 divide-x divide-slate-100 border-t border-slate-100">
+                <div className="grid grid-cols-2 divide-x divide-slate-100 dark:divide-border border-t border-slate-100 dark:border-border">
                   {[...Array(4)].map((_, j) => (
                     <div key={j} className="p-4 space-y-2">
-                      <div className="h-2.5 w-16 bg-slate-100 rounded skeleton" />
-                      <div className="h-5 w-20 bg-slate-100 rounded skeleton" />
+                      <div className="h-2.5 w-16 bg-slate-100 dark:bg-muted rounded skeleton" />
+                      <div className="h-5 w-20 bg-slate-100 dark:bg-muted rounded skeleton" />
                     </div>
                   ))}
                 </div>
@@ -561,31 +561,31 @@ export default function GaragePage() {
           </div>
 
           {(isAddingCar || editCarId) && (
-            <Card className="border-none shadow-md bg-white mb-6">
+            <Card className="border-none shadow-md bg-white dark:bg-card mb-6">
               <CardContent className="p-6 relative">
-                <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400" onClick={resetCarForm}>
+                <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetCarForm}>
                   <X className="h-4 w-4" />
                 </Button>
-                <h2 className="text-xl font-extrabold text-slate-800 mb-6">
+                <h2 className="text-xl font-extrabold text-slate-800 dark:text-foreground mb-6">
                   {editCarId ? t("garage.edit_car") : t("garage.add_car")}
                 </h2>
 
                 <form onSubmit={editCarId ? handleUpdateCar : handleAddCar} className="space-y-4">
                   <div className="space-y-2">
                     <Label>{t("garage.car_name")} <span className="text-red-500">{t("common.required")}</span></Label>
-                    <Input placeholder="TOYOTA 86" value={name} onChange={(e) => setName(e.target.value)} required className="placeholder:text-slate-300" />
+                    <Input placeholder="TOYOTA 86" value={name} onChange={(e) => setName(e.target.value)} required className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="space-y-2"><Label>{t("garage.maker")}</Label><Input placeholder="" value={maker} onChange={(e) => setMaker(e.target.value)} className="placeholder:text-slate-300" /></div>
-                    <div className="space-y-2"><Label>{t("garage.model_code")}</Label><Input placeholder="ZN6" value={modelCode} onChange={(e) => setModelCode(e.target.value)} className="placeholder:text-slate-300" /></div>
-                    <div className="space-y-2"><Label>{t("garage.year")}</Label><Input type="number" placeholder="2018" value={year} onChange={(e) => setYear(e.target.value)} className="placeholder:text-slate-300" /></div>
-                    <div className="space-y-2"><Label>{t("common.grade")}</Label><Input placeholder="GT Limited" value={grade} onChange={(e) => setGrade(e.target.value)} className="placeholder:text-slate-300" /></div>
-                    <div className="space-y-2"><Label>{t("garage.body_color")}</Label><Input placeholder="" value={color} onChange={(e) => setColor(e.target.value)} className="placeholder:text-slate-300" /></div>
-                    <div className="space-y-2"><Label>{t("garage.current_odo")} <span className="text-red-500">{t("common.required")}</span></Label><Input type="number" placeholder="52400" value={currentOdo} onChange={(e) => setCurrentOdo(e.target.value)} required className="placeholder:text-slate-300" /></div>
-                    <div className="space-y-2"><Label>{t("garage.first_registration")}</Label><Input type="month" value={firstRegistrationDate} onChange={(e) => setFirstRegistrationDate(e.target.value)} className="placeholder:text-slate-300 appearance-none h-8 min-h-0" /></div>
-                    <div className="space-y-2"><Label>{t("common.delivery_date")}</Label><Input type="date" value={purchaseDate} onChange={(e) => setPurchaseDate(e.target.value)} className="placeholder:text-slate-300 appearance-none h-8 min-h-0" /></div>
-                    <div className="space-y-2"><Label>{t("garage.purchase_odo")}</Label><Input type="number" placeholder="48000" value={purchaseOdo} onChange={(e) => setPurchaseOdo(e.target.value)} className="placeholder:text-slate-300" /></div>
-                    <div className="space-y-2"><Label>{t("garage.purchase_price")}</Label><Input type="number" placeholder="2500000" value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)} className="placeholder:text-slate-300" /></div>
+                    <div className="space-y-2"><Label>{t("garage.maker")}</Label><Input placeholder="" value={maker} onChange={(e) => setMaker(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2"><Label>{t("garage.model_code")}</Label><Input placeholder="ZN6" value={modelCode} onChange={(e) => setModelCode(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2"><Label>{t("garage.year")}</Label><Input type="number" placeholder="2018" value={year} onChange={(e) => setYear(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2"><Label>{t("common.grade")}</Label><Input placeholder="GT Limited" value={grade} onChange={(e) => setGrade(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2"><Label>{t("garage.body_color")}</Label><Input placeholder="" value={color} onChange={(e) => setColor(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2"><Label>{t("garage.current_odo")} <span className="text-red-500">{t("common.required")}</span></Label><Input type="number" placeholder="52400" value={currentOdo} onChange={(e) => setCurrentOdo(e.target.value)} required className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2"><Label>{t("garage.first_registration")}</Label><Input type="month" value={firstRegistrationDate} onChange={(e) => setFirstRegistrationDate(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground appearance-none h-8 min-h-0" /></div>
+                    <div className="space-y-2"><Label>{t("common.delivery_date")}</Label><Input type="date" value={purchaseDate} onChange={(e) => setPurchaseDate(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground appearance-none h-8 min-h-0" /></div>
+                    <div className="space-y-2"><Label>{t("garage.purchase_odo")}</Label><Input type="number" placeholder="48000" value={purchaseOdo} onChange={(e) => setPurchaseOdo(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2"><Label>{t("garage.purchase_price")}</Label><Input type="number" placeholder="2500000" value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
                   </div>
                   <div className="space-y-2">
                     <Label>{t("garage.fuel_type")}</Label>
@@ -598,10 +598,10 @@ export default function GaragePage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50/50 px-4 py-3">
+                  <div className="flex items-center justify-between rounded-lg border border-slate-100 dark:border-border bg-slate-50/50 dark:bg-muted/50 px-4 py-3">
                     <div className="space-y-0.5 pr-3">
                       <Label htmlFor="include-price" className="cursor-pointer">{t("garage.include_price_in_cost")}</Label>
-                      <p className="text-[11px] text-slate-400">{t("garage.include_price_in_cost_hint")}</p>
+                      <p className="text-[11px] text-slate-400 dark:text-muted-foreground">{t("garage.include_price_in_cost_hint")}</p>
                     </div>
                     <Switch id="include-price" checked={includePriceInCost} onCheckedChange={setIncludePriceInCost} />
                   </div>
@@ -627,16 +627,16 @@ export default function GaragePage() {
           )}
 
           {!loading && !isAddingCar && !editCarId && cars.length === 0 && (
-            <div className="text-center py-20 bg-slate-50 rounded-xl">
-              <CarFront className="mx-auto h-12 w-12 text-slate-300 mb-3" />
-              <p className="text-slate-500 font-medium">{t("garage.no_cars")}</p>
+            <div className="text-center py-20 bg-slate-50 dark:bg-muted rounded-xl">
+              <CarFront className="mx-auto h-12 w-12 text-slate-300 dark:text-muted-foreground mb-3" />
+              <p className="text-slate-500 dark:text-muted-foreground font-medium">{t("garage.no_cars")}</p>
             </div>
           )}
 
           {!loading && !isAddingCar && !editCarId && cars.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {cars.map((car) => (
-                <Card key={car.id} className="border-none shadow-sm overflow-hidden bg-white p-0 relative group">
+                <Card key={car.id} className="border-none shadow-sm overflow-hidden bg-white dark:bg-card p-0 relative group">
                   <div className="absolute top-3 right-3 flex items-center gap-2 z-20">
                     {/* 画像の位置、ズーム調整ボタン（画像が設定済みの場合のみ） */}
                     {car.image_url && (
@@ -661,7 +661,7 @@ export default function GaragePage() {
                     </Label>
                   </div>
 
-                  <div className="relative aspect-[11/6] bg-slate-800 w-full m-0 border-b border-slate-100 overflow-hidden">
+                  <div className="relative aspect-[11/6] bg-slate-800 w-full m-0 border-b border-slate-100 dark:border-border overflow-hidden">
                     {/* 登録済みの画像がある場合は表示 */}
                     {car.image_url && (
                       <img src={car.image_url} alt={car.name} className="absolute inset-0 w-full h-full object-cover" style={getCarImageStyle(car)} />
@@ -669,63 +669,63 @@ export default function GaragePage() {
                   </div>
 
                   <CardContent className="p-0 m-0">
-                    <div className="px-4 pb-4 bg-white relative z-20">
-                      <h3 className="text-2xl font-black text-slate-800 tracking-wider mt-1">{car.name}</h3>
-                      <p className="text-[10px] font-bold text-slate-400 tracking-widest">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
+                    <div className="px-4 pb-4 bg-white dark:bg-card relative z-20">
+                      <h3 className="text-2xl font-black text-slate-800 dark:text-foreground tracking-wider mt-1">{car.name}</h3>
+                      <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground tracking-widest">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
                     </div>
-                    <div className="grid grid-cols-2 divide-x divide-slate-100 border-t border-b border-slate-100">
+                    <div className="grid grid-cols-2 divide-x divide-slate-100 dark:divide-border border-t border-b border-slate-100 dark:border-border">
                       <div className="p-4">
-                        <p className="text-[9px] font-bold text-slate-400 mb-1 uppercase tracking-widest">{t("common.odometer")}</p>
-                        <p className="text-lg font-black text-slate-800 tracking-wider">{car.current_odo.toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
+                        <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-widest">{t("common.odometer")}</p>
+                        <p className="text-lg font-black text-slate-800 dark:text-foreground tracking-wider">{car.current_odo.toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
                       </div>
                       <div className="p-4">
-                        <p className="text-[9px] font-bold text-slate-400 mb-1 uppercase tracking-widest">{t("common.total_cost")}</p>
-                        <p className="text-lg font-black text-slate-800 tracking-wider">¥{
+                        <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-widest">{t("common.total_cost")}</p>
+                        <p className="text-lg font-black text-slate-800 dark:text-foreground tracking-wider">¥{
                           (records.filter(r => r.car_id === car.id).reduce((sum, r) => sum + r.amount, 0)
                             + (car.include_price_in_cost ? (car.purchase_price || 0) : 0)).toLocaleString()
                         }</p>
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 divide-x divide-slate-100 border-b border-slate-100 bg-slate-50/30">
+                    <div className="grid grid-cols-2 divide-x divide-slate-100 dark:divide-border border-b border-slate-100 dark:border-border bg-slate-50/30 dark:bg-muted/30">
                       <div className="p-4">
-                        <p className="text-[9px] font-bold text-slate-400 mb-1 uppercase tracking-widest">{t("common.distance_since_delivery")}</p>
-                        <p className="text-lg font-black text-slate-800 tracking-wider">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
+                        <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-widest">{t("common.distance_since_delivery")}</p>
+                        <p className="text-lg font-black text-slate-800 dark:text-foreground tracking-wider">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
                       </div>
                       <div className="p-4">
-                        <p className="text-[9px] font-bold text-slate-400 mb-1 uppercase tracking-widest">{t("common.ownership_period")}</p>
-                        <p className="text-lg font-black text-slate-800 tracking-wider">{formatMonthsPassedLocale(car.purchase_date, locale)}</p>
+                        <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-widest">{t("common.ownership_period")}</p>
+                        <p className="text-lg font-black text-slate-800 dark:text-foreground tracking-wider">{formatMonthsPassedLocale(car.purchase_date, locale)}</p>
                       </div>
                     </div>
-                    <div className="p-4 flex flex-col gap-2.5 text-xs bg-slate-50/50">
+                    <div className="p-4 flex flex-col gap-2.5 text-xs bg-slate-50/50 dark:bg-muted/50">
                       <div className="flex justify-between items-center">
-                        <span className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">{t("common.delivery_date")}</span>
-                        <span className="font-bold text-slate-700 tracking-wider text-[10px]">{formatDateLocale(car.purchase_date, locale)}</span>
+                        <span className="text-slate-400 dark:text-muted-foreground font-bold uppercase tracking-widest text-[9px]">{t("common.delivery_date")}</span>
+                        <span className="font-bold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{formatDateLocale(car.purchase_date, locale)}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">{t("common.car_age")}</span>
-                        <span className="font-bold text-slate-700 tracking-wider text-[10px]">{formatMonthsPassedLocale(car.first_registration_date, locale)}</span>
+                        <span className="text-slate-400 dark:text-muted-foreground font-bold uppercase tracking-widest text-[9px]">{t("common.car_age")}</span>
+                        <span className="font-bold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{formatMonthsPassedLocale(car.first_registration_date, locale)}</span>
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">{t("common.grade")}</span>
-                        <span className="font-bold text-slate-700 tracking-wider text-[10px]">{car.grade || "-"}</span>
+                        <span className="text-slate-400 dark:text-muted-foreground font-bold uppercase tracking-widest text-[9px]">{t("common.grade")}</span>
+                        <span className="font-bold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{car.grade || "-"}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-4">
-                          <span className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">{t("garage.status")}</span>
-                          <span className="font-bold text-slate-700 tracking-wider text-[10px]">{t(`garage.car_status_${car.status}`)}</span>
+                          <span className="text-slate-400 dark:text-muted-foreground font-bold uppercase tracking-widest text-[9px]">{t("garage.status")}</span>
+                          <span className="font-bold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{t(`garage.car_status_${car.status}`)}</span>
                         </div>
                         {/* 編集・削除アクション */}
                         <div className="flex items-center gap-1">
                           <button
                             onClick={() => handleStartEditCar(car)}
-                            className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                            className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                             title={t("common.edit")}
                           >
                             <Pencil size={14} />
                           </button>
                           <button
                             onClick={() => { setDeleteCarTarget(car); setDeleteCarConfirmName(""); }}
-                            className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
+                            className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
                             title={t("common.delete")}
                           >
                             <Trash2 size={14} />
@@ -743,31 +743,31 @@ export default function GaragePage() {
         {/* 車両削除確認モーダル */}
         {deleteCarTarget && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => { setDeleteCarTarget(null); setDeleteCarConfirmName(""); }}>
-            <Card className="border-none shadow-2xl bg-white max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center gap-3 text-red-500">
                   <AlertTriangle size={24} />
-                  <h2 className="text-lg font-extrabold text-slate-800">{t("garage.delete_car_title")}</h2>
+                  <h2 className="text-lg font-extrabold text-slate-800 dark:text-foreground">{t("garage.delete_car_title")}</h2>
                 </div>
-                <p className="text-sm text-slate-600">
-                  <span className="font-bold text-slate-800">{t("garage.delete_car_message", { name: deleteCarTarget.name })}</span><br />
+                <p className="text-sm text-slate-600 dark:text-muted-foreground">
+                  <span className="font-bold text-slate-800 dark:text-foreground">{t("garage.delete_car_message", { name: deleteCarTarget.name })}</span><br />
                   {t("garage.delete_car_warning")}
                 </p>
-                <p className="text-xs font-bold text-red-600 bg-red-50 rounded-lg px-3 py-2">
+                <p className="text-xs font-bold text-red-600 dark:text-red-300 bg-red-50 dark:bg-red-950/40 rounded-lg px-3 py-2">
                   {t("garage.delete_car_records_count", { count: records.filter((r) => r.car_id === deleteCarTarget.id).length })}
                 </p>
-                <p className="text-xs text-slate-500 bg-slate-50 rounded-lg px-3 py-2">
+                <p className="text-xs text-slate-500 dark:text-muted-foreground bg-slate-50 dark:bg-muted rounded-lg px-3 py-2">
                   {t("garage.delete_car_archive_hint")}
                 </p>
                 <div className="space-y-2">
-                  <p className="text-xs font-bold text-slate-800">
+                  <p className="text-xs font-bold text-slate-800 dark:text-foreground">
                     {t("garage.delete_confirm_instruction")}
                   </p>
                   <Input
                     placeholder={deleteCarTarget.name}
                     value={deleteCarConfirmName}
                     onChange={(e) => setDeleteCarConfirmName(e.target.value)}
-                    className="bg-white placeholder:text-slate-300"
+                    className="bg-white dark:bg-card placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
                   />
                 </div>
                 <div className="flex gap-3 pt-2">
@@ -795,13 +795,13 @@ export default function GaragePage() {
         {/* 画像の位置、ズーム調整モーダル */}
         {adjustTarget && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setAdjustTarget(null)}>
-            <Card className="border-none shadow-2xl bg-white max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
               <CardContent className="p-6 space-y-4">
-                <div className="flex items-center gap-3 text-slate-800">
+                <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
                   <Move size={20} />
                   <h2 className="text-lg font-extrabold">{t("garage.adjust_image_title")}</h2>
                 </div>
-                <p className="text-xs text-slate-500 font-medium">{t("garage.adjust_image_hint")}</p>
+                <p className="text-xs text-slate-500 dark:text-muted-foreground font-medium">{t("garage.adjust_image_hint")}</p>
 
                 {/* プレビュー */}
                 <div
@@ -824,8 +824,8 @@ export default function GaragePage() {
                 {/* ズームスライダー */}
                 <div className="space-y-1">
                   <div className="flex justify-between items-center">
-                    <Label className="text-xs font-bold text-slate-600">{t("garage.zoom")}</Label>
-                    <span className="text-xs font-bold text-slate-400 tabular-nums">{adjustScale.toFixed(1)}x</span>
+                    <Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.zoom")}</Label>
+                    <span className="text-xs font-bold text-slate-400 dark:text-muted-foreground tabular-nums">{adjustScale.toFixed(1)}x</span>
                   </div>
                   <input
                     type="range"
@@ -862,18 +862,18 @@ export default function GaragePage() {
           </div>
 
           {!loading && cars.length === 0 && (
-            <div className="text-center py-20 bg-slate-50 rounded-xl">
-              <p className="text-slate-500 font-medium">{t("garage.register_car_first_line1")}<br />{t("garage.register_car_first_line2")}</p>
+            <div className="text-center py-20 bg-slate-50 dark:bg-muted rounded-xl">
+              <p className="text-slate-500 dark:text-muted-foreground font-medium">{t("garage.register_car_first_line1")}<br />{t("garage.register_car_first_line2")}</p>
             </div>
           )}
 
           {(isAddingWish || editWishId) && (
-            <Card className="border-none shadow-md bg-white mb-6">
+            <Card className="border-none shadow-md bg-white dark:bg-card mb-6">
               <CardContent className="p-6 relative">
-                <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400" onClick={resetWishForm}>
+                <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetWishForm}>
                   <X className="h-4 w-4" />
                 </Button>
-                <h2 className="text-xl font-extrabold text-slate-800 mb-6">
+                <h2 className="text-xl font-extrabold text-slate-800 dark:text-foreground mb-6">
                   {editWishId ? t("garage.edit_wish") : t("garage.add_wish")}
                 </h2>
 
@@ -933,9 +933,9 @@ export default function GaragePage() {
           )}
 
           {!loading && !isAddingWish && !editWishId && wishlists.length === 0 && cars.length > 0 && (
-            <div className="text-center py-20 bg-slate-50 rounded-xl">
-              <ListTodo className="mx-auto h-12 w-12 text-slate-300 mb-3" />
-              <p className="text-slate-500 font-medium">{t("garage.no_wishlist")}</p>
+            <div className="text-center py-20 bg-slate-50 dark:bg-muted rounded-xl">
+              <ListTodo className="mx-auto h-12 w-12 text-slate-300 dark:text-muted-foreground mb-3" />
+              <p className="text-slate-500 dark:text-muted-foreground font-medium">{t("garage.no_wishlist")}</p>
             </div>
           )}
 
@@ -946,19 +946,19 @@ export default function GaragePage() {
                 // http(s) 以外のスキームは弾き、安全なURLのみリンク化
                 const safeUrl = getSafeExternalUrl(wish.url)
                 return (
-                  <Card key={wish.id} className="border border-slate-100 shadow-sm bg-white overflow-hidden relative">
+                  <Card key={wish.id} className="border border-slate-100 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden relative">
                     {/* 編集・削除ボタン（右上に常時表示） */}
                     <div className="absolute top-3 right-3 flex items-center gap-1 z-10">
                       <button
                         onClick={() => handleStartEditWish(wish)}
-                        className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                        className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                         title={t("common.edit")}
                       >
                         <Pencil size={14} />
                       </button>
                       <button
                         onClick={() => handleDeleteWish(wish.id)}
-                        className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
+                        className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
                         title={t("common.delete")}
                       >
                         <Trash2 size={14} />
@@ -967,39 +967,39 @@ export default function GaragePage() {
                     <CardContent className="p-4 flex flex-col justify-between h-full">
                       <div>
                         <div className="flex justify-between items-start mb-2 pr-16">
-                          <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-sm">
+                          <span className="text-[10px] font-bold text-slate-500 dark:text-muted-foreground bg-slate-100 dark:bg-muted px-2 py-0.5 rounded-sm">
                             {t(`wishlist_genres.${wish.genre}`)} / {wish.cars.name}
                           </span>
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusStyle}`}>
                             {t(`wishlist_statuses.${wish.status}`)}
                           </span>
                         </div>
-                        <h3 className="font-bold text-slate-800 text-lg leading-tight mb-1">{wish.item_name}</h3>
+                        <h3 className="font-bold text-slate-800 dark:text-foreground text-lg leading-tight mb-1">{wish.item_name}</h3>
 
                         {wish.price_estimate > 0 && (
                           <p className="text-sm font-bold text-blue-600 mb-2">¥{wish.price_estimate.toLocaleString()}</p>
                         )}
 
                         {wish.memo && (
-                          <p className="text-xs text-slate-500 bg-slate-50 p-2 rounded-md mb-3 line-clamp-2">
+                          <p className="text-xs text-slate-500 dark:text-muted-foreground bg-slate-50 dark:bg-muted p-2 rounded-md mb-3 line-clamp-2">
                             {wish.memo}
                           </p>
                         )}
                       </div>
 
-                      <div className="flex items-center justify-between mt-2 pt-3 border-t border-slate-50">
+                      <div className="flex items-center justify-between mt-2 pt-3 border-t border-slate-50 dark:border-border">
                         {safeUrl ? (
                           <a href={safeUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-blue-500 hover:text-blue-700 flex items-center gap-1 transition-colors">
                             <ExternalLink size={12} /> {t("garage.open_link")}
                           </a>
                         ) : (
-                          <span className="text-xs text-slate-300">{t("garage.no_link")}</span>
+                          <span className="text-xs text-slate-300 dark:text-muted-foreground">{t("garage.no_link")}</span>
                         )}
 
                         {/* ステータス変更ドロップダウン */}
                         <div className="w-32">
                           <Select defaultValue={wish.status} onValueChange={(val) => updateWishStatus(wish.id, val)}>
-                            <SelectTrigger className="h-7 text-xs font-bold bg-slate-50 border-none">
+                            <SelectTrigger className="h-7 text-xs font-bold bg-slate-50 dark:bg-muted border-none">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>

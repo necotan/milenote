@@ -11,6 +11,7 @@ import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3 } from "lucide-react"
 import { toast } from "sonner"
+import { useTheme } from "next-themes"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { recordsToCsv, downloadCsv, buildExportFilename } from "@/lib/csvExport"
@@ -30,12 +31,19 @@ const DEFAULT_MAINT_SETTINGS = {
   "periodic_inspection": { km: 0, months: 6, months_only: true },
 }
 
+const THEME_OPTIONS: { value: "light" | "dark"; color: string; labelKey: string }[] = [
+  { value: "light", color: "#ffffff", labelKey: "mypage.theme_light" },
+  { value: "dark", color: "#000000", labelKey: "mypage.theme_dark" },
+]
+
 export default function MyPage() {
   const [username, setUsername] = useState("")
   const [displayName, setDisplayName] = useState("")
   const [maintSettings, setMaintSettings] = useState<any>(DEFAULT_MAINT_SETTINGS)
   const [homeOrder, setHomeOrder] = useState<string[]>(["summary", "alerts", "cars"])
   const [isColorful, setIsColorful] = useState(false)
+  const { theme, setTheme } = useTheme()
+  const [themeMounted, setThemeMounted] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [exporting, setExporting] = useState(false)
@@ -45,6 +53,11 @@ export default function MyPage() {
 
   // 初回ローディング画面とデータ取得を連動させる
   usePageLoadingGate(!loading)
+
+  // next-themesのtheme値はSSR/初回マウント時にundefinedになるためハイドレーション後に表示を確定させる
+  useEffect(() => {
+    setThemeMounted(true)
+  }, [])
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -225,56 +238,56 @@ export default function MyPage() {
   if (loading) return (
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2">
-        <div className="h-8 w-32 bg-slate-100 rounded-lg skeleton" />
+        <div className="h-8 w-32 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
       </header>
       <div className="space-y-8">
         {/* プロフィールカードスケルトン */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden">
           <div className="md:flex">
-            <div className="md:w-1/3 p-6 bg-slate-50/50 space-y-2">
-              <div className="h-5 w-24 bg-slate-100 rounded skeleton" />
-              <div className="h-3 w-full bg-slate-100 rounded skeleton" />
-              <div className="h-3 w-4/5 bg-slate-100 rounded skeleton" />
+            <div className="md:w-1/3 p-6 bg-slate-50/50 dark:bg-muted/50 space-y-2">
+              <div className="h-5 w-24 bg-slate-100 dark:bg-muted rounded skeleton" />
+              <div className="h-3 w-full bg-slate-100 dark:bg-muted rounded skeleton" />
+              <div className="h-3 w-4/5 bg-slate-100 dark:bg-muted rounded skeleton" />
             </div>
             <div className="md:w-2/3 p-6 space-y-5">
               {[...Array(2)].map((_, i) => (
                 <div key={i} className="space-y-2 max-w-md">
-                  <div className="h-3 w-16 bg-slate-100 rounded skeleton" />
-                  <div className="h-10 w-full bg-slate-100 rounded-lg skeleton" />
+                  <div className="h-3 w-16 bg-slate-100 dark:bg-muted rounded skeleton" />
+                  <div className="h-10 w-full bg-slate-100 dark:bg-muted rounded-lg skeleton" />
                 </div>
               ))}
             </div>
           </div>
-          <div className="border-t border-slate-100 px-6 py-3 flex justify-between items-center">
-            <div className="h-3 w-48 bg-slate-100 rounded skeleton" />
-            <div className="h-8 w-16 bg-slate-100 rounded-lg skeleton" />
+          <div className="border-t border-slate-100 dark:border-border px-6 py-3 flex justify-between items-center">
+            <div className="h-3 w-48 bg-slate-100 dark:bg-muted rounded skeleton" />
+            <div className="h-8 w-16 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
           </div>
         </div>
         {/* メンテナンス設定カードスケルトン */}
-        <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden">
           <div className="md:flex">
-            <div className="md:w-1/3 p-6 bg-slate-50/50 space-y-2">
-              <div className="h-5 w-32 bg-slate-100 rounded skeleton" />
-              <div className="h-3 w-full bg-slate-100 rounded skeleton" />
-              <div className="h-3 w-4/5 bg-slate-100 rounded skeleton" />
+            <div className="md:w-1/3 p-6 bg-slate-50/50 dark:bg-muted/50 space-y-2">
+              <div className="h-5 w-32 bg-slate-100 dark:bg-muted rounded skeleton" />
+              <div className="h-3 w-full bg-slate-100 dark:bg-muted rounded skeleton" />
+              <div className="h-3 w-4/5 bg-slate-100 dark:bg-muted rounded skeleton" />
             </div>
             <div className="md:w-2/3 p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                 {[...Array(4)].map((_, i) => (
                   <div key={i} className="space-y-2">
-                    <div className="h-3 w-24 bg-slate-100 rounded skeleton" />
+                    <div className="h-3 w-24 bg-slate-100 dark:bg-muted rounded skeleton" />
                     <div className="flex gap-3">
-                      <div className="h-9 flex-1 bg-slate-100 rounded-lg skeleton" />
-                      <div className="h-9 flex-1 bg-slate-100 rounded-lg skeleton" />
+                      <div className="h-9 flex-1 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+                      <div className="h-9 flex-1 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-          <div className="border-t border-slate-100 px-6 py-3 flex justify-between items-center">
-            <div className="h-3 w-48 bg-slate-100 rounded skeleton" />
-            <div className="h-8 w-16 bg-slate-100 rounded-lg skeleton" />
+          <div className="border-t border-slate-100 dark:border-border px-6 py-3 flex justify-between items-center">
+            <div className="h-3 w-48 bg-slate-100 dark:bg-muted rounded skeleton" />
+            <div className="h-8 w-16 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
           </div>
         </div>
       </div>
@@ -285,21 +298,21 @@ export default function MyPage() {
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2 flex justify-between items-start">
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">{t("mypage.title")}</h1>
-          <p className="text-xs font-bold text-slate-400 tracking-wider mt-1">{t("mypage.subtitle")}</p>
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>
+          <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("mypage.subtitle")}</p>
         </div>
       </header>
 
       <div className="space-y-8">
         {/* プロフィール設定 */}
-        <Card className="border border-slate-200 shadow-sm bg-white overflow-hidden rounded-xl">
+        <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
-            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 bg-white">
-              <h2 className="text-base font-bold text-slate-800 flex items-center gap-2 mb-2">
-                <User size={18} className="text-slate-500" /> {t("mypage.profile")}
+            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
+              <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
+                <User size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.profile")}
               </h2>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed">
                 {t("mypage.profile_desc")}
               </p>
             </div>
@@ -307,39 +320,39 @@ export default function MyPage() {
             {/* 右側：入力フォーム */}
             <div className="md:w-2/3 p-6 space-y-5">
               <div className="space-y-2 max-w-md">
-                <Label className="text-slate-700 font-bold text-xs">{t("mypage.display_name")}</Label>
-                <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="milenote_user" className="bg-white border-slate-200 h-10 text-sm focus-visible:ring-1 focus-visible:ring-slate-300" />
+                <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.display_name")}</Label>
+                <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="milenote_user" className="bg-white dark:bg-card border-slate-200 dark:border-border h-10 text-sm focus-visible:ring-1 focus-visible:ring-slate-300" />
               </div>
 
               <div className="space-y-2 max-w-md">
-                <Label className="text-slate-700 font-bold text-xs">{t("mypage.user_id")}</Label>
-                <div className="flex h-10 w-full overflow-hidden rounded-md border border-slate-200 focus-within:ring-1 focus-within:ring-slate-300">
-                  <span className="flex items-center justify-center bg-slate-50 border-r border-slate-200 text-slate-400 px-3 text-sm font-bold min-w-[40px]">@</span>
-                  <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="milenote_user" className="border-none bg-white h-full w-full focus-visible:ring-0 focus-visible:ring-offset-0 text-sm" />
+                <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.user_id")}</Label>
+                <div className="flex h-10 w-full overflow-hidden rounded-md border border-slate-200 dark:border-border focus-within:ring-1 focus-within:ring-slate-300">
+                  <span className="flex items-center justify-center bg-slate-50 dark:bg-muted border-r border-slate-200 dark:border-border text-slate-400 dark:text-muted-foreground px-3 text-sm font-bold min-w-[40px]">@</span>
+                  <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="milenote_user" className="border-none bg-white dark:bg-card h-full w-full focus-visible:ring-0 focus-visible:ring-offset-0 text-sm" />
                 </div>
-                <p className="text-xs text-slate-400">{t("signup.user_id_hint")}</p>
+                <p className="text-xs text-slate-400 dark:text-muted-foreground">{t("signup.user_id_hint")}</p>
               </div>
             </div>
           </div>
 
           {/* 下部：保存ボタンエリア */}
-          <div data-slot="card-footer" className="border-t border-slate-100 p-6 flex flex-col items-end gap-4 md:flex-row md:justify-between md:items-end md:gap-6">
-            <p className="w-full md:w-auto text-[11px] text-slate-500 font-medium">{t("mypage.save_note")}</p>
-            <Button onClick={handleUpdate} disabled={saving} className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 text-white hover:bg-slate-800 rounded-lg shadow-sm">
+          <div data-slot="card-footer" className="border-t border-slate-100 dark:border-border p-6 flex flex-col items-end gap-4 md:flex-row md:justify-between md:items-end md:gap-6">
+            <p className="w-full md:w-auto text-[11px] text-slate-500 dark:text-muted-foreground font-medium">{t("mypage.save_note")}</p>
+            <Button onClick={handleUpdate} disabled={saving} className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground hover:bg-slate-800 dark:hover:bg-primary/90 rounded-lg shadow-sm">
               {saving ? t("common.saving") : t("mypage.save_button")}
             </Button>
           </div>
         </Card>
 
         {/* メンテナンス基準設定 */}
-        <Card className="border border-slate-200 shadow-sm bg-white overflow-hidden rounded-xl">
+        <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
-            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 bg-white">
-              <h2 className="text-base font-bold text-slate-800 flex items-center gap-2 mb-2">
-                <Wrench size={18} className="text-slate-500" /> {t("mypage.maintenance_settings")}
+            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
+              <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
+                <Wrench size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.maintenance_settings")}
               </h2>
-              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+              <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
                 {t("mypage.maintenance_desc")}
               </p>
             </div>
@@ -353,9 +366,9 @@ export default function MyPage() {
                   return (
                   <div key={key} className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label className={`text-xs font-bold ${isEnabled ? "text-slate-700" : "text-slate-400"}`}>{t(`subcategories.${key}`)}</Label>
+                      <Label className={`text-xs font-bold ${isEnabled ? "text-slate-700 dark:text-foreground" : "text-slate-400 dark:text-muted-foreground"}`}>{t(`subcategories.${key}`)}</Label>
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-slate-400">{isEnabled ? t("mypage.notify_on") : t("mypage.notify_off")}</span>
+                        <span className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{isEnabled ? t("mypage.notify_on") : t("mypage.notify_off")}</span>
                         <Switch checked={isEnabled} onCheckedChange={(v) => handleMaintToggle(key, v)} />
                       </div>
                     </div>
@@ -367,9 +380,9 @@ export default function MyPage() {
                             value={maintSettings[key]?.km || ""}
                             onChange={(e) => handleMaintChange(key, "km", e.target.value)}
                             disabled={!isEnabled}
-                            className="h-9 text-sm bg-white border-slate-200 pr-8 focus-visible:ring-1 focus-visible:ring-slate-300"
+                            className="h-9 text-sm bg-white dark:bg-card border-slate-200 dark:border-border pr-8 focus-visible:ring-1 focus-visible:ring-slate-300"
                           />
-                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 pointer-events-none">{t("common.km_unit")}</span>
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground pointer-events-none">{t("common.km_unit")}</span>
                         </div>
                       )}
                       <div className={`relative ${isMonthsOnly ? "w-full" : "flex-1"}`}>
@@ -378,9 +391,9 @@ export default function MyPage() {
                           value={maintSettings[key]?.months || ""}
                           onChange={(e) => handleMaintChange(key, "months", e.target.value)}
                           disabled={!isEnabled}
-                          className="h-9 text-sm bg-white border-slate-200 pr-10 focus-visible:ring-1 focus-visible:ring-slate-300"
+                          className="h-9 text-sm bg-white dark:bg-card border-slate-200 dark:border-border pr-10 focus-visible:ring-1 focus-visible:ring-slate-300"
                         />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 pointer-events-none">{t("common.months_unit")}</span>
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground pointer-events-none">{t("common.months_unit")}</span>
                       </div>
                     </div>
                   </div>
@@ -391,23 +404,23 @@ export default function MyPage() {
           </div>
 
           {/* 下部：保存ボタンエリア */}
-          <div data-slot="card-footer" className="border-t border-slate-100 p-6 flex flex-col items-end gap-4 md:flex-row md:justify-between md:items-end md:gap-6">
-            <p className="w-full md:w-auto text-[11px] text-slate-500 font-medium">{t("mypage.save_together_note")}</p>
-            <Button onClick={handleUpdate} disabled={saving} className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 text-white hover:bg-slate-800 rounded-lg shadow-sm">
+          <div data-slot="card-footer" className="border-t border-slate-100 dark:border-border p-6 flex flex-col items-end gap-4 md:flex-row md:justify-between md:items-end md:gap-6">
+            <p className="w-full md:w-auto text-[11px] text-slate-500 dark:text-muted-foreground font-medium">{t("mypage.save_together_note")}</p>
+            <Button onClick={handleUpdate} disabled={saving} className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground hover:bg-slate-800 dark:hover:bg-primary/90 rounded-lg shadow-sm">
               {saving ? t("common.saving") : t("mypage.save_button")}
             </Button>
           </div>
         </Card>
 
         {/* 言語設定 */}
-        <Card className="border border-slate-200 shadow-sm bg-white overflow-hidden rounded-xl">
+        <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
-            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 bg-white">
-              <h2 className="text-base font-bold text-slate-800 flex items-center gap-2 mb-2">
-                <Globe size={18} className="text-slate-500" /> {t("mypage.language")}
+            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
+              <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
+                <Globe size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.language")}
               </h2>
-              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+              <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
                 {t("mypage.language_desc")}
               </p>
             </div>
@@ -419,23 +432,23 @@ export default function MyPage() {
                   onClick={() => setLocale("ja")}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
                     locale === "ja"
-                      ? "border-slate-700 bg-slate-50 shadow-sm"
-                      : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
+                      ? "border-slate-700 dark:border-slate-300 bg-slate-50 dark:bg-muted shadow-sm"
+                      : "border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border hover:bg-slate-50/50 dark:hover:bg-muted/50"
                   }`}
                 >
                   <span className="text-lg">🇯🇵</span>
-                  <span className={`text-sm font-bold ${locale === "ja" ? "text-slate-800" : "text-slate-500"}`}>日本語</span>
+                  <span className={`text-sm font-bold ${locale === "ja" ? "text-slate-800 dark:text-foreground" : "text-slate-500 dark:text-muted-foreground"}`}>日本語</span>
                 </button>
                 <button
                   onClick={() => setLocale("en")}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
                     locale === "en"
-                      ? "border-slate-700 bg-slate-50 shadow-sm"
-                      : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
+                      ? "border-slate-700 dark:border-slate-300 bg-slate-50 dark:bg-muted shadow-sm"
+                      : "border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border hover:bg-slate-50/50 dark:hover:bg-muted/50"
                   }`}
                 >
                   <span className="text-lg">🇺🇸</span>
-                  <span className={`text-sm font-bold ${locale === "en" ? "text-slate-800" : "text-slate-500"}`}>English</span>
+                  <span className={`text-sm font-bold ${locale === "en" ? "text-slate-800 dark:text-foreground" : "text-slate-500 dark:text-muted-foreground"}`}>English</span>
                 </button>
               </div>
             </div>
@@ -443,28 +456,28 @@ export default function MyPage() {
         </Card>
 
         {/* アクセシビリティ */}
-        <Card className="border border-slate-200 shadow-sm bg-white overflow-hidden rounded-xl">
+        <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
-            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 bg-white">
-              <h2 className="text-base font-bold text-slate-800 flex items-center gap-2 mb-2">
-                <Accessibility size={18} className="text-slate-500" /> {t("mypage.accessibility")}
+            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
+              <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
+                <Accessibility size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.accessibility")}
               </h2>
-              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+              <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
                 {t("mypage.accessibility_desc")}
               </p>
             </div>
 
             {/* 右側：カラーモード選択UI */}
             <div className="md:w-2/3 p-6">
-              <Label className="text-slate-700 font-bold text-xs">{t("mypage.chart_color_mode")}</Label>
+              <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.chart_color_mode")}</Label>
               <div className="flex gap-3 max-w-sm mt-2">
                 <button
                   onClick={() => handleColorfulChange(false)}
                   className={`flex-1 flex flex-col items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
                     !isColorful
-                      ? "border-slate-700 bg-slate-50 shadow-sm"
-                      : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
+                      ? "border-slate-700 dark:border-slate-300 bg-slate-50 dark:bg-muted shadow-sm"
+                      : "border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border hover:bg-slate-50/50 dark:hover:bg-muted/50"
                   }`}
                 >
                   <div className="flex gap-1">
@@ -472,14 +485,14 @@ export default function MyPage() {
                       <span key={c} className="w-3 h-3 rounded-full" style={{ background: c }} />
                     ))}
                   </div>
-                  <span className={`text-sm font-bold ${!isColorful ? "text-slate-800" : "text-slate-500"}`}>{t("mypage.chart_color_basic")}</span>
+                  <span className={`text-sm font-bold ${!isColorful ? "text-slate-800 dark:text-foreground" : "text-slate-500 dark:text-muted-foreground"}`}>{t("mypage.chart_color_basic")}</span>
                 </button>
                 <button
                   onClick={() => handleColorfulChange(true)}
                   className={`flex-1 flex flex-col items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
                     isColorful
-                      ? "border-slate-700 bg-slate-50 shadow-sm"
-                      : "border-slate-200 hover:border-slate-300 hover:bg-slate-50/50"
+                      ? "border-slate-700 dark:border-slate-300 bg-slate-50 dark:bg-muted shadow-sm"
+                      : "border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border hover:bg-slate-50/50 dark:hover:bg-muted/50"
                   }`}
                 >
                   <div className="flex gap-1">
@@ -487,22 +500,45 @@ export default function MyPage() {
                       <span key={c} className="w-3 h-3 rounded-full" style={{ background: c }} />
                     ))}
                   </div>
-                  <span className={`text-sm font-bold ${isColorful ? "text-slate-800" : "text-slate-500"}`}>{t("mypage.chart_color_colorful")}</span>
+                  <span className={`text-sm font-bold ${isColorful ? "text-slate-800 dark:text-foreground" : "text-slate-500 dark:text-muted-foreground"}`}>{t("mypage.chart_color_colorful")}</span>
                 </button>
+              </div>
+
+              <div className="mt-6">
+                <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.theme_mode")}</Label>
+                <div className="flex gap-3 max-w-sm mt-2">
+                  {THEME_OPTIONS.map(({ value, color, labelKey }) => {
+                    const active = themeMounted && theme === value
+                    return (
+                      <button
+                        key={value}
+                        onClick={() => setTheme(value)}
+                        className={`flex-1 flex flex-col items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
+                          active
+                            ? "border-slate-700 dark:border-slate-300 bg-slate-50 dark:bg-muted shadow-sm"
+                            : "border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border hover:bg-slate-50/50 dark:hover:bg-muted/50"
+                        }`}
+                      >
+                        <span className="w-5 h-5 rounded-full border border-slate-300 dark:border-border" style={{ background: color }} />
+                        <span className={`text-sm font-bold ${active ? "text-slate-800 dark:text-foreground" : "text-slate-500 dark:text-muted-foreground"}`}>{t(labelKey)}</span>
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
             </div>
           </div>
         </Card>
 
         {/* ホーム画面のカスタマイズ */}
-        <Card className="border border-slate-200 shadow-sm bg-white overflow-hidden rounded-xl">
+        <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
-            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 bg-white">
-              <h2 className="text-base font-bold text-slate-800 flex items-center gap-2 mb-2">
-                <LayoutTemplate size={18} className="text-slate-500" /> {t("mypage.home_order")}
+            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
+              <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
+                <LayoutTemplate size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.home_order")}
               </h2>
-              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+              <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
                 {t("mypage.home_order_desc")}
               </p>
             </div>
@@ -542,45 +578,45 @@ export default function MyPage() {
                         transition: isDragging || justDroppedId === sectionId ? "none" : "transform 200ms ease",
                         zIndex: isDragging ? 10 : 0,
                       }}
-                      className={`relative flex items-center gap-3 bg-white border p-3 rounded-lg select-none touch-none cursor-grab active:cursor-grabbing ${
+                      className={`relative flex items-center gap-3 bg-white dark:bg-surface-2 border p-3 rounded-lg select-none touch-none cursor-grab active:cursor-grabbing ${
                         isDragging
-                          ? "border-slate-400 shadow-lg ring-2 ring-slate-300"
-                          : "border-slate-200 shadow-sm"
+                          ? "border-slate-400 dark:border-ring shadow-lg ring-2 ring-slate-300 dark:ring-surface-border"
+                          : "border-slate-200 dark:border-surface-3 shadow-sm"
                       }`}
                     >
                       {/* セクションアイコン */}
-                      <span className="flex items-center justify-center h-8 w-8 shrink-0 rounded-lg bg-slate-100 text-slate-600">
+                      <span className="flex items-center justify-center h-8 w-8 shrink-0 rounded-lg bg-slate-100 dark:bg-surface-3 text-slate-600 dark:text-foreground">
                         {sectionIcons[sectionId]}
                       </span>
                       {/* ラベル */}
-                      <span className="flex-1 min-w-0 text-sm font-bold text-slate-700 truncate">{t(`mypage.home_sections.${sectionId}`)}</span>
+                      <span className="flex-1 min-w-0 text-sm font-bold text-slate-700 dark:text-foreground truncate">{t(`mypage.home_sections.${sectionId}`)}</span>
                     </div>
                   )
                 })}
               </div>
               {/* 上が一番上に表示される旨の補足 */}
-              <p className="mt-3 text-[11px] text-slate-400 font-medium">{t("mypage.home_order_hint")}</p>
+              <p className="mt-3 text-[11px] text-slate-400 dark:text-muted-foreground font-medium">{t("mypage.home_order_hint")}</p>
             </div>
           </div>
 
           {/* 下部：保存ボタンエリア */}
-          <div data-slot="card-footer" className="border-t border-slate-100 p-6 flex flex-col items-end gap-4 md:flex-row md:justify-between md:items-end md:gap-6">
-            <p className="w-full md:w-auto text-[11px] text-slate-500 font-medium">{t("mypage.order_local_note")}</p>
-            <Button onClick={handleUpdate} disabled={saving} className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 text-white hover:bg-slate-800 rounded-lg shadow-sm">
+          <div data-slot="card-footer" className="border-t border-slate-100 dark:border-border p-6 flex flex-col items-end gap-4 md:flex-row md:justify-between md:items-end md:gap-6">
+            <p className="w-full md:w-auto text-[11px] text-slate-500 dark:text-muted-foreground font-medium">{t("mypage.order_local_note")}</p>
+            <Button onClick={handleUpdate} disabled={saving} className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground hover:bg-slate-800 dark:hover:bg-primary/90 rounded-lg shadow-sm">
               {saving ? t("common.saving") : t("mypage.save_button")}
             </Button>
           </div>
         </Card>
 
         {/* データのエクスポート */}
-        <Card className="border border-slate-200 shadow-sm bg-white overflow-hidden rounded-xl">
+        <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
-            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 bg-white">
-              <h2 className="text-base font-bold text-slate-800 flex items-center gap-2 mb-2">
-                <Download size={18} className="text-slate-500" /> {t("mypage.export")}
+            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
+              <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
+                <Download size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.export")}
               </h2>
-              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+              <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
                 {t("mypage.export_desc")}
               </p>
             </div>
@@ -590,7 +626,7 @@ export default function MyPage() {
               <Button
                 onClick={handleExportCsv}
                 disabled={exporting}
-                className="px-5 h-10 text-sm font-bold bg-slate-900 text-white hover:bg-slate-800 rounded-lg shadow-sm"
+                className="px-5 h-10 text-sm font-bold bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground hover:bg-slate-800 dark:hover:bg-primary/90 rounded-lg shadow-sm"
               >
                 <Download className="w-4 h-4 mr-2" />
                 {exporting ? t("mypage.exporting") : t("mypage.export_button")}
@@ -602,7 +638,7 @@ export default function MyPage() {
 
       {/* ログアウトボタン (スマホ版のみ表示、PC版はサイドバーに移動予定) */}
       <div className="md:hidden pt-8 flex justify-center mb-8">
-        <Button variant="ghost" className="px-6 font-bold text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors text-xs" onClick={handleLogout}>
+        <Button variant="ghost" className="px-6 font-bold text-slate-400 dark:text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors text-xs" onClick={handleLogout}>
           <LogOut className="w-4 h-4 mr-2" />
           {t("common.logout")}
         </Button>

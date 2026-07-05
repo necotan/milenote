@@ -16,20 +16,20 @@ export default function Footer({ className, replaceNav = false }: { className?: 
         <Link
           href="/terms"
           replace={replaceNav}
-          className="text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors"
+          className="text-xs font-bold text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors"
         >
           {t("footer.terms")}
         </Link>
-        <span className="text-slate-300" aria-hidden="true">|</span>
+        <span className="text-slate-300 dark:text-muted-foreground/50" aria-hidden="true">|</span>
         <Link
           href="/privacy"
           replace={replaceNav}
-          className="text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors"
+          className="text-xs font-bold text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors"
         >
           {t("footer.privacy")}
         </Link>
       </div>
-      <p className="text-[11px] text-slate-400">{t("footer.copyright")}</p>
+      <p className="text-[11px] text-slate-400 dark:text-muted-foreground">{t("footer.copyright")}</p>
     </footer>
   )
 }

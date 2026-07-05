@@ -81,21 +81,21 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-8 bg-white relative">
+    <div className="flex min-h-screen items-center justify-center p-8 bg-white dark:bg-background relative">
       {/* エラーポップアップ */}
       {errorPopup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-card rounded-2xl shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
             <div className="flex items-start justify-between mb-3">
-              <h3 className="text-sm font-bold text-slate-800">{t("signup.error_title")}</h3>
+              <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("signup.error_title")}</h3>
               <button
                 onClick={() => setErrorPopup(null)}
-                className="text-slate-400 hover:text-slate-600 transition-colors -mt-1 -mr-1"
+                className="text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors -mt-1 -mr-1"
               >
                 <X size={18} />
               </button>
             </div>
-            <p className="text-sm text-slate-600 leading-relaxed">{errorPopup}</p>
+            <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">{errorPopup}</p>
             <Button
               className="w-full mt-4 font-bold"
               onClick={() => setErrorPopup(null)}
@@ -109,7 +109,7 @@ export default function SignUpPage() {
       <div className="w-full max-w-sm">
         <div className="space-y-1 mb-6 text-center">
           <h1 className="text-2xl font-bold">Milenote</h1>
-          <p className="text-sm text-slate-500">{t("signup.subtitle")}</p>
+          <p className="text-sm text-slate-500 dark:text-muted-foreground">{t("signup.subtitle")}</p>
         </div>
 
         <form onSubmit={handleSignUp} className="space-y-4">
@@ -125,7 +125,7 @@ export default function SignUpPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="border-slate-300"
+              className="border-slate-300 dark:border-border"
             />
           </div>
 
@@ -134,18 +134,18 @@ export default function SignUpPage() {
             <Label htmlFor="signup-userid">
               {t("signup.user_id")} <span className="text-red-500">{t("common.required")}</span>
             </Label>
-            <div className="flex h-10 w-full overflow-hidden rounded-md border border-slate-300 focus-within:ring-1 focus-within:ring-slate-400">
-              <span className="flex items-center justify-center bg-slate-50 border-r border-slate-300 text-slate-400 px-3 text-sm font-bold min-w-[40px]">@</span>
+            <div className="flex h-10 w-full overflow-hidden rounded-md border border-slate-300 dark:border-border focus-within:ring-1 focus-within:ring-slate-400">
+              <span className="flex items-center justify-center bg-slate-50 dark:bg-muted border-r border-slate-300 dark:border-border text-slate-400 dark:text-muted-foreground px-3 text-sm font-bold min-w-[40px]">@</span>
               <Input
                 id="signup-userid"
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
                 placeholder="milenote_user"
                 required
-                className="border-none bg-white h-full w-full focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
+                className="border-none bg-white dark:bg-card h-full w-full focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
               />
             </div>
-            <p className="text-[11px] text-slate-400">{t("signup.user_id_hint")}</p>
+            <p className="text-[11px] text-slate-400 dark:text-muted-foreground">{t("signup.user_id_hint")}</p>
           </div>
 
           {/* パスワード */}
@@ -161,12 +161,12 @@ export default function SignUpPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="border-slate-300 pr-10"
+                className="border-slate-300 dark:border-border pr-10"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(v => !v)}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors"
                 tabIndex={-1}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -182,7 +182,7 @@ export default function SignUpPage() {
             <button
               type="button"
               onClick={() => router.push("/login")}
-              className="flex items-center gap-1 text-sm text-slate-400 hover:text-slate-600 transition-colors"
+              className="flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors"
             >
               <span className="font-bold text-xs">{t("signup.back_to_login")}</span>
             </button>

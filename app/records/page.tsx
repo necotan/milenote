@@ -20,16 +20,16 @@ import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES } from "@/lib/subcategories"
 
 export const CATEGORIES: Record<string, any> = {
-  fuel: { icon: Fuel, color: "text-blue-500", bg: "bg-blue-50" },
-  maintenance: { icon: Wrench, color: "text-orange-500", bg: "bg-orange-50" },
-  inspection: { icon: ClipboardList, color: "text-teal-500", bg: "bg-teal-50" },
-  repair: { icon: Hammer, color: "text-rose-500", bg: "bg-rose-50" },
-  custom: { icon: Settings, color: "text-purple-500", bg: "bg-purple-50" },
-  carwash: { icon: Droplets, color: "text-cyan-500", bg: "bg-cyan-50" },
-  highway: { icon: Ticket, color: "text-indigo-500", bg: "bg-indigo-50" },
-  tax: { icon: Receipt, color: "text-red-500", bg: "bg-red-50" },
-  insurance: { icon: Shield, color: "text-green-500", bg: "bg-green-50" },
-  other: { icon: FileText, color: "text-slate-500", bg: "bg-slate-50" },
+  fuel: { icon: Fuel, color: "text-blue-500", bg: "bg-blue-50 dark:bg-surface-2" },
+  maintenance: { icon: Wrench, color: "text-orange-500", bg: "bg-orange-50 dark:bg-surface-2" },
+  inspection: { icon: ClipboardList, color: "text-teal-500", bg: "bg-teal-50 dark:bg-surface-2" },
+  repair: { icon: Hammer, color: "text-rose-500", bg: "bg-rose-50 dark:bg-surface-2" },
+  custom: { icon: Settings, color: "text-purple-500", bg: "bg-purple-50 dark:bg-surface-2" },
+  carwash: { icon: Droplets, color: "text-cyan-500", bg: "bg-cyan-50 dark:bg-surface-2" },
+  highway: { icon: Ticket, color: "text-indigo-500", bg: "bg-indigo-50 dark:bg-surface-2" },
+  tax: { icon: Receipt, color: "text-red-500", bg: "bg-red-50 dark:bg-surface-2" },
+  insurance: { icon: Shield, color: "text-green-500", bg: "bg-green-50 dark:bg-surface-2" },
+  other: { icon: FileText, color: "text-slate-500 dark:text-muted-foreground", bg: "bg-slate-50 dark:bg-surface-2" },
 }
 
 // 給油フォーム内の自動計算ハンドラー（コンポーネント外に定義）
@@ -39,22 +39,22 @@ type FuelCalcField = "amount" | "fuelUnitPrice" | "fuelAmount"
 const RecordSkeleton = () => (
   <div className="space-y-4">
     {[...Array(5)].map((_, i) => (
-      <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm overflow-hidden">
         <div className="p-4 flex gap-4 items-start">
           {/* アイコン */}
-          <div className="w-12 h-12 rounded-full bg-slate-100 skeleton shrink-0 mt-1" />
+          <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-muted skeleton shrink-0 mt-1" />
           <div className="flex-1 min-w-0 pr-14 space-y-2">
             {/* 金額 */}
-            <div className="h-6 w-28 bg-slate-100 rounded-lg skeleton" />
+            <div className="h-6 w-28 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
             {/* タグ */}
             <div className="flex gap-2">
-              <div className="h-5 w-16 bg-slate-100 rounded-md skeleton" />
-              <div className="h-5 w-20 bg-slate-100 rounded-md skeleton" />
+              <div className="h-5 w-16 bg-slate-100 dark:bg-muted rounded-md skeleton" />
+              <div className="h-5 w-20 bg-slate-100 dark:bg-muted rounded-md skeleton" />
             </div>
             {/* 車名・ODO */}
-            <div className="h-4 w-36 bg-slate-100 rounded skeleton" />
+            <div className="h-4 w-36 bg-slate-100 dark:bg-muted rounded skeleton" />
             {/* 日付 */}
-            <div className="h-3 w-24 bg-slate-100 rounded skeleton" />
+            <div className="h-3 w-24 bg-slate-100 dark:bg-muted rounded skeleton" />
           </div>
         </div>
       </div>
@@ -88,12 +88,12 @@ const RecordForm = ({
   const selectedCar = cars.find((c: { id: string; fuel_type?: string }) => c.id === carId)
   const isEv = selectedCar?.fuel_type === "ev"
   return (
-  <Card className="border-none shadow-lg bg-white">
+  <Card className="border-none shadow-lg bg-white dark:bg-card">
     <CardContent className="p-6 relative">
-      <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400" onClick={resetForm}>
+      <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetForm}>
         <X className="h-4 w-4" />
       </Button>
-      <h2 className="text-xl font-extrabold text-slate-800 mb-6">
+      <h2 className="text-xl font-extrabold text-slate-800 dark:text-foreground mb-6">
         {editRecordId ? t("records.edit_record") : t("records.new_record")}
       </h2>
       
@@ -143,20 +143,20 @@ const RecordForm = ({
         </div>
 
         <div className="space-y-2">
-          <Label>{t("records.odometer_km")} <span className="text-slate-400 font-normal text-xs">{t("records.optional")}</span></Label>
+          <Label>{t("records.odometer_km")} <span className="text-slate-400 dark:text-muted-foreground font-normal text-xs">{t("records.optional")}</span></Label>
           <Input type="number" value={odoAtRecord} onChange={e => setOdoAtRecord(e.target.value)} placeholder="52500" />
         </div>
 
         {category === "fuel" ? (
-          <div className="rounded-2xl bg-slate-50 border border-slate-200 p-4 space-y-4">
+          <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
             <div className="flex items-center gap-2 mb-1">
-              <Fuel size={15} className="text-slate-400" />
-              <span className="text-sm font-bold text-slate-600">{isEv ? t("records.charge_info") : t("records.fuel_info")}</span>
+              <Fuel size={15} className="text-slate-400 dark:text-muted-foreground" />
+              <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.charge_info") : t("records.fuel_info")}</span>
             </div>
 
             {/* 単価 */}
             <div className="space-y-1">
-              <Label className="text-xs font-semibold text-slate-600">{isEv ? t("records.unit_price_kwh") : t("records.unit_price")}</Label>
+              <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.unit_price_kwh") : t("records.unit_price")}</Label>
               <div className="relative">
                 <Input
                   type="number"
@@ -164,15 +164,15 @@ const RecordForm = ({
                   value={fuelUnitPrice}
                   onChange={e => onFuelFieldChange("fuelUnitPrice", e.target.value)}
                   placeholder={isEv ? "30" : "170"}
-                  className="bg-white border-slate-200 focus:border-slate-400 pr-12 placeholder:text-slate-300"
+                  className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 pr-12 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{isEv ? t("records.unit_yen_per_kwh") : t("records.unit_yen_per_l")}</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{isEv ? t("records.unit_yen_per_kwh") : t("records.unit_yen_per_l")}</span>
               </div>
             </div>
 
             {/* リットル / kWh */}
             <div className="space-y-1">
-              <Label className="text-xs font-semibold text-slate-600">{isEv ? t("records.charge_amount") : t("records.fuel_amount")}</Label>
+              <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.charge_amount") : t("records.fuel_amount")}</Label>
               <div className="relative">
                 <Input
                   type="number"
@@ -180,22 +180,22 @@ const RecordForm = ({
                   value={fuelAmount}
                   onChange={e => onFuelFieldChange("fuelAmount", e.target.value)}
                   placeholder={isEv ? "30.0" : "40.0"}
-                  className="bg-white border-slate-200 focus:border-slate-400 pr-8 placeholder:text-slate-300"
+                  className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 pr-8 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{isEv ? t("records.unit_kwh") : t("records.unit_l")}</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{isEv ? t("records.unit_kwh") : t("records.unit_l")}</span>
               </div>
             </div>
 
             {/* 区切り線 */}
             <div className="flex items-center gap-2">
-              <div className="flex-1 h-px bg-slate-200" />
-              <span className="text-[10px] text-slate-400 font-bold">=</span>
-              <div className="flex-1 h-px bg-slate-200" />
+              <div className="flex-1 h-px bg-slate-200 dark:bg-border" />
+              <span className="text-[10px] text-slate-400 dark:text-muted-foreground font-bold">=</span>
+              <div className="flex-1 h-px bg-slate-200 dark:bg-border" />
             </div>
 
             {/* 総額 */}
             <div className="space-y-1">
-              <Label className="text-xs font-semibold text-slate-600">{t("records.total_amount")} <span className="text-red-400">{t("common.required")}</span></Label>
+              <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("records.total_amount")} <span className="text-red-400">{t("common.required")}</span></Label>
               <div className="relative">
                 <Input
                   type="number"
@@ -203,9 +203,9 @@ const RecordForm = ({
                   onChange={e => onFuelFieldChange("amount", e.target.value)}
                   required
                   placeholder="6800"
-                  className="bg-white border-slate-200 focus:border-slate-400 font-bold text-slate-800 pr-8 placeholder:text-slate-300"
+                  className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 font-bold text-slate-800 dark:text-foreground pr-8 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 pointer-events-none">{t("records.unit_yen")}</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{t("records.unit_yen")}</span>
               </div>
             </div>
           </div>
@@ -213,17 +213,17 @@ const RecordForm = ({
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>{t("records.entry_ic")} <span className="text-slate-400 font-normal text-[10px]">{t("records.optional")}</span></Label>
-                <Input type="text" value={entryIc} onChange={e => setEntryIc(e.target.value)} placeholder="" className="placeholder:text-slate-300" />
+                <Label>{t("records.entry_ic")} <span className="text-slate-400 dark:text-muted-foreground font-normal text-[10px]">{t("records.optional")}</span></Label>
+                <Input type="text" value={entryIc} onChange={e => setEntryIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
               </div>
               <div className="space-y-2">
-                <Label>{t("records.exit_ic")} <span className="text-slate-400 font-normal text-[10px]">{t("records.optional")}</span></Label>
-                <Input type="text" value={exitIc} onChange={e => setExitIc(e.target.value)} placeholder="" className="placeholder:text-slate-300" />
+                <Label>{t("records.exit_ic")} <span className="text-slate-400 dark:text-muted-foreground font-normal text-[10px]">{t("records.optional")}</span></Label>
+                <Input type="text" value={exitIc} onChange={e => setExitIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
               </div>
             </div>
             <div className="space-y-2">
               <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
-              <Input type="number" value={amount} onChange={e => setAmount(e.target.value)} required placeholder="1320" className="placeholder:text-slate-300" />
+              <Input type="number" value={amount} onChange={e => setAmount(e.target.value)} required placeholder="1320" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
             </div>
           </div>
         ) : (
@@ -568,16 +568,16 @@ function RecordsPageInner() {
   return (
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">{t("records.title")}</h1>
-        <p className="text-xs font-bold text-slate-400 tracking-wider mt-1">{t("records.subtitle")}</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("records.title")}</h1>
+        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("records.subtitle")}</p>
       </header>
 
       {loading && <RecordSkeleton />}
 
       {!loading && cars.length === 0 && (
-        <Card className="border-none shadow-sm bg-white p-10 text-center mt-10">
-          <CarFront className="mx-auto h-12 w-12 text-slate-300 mb-3" />
-          <p className="text-slate-500 font-medium mb-4">{t("records.register_car_first_line1")}<br/>{t("records.register_car_first_line2")}</p>
+        <Card className="border-none shadow-sm bg-white dark:bg-card p-10 text-center mt-10">
+          <CarFront className="mx-auto h-12 w-12 text-slate-300 dark:text-muted-foreground mb-3" />
+          <p className="text-slate-500 dark:text-muted-foreground font-medium mb-4">{t("records.register_car_first_line1")}<br/>{t("records.register_car_first_line2")}</p>
           <Link href="/garage"><Button className="font-bold">{t("records.go_to_garage")}</Button></Link>
         </Card>
       )}
@@ -607,18 +607,18 @@ function RecordsPageInner() {
                 </div>
                 {viewMode === "month" && (
                   <div className="flex items-center justify-center gap-4">
-                    <button onClick={goToPrevMonth} className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors">
-                      <ChevronLeft size={18} className="text-slate-600" />
+                    <button onClick={goToPrevMonth} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-muted transition-colors">
+                      <ChevronLeft size={18} className="text-slate-600 dark:text-muted-foreground" />
                     </button>
-                    <span className="font-bold text-slate-700 min-w-[120px] text-center">
+                    <span className="font-bold text-slate-700 dark:text-foreground min-w-[120px] text-center">
                       {monthLabel}
                     </span>
                     <button
                       onClick={goToNextMonth}
                       disabled={selectedYearMonth >= currentYM}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors disabled:opacity-30"
+                      className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-muted transition-colors disabled:opacity-30"
                     >
-                      <ChevronRight size={18} className="text-slate-600" />
+                      <ChevronRight size={18} className="text-slate-600 dark:text-muted-foreground" />
                     </button>
                   </div>
                 )}
@@ -667,11 +667,11 @@ function RecordsPageInner() {
       />}
 
       {!loading && !isAdding && !editRecordId && records.length === 0 && cars.length > 0 && (
-        <p className="text-center text-slate-500 py-20">{t("records.no_records_line1")}<br/>{t("records.no_records_line2")}</p>
+        <p className="text-center text-slate-500 dark:text-muted-foreground py-20">{t("records.no_records_line1")}<br/>{t("records.no_records_line2")}</p>
       )}
 
       {!loading && !isAdding && !editRecordId && records.length > 0 && displayedRecords.length === 0 && (
-        <p className="text-center text-slate-400 py-20 font-medium">
+        <p className="text-center text-slate-400 dark:text-muted-foreground py-20 font-medium">
           {t("records.no_records_in_month", { label: monthLabel })}
         </p>
       )}
@@ -683,20 +683,20 @@ function RecordsPageInner() {
             const Icon = cat.icon
             
             return (
-              <Card key={record.id} className="border-none shadow-sm bg-white overflow-hidden relative">
+              <Card key={record.id} className="border-none shadow-sm bg-white dark:bg-card overflow-hidden relative">
                 <CardContent className="p-0">
                   {/* 編集・削除ボタン（右上に常時表示） */}
                   <div className="absolute top-3 right-3 flex items-center gap-1">
                     <button
                       onClick={() => handleStartEdit(record)}
-                      className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                      className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                       title={t("common.edit")}
                     >
                       <Pencil size={14} />
                     </button>
                     <button
                       onClick={() => handleDeleteRecord(record.id)}
-                      className="p-1.5 rounded-lg border border-slate-300 text-slate-500 hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
+                      className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
                       title={t("common.delete")}
                     >
                       <Trash2 size={14} />
@@ -709,20 +709,20 @@ function RecordsPageInner() {
                     </div>
                     <div className="flex-1 min-w-0 pr-14">
                       {/* 金額 */}
-                      <h3 className="font-bold text-slate-800 text-lg mb-1">¥{record.amount.toLocaleString()}</h3>
+                      <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1">¥{record.amount.toLocaleString()}</h3>
                       
                       {/* ジャンルタグ */}
-                      <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 mb-2 flex-wrap">
-                        <span className="bg-slate-100 px-2 py-1 rounded-md">{t(`categories.${record.category}`)}</span>
+                      <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 dark:text-muted-foreground mb-2 flex-wrap">
+                        <span className="bg-slate-100 dark:bg-muted px-2 py-1 rounded-md">{t(`categories.${record.category}`)}</span>
                         {record.sub_category && (
-                          <span className="border border-slate-200 text-slate-600 px-2 py-1 rounded-md">
+                          <span className="border border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground px-2 py-1 rounded-md">
                             {t(`subcategories.${record.sub_category}`)}
                           </span>
                         )}
                       </div>
 
                       {/* 車名・走行距離 */}
-                      <div className="flex items-center gap-3 text-[11px] text-slate-500 mb-1">
+                      <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-muted-foreground mb-1">
                         <span className="font-bold">{record.cars.name}</span>
                         {record.odo_at_record != null && (
                           <span>{record.odo_at_record.toLocaleString()} {t("common.km_unit")}</span>
@@ -730,15 +730,15 @@ function RecordsPageInner() {
                       </div>
 
                       {/* 日付 */}
-                      <p className="text-[11px] font-medium text-slate-400 mb-2">{record.date.replace(/-/g, '/')}</p>
+                      <p className="text-[11px] font-medium text-slate-400 dark:text-muted-foreground mb-2">{record.date.replace(/-/g, '/')}</p>
 
                       {record.category === "fuel" && record.fuel_amount && (
-                        <p className="text-xs text-slate-500 mb-2">
-                          {record.cars?.fuel_type === "ev" ? t("records.charge_amount_label") : t("records.fuel_amount_label")} <span className="font-bold text-slate-700">{record.fuel_amount} {record.cars?.fuel_type === "ev" ? t("records.unit_kwh") : t("records.unit_l")}</span>
+                        <p className="text-xs text-slate-500 dark:text-muted-foreground mb-2">
+                          {record.cars?.fuel_type === "ev" ? t("records.charge_amount_label") : t("records.fuel_amount_label")} <span className="font-bold text-slate-700 dark:text-foreground">{record.fuel_amount} {record.cars?.fuel_type === "ev" ? t("records.unit_kwh") : t("records.unit_l")}</span>
                         </p>
                       )}
                       {record.memo && (
-                        <p className="text-sm text-slate-600 bg-slate-50 p-2 rounded-md whitespace-pre-wrap inline-block">
+                        <p className="text-sm text-slate-600 dark:text-muted-foreground bg-slate-50 dark:bg-muted p-2 rounded-md whitespace-pre-wrap inline-block">
                           {record.memo}
                         </p>
                       )}
