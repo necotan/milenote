@@ -770,7 +770,7 @@ export default function StatsPage() {
                     </div>
                     <span className="text-sm font-black text-slate-800 dark:text-foreground tabular-nums">{moonPercent}%</span>
                   </div>
-                  <div className="w-full bg-slate-100 dark:bg-muted h-2.5 rounded-full overflow-hidden">
+                  <div className="w-full bg-slate-100 dark:bg-surface-3 h-2.5 rounded-full overflow-hidden">
                     <div
                       className="bg-gradient-to-r from-blue-500 to-purple-500 h-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(59,130,246,0.5)]"
                       style={{ width: `${moonPercent}%` }}
