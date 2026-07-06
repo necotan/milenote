@@ -967,7 +967,7 @@ export default function GaragePage() {
                     <CardContent className="p-4 flex flex-col justify-between h-full">
                       <div>
                         <div className="flex justify-between items-start mb-2 pr-16">
-                          <span className="text-[10px] font-bold text-slate-500 dark:text-muted-foreground bg-slate-100 dark:bg-muted px-2 py-0.5 rounded-sm">
+                          <span className="text-[10px] font-bold text-slate-500 dark:text-muted-foreground bg-slate-100 dark:bg-surface-2 px-2 py-0.5 rounded-sm">
                             {t(`wishlist_genres.${wish.genre}`)} / {wish.cars.name}
                           </span>
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusStyle}`}>

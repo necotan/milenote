@@ -529,7 +529,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
 
                     {/* ジャンルタグ + ステータスバッジ */}
                     <div className="flex items-center gap-1.5 mb-2">
-                      <span className="text-[10px] font-bold bg-slate-100 dark:bg-muted text-slate-500 dark:text-muted-foreground px-2 py-1 rounded-md whitespace-nowrap">
+                      <span className="text-[10px] font-bold bg-slate-100 dark:bg-surface-2 text-slate-500 dark:text-muted-foreground px-2 py-1 rounded-md whitespace-nowrap">
                         {t(`categories.${cost.category}`)}
                       </span>
                       {cost.sub_category && (
