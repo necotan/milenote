@@ -133,6 +133,10 @@
     @apply font-sans;
   }
 }
+svg.lucide {
+  filter: saturate(0.85);
+}
+
 /* スクロールバーを非表示 */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
