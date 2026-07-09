@@ -326,10 +326,7 @@ export default function MyPage() {
 
               <div className="space-y-2 max-w-md">
                 <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.user_id")}</Label>
-                <div className="flex h-10 w-full overflow-hidden rounded-md border border-slate-200 dark:border-border focus-within:ring-1 focus-within:ring-slate-300">
-                  <span className="flex items-center justify-center bg-slate-50 dark:bg-muted border-r border-slate-200 dark:border-border text-slate-400 dark:text-muted-foreground px-3 text-sm font-bold min-w-[40px]">@</span>
-                  <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="milenote_user" className="border-none bg-white dark:bg-card h-full w-full focus-visible:ring-0 focus-visible:ring-offset-0 text-sm" />
-                </div>
+                <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="milenote_user" className="bg-white dark:bg-card border-slate-200 dark:border-border h-10 text-sm focus-visible:ring-1 focus-visible:ring-slate-300" />
                 <p className="text-xs text-slate-400 dark:text-muted-foreground">{t("signup.user_id_hint")}</p>
               </div>
             </div>
