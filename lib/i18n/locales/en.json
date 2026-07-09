@@ -276,6 +276,8 @@
     "settings_saved": "Settings saved!",
     "language": "Language",
     "language_desc": "Change the display language. Changes take effect immediately.",
+    "language_ja": "日本語",
+    "language_en": "English",
     "accessibility": "Accessibility",
     "accessibility_desc": "Adjust visual preferences such as chart color mode. Changes take effect immediately.",
     "chart_color_mode": "Chart Color Mode",

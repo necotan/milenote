@@ -276,6 +276,8 @@
     "settings_saved": "設定を保存しました！",
     "language": "言語設定",
     "language_desc": "アプリの表示言語を変更します。変更は即時反映されます。",
+    "language_ja": "日本語",
+    "language_en": "English",
     "accessibility": "アクセシビリティ",
     "accessibility_desc": "グラフのカラーモードなど、視認性に関わる設定を変更します。変更は即時反映されます。",
     "chart_color_mode": "グラフのカラーモード",

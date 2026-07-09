@@ -31,9 +31,9 @@ const DEFAULT_MAINT_SETTINGS = {
   "periodic_inspection": { km: 0, months: 6, months_only: true },
 }
 
-const THEME_OPTIONS: { value: "light" | "dark"; color: string; labelKey: string }[] = [
-  { value: "light", color: "#ffffff", labelKey: "mypage.theme_light" },
-  { value: "dark", color: "#000000", labelKey: "mypage.theme_dark" },
+const THEME_OPTIONS: { value: "light" | "dark"; labelKey: string }[] = [
+  { value: "light", labelKey: "mypage.theme_light" },
+  { value: "dark", labelKey: "mypage.theme_dark" },
 ]
 
 export default function MyPage() {
@@ -427,28 +427,26 @@ export default function MyPage() {
 
             {/* 右側：言語選択UI */}
             <div className="md:w-2/3 p-6">
-              <div className="flex gap-3 max-w-sm">
+              <div className="inline-flex rounded-lg bg-slate-100 dark:bg-surface-2 p-1">
                 <button
                   onClick={() => setLocale("ja")}
-                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
+                  className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                     locale === "ja"
-                      ? "border-slate-700 dark:border-slate-300 bg-slate-50 dark:bg-muted shadow-sm"
-                      : "border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border hover:bg-slate-50/50 dark:hover:bg-muted/50"
+                      ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
+                      : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
                   }`}
                 >
-                  <span className="text-lg">🇯🇵</span>
-                  <span className={`text-sm font-bold ${locale === "ja" ? "text-slate-800 dark:text-foreground" : "text-slate-500 dark:text-muted-foreground"}`}>日本語</span>
+                  {t("mypage.language_ja")}
                 </button>
                 <button
                   onClick={() => setLocale("en")}
-                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
+                  className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                     locale === "en"
-                      ? "border-slate-700 dark:border-slate-300 bg-slate-50 dark:bg-muted shadow-sm"
-                      : "border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border hover:bg-slate-50/50 dark:hover:bg-muted/50"
+                      ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
+                      : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
                   }`}
                 >
-                  <span className="text-lg">🇺🇸</span>
-                  <span className={`text-sm font-bold ${locale === "en" ? "text-slate-800 dark:text-foreground" : "text-slate-500 dark:text-muted-foreground"}`}>English</span>
+                  {t("mypage.language_en")}
                 </button>
               </div>
             </div>
@@ -471,56 +469,45 @@ export default function MyPage() {
             {/* 右側：カラーモード選択UI */}
             <div className="md:w-2/3 p-6">
               <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.chart_color_mode")}</Label>
-              <div className="flex gap-3 max-w-sm mt-2">
+              <div className="inline-flex rounded-lg bg-slate-100 dark:bg-surface-2 p-1 mt-2">
                 <button
                   onClick={() => handleColorfulChange(false)}
-                  className={`flex-1 flex flex-col items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
+                  className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                     !isColorful
-                      ? "border-slate-700 dark:border-slate-300 bg-slate-50 dark:bg-muted shadow-sm"
-                      : "border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border hover:bg-slate-50/50 dark:hover:bg-muted/50"
+                      ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
+                      : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
                   }`}
                 >
-                  <div className="flex gap-1">
-                    {["#0ea5e9", "#2563eb", "#6366f1", "#38bdf8", "#1e3a8a"].map(c => (
-                      <span key={c} className="w-3 h-3 rounded-full" style={{ background: c }} />
-                    ))}
-                  </div>
-                  <span className={`text-sm font-bold ${!isColorful ? "text-slate-800 dark:text-foreground" : "text-slate-500 dark:text-muted-foreground"}`}>{t("mypage.chart_color_basic")}</span>
+                  {t("mypage.chart_color_basic")}
                 </button>
                 <button
                   onClick={() => handleColorfulChange(true)}
-                  className={`flex-1 flex flex-col items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
+                  className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                     isColorful
-                      ? "border-slate-700 dark:border-slate-300 bg-slate-50 dark:bg-muted shadow-sm"
-                      : "border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border hover:bg-slate-50/50 dark:hover:bg-muted/50"
+                      ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
+                      : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
                   }`}
                 >
-                  <div className="flex gap-1">
-                    {["#3b82f6", "#f97316", "#a855f7", "#ef4444", "#22c55e"].map(c => (
-                      <span key={c} className="w-3 h-3 rounded-full" style={{ background: c }} />
-                    ))}
-                  </div>
-                  <span className={`text-sm font-bold ${isColorful ? "text-slate-800 dark:text-foreground" : "text-slate-500 dark:text-muted-foreground"}`}>{t("mypage.chart_color_colorful")}</span>
+                  {t("mypage.chart_color_colorful")}
                 </button>
               </div>
 
               <div className="mt-6">
                 <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.theme_mode")}</Label>
-                <div className="flex gap-3 max-w-sm mt-2">
-                  {THEME_OPTIONS.map(({ value, color, labelKey }) => {
+                <div className="inline-flex rounded-lg bg-slate-100 dark:bg-surface-2 p-1 mt-2">
+                  {THEME_OPTIONS.map(({ value, labelKey }) => {
                     const active = themeMounted && theme === value
                     return (
                       <button
                         key={value}
                         onClick={() => setTheme(value)}
-                        className={`flex-1 flex flex-col items-center gap-2 px-4 py-3 rounded-lg border-2 transition-all ${
+                        className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                           active
-                            ? "border-slate-700 dark:border-slate-300 bg-slate-50 dark:bg-muted shadow-sm"
-                            : "border-slate-200 dark:border-border hover:border-slate-300 dark:hover:border-border hover:bg-slate-50/50 dark:hover:bg-muted/50"
+                            ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
+                            : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
                         }`}
                       >
-                        <span className="w-5 h-5 rounded-full border border-slate-300 dark:border-border" style={{ background: color }} />
-                        <span className={`text-sm font-bold ${active ? "text-slate-800 dark:text-foreground" : "text-slate-500 dark:text-muted-foreground"}`}>{t(labelKey)}</span>
+                        {t(labelKey)}
                       </button>
                     )
                   })}
