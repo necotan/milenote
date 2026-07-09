@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react"
 import { createClient } from "@/utils/supabase"
 import { Card, CardContent } from "@/components/ui/card"
-import { Wrench, Droplets, Banknote, CarFront, RefreshCw, CalendarDays, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronUp, Fuel, Gauge } from "lucide-react"
+import { Wrench, Banknote, CarFront, RefreshCw, CalendarDays, TrendingUp, TrendingDown, Minus, ChevronDown, ChevronUp, Fuel, Gauge, Droplet, Filter, Cog, Snowflake, BatteryFull, Disc, ClipboardCheck } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,10 +15,16 @@ import { getCarImageStyle } from "@/utils/carImage"
 
 
 const MAINT_STYLE_CONFIG: Record<string, { icon: any; color: string }> = {
-  "oil_change": { icon: Droplets, color: "text-orange-500" },
-  "oil_filter_change": { icon: RefreshCw, color: "text-blue-500" },
+  "oil_change": { icon: Droplet, color: "text-orange-500" },
+  "oil_filter_change": { icon: Filter, color: "text-blue-500" },
+  "transmission_oil_change": { icon: Cog, color: "text-purple-500" },
+  "coolant_change": { icon: Snowflake, color: "text-cyan-500" },
   "tire_rotation": { icon: RefreshCw, color: "text-green-500" },
-  "battery_change": { icon: RefreshCw, color: "text-red-500" },
+  "battery_change": { icon: BatteryFull, color: "text-red-500" },
+  "brake_pad_change": { icon: Disc, color: "text-rose-500" },
+  "inspection_12m": { icon: ClipboardCheck, color: "text-indigo-500" },
+  "inspection_24m": { icon: ClipboardCheck, color: "text-teal-500" },
+  "periodic_inspection": { icon: ClipboardCheck, color: "text-violet-500" },
 }
 
 const DEFAULT_MAINT_SETTINGS = {
