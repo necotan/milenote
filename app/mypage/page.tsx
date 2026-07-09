@@ -597,28 +597,25 @@ export default function MyPage() {
 
         {/* データのエクスポート */}
         <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
-          <div className="md:flex">
-            {/* 左側：説明 */}
-            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
-              <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
-                <Download size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.export")}
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
-                {t("mypage.export_desc")}
-              </p>
-            </div>
+          <div className="p-6">
+            <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
+              <Download size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.export")}
+            </h2>
+            <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed">
+              {t("mypage.export_desc")}
+            </p>
+          </div>
 
-            {/* 右側：エクスポートボタン */}
-            <div className="md:w-2/3 p-6 flex items-center">
-              <Button
-                onClick={handleExportCsv}
-                disabled={exporting}
-                className="px-5 h-10 text-sm font-bold bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground hover:bg-slate-800 dark:hover:bg-primary/90 rounded-lg shadow-sm"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                {exporting ? t("mypage.exporting") : t("mypage.export_button")}
-              </Button>
-            </div>
+          {/* 下部：エクスポートボタンエリア */}
+          <div data-slot="card-footer" className="border-t border-slate-100 dark:border-border p-6 flex justify-end">
+            <Button
+              onClick={handleExportCsv}
+              disabled={exporting}
+              className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground hover:bg-slate-800 dark:hover:bg-primary/90 rounded-lg shadow-sm"
+            >
+              <Download className="w-3.5 h-3.5 mr-1.5" />
+              {exporting ? t("mypage.exporting") : t("mypage.export_button")}
+            </Button>
           </div>
         </Card>
       </div>
