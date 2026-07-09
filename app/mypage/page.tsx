@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
-import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical, ChevronRight, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck } from "lucide-react"
+import { Dialog, DialogContent, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical, ChevronRight, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck, AtSign } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { toast } from "sonner"
 import { useTheme } from "next-themes"
@@ -93,16 +94,16 @@ function ChipPresetRow({
   const isPreset = presets.includes(value)
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2.5">
       {presets.map((p) => (
         <button
           key={p}
           type="button"
           onClick={() => { setCustomOpen(false); onChange(p) }}
-          className={`px-3 h-8 rounded-full text-xs font-bold border transition-colors ${
+          className={`px-3 h-8 rounded-full text-xs font-bold border-2 transition-colors ${
             !customOpen && value === p
               ? "bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground border-slate-900 dark:border-primary"
-              : "bg-white dark:bg-card text-slate-600 dark:text-muted-foreground border-slate-200 dark:border-border"
+              : "bg-white dark:bg-card text-slate-600 dark:text-muted-foreground border-neutral-300 dark:border-neutral-600"
           }`}
         >
           {p.toLocaleString()}{suffix}
@@ -116,7 +117,7 @@ function ChipPresetRow({
             value={value || ""}
             onChange={(e) => onChange(parseInt(e.target.value) || 0)}
             onFocus={() => setCustomOpen(true)}
-            className="h-8 w-24 text-xs font-bold text-center pr-8 rounded-full border border-slate-200 dark:border-border bg-white dark:bg-card text-slate-700 dark:text-foreground outline-none focus-visible:ring-1 focus-visible:ring-slate-300"
+            className="h-8 w-24 text-xs font-bold text-center pr-8 rounded-full border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-card text-slate-700 dark:text-foreground outline-none focus-visible:ring-1 focus-visible:ring-slate-300"
           />
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground pointer-events-none">{suffix}</span>
         </div>
@@ -124,7 +125,7 @@ function ChipPresetRow({
         <button
           type="button"
           onClick={() => setCustomOpen(true)}
-          className="px-3 h-8 rounded-full text-xs font-bold border border-dashed border-slate-300 dark:border-border text-slate-400 dark:text-muted-foreground"
+          className="px-3 h-8 rounded-full text-xs font-bold border border-dashed border-neutral-300 dark:border-neutral-600 text-slate-500 dark:text-muted-foreground"
         >
           {customLabel}
         </button>
@@ -136,24 +137,19 @@ function ChipPresetRow({
 function MaintenanceItemRow({
   itemKey,
   setting,
-  isExpanded,
-  onToggleExpand,
+  onOpenEdit,
   onToggleEnabled,
-  onChange,
   t,
 }: {
   itemKey: string
   setting: MaintSetting
-  isExpanded: boolean
-  onToggleExpand: () => void
+  onOpenEdit: () => void
   onToggleEnabled: (enabled: boolean) => void
-  onChange: (field: "km" | "months", value: number) => void
   t: TranslateFn
 }) {
   const isEnabled = setting.enabled !== false
   const isMonthsOnly = !!setting.months_only
   const Icon = MAINT_ITEM_ICON[itemKey]
-  const presets = MAINT_PRESETS[itemKey]
   const itemName = t(`subcategories.${itemKey}`)
 
   const summary = isEnabled
@@ -163,74 +159,226 @@ function MaintenanceItemRow({
     : t("mypage.maint_disabled_desc")
 
   return (
-    <div>
-      <div className="flex items-center gap-3 px-4 py-3">
-        <button
-          type="button"
-          onClick={onToggleExpand}
-          className="flex-1 min-w-0 flex items-center gap-3 text-left"
-        >
-          <Icon size={18} className={isEnabled ? "text-slate-500 dark:text-muted-foreground" : "text-slate-300 dark:text-muted-foreground/70"} />
-          <div className="flex-1 min-w-0">
-            <p className={`text-sm font-bold truncate ${isEnabled ? "text-slate-800 dark:text-foreground" : "text-slate-400 dark:text-foreground/70"}`}>
-              {itemName}
-            </p>
-            <p className="text-xs text-slate-400 dark:text-muted-foreground truncate">{summary}</p>
-          </div>
-          <ChevronRight size={16} className={`shrink-0 text-slate-300 dark:text-muted-foreground transition-transform ${isExpanded ? "rotate-90" : ""}`} />
-        </button>
-        <Switch checked={isEnabled} onCheckedChange={onToggleEnabled} className="shrink-0" />
-      </div>
-      {isExpanded && (
-        <div className="mx-3 mb-3 p-3 rounded-lg bg-slate-50 dark:bg-surface-2/40 space-y-3">
-          <p className="text-xs font-bold text-slate-500 dark:text-foreground">
-            {t("mypage.maint_edit_title", { name: itemName })}
+    <div className="flex items-center gap-3 px-4 py-3">
+      <button
+        type="button"
+        onClick={onOpenEdit}
+        className="flex-1 min-w-0 flex items-center gap-3 text-left"
+      >
+        <Icon size={18} className={isEnabled ? "text-slate-500 dark:text-muted-foreground" : "text-slate-300 dark:text-muted-foreground/70"} />
+        <div className="flex-1 min-w-0">
+          <p className={`text-sm font-bold truncate ${isEnabled ? "text-slate-800 dark:text-foreground" : "text-slate-400 dark:text-foreground/70"}`}>
+            {itemName}
           </p>
-          {!isMonthsOnly && presets?.km && (
-            <div className="space-y-1">
-              <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{t("mypage.maint_distance_label")}</p>
-              <ChipPresetRow
-                value={setting.km}
-                presets={presets.km}
-                suffix={t("common.km_unit")}
-                customLabel={t("mypage.maint_custom")}
-                onChange={(v) => onChange("km", v)}
-              />
-            </div>
-          )}
-          {presets?.months && (
-            <div className="space-y-1">
-              <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{t("mypage.maint_period_label")}</p>
-              <ChipPresetRow
-                value={setting.months}
-                presets={presets.months}
-                suffix={t("common.months_unit")}
-                customLabel={t("mypage.maint_custom")}
-                onChange={(v) => onChange("months", v)}
-              />
-            </div>
-          )}
+          <p className="text-xs text-slate-400 dark:text-muted-foreground truncate">{summary}</p>
         </div>
-      )}
+        <ChevronRight size={16} className="shrink-0 text-slate-300 dark:text-muted-foreground" />
+      </button>
+      <Switch checked={isEnabled} onCheckedChange={onToggleEnabled} className="shrink-0" />
     </div>
   )
 }
 
+// メンテナンス基準の距離、期間を編集するポップアップ
+function MaintEditDialog({
+  itemKey,
+  setting,
+  open,
+  onOpenChange,
+  onSave,
+  t,
+}: {
+  itemKey: string | null
+  setting: MaintSetting | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onSave: (key: string, km: number, months: number) => Promise<boolean>
+  t: TranslateFn
+}) {
+  const [draftKm, setDraftKm] = useState(0)
+  const [draftMonths, setDraftMonths] = useState(0)
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    if (open && setting) {
+      setDraftKm(setting.km)
+      setDraftMonths(setting.months)
+    }
+  }, [open, setting])
+
+  if (!itemKey || !setting) return null
+  const isMonthsOnly = !!setting.months_only
+  const presets = MAINT_PRESETS[itemKey]
+  const itemName = t(`subcategories.${itemKey}`)
+
+  const handleSave = async () => {
+    setSaving(true)
+    const ok = await onSave(itemKey, draftKm, draftMonths)
+    setSaving(false)
+    if (ok) onOpenChange(false)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={(next) => { if (!saving) onOpenChange(next) }}>
+      <DialogContent>
+        <DialogTitle>{t("mypage.maint_edit_title", { name: itemName })}</DialogTitle>
+        <div className="mt-6 space-y-6">
+          {!isMonthsOnly && presets?.km && (
+            <div className="space-y-2.5">
+              <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{t("mypage.maint_distance_label")}</p>
+              <ChipPresetRow
+                value={draftKm}
+                presets={presets.km}
+                suffix={t("common.km_unit")}
+                customLabel={t("mypage.maint_custom")}
+                onChange={setDraftKm}
+              />
+            </div>
+          )}
+          {presets?.months && (
+            <div className="space-y-2.5">
+              <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{t("mypage.maint_period_label")}</p>
+              <ChipPresetRow
+                value={draftMonths}
+                presets={presets.months}
+                suffix={t("common.months_unit")}
+                customLabel={t("mypage.maint_custom")}
+                onChange={setDraftMonths}
+              />
+            </div>
+          )}
+        </div>
+        <DialogFooter>
+          <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)} disabled={saving}>
+            {t("common.cancel")}
+          </Button>
+          <Button type="button" size="sm" onClick={handleSave} disabled={saving}>
+            {saving ? t("common.saving") : t("common.save")}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+// プロフィールの項目行
+function ProfileFieldRow({
+  icon: Icon,
+  label,
+  value,
+  placeholder,
+  onClick,
+}: {
+  icon: LucideIcon
+  label: string
+  value: string
+  placeholder: string
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="w-full flex items-center gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-surface-2/40 transition-colors"
+    >
+      <Icon size={16} className="shrink-0 text-slate-400 dark:text-muted-foreground" />
+      <div className="flex-1 min-w-0">
+        <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{label}</p>
+        <p className={`text-sm font-bold truncate ${value ? "text-slate-800 dark:text-foreground" : "text-slate-300 dark:text-muted-foreground/70"}`}>
+          {value || placeholder}
+        </p>
+      </div>
+      <ChevronRight size={16} className="shrink-0 text-slate-300 dark:text-muted-foreground" />
+    </button>
+  )
+}
+
+// プロフィール項目（表示名、ユーザーID）を編集するポップアップ
+function ProfileFieldDialog({
+  field,
+  initialValue,
+  open,
+  onOpenChange,
+  onSave,
+  t,
+}: {
+  field: "display_name" | "user_id" | null
+  initialValue: string
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onSave: (field: "display_name" | "user_id", value: string) => Promise<boolean>
+  t: TranslateFn
+}) {
+  const [draft, setDraft] = useState("")
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    if (open) setDraft(initialValue)
+  }, [open, initialValue])
+
+  if (!field) return null
+  const label = field === "display_name" ? t("mypage.display_name") : t("mypage.user_id")
+
+  const handleSave = async () => {
+    setSaving(true)
+    const ok = await onSave(field, draft)
+    setSaving(false)
+    if (ok) onOpenChange(false)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={(next) => { if (!saving) onOpenChange(next) }}>
+      <DialogContent>
+        <DialogTitle>{t("mypage.edit_field_title", { name: label })}</DialogTitle>
+        <div className="mt-6 space-y-2">
+          <Input
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            placeholder="milenote_user"
+            autoFocus
+            className="bg-white dark:bg-card border-slate-200 dark:border-border h-10 text-sm focus-visible:ring-1 focus-visible:ring-slate-300"
+          />
+          {field === "user_id" && (
+            <p className="text-xs text-slate-400 dark:text-muted-foreground">{t("signup.user_id_hint")}</p>
+          )}
+        </div>
+        <DialogFooter>
+          <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)} disabled={saving}>
+            {t("common.cancel")}
+          </Button>
+          <Button type="button" size="sm" onClick={handleSave} disabled={saving}>
+            {saving ? t("common.saving") : t("common.save")}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
 export default function MyPage() {
+  const [userId, setUserId] = useState<string | null>(null)
   const [username, setUsername] = useState("")
   const [displayName, setDisplayName] = useState("")
   const [maintSettings, setMaintSettings] = useState<MaintSettings>(DEFAULT_MAINT_SETTINGS)
-  const [expandedMaintKey, setExpandedMaintKey] = useState<string | null>(null)
+  const [maintDialogKey, setMaintDialogKey] = useState<string | null>(null)
+  const [profileDialogField, setProfileDialogField] = useState<"display_name" | "user_id" | null>(null)
   const [homeOrder, setHomeOrder] = useState<string[]>(["cars", "summary", "alerts"])
   const [isColorful, setIsColorful] = useState(false)
   const { theme, setTheme } = useTheme()
   const [themeMounted, setThemeMounted] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
   const [exporting, setExporting] = useState(false)
   const router = useRouter()
   const supabase = createClient()
   const { t, locale, setLocale } = useTranslation()
+
+  // maint_settingsは1カラムのjsonbのため、トグル/ポップアップ保存の両方で最新値とロールバック先を参照する
+  const maintSettingsRef = useRef<MaintSettings>(maintSettings)
+  const lastPersistedMaintRef = useRef<MaintSettings>(maintSettings)
+  const maintSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  useEffect(() => {
+    maintSettingsRef.current = maintSettings
+  }, [maintSettings])
 
   // 初回ローディング画面とデータ取得を連動させる
   usePageLoadingGate(!loading)
@@ -245,14 +393,18 @@ export default function MyPage() {
       setLoading(true)
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
+        setUserId(user.id)
         const { data } = await supabase.from("users").select("*").eq("id", user.id).single()
         if (data) {
           setUsername(data.username || "")
           setDisplayName(data.display_name || "")
           // デフォルトをベースにDBの保存値を上書きマージ（未保存の新項目はデフォルト値で表示）
-          if (data.maint_settings) {
-            setMaintSettings({ ...DEFAULT_MAINT_SETTINGS, ...data.maint_settings })
-          }
+          const mergedMaintSettings = data.maint_settings
+            ? { ...DEFAULT_MAINT_SETTINGS, ...data.maint_settings }
+            : DEFAULT_MAINT_SETTINGS
+          setMaintSettings(mergedMaintSettings)
+          maintSettingsRef.current = mergedMaintSettings
+          lastPersistedMaintRef.current = mergedMaintSettings
         }
       }
       setLoading(false)
@@ -276,53 +428,73 @@ export default function MyPage() {
     localStorage.setItem("milenote_colorful_pie", String(val))
   }
 
-  const handleUpdate = async () => {
-    if (username && !/^[a-zA-Z0-9_]+$/.test(username)) {
-      toast.error(t("signup.invalid_user_id"))
-      return
+  const persistMaintSettings = async (next: MaintSettings): Promise<boolean> => {
+    if (!userId) return false
+    const { error } = await supabase.from("users").update({ maint_settings: next }).eq("id", userId)
+    if (error) {
+      toast.error(t("common.error_occurred") + ": " + error.message)
+      return false
     }
-    setSaving(true)
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      const { error } = await supabase
-        .from("users")
-        .update({
-          username,
-          display_name: displayName,
-          maint_settings: maintSettings // メンテナンス設定も一緒に保存
-        })
-        .eq("id", user.id)
-
-      // ホーム画面の並び順をローカルストレージに保存
-      localStorage.setItem("home_layout", JSON.stringify(homeOrder))
-
-      if (error) {
-        toast.error(t("common.error_occurred") + ": " + error.message)
-      } else {
-        toast.success(t("mypage.settings_saved"))
-      }
-    }
-    setSaving(false)
+    return true
   }
 
-  const handleMaintChange = (key: string, field: "km" | "months", value: number) => {
-    setMaintSettings((prev) => ({
-      ...prev,
-      [key]: {
-        ...prev[key],
-        [field]: value
+  // トグルの連打で古い書き込みが後から完了し新しい変更を上書きしないよう、短いdebounceでまとめて保存する
+  const scheduleMaintSave = (next: MaintSettings) => {
+    if (maintSaveTimer.current) clearTimeout(maintSaveTimer.current)
+    maintSaveTimer.current = setTimeout(async () => {
+      const ok = await persistMaintSettings(next)
+      if (ok) {
+        lastPersistedMaintRef.current = next
+      } else {
+        setMaintSettings(lastPersistedMaintRef.current)
+        maintSettingsRef.current = lastPersistedMaintRef.current
       }
-    }))
+    }, 400)
   }
 
   const handleMaintToggle = (key: string, enabled: boolean) => {
-    setMaintSettings((prev) => ({
-      ...prev,
-      [key]: {
-        ...prev[key],
-        enabled
-      }
-    }))
+    const next = { ...maintSettingsRef.current, [key]: { ...maintSettingsRef.current[key], enabled } }
+    setMaintSettings(next)
+    maintSettingsRef.current = next
+    scheduleMaintSave(next)
+  }
+
+  // ポップアップの保存ボタン押下時、保留中のdebounceを打ち切り、即座に反映する
+  const handleMaintDialogSave = async (key: string, km: number, months: number): Promise<boolean> => {
+    if (maintSaveTimer.current) {
+      clearTimeout(maintSaveTimer.current)
+      maintSaveTimer.current = null
+    }
+    const next = { ...maintSettingsRef.current, [key]: { ...maintSettingsRef.current[key], km, months } }
+    setMaintSettings(next)
+    maintSettingsRef.current = next
+    const ok = await persistMaintSettings(next)
+    if (ok) {
+      lastPersistedMaintRef.current = next
+      toast.success(t("mypage.settings_saved"))
+    } else {
+      setMaintSettings(lastPersistedMaintRef.current)
+      maintSettingsRef.current = lastPersistedMaintRef.current
+    }
+    return ok
+  }
+
+  const handleProfileFieldSave = async (field: "display_name" | "user_id", value: string): Promise<boolean> => {
+    if (!userId) return false
+    if (field === "user_id" && value && !/^[a-zA-Z0-9_]+$/.test(value)) {
+      toast.error(t("signup.invalid_user_id"))
+      return false
+    }
+    const column = field === "display_name" ? "display_name" : "username"
+    const { error } = await supabase.from("users").update({ [column]: value }).eq("id", userId)
+    if (error) {
+      toast.error(t("common.error_occurred") + ": " + error.message)
+      return false
+    }
+    if (field === "display_name") setDisplayName(value)
+    else setUsername(value)
+    toast.success(t("mypage.settings_saved"))
+    return true
   }
 
   const sectionIcons: Record<string, ReactNode> = {
@@ -370,6 +542,8 @@ export default function MyPage() {
         const next = [...prev]
         const [moved] = next.splice(startIndex, 1)
         next.splice(targetIndex, 0, moved)
+        // 並び順はローカルストレージのみで完結するため、確定した瞬間に自動保存する
+        localStorage.setItem("home_layout", JSON.stringify(next))
         return next
       })
       // ドロップ直後はアニメーションを止めて、確定位置にそのまま着地させる
@@ -498,27 +672,23 @@ export default function MyPage() {
               </p>
             </div>
 
-            {/* 右側：入力フォーム */}
-            <div className="md:w-2/3 p-6 space-y-5">
-              <div className="space-y-2 max-w-md">
-                <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.display_name")}</Label>
-                <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="milenote_user" className="bg-white dark:bg-card border-slate-200 dark:border-border h-10 text-sm focus-visible:ring-1 focus-visible:ring-slate-300" />
-              </div>
-
-              <div className="space-y-2 max-w-md">
-                <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.user_id")}</Label>
-                <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="milenote_user" className="bg-white dark:bg-card border-slate-200 dark:border-border h-10 text-sm focus-visible:ring-1 focus-visible:ring-slate-300" />
-                <p className="text-xs text-slate-400 dark:text-muted-foreground">{t("signup.user_id_hint")}</p>
-              </div>
+            {/* 右側：タップで編集ポップアップを開く項目行 */}
+            <div className="md:w-2/3 p-6 space-y-3">
+              <ProfileFieldRow
+                icon={User}
+                label={t("mypage.display_name")}
+                value={displayName}
+                placeholder="milenote_user"
+                onClick={() => setProfileDialogField("display_name")}
+              />
+              <ProfileFieldRow
+                icon={AtSign}
+                label={t("mypage.user_id")}
+                value={username}
+                placeholder="milenote_user"
+                onClick={() => setProfileDialogField("user_id")}
+              />
             </div>
-          </div>
-
-          {/* 下部：保存ボタンエリア */}
-          <div data-slot="card-footer" className="border-t border-slate-100 dark:border-border p-6 flex flex-col items-end gap-4 md:flex-row md:justify-between md:items-end md:gap-6">
-            <p className="w-full md:w-auto text-[11px] text-slate-500 dark:text-muted-foreground font-medium">{t("mypage.save_note")}</p>
-            <Button onClick={handleUpdate} disabled={saving} className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground hover:bg-slate-800 dark:hover:bg-primary/90 rounded-lg shadow-sm">
-              {saving ? t("common.saving") : t("mypage.save_button")}
-            </Button>
           </div>
         </Card>
 
@@ -549,10 +719,8 @@ export default function MyPage() {
                           key={key}
                           itemKey={key}
                           setting={maintSettings[key] ?? DEFAULT_MAINT_SETTINGS[key]}
-                          isExpanded={expandedMaintKey === key}
-                          onToggleExpand={() => setExpandedMaintKey((prev) => (prev === key ? null : key))}
+                          onOpenEdit={() => setMaintDialogKey(key)}
                           onToggleEnabled={(v) => handleMaintToggle(key, v)}
-                          onChange={(field, value) => handleMaintChange(key, field, value)}
                           t={t}
                         />
                       ))}
@@ -561,14 +729,6 @@ export default function MyPage() {
                 ))}
               </div>
             </div>
-          </div>
-
-          {/* 下部：保存ボタンエリア */}
-          <div data-slot="card-footer" className="border-t border-slate-100 dark:border-border p-6 flex flex-col items-end gap-4 md:flex-row md:justify-between md:items-end md:gap-6">
-            <p className="w-full md:w-auto text-[11px] text-slate-500 dark:text-muted-foreground font-medium">{t("mypage.save_together_note")}</p>
-            <Button onClick={handleUpdate} disabled={saving} className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground hover:bg-slate-800 dark:hover:bg-primary/90 rounded-lg shadow-sm">
-              {saving ? t("common.saving") : t("mypage.save_button")}
-            </Button>
           </div>
         </Card>
 
@@ -751,14 +911,6 @@ export default function MyPage() {
               <p className="mt-3 text-[11px] text-slate-400 dark:text-muted-foreground font-medium">{t("mypage.home_order_hint")}</p>
             </div>
           </div>
-
-          {/* 下部：保存ボタンエリア */}
-          <div data-slot="card-footer" className="border-t border-slate-100 dark:border-border p-6 flex flex-col items-end gap-4 md:flex-row md:justify-between md:items-end md:gap-6">
-            <p className="w-full md:w-auto text-[11px] text-slate-500 dark:text-muted-foreground font-medium">{t("mypage.order_local_note")}</p>
-            <Button onClick={handleUpdate} disabled={saving} className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground hover:bg-slate-800 dark:hover:bg-primary/90 rounded-lg shadow-sm">
-              {saving ? t("common.saving") : t("mypage.save_button")}
-            </Button>
-          </div>
         </Card>
 
         {/* データのエクスポート */}
@@ -785,6 +937,23 @@ export default function MyPage() {
           </div>
         </Card>
       </div>
+
+      <ProfileFieldDialog
+        field={profileDialogField}
+        initialValue={profileDialogField === "display_name" ? displayName : username}
+        open={profileDialogField !== null}
+        onOpenChange={(open) => { if (!open) setProfileDialogField(null) }}
+        onSave={handleProfileFieldSave}
+        t={t}
+      />
+      <MaintEditDialog
+        itemKey={maintDialogKey}
+        setting={maintDialogKey ? (maintSettings[maintDialogKey] ?? DEFAULT_MAINT_SETTINGS[maintDialogKey]) : null}
+        open={maintDialogKey !== null}
+        onOpenChange={(open) => { if (!open) setMaintDialogKey(null) }}
+        onSave={handleMaintDialogSave}
+        t={t}
+      />
 
       {/* ログアウトボタン (スマホ版のみ表示、PC版はサイドバーに移動予定) */}
       <div className="md:hidden pt-8 flex justify-center mb-8">
