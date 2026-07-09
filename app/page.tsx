@@ -45,7 +45,7 @@ export default function Home() {
   const [showAllAlerts, setShowAllAlerts] = useState(false)
   const [loading, setLoading] = useState(true)
   const [displayName, setDisplayName] = useState("")
-  const [homeOrder, setHomeOrder] = useState<string[]>(["summary", "alerts", "cars"])
+  const [homeOrder, setHomeOrder] = useState<string[]>(["cars", "summary", "alerts"])
   const [odoModalOpen, setOdoModalOpen] = useState(false)
   const [odoCarId, setOdoCarId] = useState("")
   const [odoValue, setOdoValue] = useState("")

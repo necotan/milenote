@@ -270,7 +270,7 @@
     "save_together_note": "All items are saved together.",
     "home_order": "Home Screen Order",
     "home_order_desc": "Rearrange cards on the home screen. Layout is optimized for both PC and mobile.",
-    "home_order_hint": "Drag a card to reorder. Cards higher in the list appear first on the home screen.",
+    "home_order_hint": "Drag the handle on the right to reorder. Cards higher in the list appear first on the home screen.",
     "drag_handle": "Drag to reorder",
     "order_local_note": "Order is saved in this browser only.",
     "settings_saved": "Settings saved!",

@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
-import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3 } from "lucide-react"
+import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical } from "lucide-react"
 import { toast } from "sonner"
 import { useTheme } from "next-themes"
 import { useTranslation } from "@/lib/i18n"
@@ -40,7 +40,7 @@ export default function MyPage() {
   const [username, setUsername] = useState("")
   const [displayName, setDisplayName] = useState("")
   const [maintSettings, setMaintSettings] = useState<any>(DEFAULT_MAINT_SETTINGS)
-  const [homeOrder, setHomeOrder] = useState<string[]>(["summary", "alerts", "cars"])
+  const [homeOrder, setHomeOrder] = useState<string[]>(["cars", "summary", "alerts"])
   const [isColorful, setIsColorful] = useState(false)
   const { theme, setTheme } = useTheme()
   const [themeMounted, setThemeMounted] = useState(false)
@@ -158,7 +158,7 @@ export default function MyPage() {
   const dragInfo = useRef<{ startY: number; startIndex: number; step: number } | null>(null)
   const rowRefs = useRef<Array<HTMLDivElement | null>>([])
 
-  const handleDragStart = (e: ReactPointerEvent<HTMLDivElement>, index: number) => {
+  const handleDragStart = (e: ReactPointerEvent<HTMLSpanElement>, index: number) => {
     const el = rowRefs.current[index]
     // カードの高さと行間（space-y-2 = 8px）を1段分の移動量とする
     const step = el ? el.getBoundingClientRect().height + 8 : 56
@@ -169,7 +169,7 @@ export default function MyPage() {
     e.currentTarget.setPointerCapture(e.pointerId)
   }
 
-  const handleDragMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+  const handleDragMove = (e: ReactPointerEvent<HTMLSpanElement>) => {
     if (!dragInfo.current) return
     const { startY, startIndex, step } = dragInfo.current
     // 先頭カードより上・末尾カードより下へはみ出さないよう移動量を制限する
@@ -551,18 +551,12 @@ export default function MyPage() {
                       ref={(el) => {
                         rowRefs.current[index] = el
                       }}
-                      onPointerDown={(e) => handleDragStart(e, index)}
-                      onPointerMove={handleDragMove}
-                      onPointerUp={handleDragEnd}
-                      onPointerCancel={handleDragEnd}
-                      role="button"
-                      aria-label={t("mypage.drag_handle")}
                       style={{
                         transform: isDragging ? `translateY(${translateY}px) scale(1.02)` : `translateY(${translateY}px)`,
                         transition: isDragging || justDroppedId === sectionId ? "none" : "transform 200ms ease",
                         zIndex: isDragging ? 10 : 0,
                       }}
-                      className={`relative flex items-center gap-3 bg-white dark:bg-surface-2 border p-3 rounded-lg select-none touch-none cursor-grab active:cursor-grabbing ${
+                      className={`relative flex items-center gap-3 bg-white dark:bg-surface-2 border p-3 rounded-lg select-none ${
                         isDragging
                           ? "border-slate-400 dark:border-ring shadow-lg ring-2 ring-slate-300 dark:ring-surface-border"
                           : "border-slate-200 dark:border-surface-3 shadow-sm"
@@ -574,6 +568,18 @@ export default function MyPage() {
                       </span>
                       {/* ラベル */}
                       <span className="flex-1 min-w-0 text-sm font-bold text-slate-700 dark:text-foreground truncate">{t(`mypage.home_sections.${sectionId}`)}</span>
+                      {/* ドラッグハンドル */}
+                      <span
+                        onPointerDown={(e) => handleDragStart(e, index)}
+                        onPointerMove={handleDragMove}
+                        onPointerUp={handleDragEnd}
+                        onPointerCancel={handleDragEnd}
+                        role="button"
+                        aria-label={t("mypage.drag_handle")}
+                        className="flex items-center justify-center h-8 w-8 shrink-0 rounded-lg text-slate-400 dark:text-muted-foreground touch-none cursor-grab active:cursor-grabbing"
+                      >
+                        <GripVertical size={18} />
+                      </span>
                     </div>
                   )
                 })}
