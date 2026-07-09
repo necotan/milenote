@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
-import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical } from "lucide-react"
+import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical, ChevronRight, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck } from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 import { toast } from "sonner"
 import { useTheme } from "next-themes"
 import { useTranslation } from "@/lib/i18n"
@@ -18,7 +19,10 @@ import { recordsToCsv, downloadCsv, buildExportFilename } from "@/lib/csvExport"
 import type { ExportRecord } from "@/lib/csvExport"
 import Footer from "@/components/ui/Footer"
 
-const DEFAULT_MAINT_SETTINGS = {
+type MaintSetting = { km: number; months: number; months_only?: boolean; enabled?: boolean }
+type MaintSettings = Record<string, MaintSetting>
+
+const DEFAULT_MAINT_SETTINGS: MaintSettings = {
   "oil_change": { km: 5000, months: 6 },
   "oil_filter_change": { km: 10000, months: 12 },
   "transmission_oil_change": { km: 40000, months: 24 },
@@ -31,15 +35,192 @@ const DEFAULT_MAINT_SETTINGS = {
   "periodic_inspection": { km: 0, months: 6, months_only: true },
 }
 
+// メンテナンス基準設定UIのカテゴリ分け、アイコン、プリセット値
+const MAINT_CATEGORIES: { key: string; items: string[] }[] = [
+  { key: "fluid", items: ["oil_change", "oil_filter_change", "transmission_oil_change", "coolant_change"] },
+  { key: "chassis", items: ["tire_rotation", "battery_change", "brake_pad_change"] },
+  { key: "inspection", items: ["inspection_12m", "inspection_24m", "periodic_inspection"] },
+]
+
+const MAINT_ITEM_ICON: Record<string, LucideIcon> = {
+  oil_change: Droplet,
+  oil_filter_change: Filter,
+  transmission_oil_change: Cog,
+  coolant_change: Snowflake,
+  tire_rotation: RefreshCw,
+  battery_change: BatteryFull,
+  brake_pad_change: Disc,
+  inspection_12m: ClipboardCheck,
+  inspection_24m: ClipboardCheck,
+  periodic_inspection: ClipboardCheck,
+}
+
+const MAINT_PRESETS: Record<string, { km?: number[]; months: number[] }> = {
+  oil_change: { km: [3000, 5000, 10000], months: [3, 6, 12] },
+  oil_filter_change: { km: [5000, 10000, 15000], months: [6, 12, 24] },
+  transmission_oil_change: { km: [20000, 40000, 60000], months: [12, 24, 36] },
+  coolant_change: { km: [20000, 40000, 60000], months: [12, 24, 36] },
+  tire_rotation: { km: [5000, 10000, 15000], months: [6, 12, 18] },
+  battery_change: { km: [20000, 30000, 40000], months: [12, 24, 36] },
+  brake_pad_change: { km: [30000, 50000, 70000], months: [24, 48, 60] },
+  inspection_12m: { months: [6, 12, 24] },
+  inspection_24m: { months: [12, 24, 36] },
+  periodic_inspection: { months: [3, 6, 12] },
+}
+
 const THEME_OPTIONS: { value: "light" | "dark"; labelKey: string }[] = [
   { value: "light", labelKey: "mypage.theme_light" },
   { value: "dark", labelKey: "mypage.theme_dark" },
 ]
 
+type TranslateFn = (key: string, params?: Record<string, string | number>) => string
+
+// 距離、期間のプリセットチップとカスタム値入力
+function ChipPresetRow({
+  value,
+  presets,
+  suffix,
+  customLabel,
+  onChange,
+}: {
+  value: number
+  presets: number[]
+  suffix: string
+  customLabel: string
+  onChange: (value: number) => void
+}) {
+  const [customOpen, setCustomOpen] = useState(false)
+  const isPreset = presets.includes(value)
+
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      {presets.map((p) => (
+        <button
+          key={p}
+          type="button"
+          onClick={() => { setCustomOpen(false); onChange(p) }}
+          className={`px-3 h-8 rounded-full text-xs font-bold border transition-colors ${
+            !customOpen && value === p
+              ? "bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground border-slate-900 dark:border-primary"
+              : "bg-white dark:bg-card text-slate-600 dark:text-muted-foreground border-slate-200 dark:border-border"
+          }`}
+        >
+          {p.toLocaleString()}{suffix}
+        </button>
+      ))}
+      {customOpen || !isPreset ? (
+        <div className="relative">
+          <input
+            type="number"
+            autoFocus={customOpen}
+            value={value || ""}
+            onChange={(e) => onChange(parseInt(e.target.value) || 0)}
+            onFocus={() => setCustomOpen(true)}
+            className="h-8 w-24 text-xs font-bold text-center pr-8 rounded-full border border-slate-200 dark:border-border bg-white dark:bg-card text-slate-700 dark:text-foreground outline-none focus-visible:ring-1 focus-visible:ring-slate-300"
+          />
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground pointer-events-none">{suffix}</span>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setCustomOpen(true)}
+          className="px-3 h-8 rounded-full text-xs font-bold border border-dashed border-slate-300 dark:border-border text-slate-400 dark:text-muted-foreground"
+        >
+          {customLabel}
+        </button>
+      )}
+    </div>
+  )
+}
+
+function MaintenanceItemRow({
+  itemKey,
+  setting,
+  isExpanded,
+  onToggleExpand,
+  onToggleEnabled,
+  onChange,
+  t,
+}: {
+  itemKey: string
+  setting: MaintSetting
+  isExpanded: boolean
+  onToggleExpand: () => void
+  onToggleEnabled: (enabled: boolean) => void
+  onChange: (field: "km" | "months", value: number) => void
+  t: TranslateFn
+}) {
+  const isEnabled = setting.enabled !== false
+  const isMonthsOnly = !!setting.months_only
+  const Icon = MAINT_ITEM_ICON[itemKey]
+  const presets = MAINT_PRESETS[itemKey]
+  const itemName = t(`subcategories.${itemKey}`)
+
+  const summary = isEnabled
+    ? isMonthsOnly
+      ? t("mypage.maint_summary_months_only", { months: setting.months })
+      : t("mypage.maint_summary", { km: setting.km.toLocaleString(), months: setting.months })
+    : t("mypage.maint_disabled_desc")
+
+  return (
+    <div>
+      <div className="flex items-center gap-3 px-4 py-3">
+        <button
+          type="button"
+          onClick={onToggleExpand}
+          className="flex-1 min-w-0 flex items-center gap-3 text-left"
+        >
+          <Icon size={18} className={isEnabled ? "text-slate-500 dark:text-muted-foreground" : "text-slate-300 dark:text-muted-foreground/70"} />
+          <div className="flex-1 min-w-0">
+            <p className={`text-sm font-bold truncate ${isEnabled ? "text-slate-800 dark:text-foreground" : "text-slate-400 dark:text-foreground/70"}`}>
+              {itemName}
+            </p>
+            <p className="text-xs text-slate-400 dark:text-muted-foreground truncate">{summary}</p>
+          </div>
+          <ChevronRight size={16} className={`shrink-0 text-slate-300 dark:text-muted-foreground transition-transform ${isExpanded ? "rotate-90" : ""}`} />
+        </button>
+        <Switch checked={isEnabled} onCheckedChange={onToggleEnabled} className="shrink-0" />
+      </div>
+      {isExpanded && (
+        <div className="mx-3 mb-3 p-3 rounded-lg bg-slate-50 dark:bg-surface-2/40 space-y-3">
+          <p className="text-xs font-bold text-slate-500 dark:text-foreground">
+            {t("mypage.maint_edit_title", { name: itemName })}
+          </p>
+          {!isMonthsOnly && presets?.km && (
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{t("mypage.maint_distance_label")}</p>
+              <ChipPresetRow
+                value={setting.km}
+                presets={presets.km}
+                suffix={t("common.km_unit")}
+                customLabel={t("mypage.maint_custom")}
+                onChange={(v) => onChange("km", v)}
+              />
+            </div>
+          )}
+          {presets?.months && (
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{t("mypage.maint_period_label")}</p>
+              <ChipPresetRow
+                value={setting.months}
+                presets={presets.months}
+                suffix={t("common.months_unit")}
+                customLabel={t("mypage.maint_custom")}
+                onChange={(v) => onChange("months", v)}
+              />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function MyPage() {
   const [username, setUsername] = useState("")
   const [displayName, setDisplayName] = useState("")
-  const [maintSettings, setMaintSettings] = useState<any>(DEFAULT_MAINT_SETTINGS)
+  const [maintSettings, setMaintSettings] = useState<MaintSettings>(DEFAULT_MAINT_SETTINGS)
+  const [expandedMaintKey, setExpandedMaintKey] = useState<string | null>(null)
   const [homeOrder, setHomeOrder] = useState<string[]>(["cars", "summary", "alerts"])
   const [isColorful, setIsColorful] = useState(false)
   const { theme, setTheme } = useTheme()
@@ -124,18 +305,18 @@ export default function MyPage() {
     setSaving(false)
   }
 
-  const handleMaintChange = (key: string, field: "km" | "months", value: string) => {
-    setMaintSettings((prev: any) => ({
+  const handleMaintChange = (key: string, field: "km" | "months", value: number) => {
+    setMaintSettings((prev) => ({
       ...prev,
       [key]: {
         ...prev[key],
-        [field]: parseInt(value) || 0
+        [field]: value
       }
     }))
   }
 
   const handleMaintToggle = (key: string, enabled: boolean) => {
-    setMaintSettings((prev: any) => ({
+    setMaintSettings((prev) => ({
       ...prev,
       [key]: {
         ...prev[key],
@@ -354,48 +535,30 @@ export default function MyPage() {
               </p>
             </div>
 
-            {/* 右側：入力フォーム */}
+            {/* 右側：カテゴリ別の折りたたみリスト */}
             <div className="md:w-2/3 p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                {Object.keys(DEFAULT_MAINT_SETTINGS).map((key) => {
-                  const isEnabled = maintSettings[key]?.enabled !== false
-                  const isMonthsOnly = !!(DEFAULT_MAINT_SETTINGS as Record<string, { km: number; months: number; months_only?: boolean }>)[key]?.months_only
-                  return (
-                  <div key={key} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label className={`text-xs font-bold ${isEnabled ? "text-slate-700 dark:text-foreground" : "text-slate-400 dark:text-muted-foreground"}`}>{t(`subcategories.${key}`)}</Label>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{isEnabled ? t("mypage.notify_on") : t("mypage.notify_off")}</span>
-                        <Switch checked={isEnabled} onCheckedChange={(v) => handleMaintToggle(key, v)} />
-                      </div>
-                    </div>
-                    <div className={`flex gap-3 transition-opacity ${isEnabled ? "" : "opacity-40"}`}>
-                      {!isMonthsOnly && (
-                        <div className="relative flex-1">
-                          <Input
-                            type="number"
-                            value={maintSettings[key]?.km || ""}
-                            onChange={(e) => handleMaintChange(key, "km", e.target.value)}
-                            disabled={!isEnabled}
-                            className="h-9 text-sm bg-white dark:bg-card border-slate-200 dark:border-border pr-8 focus-visible:ring-1 focus-visible:ring-slate-300"
-                          />
-                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground pointer-events-none">{t("common.km_unit")}</span>
-                        </div>
-                      )}
-                      <div className={`relative ${isMonthsOnly ? "w-full" : "flex-1"}`}>
-                        <Input
-                          type="number"
-                          value={maintSettings[key]?.months || ""}
-                          onChange={(e) => handleMaintChange(key, "months", e.target.value)}
-                          disabled={!isEnabled}
-                          className="h-9 text-sm bg-white dark:bg-card border-slate-200 dark:border-border pr-10 focus-visible:ring-1 focus-visible:ring-slate-300"
+              <div className="space-y-5">
+                {MAINT_CATEGORIES.map((category) => (
+                  <div key={category.key}>
+                    <p className="text-[11px] font-bold text-slate-400 dark:text-muted-foreground tracking-wide mb-2 px-1">
+                      {t(`mypage.maint_category_${category.key}`)}
+                    </p>
+                    <div className="rounded-xl border border-slate-200 dark:border-border divide-y divide-slate-100 dark:divide-border overflow-hidden">
+                      {category.items.map((key) => (
+                        <MaintenanceItemRow
+                          key={key}
+                          itemKey={key}
+                          setting={maintSettings[key] ?? DEFAULT_MAINT_SETTINGS[key]}
+                          isExpanded={expandedMaintKey === key}
+                          onToggleExpand={() => setExpandedMaintKey((prev) => (prev === key ? null : key))}
+                          onToggleEnabled={(v) => handleMaintToggle(key, v)}
+                          onChange={(field, value) => handleMaintChange(key, field, value)}
+                          t={t}
                         />
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground pointer-events-none">{t("common.months_unit")}</span>
-                      </div>
+                      ))}
                     </div>
                   </div>
-                  )
-                })}
+                ))}
               </div>
             </div>
           </div>
