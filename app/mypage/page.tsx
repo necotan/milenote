@@ -117,7 +117,7 @@ function ChipPresetRow({
             value={value || ""}
             onChange={(e) => onChange(parseInt(e.target.value) || 0)}
             onFocus={() => setCustomOpen(true)}
-            className="h-8 w-24 text-xs font-bold text-center pr-8 rounded-full border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-card text-slate-700 dark:text-foreground outline-none focus-visible:ring-1 focus-visible:ring-slate-300"
+            className="h-8 w-28 md:w-24 text-base md:text-xs font-bold text-center pr-8 rounded-full border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-card text-slate-700 dark:text-foreground outline-none focus-visible:ring-1 focus-visible:ring-slate-300"
           />
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground pointer-events-none">{suffix}</span>
         </div>
@@ -335,7 +335,7 @@ function ProfileFieldDialog({
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="milenote_user"
-            className="bg-white dark:bg-card border-slate-200 dark:border-border h-10 text-sm focus-visible:ring-1 focus-visible:ring-slate-300"
+            className="bg-white dark:bg-card border-slate-200 dark:border-border h-10 text-base md:text-sm focus-visible:ring-1 focus-visible:ring-slate-300"
           />
           {field === "user_id" && (
             <p className="text-xs text-slate-400 dark:text-muted-foreground">{t("signup.user_id_hint")}</p>
