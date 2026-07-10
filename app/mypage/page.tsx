@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Dialog, DialogContent, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical, ChevronRight, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck, AtSign } from "lucide-react"
+import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical, ChevronRight, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck, AtSign, Info } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { toast } from "sonner"
 import { useTheme } from "next-themes"
@@ -787,7 +787,12 @@ export default function MyPage() {
 
             {/* 右側：カラーモード選択UI */}
             <div className="md:w-2/3 p-6">
-              <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.chart_color_mode")}</Label>
+              <Label className="text-slate-700 dark:text-foreground font-bold text-xs inline-flex items-center gap-1">
+                {t("mypage.chart_color_mode")}
+                <span title={t("mypage.chart_color_mode_tooltip")}>
+                  <Info size={13} className="text-slate-400 dark:text-muted-foreground cursor-help" />
+                </span>
+              </Label>
               <div className="inline-flex rounded-lg bg-slate-100 dark:bg-surface-2 p-1 mt-2">
                 <button
                   onClick={() => handleColorfulChange(false)}
@@ -810,6 +815,9 @@ export default function MyPage() {
                   {t("mypage.chart_color_colorful")}
                 </button>
               </div>
+              <p className="text-xs text-slate-400 dark:text-muted-foreground mt-1.5">
+                {isColorful ? t("mypage.chart_color_colorful_note") : t("mypage.chart_color_basic_note")}
+              </p>
 
               <div className="mt-6">
                 <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.theme_mode")}</Label>
