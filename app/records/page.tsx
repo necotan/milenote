@@ -39,7 +39,7 @@ type FuelCalcField = "amount" | "fuelUnitPrice" | "fuelAmount"
 const RecordSkeleton = () => (
   <div className="space-y-4">
     {[...Array(5)].map((_, i) => (
-      <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm overflow-hidden">
+      <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden">
         <div className="p-4 flex gap-4 items-start">
           {/* アイコン */}
           <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-muted skeleton shrink-0 mt-1" />

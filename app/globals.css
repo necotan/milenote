@@ -164,6 +164,18 @@ svg.lucide {
   );
   animation: skeleton-shimmer 1.5s ease-in-out infinite;
 }
+
+.dark .skeleton {
+  background-color: oklch(0.24 0 0);
+}
+.dark .skeleton::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+}
 @keyframes skeleton-shimmer {
   100% {
     transform: translateX(100%);

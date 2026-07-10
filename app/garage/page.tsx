@@ -531,13 +531,13 @@ export default function GaragePage() {
         {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
             {[...Array(2)].map((_, i) => (
-              <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm overflow-hidden">
+              <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden">
                 <div className="h-48 bg-slate-100 dark:bg-muted skeleton" />
                 <div className="p-4 space-y-2">
                   <div className="h-7 w-36 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
                   <div className="h-3 w-48 bg-slate-100 dark:bg-muted rounded skeleton" />
                 </div>
-                <div className="grid grid-cols-2 divide-x divide-slate-100 dark:divide-border border-t border-slate-100 dark:border-border">
+                <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-t border-slate-100 dark:border-border">
                   {[...Array(4)].map((_, j) => (
                     <div key={j} className="p-4 space-y-2">
                       <div className="h-2.5 w-16 bg-slate-100 dark:bg-muted rounded skeleton" />
@@ -673,7 +673,7 @@ export default function GaragePage() {
                       <h3 className="text-2xl font-black text-slate-800 dark:text-foreground tracking-wider mt-1">{car.name}</h3>
                       <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground tracking-widest">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
                     </div>
-                    <div className="grid grid-cols-2 divide-x divide-slate-100 dark:divide-border border-t border-b border-slate-100 dark:border-border">
+                    <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-t border-b border-slate-100 dark:border-border">
                       <div className="p-4">
                         <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-widest">{t("common.odometer")}</p>
                         <p className="text-lg font-black text-slate-800 dark:text-foreground tracking-wider">{car.current_odo.toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
@@ -686,7 +686,7 @@ export default function GaragePage() {
                         }</p>
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 divide-x divide-slate-100 dark:divide-border border-b border-slate-100 dark:border-border bg-slate-50/30 dark:bg-muted/30">
+                    <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-b border-slate-100 dark:border-border bg-slate-50/30 dark:bg-muted/30">
                       <div className="p-4">
                         <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-widest">{t("common.distance_since_delivery")}</p>
                         <p className="text-lg font-black text-slate-800 dark:text-foreground tracking-wider">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>

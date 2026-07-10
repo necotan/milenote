@@ -217,7 +217,7 @@ const getFrequencyLabel = (freq: string, t: (key: string) => string): string => 
 const RecurringCardSkeleton = () => (
   <div className="space-y-3">
     {[...Array(3)].map((_, i) => (
-      <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm overflow-hidden relative">
+      <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden relative">
         <div className="absolute top-3 right-3 flex items-center gap-1">
           <div className="h-7 w-7 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
           <div className="h-7 w-7 bg-slate-100 dark:bg-muted rounded-lg skeleton" />

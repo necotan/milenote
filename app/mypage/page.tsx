@@ -787,7 +787,7 @@ export default function MyPage() {
 
             {/* 右側：カラーモード選択UI */}
             <div className="md:w-2/3 p-6">
-              <Label className="text-slate-700 dark:text-foreground font-bold text-xs inline-flex items-center gap-1">
+              <Label className="text-slate-700 dark:text-foreground font-bold text-xs flex items-center gap-1">
                 {t("mypage.chart_color_mode")}
                 <span title={t("mypage.chart_color_mode_tooltip")}>
                   <Info size={13} className="text-slate-400 dark:text-muted-foreground cursor-help" />
