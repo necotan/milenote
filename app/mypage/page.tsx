@@ -328,14 +328,13 @@ function ProfileFieldDialog({
 
   return (
     <Dialog open={open} onOpenChange={(next) => { if (!saving) onOpenChange(next) }}>
-      <DialogContent>
+      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogTitle>{t("mypage.edit_field_title", { name: label })}</DialogTitle>
         <div className="mt-6 space-y-2">
           <Input
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="milenote_user"
-            autoFocus
             className="bg-white dark:bg-card border-slate-200 dark:border-border h-10 text-sm focus-visible:ring-1 focus-visible:ring-slate-300"
           />
           {field === "user_id" && (

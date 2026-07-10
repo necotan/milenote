@@ -559,7 +559,7 @@ export default function Home() {
 
       {/* ODO更新モーダル */}
       {odoModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setOdoModalOpen(false)}>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-50 p-4" onClick={() => setOdoModalOpen(false)}>
           <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3">
