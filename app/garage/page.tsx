@@ -742,7 +742,7 @@ export default function GaragePage() {
 
         {/* 車両削除確認モーダル */}
         {deleteCarTarget && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => { setDeleteCarTarget(null); setDeleteCarConfirmName(""); }}>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => { setDeleteCarTarget(null); setDeleteCarConfirmName(""); }}>
             <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center gap-3 text-red-500">
@@ -794,7 +794,7 @@ export default function GaragePage() {
 
         {/* 画像の位置、ズーム調整モーダル */}
         {adjustTarget && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setAdjustTarget(null)}>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => setAdjustTarget(null)}>
             <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
