@@ -1188,7 +1188,7 @@ export default function StatsPage() {
                           </Pie>
                           {/* Recharts のコールバック型が複雑なため any を許容 */}
                           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                          <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} formatter={(value: any) => [`¥${Number(value).toLocaleString()}`, t("stats.amount")]} />
+                          <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} formatter={(value: any, name: any) => [`¥${Number(value).toLocaleString()}`, String(name)]} />
                           <Legend verticalAlign="bottom" content={renderGridLegend(renderRawLegendLabel)} />
                         </PieChart>
                       </ResponsiveContainer>

@@ -214,7 +214,6 @@
     "chart_line": "Line",
     "chart_bar": "Bar",
     "total": "Total",
-    "amount": "Amount",
     "expenditure": "Spent",
     "earth_rounds": "{{rounds}} Earth laps",
     "earth_note": "Based on Earth circumference ≈ 40,075 km",
