@@ -141,6 +141,12 @@ svg.lucide {
   filter: saturate(0.85);
 }
 
+.recharts-wrapper,
+.recharts-wrapper * {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* スクロールバーを非表示 */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
