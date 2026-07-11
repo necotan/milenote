@@ -16,7 +16,7 @@ import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton, SkeletonTabs } from "@/components/ui/skeleton"
 import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES } from "@/lib/subcategories"
 
@@ -39,6 +39,7 @@ type FuelCalcField = "amount" | "fuelUnitPrice" | "fuelAmount"
 // スケルトンUIコンポーネント
 const RecordSkeleton = () => (
   <div className="space-y-4">
+    <SkeletonTabs className="mb-6" />
     {[...Array(5)].map((_, i) => (
       <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden">
         <div className="p-4 flex gap-4 items-start">

@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton, SkeletonTabs } from "@/components/ui/skeleton"
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Label, Legend,
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -711,6 +711,7 @@ export default function StatsPage() {
         <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
         <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
       </header>
+      <SkeletonTabs />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {[...Array(2)].map((_, i) => (
           <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border p-4 space-y-3">

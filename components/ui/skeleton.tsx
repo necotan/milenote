@@ -14,4 +14,10 @@ function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-export { Skeleton }
+// タブ切り替え（TabsList）と同寸のプレースホルダ
+// タブはロード完了まで実表示しない方針のため、タブ付きページのスケルトンではTabsListと同じ位置にこれを表示
+function SkeletonTabs({ className, ...props }: React.ComponentProps<"div">) {
+  return <Skeleton className={cn("h-8 w-full rounded-full", className)} {...props} />
+}
+
+export { Skeleton, SkeletonTabs }

@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton, SkeletonTabs } from "@/components/ui/skeleton"
 import { CarFront, Plus, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, AlertTriangle, Move } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
@@ -520,14 +520,19 @@ export default function GaragePage() {
       </header>
 
       <Tabs defaultValue="mycars" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-6 bg-slate-100 dark:bg-muted p-[3px]">
-          <TabsTrigger value="mycars" className="flex items-center gap-2 font-bold uppercase tracking-wider">
-            <CarFront size={14} /> {t("garage.my_cars")}
-          </TabsTrigger>
-          <TabsTrigger value="wishlist" className="flex items-center gap-2 font-bold uppercase tracking-wider">
-            <ListTodo size={14} /> {t("garage.wishlist")}
-          </TabsTrigger>
-        </TabsList>
+        {/* タブ選択状態を再取得時にも保持するため、Tabsルートは常にマウントしたまま中身だけ切り替える */}
+        {!loading && (
+          <TabsList className="grid w-full grid-cols-2 mb-6 bg-slate-100 dark:bg-muted p-[3px]">
+            <TabsTrigger value="mycars" className="flex items-center gap-2 font-bold uppercase tracking-wider">
+              <CarFront size={14} /> {t("garage.my_cars")}
+            </TabsTrigger>
+            <TabsTrigger value="wishlist" className="flex items-center gap-2 font-bold uppercase tracking-wider">
+              <ListTodo size={14} /> {t("garage.wishlist")}
+            </TabsTrigger>
+          </TabsList>
+        )}
+
+        {loading && <SkeletonTabs className="mb-6" />}
 
         {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
