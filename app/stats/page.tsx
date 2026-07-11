@@ -6,6 +6,7 @@ import { createClient } from "@/utils/supabase"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Label, Legend,
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -703,17 +704,18 @@ export default function StatsPage() {
   }, [yearlyCategoriesPresent, yearlyTopByRow])
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
-  // ローディング状態の表示
+  // ローディング状態の表示（タイトルは即時表示し、コンテンツのみスケルトン）
   if (loading) return (
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2">
-        <div className="h-8 w-16 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
+        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
       </header>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {[...Array(2)].map((_, i) => (
           <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border p-4 space-y-3">
-            <div className="h-4 w-28 bg-slate-100 dark:bg-muted rounded skeleton" />
-            <div className="h-64 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+            <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-64 rounded-lg" />
           </div>
         ))}
       </div>

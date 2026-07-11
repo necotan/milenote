@@ -83,6 +83,8 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --skeleton: oklch(0.968 0.007 247.896);
+  --skeleton-shimmer: rgba(255, 255, 255, 0.65);
 }
 
 .dark {
@@ -120,6 +122,8 @@
   --surface-2: oklch(0.27 0 0);
   --surface-3: oklch(0.37 0 0);
   --surface-border: oklch(0.44 0 0);
+  --skeleton: oklch(0.24 0 0);
+  --skeleton-shimmer: rgba(255, 255, 255, 0.08);
 }
 
 @layer base {
@@ -146,10 +150,11 @@ svg.lucide {
   scrollbar-width: none;
 }
 
-/* 読み込み中スケルトンのシマーアニメーション */
+/* 背景色、シマー色は :root / .dark の --skeleton 変数で一元管理 */
 .skeleton {
   position: relative;
   overflow: hidden;
+  background-color: var(--skeleton);
 }
 .skeleton::after {
   content: "";
@@ -159,22 +164,10 @@ svg.lucide {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.65),
+    var(--skeleton-shimmer),
     transparent
   );
   animation: skeleton-shimmer 1.5s ease-in-out infinite;
-}
-
-.dark .skeleton {
-  background-color: oklch(0.24 0 0);
-}
-.dark .skeleton::after {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.08),
-    transparent
-  );
 }
 @keyframes skeleton-shimmer {
   100% {

@@ -16,6 +16,7 @@ import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
+import { Skeleton } from "@/components/ui/skeleton"
 import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES } from "@/lib/subcategories"
 
@@ -42,19 +43,19 @@ const RecordSkeleton = () => (
       <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden">
         <div className="p-4 flex gap-4 items-start">
           {/* アイコン */}
-          <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-muted skeleton shrink-0 mt-1" />
+          <Skeleton className="w-12 h-12 rounded-full shrink-0 mt-1" />
           <div className="flex-1 min-w-0 pr-14 space-y-2">
             {/* 金額 */}
-            <div className="h-6 w-28 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+            <Skeleton className="h-6 w-28 rounded-lg" />
             {/* タグ */}
             <div className="flex gap-2">
-              <div className="h-5 w-16 bg-slate-100 dark:bg-muted rounded-md skeleton" />
-              <div className="h-5 w-20 bg-slate-100 dark:bg-muted rounded-md skeleton" />
+              <Skeleton className="h-5 w-16 rounded-md" />
+              <Skeleton className="h-5 w-20 rounded-md" />
             </div>
             {/* 車名・ODO */}
-            <div className="h-4 w-36 bg-slate-100 dark:bg-muted rounded skeleton" />
+            <Skeleton className="h-4 w-36" />
             {/* 日付 */}
-            <div className="h-3 w-24 bg-slate-100 dark:bg-muted rounded skeleton" />
+            <Skeleton className="h-3 w-24" />
           </div>
         </div>
       </div>

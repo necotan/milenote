@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Dialog, DialogContent, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical, ChevronRight, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck, AtSign, Info } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
@@ -591,48 +592,51 @@ export default function MyPage() {
 
   if (loading) return (
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
-      <header className="pt-4 pb-2">
-        <div className="h-8 w-32 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+      <header className="pt-4 pb-2 flex justify-between items-start">
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>
+          <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("mypage.subtitle")}</p>
+        </div>
       </header>
       <div className="space-y-8">
         {/* プロフィールカードスケルトン */}
         <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden">
           <div className="md:flex">
             <div className="md:w-1/3 p-6 bg-slate-50/50 dark:bg-muted/50 space-y-2">
-              <div className="h-5 w-24 bg-slate-100 dark:bg-muted rounded skeleton" />
-              <div className="h-3 w-full bg-slate-100 dark:bg-muted rounded skeleton" />
-              <div className="h-3 w-4/5 bg-slate-100 dark:bg-muted rounded skeleton" />
+              <Skeleton className="h-5 w-24" />
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-4/5" />
             </div>
             <div className="md:w-2/3 p-6 space-y-5">
               {[...Array(2)].map((_, i) => (
                 <div key={i} className="space-y-2 max-w-md">
-                  <div className="h-3 w-16 bg-slate-100 dark:bg-muted rounded skeleton" />
-                  <div className="h-10 w-full bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+                  <Skeleton className="h-3 w-16" />
+                  <Skeleton className="h-10 w-full rounded-lg" />
                 </div>
               ))}
             </div>
           </div>
           <div className="border-t border-slate-100 dark:border-border px-6 py-3 flex justify-between items-center">
-            <div className="h-3 w-48 bg-slate-100 dark:bg-muted rounded skeleton" />
-            <div className="h-8 w-16 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+            <Skeleton className="h-3 w-48" />
+            <Skeleton className="h-8 w-16 rounded-lg" />
           </div>
         </div>
         {/* メンテナンス設定カードスケルトン */}
         <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden">
           <div className="md:flex">
             <div className="md:w-1/3 p-6 bg-slate-50/50 dark:bg-muted/50 space-y-2">
-              <div className="h-5 w-32 bg-slate-100 dark:bg-muted rounded skeleton" />
-              <div className="h-3 w-full bg-slate-100 dark:bg-muted rounded skeleton" />
-              <div className="h-3 w-4/5 bg-slate-100 dark:bg-muted rounded skeleton" />
+              <Skeleton className="h-5 w-32" />
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-4/5" />
             </div>
             <div className="md:w-2/3 p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                 {[...Array(4)].map((_, i) => (
                   <div key={i} className="space-y-2">
-                    <div className="h-3 w-24 bg-slate-100 dark:bg-muted rounded skeleton" />
+                    <Skeleton className="h-3 w-24" />
                     <div className="flex gap-3">
-                      <div className="h-9 flex-1 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
-                      <div className="h-9 flex-1 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+                      <Skeleton className="h-9 flex-1 rounded-lg" />
+                      <Skeleton className="h-9 flex-1 rounded-lg" />
                     </div>
                   </div>
                 ))}
@@ -640,8 +644,8 @@ export default function MyPage() {
             </div>
           </div>
           <div className="border-t border-slate-100 dark:border-border px-6 py-3 flex justify-between items-center">
-            <div className="h-3 w-48 bg-slate-100 dark:bg-muted rounded skeleton" />
-            <div className="h-8 w-16 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+            <Skeleton className="h-3 w-48" />
+            <Skeleton className="h-8 w-16 rounded-lg" />
           </div>
         </div>
       </div>

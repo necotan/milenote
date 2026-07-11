@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
+import { Skeleton } from "@/components/ui/skeleton"
 import { CarFront, Plus, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, AlertTriangle, Move } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
@@ -532,16 +533,16 @@ export default function GaragePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
             {[...Array(2)].map((_, i) => (
               <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden">
-                <div className="h-48 bg-slate-100 dark:bg-muted skeleton" />
+                <Skeleton className="h-48 rounded-none" />
                 <div className="p-4 space-y-2">
-                  <div className="h-7 w-36 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
-                  <div className="h-3 w-48 bg-slate-100 dark:bg-muted rounded skeleton" />
+                  <Skeleton className="h-7 w-36 rounded-lg" />
+                  <Skeleton className="h-3 w-48" />
                 </div>
                 <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-t border-slate-100 dark:border-border">
                   {[...Array(4)].map((_, j) => (
                     <div key={j} className="p-4 space-y-2">
-                      <div className="h-2.5 w-16 bg-slate-100 dark:bg-muted rounded skeleton" />
-                      <div className="h-5 w-20 bg-slate-100 dark:bg-muted rounded skeleton" />
+                      <Skeleton className="h-2.5 w-16" />
+                      <Skeleton className="h-5 w-20" />
                     </div>
                   ))}
                 </div>

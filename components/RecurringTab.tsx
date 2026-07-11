@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Plus, X, Pencil, Trash2, Pause, Play, ChevronDown, ChevronUp, Info, RepeatIcon } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
@@ -219,21 +220,21 @@ const RecurringCardSkeleton = () => (
     {[...Array(3)].map((_, i) => (
       <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden relative">
         <div className="absolute top-3 right-3 flex items-center gap-1">
-          <div className="h-7 w-7 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
-          <div className="h-7 w-7 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
-          <div className="h-7 w-7 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+          <Skeleton className="h-7 w-7 rounded-lg" />
+          <Skeleton className="h-7 w-7 rounded-lg" />
+          <Skeleton className="h-7 w-7 rounded-lg" />
         </div>
         <div className="p-4 flex gap-3 items-start">
-          <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-muted skeleton shrink-0 mt-1" />
+          <Skeleton className="w-12 h-12 rounded-full shrink-0 mt-1" />
           <div className="flex-1 min-w-0 pr-24 space-y-2">
-            <div className="h-6 w-32 bg-slate-100 dark:bg-muted rounded-lg skeleton" />
+            <Skeleton className="h-6 w-32 rounded-lg" />
             <div className="flex gap-1.5">
-              <div className="h-5 w-14 bg-slate-100 dark:bg-muted rounded-md skeleton" />
-              <div className="h-5 w-20 bg-slate-100 dark:bg-muted rounded-md skeleton" />
-              <div className="h-5 w-16 bg-slate-100 dark:bg-muted rounded-md skeleton" />
+              <Skeleton className="h-5 w-14 rounded-md" />
+              <Skeleton className="h-5 w-20 rounded-md" />
+              <Skeleton className="h-5 w-16 rounded-md" />
             </div>
-            <div className="h-3 w-24 bg-slate-100 dark:bg-muted rounded skeleton" />
-            <div className="h-3 w-40 bg-slate-100 dark:bg-muted rounded skeleton" />
+            <Skeleton className="h-3 w-24" />
+            <Skeleton className="h-3 w-40" />
           </div>
         </div>
       </div>
