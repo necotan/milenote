@@ -667,7 +667,7 @@ export default function GaragePage() {
                     </Label>
                   </div>
 
-                  <div className="relative aspect-[11/6] bg-slate-800 w-full m-0 border-b border-slate-100 dark:border-border overflow-hidden">
+                  <div className="relative aspect-[11/6] bg-neutral-800 w-full m-0 border-b border-slate-100 dark:border-border overflow-hidden">
                     {/* 登録済みの画像がある場合は表示 */}
                     {car.image_url && (
                       <img src={car.image_url} alt={car.name} className="absolute inset-0 w-full h-full object-cover" style={getCarImageStyle(car)} />
@@ -812,7 +812,7 @@ export default function GaragePage() {
                 {/* プレビュー */}
                 <div
                   ref={previewRef}
-                  className="relative aspect-[11/6] w-full bg-slate-800 rounded-lg overflow-hidden cursor-move select-none touch-none"
+                  className="relative aspect-[11/6] w-full bg-neutral-800 rounded-lg overflow-hidden cursor-move select-none touch-none"
                   onPointerDown={handleAdjustPointerDown}
                   onPointerMove={handleAdjustPointerMove}
                   onPointerUp={handleAdjustPointerUp}

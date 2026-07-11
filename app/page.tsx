@@ -506,7 +506,7 @@ export default function Home() {
             <div className="space-y-4">
               {cars.map((car) => (
                 <Card key={car.id} className="border-none shadow-sm overflow-hidden bg-white dark:bg-card p-0">
-                  <div className="relative aspect-[11/6] bg-slate-800 w-full m-0 border-b border-slate-100 dark:border-border overflow-hidden">
+                  <div className="relative aspect-[11/6] bg-neutral-800 w-full m-0 border-b border-slate-100 dark:border-border overflow-hidden">
                     {car.image_url && <img src={car.image_url} alt={car.name} className="absolute inset-0 w-full h-full object-cover" style={getCarImageStyle(car)} />}
                   </div>
                   <CardContent className="p-0 m-0">
