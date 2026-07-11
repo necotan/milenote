@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import type { ReactElement } from "react"
+import type { CSSProperties, ReactElement } from "react"
 import { createClient } from "@/utils/supabase"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -13,7 +13,7 @@ import {
   BarChart, Bar
 } from "recharts"
 import type { TooltipContentProps } from "recharts"
-import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, RotateCcw, LineChart as LineChartIcon, Fuel, Hash, Receipt, TrendingUp, Leaf, Droplet, Zap, BatteryCharging } from "lucide-react"
+import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, ChevronDown, Info, LineChart as LineChartIcon, Fuel, Hash, Receipt, TrendingUp, Leaf, Droplet, Zap, BatteryCharging } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
@@ -117,53 +117,160 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
   return PieCustomLabel;
 };
 
-// 期間フィルターUIコンポーネント
-function PeriodFilter({
-  start, end,
-  onStartChange, onEndChange, onReset,
-  labelFrom, labelTo, labelReset,
+type PeriodPreset = "3m" | "1y" | "year" | "all" | "custom"
+
+function PeriodDateRow({
+  label, value, display, onChange,
 }: {
+  label: string
+  value: string
+  display: string
+  onChange: (v: string) => void
+}) {
+  return (
+    <div className="flex items-center justify-between py-2.5">
+      <span className="text-xs font-semibold text-slate-500 dark:text-muted-foreground">{label}</span>
+      <div className="group relative">
+        <span className="text-sm font-semibold text-slate-800 dark:text-foreground tabular-nums transition-opacity group-hover:opacity-70 group-active:opacity-50">
+          {display}
+        </span>
+        <input
+          type="date"
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          onClick={e => {
+            try { e.currentTarget.showPicker() } catch { /* 非対応、非ジェスチャ時は無視 */ }
+          }}
+          aria-label={label}
+          className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+          style={{ fontSize: 16 }}
+        />
+      </div>
+    </div>
+  )
+}
+
+// 期間フィルターUIコンポーネント
+// 上段のタブでプリセットを選択し、下段のボタンに現在の期間を常に表示
+// ボタンをタップすると開始日/終了日の編集行が開閉
+function PeriodFilter({
+  preset, onPresetChange,
+  start, end, onStartChange, onEndChange,
+}: {
+  preset: PeriodPreset
+  onPresetChange: (p: PeriodPreset) => void
   start: string; end: string
   onStartChange: (v: string) => void
   onEndChange: (v: string) => void
-  onReset: () => void
-  labelFrom: string; labelTo: string; labelReset: string
 }) {
+  const { t, locale } = useTranslation()
+  const [expanded, setExpanded] = useState(false)
+
+  const formatDisplayDate = (iso: string) => {
+    if (!iso) return "—"
+    const [y, m, d] = iso.split("-").map(Number)
+    if (locale === "en") {
+      const names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+      return `${names[m - 1]} ${d}, ${y}`
+    }
+    return `${y}年${m}月${d}日`
+  }
+
+  const formatSummaryDate = (iso: string) => {
+    if (!iso) return "—"
+    const [y, m, d] = iso.split("-").map(Number)
+    return locale === "en" ? `${m}/${d}/${y}` : `${y}/${m}/${d}`
+  }
+
+  const presets: { value: PeriodPreset; label: string }[] = [
+    { value: "year", label: t("stats.period_this_year") },
+    { value: "3m", label: t("stats.period_3m") },
+    { value: "1y", label: t("stats.period_1y") },
+    { value: "all", label: t("stats.period_all") },
+  ]
+
+  // 展開エリアのアニメーション
+  const EASE_APPLE = "cubic-bezier(0.32, 0.72, 0, 1)"
+  // translate3d と will-change を併用することで、Safari で transform のみのアニメーションがカクつく問題を回避
+  const fadeItemStyle = (index: number): CSSProperties => ({
+    opacity: expanded ? 1 : 0,
+    transform: expanded ? "translate3d(0, 0, 0)" : "translate3d(0, -8px, 0)",
+    willChange: "opacity, transform",
+    transitionProperty: "opacity, transform",
+    transitionDuration: expanded ? "320ms" : "200ms",
+    transitionTimingFunction: EASE_APPLE,
+    transitionDelay: expanded ? `${60 + index * 45}ms` : `${(2 - index) * 30}ms`,
+  })
+
   return (
-    <div className="flex flex-wrap items-center gap-2 px-4 pb-3">
-      <div className="flex items-center gap-1.5">
-        <div className="flex items-center gap-1 text-slate-500 dark:text-muted-foreground">
-          <CalendarDays size={14} />
-          <span className="text-xs font-semibold">{labelFrom}</span>
+    <div className="px-4 pb-3 pt-2">
+      <SegmentedToggle
+        value={preset}
+        onChange={onPresetChange}
+        fullWidth
+        className="mb-2.5"
+        options={presets}
+      />
+
+      <button
+        type="button"
+        onClick={() => setExpanded(v => !v)}
+        aria-expanded={expanded}
+        className="flex w-full items-center gap-2 rounded-lg bg-slate-100 dark:bg-muted px-3 py-2.5 text-left transition-colors hover:bg-slate-200/70 dark:hover:bg-muted/70"
+      >
+        <CalendarDays size={14} className="shrink-0 text-slate-500 dark:text-muted-foreground" />
+        <span className="text-sm font-semibold text-slate-800 dark:text-foreground tabular-nums">
+          {formatSummaryDate(start)} {locale === "en" ? "–" : "〜"} {formatSummaryDate(end)}
+        </span>
+        <ChevronDown
+          size={16}
+          className="ml-auto shrink-0 text-slate-400 dark:text-muted-foreground"
+          style={{
+            transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
+            transition: `transform 380ms ${EASE_APPLE}`,
+          }}
+        />
+      </button>
+
+      {/* 開始日・終了日の編集行 */}
+      <div
+        aria-hidden={!expanded}
+        className="grid"
+        style={{
+          gridTemplateRows: expanded ? "1fr" : "0fr",
+          transition: `grid-template-rows 380ms ${EASE_APPLE} ${expanded ? "0ms" : "140ms"}`,
+        }}
+      >
+        <div className="min-h-0 overflow-hidden">
+          <div className={`mt-2.5 ${expanded ? "" : "pointer-events-none"}`}>
+            <div className="rounded-lg bg-slate-100 dark:bg-muted px-3 divide-y divide-slate-200 dark:divide-border">
+              <div style={fadeItemStyle(0)}>
+                <PeriodDateRow
+                  label={t("stats.start_date")}
+                  value={start}
+                  display={formatDisplayDate(start)}
+                  onChange={onStartChange}
+                />
+              </div>
+              <div style={fadeItemStyle(1)}>
+                <PeriodDateRow
+                  label={t("stats.end_date")}
+                  value={end}
+                  display={formatDisplayDate(end)}
+                  onChange={onEndChange}
+                />
+              </div>
+            </div>
+            <p
+              className="mt-2.5 flex items-center justify-end gap-1 px-1 text-[10px] text-slate-400 dark:text-muted-foreground"
+              style={fadeItemStyle(2)}
+            >
+              <Info size={12} className="shrink-0" />
+              {t("stats.period_edit_hint")}
+            </p>
+          </div>
         </div>
-        <input
-          type="date"
-          value={start}
-          onChange={e => onStartChange(e.target.value)}
-          className="text-xs border border-slate-200 dark:border-border rounded-md px-1.5 py-1 text-slate-700 dark:text-foreground bg-white dark:bg-card focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-400 transition-all w-[110px]"
-        />
       </div>
-
-      <div className="flex items-center gap-1.5">
-        <span className="text-slate-300 dark:text-muted-foreground text-xs">—</span>
-        <span className="text-xs font-semibold text-slate-500 dark:text-muted-foreground">{labelTo}</span>
-        <input
-          type="date"
-          value={end}
-          onChange={e => onEndChange(e.target.value)}
-          className="text-xs border border-slate-200 dark:border-border rounded-md px-1.5 py-1 text-slate-700 dark:text-foreground bg-white dark:bg-card focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-400 transition-all w-[110px]"
-        />
-      </div>
-
-      {(start || end) && (
-        <button
-          onClick={onReset}
-          className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 dark:text-muted-foreground hover:text-red-400 transition-colors px-2 py-1 rounded hover:bg-red-50 ml-auto"
-        >
-          <RotateCcw size={12} />
-          {labelReset}
-        </button>
-      )}
     </div>
   )
 }
@@ -199,6 +306,7 @@ export default function StatsPage() {
   const [loading, setLoading] = useState(true)
 
   // カテゴリ別グラフ用フィルター
+  const [catPreset, setCatPreset] = useState<PeriodPreset>("all")
   const [catStart, setCatStart] = useState("")
   const [catEnd, setCatEnd] = useState("")
 
@@ -279,10 +387,65 @@ export default function StatsPage() {
     fetchData()
   }, [supabase])
 
+  // 期間プリセットから実際の開始・終了日を算出
+  const toIsoDate = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
+  const todayStr = toIsoDate(new Date())
+  const threeMonthsAgoStr = (() => {
+    const now = new Date()
+    return toIsoDate(new Date(now.getFullYear(), now.getMonth() - 3, now.getDate()))
+  })()
+  const oneYearAgoStr = (() => {
+    const now = new Date()
+    return toIsoDate(new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()))
+  })()
+  const yearStartStr = `${currentYear}-01-01`
+  // 全期間の開始日表示用
+  const minRecordDate = useMemo(
+    () => records.reduce((min, r) => (!min || r.date < min ? r.date : min), ""),
+    [records],
+  )
+
+  // 表示用の開始・終了日
+  const catDisplayStart = catPreset === "3m" ? threeMonthsAgoStr
+    : catPreset === "1y" ? oneYearAgoStr
+    : catPreset === "year" ? yearStartStr
+    : catPreset === "all" ? minRecordDate
+    : catStart
+  const catDisplayEnd = catPreset === "custom" ? catEnd : todayStr
+
+  // 絞り込み用
+  const catFilterStart = catPreset === "all" ? "" : catDisplayStart
+  const catFilterEnd = catPreset === "all" ? "" : catDisplayEnd
+
+  // プリセット切替
+  const selectCatPreset = (p: PeriodPreset) => {
+    if (p === "custom" && catPreset !== "custom") {
+      setCatStart(catDisplayStart)
+      setCatEnd(catDisplayEnd)
+    }
+    setCatPreset(p)
+  }
+
+  // 日付を直接変更したら期間を指定に切り替え
+  const changeCatStart = (v: string) => {
+    if (catPreset !== "custom") {
+      setCatEnd(catDisplayEnd)
+      setCatPreset("custom")
+    }
+    setCatStart(v)
+  }
+  const changeCatEnd = (v: string) => {
+    if (catPreset !== "custom") {
+      setCatStart(catDisplayStart)
+      setCatPreset("custom")
+    }
+    setCatEnd(v)
+  }
+
   // データフィルタリング処理
   const catFilteredRecords = records.filter(r => {
-    if (catStart && r.date < catStart) return false
-    if (catEnd && r.date > catEnd) return false
+    if (catFilterStart && r.date < catFilterStart) return false
+    if (catFilterEnd && r.date > catFilterEnd) return false
     return true
   })
 
@@ -322,7 +485,7 @@ export default function StatsPage() {
   useEffect(() => {
     if (isFirstCatFilter.current) { isFirstCatFilter.current = false; return }
     setPieAnimKey(k => k + 1)
-  }, [catStart, catEnd])
+  }, [catFilterStart, catFilterEnd])
 
   // 折れ線グラフの実パス長を測定して CSS 変数に反映し、線と点のアニメーションを同期させる
   // 初期マウント時に該当タブが非アクティブで DOM が無いケースに対応するため、container を state で受けてアタッチされたタイミングで測定する
@@ -942,12 +1105,10 @@ export default function StatsPage() {
                 </CardTitle>
               </CardHeader>
               <PeriodFilter
-                start={catStart} end={catEnd}
-                onStartChange={setCatStart} onEndChange={setCatEnd}
-                onReset={() => { setCatStart(""); setCatEnd("") }}
-                labelFrom={t("stats.from")}
-                labelTo={t("stats.to")}
-                labelReset={t("stats.reset_filter")}
+                preset={catPreset}
+                onPresetChange={selectCatPreset}
+                start={catDisplayStart} end={catDisplayEnd}
+                onStartChange={changeCatStart} onEndChange={changeCatEnd}
               />
               <CardContent className="h-80 p-0">
                 {categoryData.length === 0 ? (
