@@ -12,13 +12,12 @@ type SegmentedToggleOption<T extends string> = {
 }
 
 export function SegmentedToggle<T extends string>({
-  value, options, onChange, className, fullWidth = false,
+  value, options, onChange, className,
 }: {
   value: T
   options: SegmentedToggleOption<T>[]
   onChange: (value: T) => void
   className?: string
-  fullWidth?: boolean
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const buttonRefs = useRef<Record<string, HTMLButtonElement | null>>({})
@@ -30,13 +29,7 @@ export function SegmentedToggle<T extends string>({
   useLayoutEffect(() => {
     const activeButton = buttonRefs.current[value]
     const indicator = indicatorRef.current
-    if (!indicator) return
-    // value がどの選択肢にも一致しない場合（未選択状態）はインジケータを隠す
-    if (!activeButton) {
-      indicator.style.opacity = "0"
-      prevValueRef.current = null
-      return
-    }
+    if (!activeButton || !indicator) return
     const shouldAnimate = prevValueRef.current !== null && prevValueRef.current !== value
     prevValueRef.current = value
     // 初回や再計測ではトランジションを一時的に無効化して瞬間配置する
@@ -54,7 +47,7 @@ export function SegmentedToggle<T extends string>({
   return (
     <div
       ref={containerRef}
-      className={cn("relative inline-flex items-center rounded-full bg-slate-100 dark:bg-muted p-[3px]", fullWidth && "flex w-full", className)}
+      className={cn("relative inline-flex items-center rounded-full bg-slate-100 dark:bg-muted p-[3px]", className)}
     >
       <span
         ref={indicatorRef}
@@ -73,7 +66,6 @@ export function SegmentedToggle<T extends string>({
             title={option.label}
             className={cn(
               "relative z-10 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold transition-colors",
-              fullWidth && "flex-1 justify-center whitespace-nowrap px-1",
               active ? "text-slate-800 dark:text-foreground" : "text-slate-500 hover:text-slate-700 dark:text-muted-foreground dark:hover:text-foreground"
             )}
           >

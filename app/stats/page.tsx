@@ -73,11 +73,18 @@ const CO2_COEFFICIENT: Record<string, number> = {
 }
 const CO2_COEFFICIENT_DEFAULT = 2.32
 
+// ラベルテキストの幅を概算
+const estimateLabelWidth = (text: string): number => {
+  let width = 0
+  for (const ch of text) width += ch.charCodeAt(0) > 0xff ? 10 : 5.8
+  return width
+}
+
 const createCustomizedLabel = (t: (key: string, params?: Record<string, string | number>) => string, locale: string, fillColor: string) => {
   // Recharts の PieLabel 型は省略可能フィールドを含む複雑な union のため any を許容
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const PieCustomLabel = (props: any) => {
-    const { x, y, percent, value, textAnchor } = props;
+    const { x, y, cx, percent, value, textAnchor } = props;
 
     const formatValue = (val: number) => {
       const truncateToOneDecimal = (num: number, divisor: number) => {
@@ -98,9 +105,26 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
 
     if (percent < 0.01) return null;
 
+    // 金額とパーセントを2行に分けて表示
+    const amountText = formatValue(value);
+    const percentText = `(${(percent * 100).toFixed(1)}%)`;
+
+    // ラベルがカード（SVG）の端に張り付かないよう、テキスト幅を概算して左右に最低限の余白を確保
+    const EDGE_PAD = 8;
+    const svgWidth = Number(cx) * 2;
+    const textWidth = Math.max(estimateLabelWidth(amountText), estimateLabelWidth(percentText));
+    let clampedX = Number(x);
+    if (textAnchor === "end") {
+      clampedX = Math.max(clampedX, EDGE_PAD + textWidth);
+    } else if (textAnchor === "start") {
+      clampedX = Math.min(clampedX, svgWidth - EDGE_PAD - textWidth);
+    } else {
+      clampedX = Math.min(Math.max(clampedX, EDGE_PAD + textWidth / 2), svgWidth - EDGE_PAD - textWidth / 2);
+    }
+
     return (
       <text
-        x={x}
+        x={clampedX}
         y={y}
         fill={fillColor}
         textAnchor={textAnchor as "start" | "middle" | "end"}
@@ -109,7 +133,8 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
         fontWeight="500"
         style={{ animation: "pieLabelFadeIn 0.75s ease-out forwards" }}
       >
-        {`${formatValue(value)} (${(percent * 100).toFixed(1)}%)`}
+        <tspan x={clampedX} dy="-0.55em">{amountText}</tspan>
+        <tspan x={clampedX} dy="1.1em">{percentText}</tspan>
       </text>
     );
   };
@@ -204,13 +229,26 @@ function PeriodFilter({
 
   return (
     <div className="px-4 pb-3 pt-2">
-      <SegmentedToggle
-        value={preset}
-        onChange={onPresetChange}
-        fullWidth
-        className="mb-2.5"
-        options={presets}
-      />
+      <div className="mb-2.5 flex flex-wrap gap-1.5">
+        {presets.map(p => {
+          const active = preset === p.value
+          return (
+            <button
+              key={p.value}
+              type="button"
+              onClick={() => onPresetChange(p.value)}
+              aria-pressed={active}
+              className={
+                active
+                  ? "rounded-full px-3 py-1.5 text-xs font-semibold transition-colors bg-slate-700 text-white dark:bg-surface-3 dark:text-foreground"
+                  : "rounded-full px-3 py-1.5 text-xs font-semibold transition-colors bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted/70"
+              }
+            >
+              {p.label}
+            </button>
+          )
+        })}
+      </div>
 
       <button
         type="button"
