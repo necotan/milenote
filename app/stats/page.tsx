@@ -363,7 +363,9 @@ export default function StatsPage() {
     axisTick: isDark ? "#64748b" : "#94a3b8",
     sliceStroke: isDark ? "#18181b" : "#ffffff",
     dotStroke: isDark ? "#18181b" : "#ffffff",
-    tooltipBg: isDark ? "#1e293b" : "#ffffff",
+    tooltipBg: isDark ? "#404040" : "#f1f5f9",
+    tooltipText: isDark ? "#f5f5f5" : "#334155",
+    tooltipLabel: isDark ? "#a3a3a3" : "#64748b",
     labelLineStroke: isDark ? "#475569" : "#cbd5e1",
     pieLabelFill: isDark ? "#94a3b8" : "#64748b",
     cursorFill: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)",
@@ -1148,7 +1150,7 @@ export default function StatsPage() {
                           </Pie>
                           {/* Recharts のコールバック型が複雑なため any を許容 */}
                           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                          <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} formatter={(value: any, name: any) => [`¥${Number(value).toLocaleString()}`, String(name)]} />
+                          <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} formatter={(value: any, name: any) => [`¥${Number(value).toLocaleString()}`, String(name)]} />
                           <Legend verticalAlign="bottom" content={renderGridLegend(renderRawLegendLabel)} />
                         </PieChart>
                       </ResponsiveContainer>
@@ -1192,7 +1194,7 @@ export default function StatsPage() {
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
                         <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: chartChrome.axisTick }} tickFormatter={monthFormatter} padding={{ left: 30, right: 30 }} />
                         <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
-                        <Tooltip cursor={{ stroke: chartChrome.gridStroke }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} formatter={expenditureTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
+                        <Tooltip cursor={{ stroke: chartChrome.gridStroke }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} labelStyle={{ color: chartChrome.tooltipLabel }} formatter={expenditureTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
                         <Line type="linear" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={monthlyLineDot} isAnimationActive={false} />
                       </LineChart>
                     ) : (
@@ -1252,7 +1254,7 @@ export default function StatsPage() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
                       <XAxis dataKey="year" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: chartChrome.axisTick }} tickFormatter={yearFormatter} padding={{ left: 30, right: 30 }} />
                       <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
-                      <Tooltip cursor={{ stroke: chartChrome.gridStroke }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} formatter={expenditureTooltipFormatter} labelFormatter={yearTooltipLabelFormatter} />
+                      <Tooltip cursor={{ stroke: chartChrome.gridStroke }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} labelStyle={{ color: chartChrome.tooltipLabel }} formatter={expenditureTooltipFormatter} labelFormatter={yearTooltipLabelFormatter} />
                       <Line type="linear" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={yearlyLineDot} isAnimationActive={false} />
                     </LineChart>
                   ) : (
