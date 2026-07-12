@@ -13,7 +13,7 @@ import {
   BarChart, Bar
 } from "recharts"
 import type { TooltipContentProps } from "recharts"
-import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, ChevronDown, Info, LineChart as LineChartIcon, Fuel, Hash, Receipt, TrendingUp, Leaf, Droplet, Zap, BatteryCharging } from "lucide-react"
+import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, ChevronDown, Info, LineChart as LineChartIcon, Fuel, BatteryCharging } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
@@ -315,23 +315,18 @@ function PeriodFilter({
 
 // 走行距離タブ用の統計行コンポーネント
 function StatRow({
-  icon: Icon, iconColor, label, value, unit,
+  label, value, unit,
 }: {
-  icon: typeof Fuel
-  iconColor: string
   label: string
   value: string
   unit: string
 }) {
   return (
     <div className="flex items-center justify-between py-2.5">
-      <div className="flex items-center gap-2">
-        <Icon size={16} className={iconColor} />
-        <span className="text-sm font-semibold text-slate-600 dark:text-muted-foreground">{label}</span>
-      </div>
+      <span className="text-sm font-semibold text-slate-600 dark:text-muted-foreground">{label}</span>
       <div className="flex items-baseline gap-1">
-        <span className="text-lg font-bold text-slate-800 dark:text-foreground tabular-nums tracking-wider">{value}</span>
-        {unit && <span className="text-xs font-bold text-slate-400 dark:text-muted-foreground">{unit}</span>}
+        <span className="text-lg font-bold text-slate-800 dark:text-foreground tabular-nums tracking-wide">{value}</span>
+        {unit && <span className="text-sm font-bold text-slate-400 dark:text-muted-foreground">{unit}</span>}
       </div>
     </div>
   )
@@ -998,29 +993,21 @@ export default function StatsPage() {
             <CardContent className="px-4 pb-4 pt-0">
               <div className="divide-y divide-slate-100 dark:divide-border">
                 <StatRow
-                  icon={Droplet}
-                  iconColor="text-blue-500"
                   label={t("stats.total_fuel")}
                   value={totalFuelAmount.toFixed(1)}
                   unit={t("stats.unit_liter")}
                 />
                 <StatRow
-                  icon={Hash}
-                  iconColor="text-indigo-500"
                   label={t("stats.fuel_count")}
                   value={fuelCount.toLocaleString()}
                   unit={t("stats.unit_count_times")}
                 />
                 <StatRow
-                  icon={Receipt}
-                  iconColor="text-orange-500"
                   label={t("stats.total_fuel_cost")}
                   value={`¥${totalFuelCost.toLocaleString()}`}
                   unit=""
                 />
                 <StatRow
-                  icon={TrendingUp}
-                  iconColor="text-rose-500"
                   label={t("stats.avg_unit_price")}
                   value={Math.round(avgUnitPrice).toLocaleString()}
                   unit={t("stats.unit_yen_per_liter")}
@@ -1029,13 +1016,11 @@ export default function StatsPage() {
               {/* CO₂セクション */}
               <div className="mt-2 pt-1 border-t-2 border-slate-100 dark:border-border">
                 <StatRow
-                  icon={Leaf}
-                  iconColor="text-green-500"
                   label={t("stats.co2_emission")}
                   value={Math.round(co2Emission).toLocaleString()}
                   unit={t("stats.unit_kg")}
                 />
-                <p className="text-[10px] text-slate-400 dark:text-muted-foreground pl-6">{t("stats.co2_note")}</p>
+                <p className="text-[10px] text-slate-400 dark:text-muted-foreground">{t("stats.co2_note")}</p>
               </div>
             </CardContent>
           </Card>
@@ -1051,29 +1036,21 @@ export default function StatsPage() {
               <CardContent className="px-4 pb-4 pt-0">
                 <div className="divide-y divide-slate-100 dark:divide-border">
                   <StatRow
-                    icon={Zap}
-                    iconColor="text-sky-500"
                     label={t("stats.total_charge")}
                     value={totalChargeAmount.toFixed(1)}
                     unit={t("stats.unit_kwh")}
                   />
                   <StatRow
-                    icon={Hash}
-                    iconColor="text-indigo-500"
                     label={t("stats.charge_count")}
                     value={chargeCount.toLocaleString()}
                     unit={t("stats.unit_count_times")}
                   />
                   <StatRow
-                    icon={Receipt}
-                    iconColor="text-orange-500"
                     label={t("stats.total_charge_cost")}
                     value={`¥${totalChargeCost.toLocaleString()}`}
                     unit=""
                   />
                   <StatRow
-                    icon={TrendingUp}
-                    iconColor="text-rose-500"
                     label={t("stats.avg_charge_unit_price")}
                     value={Math.round(avgChargeUnitPrice).toLocaleString()}
                     unit={t("stats.unit_yen_per_kwh")}
