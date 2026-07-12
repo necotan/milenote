@@ -587,11 +587,12 @@ export default function StatsPage() {
   }, [monthlyData])
 
   // 直近3年（今年を含む過去3年）の枠を生成してから集計
-  type YearlyBucket = { year: number; amount: number } & Record<CategoryKey, number>
+  type YearlyBucket = { year: number; amount: number; hasData: boolean } & Record<CategoryKey, number>
   const yearlyData = useMemo<YearlyBucket[]>(() => {
     const years: YearlyBucket[] = Array.from({ length: 3 }, (_, i) => ({
       year: currentYear - (2 - i),
       amount: 0,
+      hasData: false,
       ...buildEmptyCategoryBuckets(),
     }))
     records.forEach(r => {
@@ -601,6 +602,7 @@ export default function StatsPage() {
       const cat = normalizeCategoryKey(r.category)
       found[cat] += r.amount
       found.amount += r.amount
+      found.hasData = true
     })
     return years
   }, [records, currentYear])
@@ -626,6 +628,7 @@ export default function StatsPage() {
       .map((d, i) => ({
         year: d.year,
         amount: d.amount,
+        hasData: d.hasData,
         diff: i > 0 ? d.amount - yearlyData[i - 1].amount : null,
       }))
       .reverse(),
@@ -1294,20 +1297,28 @@ export default function StatsPage() {
                         <td className="py-4 pr-3 text-[15px] font-bold text-slate-700 dark:text-foreground tabular-nums">
                           {locale === "en" ? row.year : `${row.year}年`}
                         </td>
-                        <td className="py-4 px-3 text-right text-sm font-bold text-slate-800 dark:text-foreground tabular-nums">
-                          ¥{row.amount.toLocaleString()}
-                        </td>
-                        <td className="py-4 pl-3 text-right text-xs tabular-nums">
-                          {row.diff === null ? (
-                            <span className="text-slate-300 dark:text-muted-foreground">—</span>
-                          ) : row.diff > 0 ? (
-                            <span className="font-semibold text-rose-500">+¥{row.diff.toLocaleString()}</span>
-                          ) : row.diff < 0 ? (
-                            <span className="font-semibold text-emerald-500">-¥{Math.abs(row.diff).toLocaleString()}</span>
-                          ) : (
-                            <span className="text-slate-400 dark:text-muted-foreground">±¥0</span>
-                          )}
-                        </td>
+                        {row.hasData ? (
+                          <>
+                            <td className="py-4 px-3 text-right text-sm font-bold text-slate-800 dark:text-foreground tabular-nums">
+                              ¥{row.amount.toLocaleString()}
+                            </td>
+                            <td className="py-4 pl-3 text-right text-xs tabular-nums">
+                              {row.diff === null ? (
+                                <span className="text-slate-300 dark:text-muted-foreground">—</span>
+                              ) : row.diff > 0 ? (
+                                <span className="font-semibold text-rose-500">+¥{row.diff.toLocaleString()}</span>
+                              ) : row.diff < 0 ? (
+                                <span className="font-semibold text-emerald-500">-¥{Math.abs(row.diff).toLocaleString()}</span>
+                              ) : (
+                                <span className="text-slate-400 dark:text-muted-foreground">±¥0</span>
+                              )}
+                            </td>
+                          </>
+                        ) : (
+                          <td colSpan={2} className="py-4 pl-3 text-right text-xs text-slate-400 dark:text-muted-foreground">
+                            {t("stats.no_data")}
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
