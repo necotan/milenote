@@ -229,25 +229,8 @@ function PeriodFilter({
 
   return (
     <div className="px-4 pb-3 pt-2">
-      <div className="mb-2.5 flex flex-wrap gap-1.5">
-        {presets.map(p => {
-          const active = preset === p.value
-          return (
-            <button
-              key={p.value}
-              type="button"
-              onClick={() => onPresetChange(p.value)}
-              aria-pressed={active}
-              className={
-                active
-                  ? "rounded-full px-3 py-1.5 text-xs font-semibold transition-colors bg-slate-700 text-white dark:bg-surface-3 dark:text-foreground"
-                  : "rounded-full px-3 py-1.5 text-xs font-semibold transition-colors bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted/70"
-              }
-            >
-              {p.label}
-            </button>
-          )
-        })}
+      <div className="mb-2.5">
+        <SegmentedToggle value={preset} onChange={onPresetChange} options={presets} />
       </div>
 
       <button
