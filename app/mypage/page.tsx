@@ -968,7 +968,7 @@ export default function MyPage() {
 
       {/* ログアウトボタン (スマホ版のみ表示、PC版はサイドバーに移動予定) */}
       <div className="md:hidden pt-8 flex justify-center mb-8">
-        <Button variant="ghost" className="px-6 font-bold text-slate-400 dark:text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors text-xs" onClick={handleLogout}>
+        <Button variant="outline" className="px-8 h-9 font-bold rounded-lg bg-white dark:bg-card border-slate-200 dark:border-border shadow-sm text-slate-400 dark:text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors text-xs" onClick={handleLogout}>
           <LogOut className="w-4 h-4 mr-2" />
           {t("common.logout")}
         </Button>
