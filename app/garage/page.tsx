@@ -439,6 +439,21 @@ export default function GaragePage() {
     if (updateError) {
       toast.error(t("garage.db_update_failed"))
     } else {
+      // 画像への差し替えが成功したら、古い画像を Storage から削除
+      // 失敗しても表示は壊れず、残ったファイルは次回の写真変更・車両削除時に処理されるため、エラーは表示しない
+      try {
+        const { data: files } = await supabase.storage.from("cars").list(user.id)
+        if (files && files.length > 0) {
+          const targets = files
+            .filter((f) => f.name.startsWith(`${carId}-`) && f.name !== fileName)
+            .map((f) => `${user.id}/${f.name}`)
+          if (targets.length > 0) {
+            await supabase.storage.from("cars").remove(targets)
+          }
+        }
+      } catch {
+      }
+
       toast.success(t("garage.photo_set"))
       fetchData() // 画面を更新して写真を表示
       // アップロード直後に位置・ズーム調整モーダルを開き、新しい画像をすぐ調整できるようにする
