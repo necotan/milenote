@@ -388,8 +388,8 @@ export default function GaragePage() {
     const file = event.target.files?.[0]
     if (!file) return
 
-    // 5MB制限チェック
-    if (file.size > 5 * 1024 * 1024) {
+    // 極端に大きいファイルはブラウザでのデコードに負荷がかかるため上限を設ける
+    if (file.size > 30 * 1024 * 1024) {
       toast.error(t("garage.file_too_large"))
       return
     }
@@ -399,9 +399,10 @@ export default function GaragePage() {
     if (!user) return
 
     // public バケットに保存するため、アップロード前に EXIF情報 を除去する
+    // 5MB を超える画像は、品質・解像度の順で段階的に圧縮して 5MB 以下に収める
     let cleanedFile: File
     try {
-      cleanedFile = (await stripImageMetadata(file)).file
+      cleanedFile = (await stripImageMetadata(file, { maxBytes: 5 * 1024 * 1024 })).file
     } catch {
       toast.dismiss(toastId)
       toast.error(t("garage.upload_failed"))

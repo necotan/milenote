@@ -113,7 +113,7 @@
     "confirm_delete_item": "このアイテムを削除しますか？この操作は元に戻せません。",
     "item_deleted": "アイテムを削除しました",
     "status_updated": "ステータスを更新しました",
-    "file_too_large": "ファイルサイズは5MB以下にしてください",
+    "file_too_large": "ファイルサイズは30MB以下にしてください",
     "uploading_photo": "写真をアップロード中...",
     "upload_failed": "アップロードに失敗しました",
     "db_update_failed": "データベースの更新に失敗しました",

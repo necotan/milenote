@@ -113,7 +113,7 @@
     "confirm_delete_item": "Delete this item? This cannot be undone.",
     "item_deleted": "Item deleted",
     "status_updated": "Status updated",
-    "file_too_large": "File must be 5MB or less",
+    "file_too_large": "File must be 30MB or less",
     "uploading_photo": "Uploading photo...",
     "upload_failed": "Upload failed",
     "db_update_failed": "Database update failed",
