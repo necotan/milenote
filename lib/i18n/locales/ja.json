@@ -318,7 +318,7 @@
     }
   },
   "login": {
-    "subtitle": "愛車管理を始めましょう",
+    "subtitle": "愛車の維持費を、まとめて管理",
     "email": "メールアドレス",
     "password": "パスワード",
     "password_placeholder": "6文字以上で入力",
