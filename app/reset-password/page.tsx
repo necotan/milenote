@@ -90,7 +90,7 @@ function ResetPasswordContent() {
             </div>
             <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">{errorPopup}</p>
             <Button
-              className="w-full mt-4 font-bold"
+              className="w-full mt-6 font-bold"
               onClick={() => setErrorPopup(null)}
             >
               OK
@@ -106,7 +106,7 @@ function ResetPasswordContent() {
             <h3 className="text-sm font-bold text-slate-800 dark:text-foreground mb-3">{t("reset.success_title")}</h3>
             <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">{t("reset.success_message")}</p>
             <Button
-              className="w-full mt-4 font-bold"
+              className="w-full mt-6 font-bold"
               onClick={() => router.push("/")}
             >
               OK

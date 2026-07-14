@@ -72,7 +72,7 @@ export default function LoginPage() {
             </div>
             <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">{errorPopup}</p>
             <Button
-              className="w-full mt-4 font-bold"
+              className="w-full mt-6 font-bold"
               onClick={() => setErrorPopup(null)}
             >
               OK
@@ -98,7 +98,7 @@ export default function LoginPage() {
               <>
                 <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed whitespace-pre-line">{t("reset.sent_message")}</p>
                 <Button
-                  className="w-full mt-4 font-bold"
+                  className="w-full mt-6 font-bold"
                   onClick={() => setResetOpen(false)}
                 >
                   OK
