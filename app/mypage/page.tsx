@@ -488,7 +488,11 @@ export default function MyPage() {
     const column = field === "display_name" ? "display_name" : "username"
     const { error } = await supabase.from("users").update({ [column]: value }).eq("id", userId)
     if (error) {
-      toast.error(t("common.error_occurred") + ": " + error.message)
+      if (field === "user_id" && error.code === "23505") {
+        toast.error(t("signup.user_id_taken"))
+      } else {
+        toast.error(t("common.error_occurred") + ": " + error.message)
+      }
       return false
     }
     if (field === "display_name") setDisplayName(value)
