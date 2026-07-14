@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Plus, X, Pencil, Trash2, Pause, Play, ChevronDown, ChevronUp, Info, RepeatIcon } from "lucide-react"
+import { Plus, X, Pencil, Trash2, Pause, Play, ChevronDown, Info, RepeatIcon } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
 import { CATEGORIES } from "@/app/records/page"
@@ -30,11 +30,15 @@ const AutoRecordBanner = () => {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
+  // 展開エリアのアニメーション
+  const EASE_APPLE = "cubic-bezier(0.32, 0.72, 0, 1)"
+
   return (
     <div className="rounded-xl border border-blue-200 dark:border-blue-900 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 overflow-hidden mb-5">
       <button
         type="button"
         onClick={() => setOpen(v => !v)}
+        aria-expanded={open}
         className="w-full flex items-center gap-2.5 px-4 py-3 text-left hover:bg-white/30 dark:hover:bg-card/30 transition-colors"
       >
         <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/60">
@@ -43,20 +47,44 @@ const AutoRecordBanner = () => {
         <span className="flex-1 text-sm font-semibold text-blue-800 dark:text-blue-200">
           {t("records.recurring_banner_title")}
         </span>
-        {open
-          ? <ChevronUp size={15} className="text-blue-400 dark:text-blue-300 shrink-0" />
-          : <ChevronDown size={15} className="text-blue-400 dark:text-blue-300 shrink-0" />
-        }
+        <ChevronDown
+          size={15}
+          className="text-blue-400 dark:text-blue-300 shrink-0"
+          style={{
+            transform: open ? "rotate(180deg)" : "rotate(0deg)",
+            transition: `transform 380ms ${EASE_APPLE}`,
+          }}
+        />
       </button>
-      {open && (
-        <div className="px-4 pb-4 pt-0">
-          <div className="border-t border-blue-100 dark:border-blue-900 pt-3">
-            <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
-              {t("records.recurring_banner_body")}
-            </p>
+      <div
+        aria-hidden={!open}
+        className="grid"
+        style={{
+          gridTemplateRows: open ? "1fr" : "0fr",
+          transition: `grid-template-rows 380ms ${EASE_APPLE} ${open ? "0ms" : "140ms"}`,
+        }}
+      >
+        <div className="min-h-0 overflow-hidden">
+          <div
+            className={`px-4 pb-4 pt-0 ${open ? "" : "pointer-events-none"}`}
+            style={{
+              opacity: open ? 1 : 0,
+              transform: open ? "translate3d(0, 0, 0)" : "translate3d(0, -8px, 0)",
+              willChange: "opacity, transform",
+              transitionProperty: "opacity, transform",
+              transitionDuration: open ? "320ms" : "200ms",
+              transitionTimingFunction: EASE_APPLE,
+              transitionDelay: open ? "60ms" : "30ms",
+            }}
+          >
+            <div className="border-t border-blue-100 dark:border-blue-900 pt-3">
+              <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+                {t("records.recurring_banner_body")}
+              </p>
+            </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   )
 }
