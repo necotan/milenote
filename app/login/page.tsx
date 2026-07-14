@@ -16,6 +16,10 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [errorPopup, setErrorPopup] = useState<string | null>(null)
+  const [resetOpen, setResetOpen] = useState(false)
+  const [resetEmail, setResetEmail] = useState("")
+  const [resetLoading, setResetLoading] = useState(false)
+  const [resetSent, setResetSent] = useState(false)
   const router = useRouter()
   const supabase = createClient()
   const { t } = useTranslation()
@@ -31,12 +35,32 @@ export default function LoginPage() {
     setLoading(false)
   }
 
+  // パスワードリセットモーダルを開く
+  const openResetModal = () => {
+    setResetEmail(email)
+    setResetSent(false)
+    setResetOpen(true)
+  }
+
+  // パスワードリセットメール送信
+  const handleResetRequest = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!resetEmail) return
+    setResetLoading(true)
+    await supabase.auth.resetPasswordForEmail(resetEmail, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    })
+    // メールアドレスの登録有無を漏らさないため、結果に関わらず送信完了の表示にする
+    setResetLoading(false)
+    setResetSent(true)
+  }
+
   return (
     <div className="relative flex min-h-screen items-center justify-center p-8 bg-white dark:bg-background">
       {/* エラーポップアップ */}
       {errorPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-card rounded-2xl shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-card rounded-2xl border border-slate-200 dark:border-border shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
             <div className="flex items-start justify-between mb-3">
               <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("login.error_title")}</h3>
               <button
@@ -53,6 +77,45 @@ export default function LoginPage() {
             >
               OK
             </Button>
+          </div>
+        </div>
+      )}
+
+      {/* パスワードリセットモーダル */}
+      {resetOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-card rounded-2xl border border-slate-200 dark:border-border shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
+            <div className="flex items-start justify-between mb-3">
+              <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("reset.request_title")}</h3>
+              <button
+                onClick={() => setResetOpen(false)}
+                className="text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors -mt-1 -mr-1"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            {resetSent ? (
+              <>
+                <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed whitespace-pre-line">{t("reset.sent_message")}</p>
+                <Button
+                  className="w-full mt-4 font-bold"
+                  onClick={() => setResetOpen(false)}
+                >
+                  OK
+                </Button>
+              </>
+            ) : (
+              <form onSubmit={handleResetRequest} className="space-y-4">
+                <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">{t("reset.request_description")}</p>
+                <div className="space-y-2">
+                  <Label htmlFor="reset-email">{t("login.email")}</Label>
+                  <Input id="reset-email" type="email" placeholder="example@mail.com" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} required className="border-slate-300 dark:border-border" />
+                </div>
+                <Button className="w-full font-bold" type="submit" disabled={resetLoading}>
+                  {resetLoading ? t("login.processing") : t("reset.send")}
+                </Button>
+              </form>
+            )}
           </div>
         </div>
       )}
@@ -83,6 +146,13 @@ export default function LoginPage() {
             <Button variant="outline" className="min-w-[200px]" type="button" onClick={() => router.push("/login/signup")}>
               {t("login.signup")}
             </Button>
+            <button
+              type="button"
+              onClick={openResetModal}
+              className="mt-2 text-xs text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors underline underline-offset-2"
+            >
+              {t("login.forgot_password")}
+            </button>
           </div>
         </form>
       </div>

@@ -59,7 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     let active = true;
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!active) return;
-      const isPublic = pathname.startsWith("/login") || pathname === "/terms" || pathname === "/privacy";
+      const isPublic = pathname.startsWith("/login") || pathname === "/terms" || pathname === "/privacy" || pathname === "/reset-password";
       if (!session && !isPublic) {
         router.push("/login");
         return;
@@ -88,7 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const setReady = useCallback(() => setPageReady(true), []);
   const gateValue = useMemo(() => ({ setExpecting, setReady }), [setExpecting, setReady]);
 
-  if (pathname.startsWith("/login") || pathname === "/terms" || pathname === "/privacy") {
+  if (pathname.startsWith("/login") || pathname === "/terms" || pathname === "/privacy" || pathname === "/reset-password") {
     return (
       <html lang="ja" suppressHydrationWarning>
         <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-slate-50 dark:bg-background tracking-wide`}>

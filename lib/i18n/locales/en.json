@@ -327,7 +327,8 @@
     "signup": "Create Account",
     "confirmation_sent": "Confirmation email sent! Click the link in the email to complete registration.",
     "error_title": "Login Error",
-    "login_failed": "Incorrect email or password."
+    "login_failed": "Incorrect email or password.",
+    "forgot_password": "Forgot your password?"
   },
   "signup": {
     "subtitle": "Create a new account",
@@ -341,6 +342,22 @@
     "user_id_taken": "This User ID is already taken. Please choose a different one.",
     "password_too_short": "Password must be at least 6 characters.",
     "invalid_user_id": "User ID can only contain letters, numbers, and underscores (_)."
+  },
+  "reset": {
+    "request_title": "Reset Password",
+    "request_description": "Enter your registered email address and we'll send you a link to reset your password.",
+    "send": "Send Reset Email",
+    "sent_message": "If the email address you entered is registered, we've sent you a password reset email.\n\nFollow the link in the email to reset your password. If you don't see it, please check your spam folder.",
+    "new_password_title": "Set a new password",
+    "new_password": "New Password",
+    "confirm_password": "Confirm New Password",
+    "update": "Update Password",
+    "error_title": "Password Reset Error",
+    "password_mismatch": "Passwords do not match. Please enter the same password twice.",
+    "invalid_link": "This link is invalid or has expired. Please request a new password reset email.",
+    "same_password": "Your new password must be different from your current password.",
+    "success_title": "Password Updated",
+    "success_message": "Your password has been updated."
   },
   "footer": {
     "terms": "Terms of Service",

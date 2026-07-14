@@ -48,6 +48,8 @@ export default function SignUpPage() {
         email,
         password,
         options: {
+          // 確認メールのリンクを踏んだ後の着地先
+          emailRedirectTo: `${window.location.origin}/login`,
           data: {
             display_name: userId,
             username: userId,
@@ -84,8 +86,8 @@ export default function SignUpPage() {
     <div className="flex min-h-screen items-center justify-center p-8 bg-white dark:bg-background relative">
       {/* エラーポップアップ */}
       {errorPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-card rounded-2xl shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-card rounded-2xl border border-slate-200 dark:border-border shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
             <div className="flex items-start justify-between mb-3">
               <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("signup.error_title")}</h3>
               <button
