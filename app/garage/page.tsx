@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Skeleton, SkeletonTabs } from "@/components/ui/skeleton"
-import { CarFront, Plus, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, AlertTriangle, Move } from "lucide-react"
+import { CarFront, Plus, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, AlertTriangle, Move, SlidersHorizontal } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
@@ -32,6 +32,10 @@ import { FUEL_TYPES } from "@/lib/fuelTypes"
 
 const CAR_STATUS_KEYS = ["pending", "active", "archived", "archived_excluded"] as const
 type CarStatus = typeof CAR_STATUS_KEYS[number]
+
+// ウィッシュリストの絞り込み対象ステータス
+const WISH_STATUS_KEYS = ["considering", "purchased", "installed", "given_up"] as const
+type WishStatus = typeof WISH_STATUS_KEYS[number]
 
 // 一覧での並び順
 const CAR_STATUS_ORDER: Record<string, number> = {
@@ -90,6 +94,10 @@ export default function GaragePage() {
   const [purchasePrice, setPurchasePrice] = useState("")
   const [includePriceInCost, setIncludePriceInCost] = useState(false)
   const [carStatus, setCarStatus] = useState<CarStatus>("active")
+
+  // ウィッシュリストのステータス絞り込み
+  const [wishFilters, setWishFilters] = useState<WishStatus[]>([])
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   // ウィッシュリスト追加フォームの状態管理
   const [wishCarId, setWishCarId] = useState("")
@@ -519,6 +527,16 @@ export default function GaragePage() {
     }
   }
 
+  // ステータス絞り込みの選択切り替え
+  const toggleWishFilter = (key: WishStatus) => {
+    setWishFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
+  }
+
+  // ステータス絞り込みを適用したウィッシュリスト
+  const filteredWishlists = wishFilters.length === 0
+    ? wishlists
+    : wishlists.filter((w) => wishFilters.includes(w.status))
+
   // ステータスの色を定義
   const getStatusStyle = (status: string) => {
     switch (status) {
@@ -877,13 +895,83 @@ export default function GaragePage() {
 
         {/* ウィッシュリスト（欲しいもの） */}
         <TabsContent value="wishlist" className="space-y-4">
-          <div className="flex justify-end">
+          <div className="flex items-center justify-end gap-4">
+            {/* ステータス絞り込みボタン（アイテムがあるときのみ表示、絞り込み中は選択数をバッジ表示） */}
+            {!loading && !isAddingWish && !editWishId && wishlists.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setIsFilterOpen(true)}
+                title={t("garage.wish_filter_title")}
+                className="relative h-7 flex items-center px-2.5 rounded-lg border bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+              >
+                <SlidersHorizontal size={15} />
+                {wishFilters.length > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-slate-400 text-white dark:bg-surface-2 dark:text-foreground/80 text-[9px] font-semibold tabular-nums">
+                    {wishFilters.length}
+                  </span>
+                )}
+              </button>
+            )}
             {!loading && !isAddingWish && !editWishId && cars.length > 0 && (
-              <Button onClick={() => setIsAddingWish(true)} size="sm" className="font-bold">
+              <Button onClick={() => setIsAddingWish(true)} size="sm" className="font-bold shrink-0">
                 <Plus className="mr-1 h-4 w-4" /> {t("common.add")}
               </Button>
             )}
           </div>
+
+          {/* ステータス絞り込みモーダル */}
+          {isFilterOpen && (
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => setIsFilterOpen(false)}>
+              <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+                <CardContent className="p-6 space-y-4">
+                  <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
+                    <SlidersHorizontal size={20} />
+                    <h2 className="text-lg font-extrabold">{t("garage.wish_filter_title")}</h2>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {/* すべて */}
+                    <button
+                      type="button"
+                      onClick={() => setWishFilters([])}
+                      aria-pressed={wishFilters.length === 0}
+                      className={`text-xs font-bold px-3.5 py-1.5 rounded-full border transition-colors ${
+                        wishFilters.length === 0
+                          ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                          : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                      }`}
+                    >
+                      {t("garage.wish_filter_all")}
+                      <span className="ml-1.5 tabular-nums opacity-60">{wishlists.length}</span>
+                    </button>
+                    {/* 各ステータスチップ */}
+                    {WISH_STATUS_KEYS.map((key) => {
+                      const active = wishFilters.includes(key)
+                      const count = wishlists.filter((w) => w.status === key).length
+                      return (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => toggleWishFilter(key)}
+                          aria-pressed={active}
+                          className={`text-xs font-bold px-3.5 py-1.5 rounded-full border transition-colors ${
+                            active
+                              ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                              : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                          }`}
+                        >
+                          {t(`wishlist_statuses.${key}`)}
+                          <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                  <Button variant="outline" className="w-full font-bold" onClick={() => setIsFilterOpen(false)}>
+                    {t("common.close")}
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
           {!loading && cars.length === 0 && (
             <div className="text-center py-20 bg-slate-50 dark:bg-muted rounded-xl">
@@ -963,9 +1051,17 @@ export default function GaragePage() {
             </div>
           )}
 
-          {!loading && !isAddingWish && !editWishId && wishlists.length > 0 && (
+          {/* 絞り込み結果が無いとき */}
+          {!loading && !isAddingWish && !editWishId && wishlists.length > 0 && filteredWishlists.length === 0 && (
+            <div className="text-center py-20 bg-slate-50 dark:bg-muted rounded-xl">
+              <ListTodo className="mx-auto h-12 w-12 text-slate-300 dark:text-muted-foreground mb-3" />
+              <p className="text-slate-500 dark:text-muted-foreground font-medium">{t("garage.no_filtered_wishlist")}</p>
+            </div>
+          )}
+
+          {!loading && !isAddingWish && !editWishId && filteredWishlists.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {wishlists.map((wish) => {
+              {filteredWishlists.map((wish) => {
                 const statusStyle = getStatusStyle(wish.status)
                 // http(s) 以外のスキームは弾き、安全なURLのみリンク化
                 const safeUrl = getSafeExternalUrl(wish.url)
