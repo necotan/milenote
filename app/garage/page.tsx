@@ -669,7 +669,7 @@ export default function GaragePage() {
           )}
 
           {!loading && !isAddingCar && !editCarId && cars.length === 0 && (
-            <div className="text-center py-20 bg-slate-50 dark:bg-muted rounded-xl">
+            <div className="text-center py-20">
               <CarFront className="mx-auto h-12 w-12 text-slate-300 dark:text-muted-foreground mb-3" />
               <p className="text-slate-500 dark:text-muted-foreground font-medium">{t("garage.no_cars")}</p>
             </div>
@@ -974,7 +974,7 @@ export default function GaragePage() {
           )}
 
           {!loading && cars.length === 0 && (
-            <div className="text-center py-20 bg-slate-50 dark:bg-muted rounded-xl">
+            <div className="text-center py-20">
               <p className="text-slate-500 dark:text-muted-foreground font-medium">{t("garage.register_car_first_line1")}<br />{t("garage.register_car_first_line2")}</p>
             </div>
           )}
