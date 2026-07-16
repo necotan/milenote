@@ -1245,6 +1245,13 @@ export default function StatsPage() {
               </div>
             </CardHeader>
             <CardContent className="px-2 pb-4 pt-0 lg:flex lg:items-center lg:gap-10 lg:px-6">
+              {records.length === 0 ? (
+                <div className="h-64 w-full flex flex-col items-center justify-center text-slate-300 dark:text-muted-foreground gap-2">
+                  <CalendarDays size={40} strokeWidth={1.5} />
+                  <p className="text-sm font-medium">{t("stats.no_data")}</p>
+                </div>
+              ) : (
+              <>
               {/* グラフ */}
               <div
                 key={yearlyAnimKey}
@@ -1324,6 +1331,8 @@ export default function StatsPage() {
                   </tbody>
                 </table>
               </div>
+              </>
+              )}
             </CardContent>
           </Card>
 
