@@ -577,11 +577,11 @@ function RecordsPageInner() {
       {loading && <RecordSkeleton />}
 
       {!loading && cars.length === 0 && (
-        <Card className="border-none shadow-sm bg-white dark:bg-card p-10 text-center mt-10">
+        <div className="text-center py-20">
           <CarFront className="mx-auto h-12 w-12 text-slate-300 dark:text-muted-foreground mb-3" />
           <p className="text-slate-500 dark:text-muted-foreground font-medium mb-4">{t("records.register_car_first_line1")}<br/>{t("records.register_car_first_line2")}</p>
           <Link href="/garage"><Button className="font-bold">{t("records.go_to_garage")}</Button></Link>
-        </Card>
+        </div>
       )}
 
       {!loading && cars.length > 0 && (
