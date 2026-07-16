@@ -117,7 +117,7 @@ export default function GaragePage() {
         .from("cars")
         .select("*")
         .eq("user_id", user.id)
-        .neq("status", "deleted")
+        .in("status", ["pending", "active", "archived", "archived_excluded"])
         .order("created_at", { ascending: false })
 
       if (carsData) {
