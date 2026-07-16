@@ -1045,7 +1045,7 @@ export default function GaragePage() {
           )}
 
           {!loading && !isAddingWish && !editWishId && wishlists.length === 0 && cars.length > 0 && (
-            <div className="text-center py-20 bg-slate-50 dark:bg-muted rounded-xl">
+            <div className="text-center py-20">
               <ListTodo className="mx-auto h-12 w-12 text-slate-300 dark:text-muted-foreground mb-3" />
               <p className="text-slate-500 dark:text-muted-foreground font-medium">{t("garage.no_wishlist")}</p>
             </div>
@@ -1053,7 +1053,7 @@ export default function GaragePage() {
 
           {/* 絞り込み結果が無いとき */}
           {!loading && !isAddingWish && !editWishId && wishlists.length > 0 && filteredWishlists.length === 0 && (
-            <div className="text-center py-20 bg-slate-50 dark:bg-muted rounded-xl">
+            <div className="text-center py-20">
               <ListTodo className="mx-auto h-12 w-12 text-slate-300 dark:text-muted-foreground mb-3" />
               <p className="text-slate-500 dark:text-muted-foreground font-medium">{t("garage.no_filtered_wishlist")}</p>
             </div>
