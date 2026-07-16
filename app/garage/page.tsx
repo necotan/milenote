@@ -538,6 +538,20 @@ export default function GaragePage() {
     setWishGenreFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
   }
 
+  // タッチ/ペンは pointerup（実際に触れた要素で発火する）で即時処理し、その直後に届くclickは無視する
+  const lastChipTouchAt = useRef(0)
+  const chipTapHandlers = (toggle: () => void) => ({
+    onPointerUp: (e: React.PointerEvent<HTMLButtonElement>) => {
+      if (e.pointerType === "mouse") return
+      lastChipTouchAt.current = Date.now()
+      toggle()
+    },
+    onClick: () => {
+      if (Date.now() - lastChipTouchAt.current < 700) return
+      toggle()
+    },
+  })
+
   // ステータス・ジャンル絞り込みを適用したウィッシュリスト
   const filteredWishlists = wishlists.filter((w) =>
     (wishFilters.length === 0 || wishFilters.includes(w.status)) &&
@@ -942,13 +956,13 @@ export default function GaragePage() {
                   {/* ステータス絞り込み */}
                   <div className="space-y-2">
                     <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("garage.status")}</p>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2.5">
                       {/* すべて */}
                       <button
                         type="button"
-                        onClick={() => setWishFilters([])}
+                        {...chipTapHandlers(() => setWishFilters([]))}
                         aria-pressed={wishFilters.length === 0}
-                        className={`text-xs font-bold px-3.5 py-1.5 rounded-full border transition-colors ${
+                        className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                           wishFilters.length === 0
                             ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
                             : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -965,9 +979,9 @@ export default function GaragePage() {
                           <button
                             key={key}
                             type="button"
-                            onClick={() => toggleWishFilter(key)}
+                            {...chipTapHandlers(() => toggleWishFilter(key))}
                             aria-pressed={active}
-                            className={`text-xs font-bold px-3.5 py-1.5 rounded-full border transition-colors ${
+                            className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                               active
                                 ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
                                 : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -984,13 +998,13 @@ export default function GaragePage() {
                   {/* ジャンル絞り込み */}
                   <div className="space-y-2">
                     <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("garage.genre")}</p>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2.5">
                       {/* すべて */}
                       <button
                         type="button"
-                        onClick={() => setWishGenreFilters([])}
+                        {...chipTapHandlers(() => setWishGenreFilters([]))}
                         aria-pressed={wishGenreFilters.length === 0}
-                        className={`text-xs font-bold px-3.5 py-1.5 rounded-full border transition-colors ${
+                        className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                           wishGenreFilters.length === 0
                             ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
                             : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -1007,9 +1021,9 @@ export default function GaragePage() {
                           <button
                             key={key}
                             type="button"
-                            onClick={() => toggleWishGenreFilter(key)}
+                            {...chipTapHandlers(() => toggleWishGenreFilter(key))}
                             aria-pressed={active}
-                            className={`text-xs font-bold px-3.5 py-1.5 rounded-full border transition-colors ${
+                            className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                               active
                                 ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
                                 : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
