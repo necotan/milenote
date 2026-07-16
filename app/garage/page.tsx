@@ -27,7 +27,7 @@ import {
 } from "@/utils/carImage"
 import { stripImageMetadata } from "@/utils/stripImageMetadata"
 import { getSafeExternalUrl } from "@/utils/safeUrl"
-import { WISHLIST_GENRES } from "@/lib/wishlistGenres"
+import { WISHLIST_GENRES, WishlistGenreSlug } from "@/lib/wishlistGenres"
 import { FUEL_TYPES } from "@/lib/fuelTypes"
 
 const CAR_STATUS_KEYS = ["pending", "active", "archived", "archived_excluded"] as const
@@ -95,8 +95,9 @@ export default function GaragePage() {
   const [includePriceInCost, setIncludePriceInCost] = useState(false)
   const [carStatus, setCarStatus] = useState<CarStatus>("active")
 
-  // ウィッシュリストのステータス絞り込み
+  // ウィッシュリストのステータス・ジャンル絞り込み
   const [wishFilters, setWishFilters] = useState<WishStatus[]>([])
+  const [wishGenreFilters, setWishGenreFilters] = useState<WishlistGenreSlug[]>([])
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   // ウィッシュリスト追加フォームの状態管理
@@ -532,10 +533,19 @@ export default function GaragePage() {
     setWishFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
   }
 
-  // ステータス絞り込みを適用したウィッシュリスト
-  const filteredWishlists = wishFilters.length === 0
-    ? wishlists
-    : wishlists.filter((w) => wishFilters.includes(w.status))
+  // ジャンル絞り込みの選択切り替え
+  const toggleWishGenreFilter = (key: WishlistGenreSlug) => {
+    setWishGenreFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
+  }
+
+  // ステータス・ジャンル絞り込みを適用したウィッシュリスト
+  const filteredWishlists = wishlists.filter((w) =>
+    (wishFilters.length === 0 || wishFilters.includes(w.status)) &&
+    (wishGenreFilters.length === 0 || wishGenreFilters.includes(w.genre))
+  )
+
+  // 絞り込み中の選択数（バッジ表示用）
+  const activeFilterCount = wishFilters.length + wishGenreFilters.length
 
   // ステータスの色を定義
   const getStatusStyle = (status: string) => {
@@ -905,9 +915,9 @@ export default function GaragePage() {
                 className="relative h-7 flex items-center px-2.5 rounded-lg border bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
               >
                 <SlidersHorizontal size={15} />
-                {wishFilters.length > 0 && (
+                {activeFilterCount > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-slate-400 text-white dark:bg-surface-2 dark:text-foreground/80 text-[9px] font-semibold tabular-nums">
-                    {wishFilters.length}
+                    {activeFilterCount}
                   </span>
                 )}
               </button>
@@ -928,42 +938,89 @@ export default function GaragePage() {
                     <SlidersHorizontal size={20} />
                     <h2 className="text-lg font-extrabold">{t("garage.wish_filter_title")}</h2>
                   </div>
-                  <div className="flex flex-wrap gap-2">
-                    {/* すべて */}
-                    <button
-                      type="button"
-                      onClick={() => setWishFilters([])}
-                      aria-pressed={wishFilters.length === 0}
-                      className={`text-xs font-bold px-3.5 py-1.5 rounded-full border transition-colors ${
-                        wishFilters.length === 0
-                          ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
-                          : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
-                      }`}
-                    >
-                      {t("garage.wish_filter_all")}
-                      <span className="ml-1.5 tabular-nums opacity-60">{wishlists.length}</span>
-                    </button>
-                    {/* 各ステータスチップ */}
-                    {WISH_STATUS_KEYS.map((key) => {
-                      const active = wishFilters.includes(key)
-                      const count = wishlists.filter((w) => w.status === key).length
-                      return (
-                        <button
-                          key={key}
-                          type="button"
-                          onClick={() => toggleWishFilter(key)}
-                          aria-pressed={active}
-                          className={`text-xs font-bold px-3.5 py-1.5 rounded-full border transition-colors ${
-                            active
-                              ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
-                              : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
-                          }`}
-                        >
-                          {t(`wishlist_statuses.${key}`)}
-                          <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
-                        </button>
-                      )
-                    })}
+
+                  {/* ステータス絞り込み */}
+                  <div className="space-y-2">
+                    <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("garage.status")}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {/* すべて */}
+                      <button
+                        type="button"
+                        onClick={() => setWishFilters([])}
+                        aria-pressed={wishFilters.length === 0}
+                        className={`text-xs font-bold px-3.5 py-1.5 rounded-full border transition-colors ${
+                          wishFilters.length === 0
+                            ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                            : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                        }`}
+                      >
+                        {t("garage.wish_filter_all")}
+                        <span className="ml-1.5 tabular-nums opacity-60">{wishlists.length}</span>
+                      </button>
+                      {/* 各ステータスチップ */}
+                      {WISH_STATUS_KEYS.map((key) => {
+                        const active = wishFilters.includes(key)
+                        const count = wishlists.filter((w) => w.status === key).length
+                        return (
+                          <button
+                            key={key}
+                            type="button"
+                            onClick={() => toggleWishFilter(key)}
+                            aria-pressed={active}
+                            className={`text-xs font-bold px-3.5 py-1.5 rounded-full border transition-colors ${
+                              active
+                                ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                                : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                            }`}
+                          >
+                            {t(`wishlist_statuses.${key}`)}
+                            <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* ジャンル絞り込み */}
+                  <div className="space-y-2">
+                    <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("garage.genre")}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {/* すべて */}
+                      <button
+                        type="button"
+                        onClick={() => setWishGenreFilters([])}
+                        aria-pressed={wishGenreFilters.length === 0}
+                        className={`text-xs font-bold px-3.5 py-1.5 rounded-full border transition-colors ${
+                          wishGenreFilters.length === 0
+                            ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                            : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                        }`}
+                      >
+                        {t("garage.wish_filter_all")}
+                        <span className="ml-1.5 tabular-nums opacity-60">{wishlists.length}</span>
+                      </button>
+                      {/* 各ジャンルチップ */}
+                      {WISHLIST_GENRES.map((key) => {
+                        const active = wishGenreFilters.includes(key)
+                        const count = wishlists.filter((w) => w.genre === key).length
+                        return (
+                          <button
+                            key={key}
+                            type="button"
+                            onClick={() => toggleWishGenreFilter(key)}
+                            aria-pressed={active}
+                            className={`text-xs font-bold px-3.5 py-1.5 rounded-full border transition-colors ${
+                              active
+                                ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                                : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                            }`}
+                          >
+                            {t(`wishlist_genres.${key}`)}
+                            <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
                   <Button variant="outline" className="w-full font-bold" onClick={() => setIsFilterOpen(false)}>
                     {t("common.close")}
