@@ -490,7 +490,7 @@ export default function Home() {
               </div>
             ) : (
               <Card className="border-none shadow-sm bg-white dark:bg-card p-6 text-center">
-                <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground italic tracking-widest">{t("home.no_alerts")}</p>
+                <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-widest">{t("home.no_alerts")}</p>
               </Card>
             )}
         </section>
