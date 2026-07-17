@@ -163,6 +163,7 @@ const RecurringForm = ({
                 <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
                 <Input
                   type="number"
+                  min="0"
                   value={amount}
                   onChange={e => setAmount(e.target.value)}
                   required

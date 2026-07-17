@@ -601,6 +601,7 @@ export default function Home() {
                 <div className="relative">
                   <Input
                     type="number"
+                    min="0"
                     value={odoValue}
                     onChange={(e) => setOdoValue(e.target.value)}
                     className="h-10 pr-10 bg-white dark:bg-card border-slate-200 dark:border-border"

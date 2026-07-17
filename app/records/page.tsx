@@ -146,7 +146,7 @@ const RecordForm = ({
 
         <div className="space-y-2">
           <Label>{t("records.odometer_km")} <span className="text-slate-400 dark:text-muted-foreground font-normal text-xs">{t("records.optional")}</span></Label>
-          <Input type="number" value={odoAtRecord} onChange={e => setOdoAtRecord(e.target.value)} placeholder="52500" />
+          <Input type="number" min="0" value={odoAtRecord} onChange={e => setOdoAtRecord(e.target.value)} placeholder="52500" />
         </div>
 
         {category === "fuel" ? (
@@ -163,6 +163,7 @@ const RecordForm = ({
                 <Input
                   type="number"
                   step="0.1"
+                  min="0"
                   value={fuelUnitPrice}
                   onChange={e => onFuelFieldChange("fuelUnitPrice", e.target.value)}
                   placeholder={isEv ? "30" : "170"}
@@ -179,6 +180,7 @@ const RecordForm = ({
                 <Input
                   type="number"
                   step="0.01"
+                  min="0"
                   value={fuelAmount}
                   onChange={e => onFuelFieldChange("fuelAmount", e.target.value)}
                   placeholder={isEv ? "30.0" : "40.0"}
@@ -201,6 +203,7 @@ const RecordForm = ({
               <div className="relative">
                 <Input
                   type="number"
+                  min="0"
                   value={amount}
                   onChange={e => onFuelFieldChange("amount", e.target.value)}
                   required
@@ -225,13 +228,13 @@ const RecordForm = ({
             </div>
             <div className="space-y-2">
               <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
-              <Input type="number" value={amount} onChange={e => setAmount(e.target.value)} required placeholder="1320" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+              <Input type="number" min="0" value={amount} onChange={e => setAmount(e.target.value)} required placeholder="1320" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
             </div>
           </div>
         ) : (
           <div className="space-y-2">
             <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
-            <Input type="number" value={amount} onChange={e => setAmount(e.target.value)} required placeholder="5000" />
+            <Input type="number" min="0" value={amount} onChange={e => setAmount(e.target.value)} required placeholder="5000" />
           </div>
         )}
 

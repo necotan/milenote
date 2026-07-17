@@ -674,11 +674,11 @@ export default function GaragePage() {
                     <div className="space-y-2"><Label>{t("garage.year")}</Label><Input type="number" placeholder="2018" value={year} onChange={(e) => setYear(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
                     <div className="space-y-2"><Label>{t("common.grade")}</Label><Input placeholder="GT Limited" value={grade} onChange={(e) => setGrade(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
                     <div className="space-y-2"><Label>{t("garage.body_color")}</Label><Input placeholder="" value={color} onChange={(e) => setColor(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
-                    <div className="space-y-2"><Label>{t("garage.current_odo")} <span className="text-red-500">{t("common.required")}</span></Label><Input type="number" placeholder="52400" value={currentOdo} onChange={(e) => setCurrentOdo(e.target.value)} required className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2"><Label>{t("garage.current_odo")} <span className="text-red-500">{t("common.required")}</span></Label><Input type="number" min="0" placeholder="52400" value={currentOdo} onChange={(e) => setCurrentOdo(e.target.value)} required className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
                     <div className="space-y-2"><Label>{t("garage.first_registration")}</Label><Input type="month" value={firstRegistrationDate} onChange={(e) => setFirstRegistrationDate(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground appearance-none h-8 min-h-0" /></div>
                     <div className="space-y-2"><Label>{t("common.delivery_date")}</Label><Input type="date" value={purchaseDate} onChange={(e) => setPurchaseDate(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground appearance-none h-8 min-h-0" /></div>
-                    <div className="space-y-2"><Label>{t("garage.purchase_odo")}</Label><Input type="number" placeholder="48000" value={purchaseOdo} onChange={(e) => setPurchaseOdo(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
-                    <div className="space-y-2"><Label>{t("garage.purchase_price")}</Label><Input type="number" placeholder="2500000" value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2"><Label>{t("garage.purchase_odo")}</Label><Input type="number" min="0" placeholder="48000" value={purchaseOdo} onChange={(e) => setPurchaseOdo(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2"><Label>{t("garage.purchase_price")}</Label><Input type="number" min="0" placeholder="2500000" value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
                   </div>
                   <div className="space-y-2">
                     <Label>{t("garage.fuel_type")}</Label>
@@ -1126,7 +1126,7 @@ export default function GaragePage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-2">
                       <Label>{t("garage.estimated_price")}</Label>
-                      <Input type="number" placeholder="100000" value={wishPrice} onChange={(e) => setWishPrice(e.target.value)} />
+                      <Input type="number" min="0" placeholder="100000" value={wishPrice} onChange={(e) => setWishPrice(e.target.value)} />
                     </div>
                     <div className="space-y-2">
                       <Label>{t("garage.reference_url")}</Label>
