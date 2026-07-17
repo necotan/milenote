@@ -323,8 +323,9 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
     if (user) {
       const { data } = await supabase
         .from("recurring_costs")
-        .select(`*, cars(name)`)
+        .select(`*, cars!inner(name, status)`)
         .eq("user_id", user.id)
+        .in("cars.status", ["active", "archived"])
         .order("next_billing_date", { ascending: true })
       if (data) setCosts(data)
     }

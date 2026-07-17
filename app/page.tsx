@@ -75,7 +75,7 @@ export default function Home() {
         if (userData?.display_name) setDisplayName(userData.display_name)
 
         const { data: carsData } = await supabase.from("cars").select("*").eq("user_id", user.id).eq("status", "active").eq("is_display_home", true)
-        const { data: recordsData } = await supabase.from("records").select("*, cars(fuel_type)").eq("user_id", user.id)
+        const { data: recordsData } = await supabase.from("records").select("*, cars!inner(fuel_type, status)").eq("user_id", user.id).in("cars.status", ["active", "archived"])
 
         if (carsData) setCars(carsData)
         if (recordsData) setRecords(recordsData)

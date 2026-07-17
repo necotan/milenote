@@ -376,7 +376,7 @@ export default function StatsPage() {
       setLoading(true)
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        const { data: recordsData } = await supabase.from("records").select("*").eq("user_id", user.id)
+        const { data: recordsData } = await supabase.from("records").select("*, cars!inner(status)").eq("user_id", user.id).in("cars.status", ["active", "archived"])
         if (recordsData) setRecords(recordsData)
         const { data: carsData } = await supabase.from("cars").select("id, current_odo, fuel_type").eq("user_id", user.id).in("status", ["active", "archived"])
         if (carsData) {

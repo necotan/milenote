@@ -237,6 +237,20 @@ export default function GaragePage() {
       if (error) {
         toast.error(t("common.error_occurred") + ": " + error.message)
       } else {
+        // 元愛車（archived / archived_excluded）へ変更した場合、その車の有効な定期費用を自動で一時停止する
+        const isArchivedStatus = (s: string | undefined) => s === "archived" || s === "archived_excluded"
+        const prevStatus = cars.find((c) => c.id === editCarId)?.status
+        if (!isArchivedStatus(prevStatus) && isArchivedStatus(carStatus)) {
+          const { data: paused } = await supabase
+            .from("recurring_costs")
+            .update({ is_active: false })
+            .eq("car_id", editCarId)
+            .eq("is_active", true)
+            .select("id")
+          if (paused && paused.length > 0) {
+            toast.info(t("garage.recurring_paused", { count: paused.length }))
+          }
+        }
         toast.success(t("garage.car_updated"))
         resetCarForm()
         fetchData()
@@ -681,6 +695,9 @@ export default function GaragePage() {
                         ))}
                       </SelectContent>
                     </Select>
+                    {editCarId && (carStatus === "archived" || carStatus === "archived_excluded") && (
+                      <p className="text-[11px] text-slate-400 dark:text-muted-foreground">{t("garage.car_status_archive_hint")}</p>
+                    )}
                   </div>
                   <div className="pt-4 flex justify-center">
                     <Button type="submit" className="px-12 font-bold" disabled={savingCar}>

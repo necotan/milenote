@@ -130,7 +130,9 @@
     "car_status_pending": "納車待ち",
     "car_status_active": "所有中",
     "car_status_archived": "元愛車（統計に含める）",
-    "car_status_archived_excluded": "元愛車（統計から除外）"
+    "car_status_archived_excluded": "元愛車（統計から除外）",
+    "car_status_archive_hint": "元愛車に変更すると、この車の定期費用は自動で一時停止されます",
+    "recurring_paused": "この車の定期費用{{count}}件を一時停止しました"
   },
   "records": {
     "title": "記録",

@@ -333,8 +333,9 @@ function RecordsPageInner() {
 
       const { data: recordsData } = await supabase
         .from("records")
-        .select(`*, cars(name, fuel_type)`)
+        .select(`*, cars!inner(name, fuel_type, status)`)
         .eq("user_id", user.id)
+        .in("cars.status", ["active", "archived"])
         .order("date", { ascending: false })
         .order("created_at", { ascending: false })
       if (recordsData) setRecords(recordsData)

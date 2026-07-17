@@ -130,7 +130,9 @@
     "car_status_pending": "Pending Delivery",
     "car_status_active": "Owned",
     "car_status_archived": "Former Car (Tracked)",
-    "car_status_archived_excluded": "Former Car (Excluded)"
+    "car_status_archived_excluded": "Former Car (Excluded)",
+    "car_status_archive_hint": "Changing to a former car automatically pauses its recurring costs",
+    "recurring_paused": "Paused {{count}} recurring cost(s) for this car"
   },
   "records": {
     "title": "Records",
