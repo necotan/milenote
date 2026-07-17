@@ -329,7 +329,7 @@ export default function Home() {
                 <div className="p-4">
                   <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground uppercase tracking-widest mb-3">{t("home.recent_records")}</p>
                   {records.length === 0 ? (
-                    <p className="text-[11px] text-slate-400 dark:text-muted-foreground text-center py-2">{t("home.no_records")}</p>
+                    <p className="text-[11px] text-slate-400 dark:text-muted-foreground">{t("home.no_records")}</p>
                   ) : (
                     <div className="space-y-2">
                       {[...records]
