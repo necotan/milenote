@@ -90,7 +90,7 @@
     "delete_car_title": "Delete Car",
     "delete_car_message": "Delete \"{{name}}\".",
     "delete_car_warning": "This action cannot be undone. All linked cost records, wishlist items, and recurring costs will be permanently deleted.",
-    "delete_car_records_count": "Records to be permanently deleted: {{count}}",
+    "delete_car_data_count": "Data to be permanently deleted: {{records}} records, {{wishlists}} wishlist items, {{recurring}} recurring costs",
     "delete_car_archive_hint": "To keep the history, change the status to \"Former Car\" instead of deleting.",
     "delete_confirm_instruction": "Type the car name exactly to confirm",
     "name_mismatch": "Car name does not match",

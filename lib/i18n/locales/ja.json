@@ -90,7 +90,7 @@
     "delete_car_title": "愛車を削除",
     "delete_car_message": "「{{name}}」を削除します。",
     "delete_car_warning": "この操作は取り消せません。紐づく維持費の記録、ウィッシュリスト、定期費用もすべて完全に削除されます。",
-    "delete_car_records_count": "完全に削除される記録：{{count}}件",
+    "delete_car_data_count": "完全に削除されるデータ：記録{{records}}件・ウィッシュリスト{{wishlists}}件・定期費用{{recurring}}件",
     "delete_car_archive_hint": "履歴を残したい場合は、削除せずステータスを「元愛車」に変更してください。",
     "delete_confirm_instruction": "確認のため、車名を正確に入力してください",
     "name_mismatch": "車名が一致しません",

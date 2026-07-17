@@ -63,6 +63,7 @@ export default function GaragePage() {
   const [deleteCarTarget, setDeleteCarTarget] = useState<any | null>(null)
   const [deleteCarConfirmName, setDeleteCarConfirmName] = useState("")
   const [deletingCar, setDeletingCar] = useState(false)
+  const [deleteCarRecurringCount, setDeleteCarRecurringCount] = useState<number | null>(null)
 
   // 画像の位置、ズーム調整モーダル用
   const [adjustTarget, setAdjustTarget] = useState<any | null>(null)
@@ -258,6 +259,18 @@ export default function GaragePage() {
     } finally {
       setSavingCar(false)
     }
+  }
+
+  // 削除確認モーダルを開く（定期費用はガレージで取得していないため、削除される件数をここで取得）
+  const openDeleteCarDialog = async (car: any) => {
+    setDeleteCarTarget(car)
+    setDeleteCarConfirmName("")
+    setDeleteCarRecurringCount(null)
+    const { count } = await supabase
+      .from("recurring_costs")
+      .select("id", { count: "exact", head: true })
+      .eq("car_id", car.id)
+    setDeleteCarRecurringCount(count ?? 0)
   }
 
   // 車両の物理削除処理
@@ -807,7 +820,7 @@ export default function GaragePage() {
                             <Pencil size={14} />
                           </button>
                           <button
-                            onClick={() => { setDeleteCarTarget(car); setDeleteCarConfirmName(""); }}
+                            onClick={() => { openDeleteCarDialog(car) }}
                             className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
                             title={t("common.delete")}
                           >
@@ -837,7 +850,11 @@ export default function GaragePage() {
                   {t("garage.delete_car_warning")}
                 </p>
                 <p className="text-xs font-bold text-red-600 dark:text-red-300 bg-red-50 dark:bg-red-950/40 rounded-lg px-3 py-2">
-                  {t("garage.delete_car_records_count", { count: records.filter((r) => r.car_id === deleteCarTarget.id).length })}
+                  {t("garage.delete_car_data_count", {
+                    records: records.filter((r) => r.car_id === deleteCarTarget.id).length,
+                    wishlists: wishlists.filter((w) => w.car_id === deleteCarTarget.id).length,
+                    recurring: deleteCarRecurringCount ?? "…",
+                  })}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-muted-foreground bg-slate-50 dark:bg-muted rounded-lg px-3 py-2">
                   {t("garage.delete_car_archive_hint")}
