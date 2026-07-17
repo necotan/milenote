@@ -419,8 +419,8 @@ export default function StatsPage() {
   const yearStartStr = `${currentYear}-01-01`
   // 全期間の開始日表示用
   const minRecordDate = useMemo(
-    () => records.reduce((min, r) => (!min || r.date < min ? r.date : min), ""),
-    [records],
+    () => records.reduce((min, r) => (!min || r.date < min ? r.date : min), "") || todayStr,
+    [records, todayStr],
   )
 
   // 表示用の開始・終了日
