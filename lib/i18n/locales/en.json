@@ -46,6 +46,7 @@
     "greeting_suffix": ", {{name}}",
     "this_month_cost": "This Month",
     "vs_last_month": "vs last month",
+    "no_cost_data": "No data",
     "record_fuel": "Add fuel log",
     "update_odo": "Update odometer",
     "update_odo_title": "Update Odometer (ODO)",

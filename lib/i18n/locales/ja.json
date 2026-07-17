@@ -46,6 +46,7 @@
     "greeting_suffix": "、{{name}}さん",
     "this_month_cost": "今月の費用",
     "vs_last_month": "※先月比",
+    "no_cost_data": "データがありません",
     "record_fuel": "給油を記録",
     "update_odo": "ODOを更新",
     "update_odo_title": "走行距離(ODO)を更新",

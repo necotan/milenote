@@ -280,23 +280,29 @@ export default function Home() {
                     <p className="text-sm font-bold text-slate-600 dark:text-muted-foreground flex items-center gap-1 uppercase tracking-widest mb-1">
                       <Banknote size={14} /> {t("home.this_month_cost")}
                     </p>
-                    <p className="text-2xl font-black text-slate-800 dark:text-foreground tracking-wider">¥{thisMonthCost.toLocaleString()}</p>
-                    <div className="flex items-center gap-1.5 mt-1">
-                      <p className="text-[9px] text-slate-400 dark:text-muted-foreground font-bold tracking-widest">{t("home.vs_last_month")}</p>
-                      {diffCost > 0 ? (
-                        <span className="flex items-baseline text-red-500 font-bold text-[10px] tracking-wide">
-                          <TrendingUp size={10} className="mr-0.5 self-center" /> +¥{diffCost.toLocaleString()}
-                        </span>
-                      ) : diffCost < 0 ? (
-                        <span className="flex items-baseline text-blue-500 font-bold text-[10px] tracking-wide">
-                          <TrendingDown size={10} className="mr-0.5 self-center" /> -¥{Math.abs(diffCost).toLocaleString()}
-                        </span>
-                      ) : (
-                        <span className="flex items-baseline text-slate-400 dark:text-muted-foreground font-bold text-[10px] tracking-wide">
-                          <Minus size={10} className="mr-0.5 self-center" /> ±¥0
-                        </span>
-                      )}
-                    </div>
+                    {thisMonthRecords.length === 0 ? (
+                      <p className="text-sm font-bold text-slate-400 dark:text-muted-foreground tracking-wider py-1.5">{t("home.no_cost_data")}</p>
+                    ) : (
+                      <>
+                        <p className="text-2xl font-black text-slate-800 dark:text-foreground tracking-wider">¥{thisMonthCost.toLocaleString()}</p>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <p className="text-[9px] text-slate-400 dark:text-muted-foreground font-bold tracking-widest">{t("home.vs_last_month")}</p>
+                          {diffCost > 0 ? (
+                            <span className="flex items-baseline text-red-500 font-bold text-[10px] tracking-wide">
+                              <TrendingUp size={10} className="mr-0.5 self-center" /> +¥{diffCost.toLocaleString()}
+                            </span>
+                          ) : diffCost < 0 ? (
+                            <span className="flex items-baseline text-blue-500 font-bold text-[10px] tracking-wide">
+                              <TrendingDown size={10} className="mr-0.5 self-center" /> -¥{Math.abs(diffCost).toLocaleString()}
+                            </span>
+                          ) : (
+                            <span className="flex items-baseline text-slate-400 dark:text-muted-foreground font-bold text-[10px] tracking-wide">
+                              <Minus size={10} className="mr-0.5 self-center" /> ±¥0
+                            </span>
+                          )}
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   {/* 給油を記録・ODO更新ボタン */}
