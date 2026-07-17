@@ -1144,7 +1144,7 @@ export default function StatsPage() {
                       }
                     `}</style>
                     <div key={pieAnimKey} className="pie-anim" style={{ width: "100%", height: "100%" }}>
-                      <ResponsiveContainer width="100%" height="100%">
+                      <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                         <PieChart>
                           <Pie data={categoryData} cx="50%" cy="45%" innerRadius={60} outerRadius={80} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill)} labelLine={{ stroke: chartChrome.labelLineStroke, strokeWidth: 1 }}>
                             {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
@@ -1191,7 +1191,7 @@ export default function StatsPage() {
                   className={`${monthlyChartType === "bar" ? "bar-anim" : "line-anim"}${monthlyChartType === "line" && monthlyLineReady ? " line-ready" : ""}`}
                   style={{ width: "100%", height: "100%" }}
                 >
-                  <ResponsiveContainer width="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                     {monthlyChartType === "line" ? (
                       <LineChart data={monthlyData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
@@ -1258,7 +1258,7 @@ export default function StatsPage() {
                 ref={yearlyChartType === "line" ? setYearlyLineContainer : null}
                 className={`h-64 w-full lg:flex-1 lg:min-w-0 ${yearlyChartType === "bar" ? "bar-anim" : "line-anim"}${yearlyChartType === "line" && yearlyLineReady ? " line-ready" : ""}`}
               >
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                   {yearlyChartType === "line" ? (
                     <LineChart data={yearlyData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
