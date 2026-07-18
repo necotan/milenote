@@ -12,6 +12,7 @@ import { ThemeProvider } from "next-themes";
 import { LanguageProvider } from "@/lib/i18n";
 import { LoadingGateProvider } from "@/lib/loadingGate";
 import LoadingScreen from "@/components/ui/LoadingScreen";
+import { isPublicRoute } from "@/utils/publicRoutes";
 
 import RecurringCostProcessor from "@/components/RecurringCostProcessor";
 
@@ -59,8 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     let active = true;
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!active) return;
-      const isPublic = pathname.startsWith("/login") || pathname === "/terms" || pathname === "/privacy" || pathname === "/reset-password";
-      if (!session && !isPublic) {
+      if (!session && !isPublicRoute(pathname)) {
         router.push("/login");
         return;
       }
@@ -88,7 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const setReady = useCallback(() => setPageReady(true), []);
   const gateValue = useMemo(() => ({ setExpecting, setReady }), [setExpecting, setReady]);
 
-  if (pathname.startsWith("/login") || pathname === "/terms" || pathname === "/privacy" || pathname === "/reset-password") {
+  if (isPublicRoute(pathname)) {
     return (
       <html lang="ja" suppressHydrationWarning>
         <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-slate-50 dark:bg-background tracking-wide`}>
