@@ -31,6 +31,15 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // ログイン済みでログインページに来た場合はホームへ転送
+  if (user && request.nextUrl.pathname.startsWith("/login")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    const redirectResponse = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach((cookie) => redirectResponse.cookies.set(cookie));
+    return redirectResponse;
+  }
+
   if (!user && !isPublicRoute(request.nextUrl.pathname)) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
