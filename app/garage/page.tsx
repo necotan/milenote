@@ -664,12 +664,13 @@ export default function GaragePage() {
                   {editCarId ? t("garage.edit_car") : t("garage.add_car")}
                 </h2>
 
-                <form onSubmit={editCarId ? handleUpdateCar : handleAddCar} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>{t("garage.car_name")} <span className="text-red-500">{t("common.required")}</span></Label>
-                    <Input placeholder="TOYOTA 86" value={name} onChange={(e) => setName(e.target.value)} required className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <form onSubmit={editCarId ? handleUpdateCar : handleAddCar} className="space-y-4 sm:space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8 sm:gap-y-5 sm:max-w-[50rem]">
+                    {/* 車名は1行使用するが、入力欄の幅は左カラムに揃える */}
+                    <div className="space-y-2 sm:col-span-2">
+                      <Label>{t("garage.car_name")} <span className="text-red-500">{t("common.required")}</span></Label>
+                      <Input placeholder="TOYOTA 86" value={name} onChange={(e) => setName(e.target.value)} required className="sm:max-w-[calc(50%-1rem)] placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                    </div>
                     <div className="space-y-2"><Label>{t("garage.maker")}</Label><Input placeholder="" value={maker} onChange={(e) => setMaker(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
                     <div className="space-y-2"><Label>{t("garage.model_code")}</Label><Input placeholder="ZN6" value={modelCode} onChange={(e) => setModelCode(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
                     <div className="space-y-2"><Label>{t("garage.year")}</Label><Input type="number" placeholder="2018" value={year} onChange={(e) => setYear(e.target.value)} className="max-w-40 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
@@ -692,7 +693,7 @@ export default function GaragePage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="flex items-center justify-between rounded-lg border border-slate-100 dark:border-border bg-slate-50/50 dark:bg-muted/50 px-4 py-3">
+                  <div className="flex items-center justify-between rounded-lg border border-slate-100 dark:border-border bg-slate-50/50 dark:bg-muted/50 px-4 py-3 sm:max-w-sm">
                     <div className="space-y-0.5 pr-3">
                       <Label htmlFor="include-price" className="cursor-pointer">{t("garage.include_price_in_cost")}</Label>
                       <p className="text-[11px] text-slate-400 dark:text-muted-foreground">{t("garage.include_price_in_cost_hint")}</p>
