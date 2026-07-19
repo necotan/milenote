@@ -680,7 +680,17 @@ export default function GaragePage() {
                     <div className="space-y-2"><Label>{t("garage.purchase_odo")}</Label><NumberInput placeholder="48,000" value={purchaseOdo} onValueChange={setPurchaseOdo} className="max-w-40 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
                     <div className="space-y-2"><Label>{t("garage.first_registration")}</Label><Input type="month" value={firstRegistrationDate} onChange={(e) => setFirstRegistrationDate(e.target.value)} className="max-w-40 placeholder:text-slate-300 dark:placeholder:text-muted-foreground appearance-none h-8 min-h-0" /></div>
                     <div className="space-y-2"><Label>{t("common.delivery_date")}</Label><Input type="date" value={purchaseDate} onChange={(e) => setPurchaseDate(e.target.value)} className="max-w-40 placeholder:text-slate-300 dark:placeholder:text-muted-foreground appearance-none h-8 min-h-0" /></div>
-                    <div className="space-y-2"><Label>{t("garage.purchase_price")}</Label><NumberInput placeholder="2,500,000" value={purchasePrice} onValueChange={setPurchasePrice} className="max-w-40 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2">
+                      <Label>{t("garage.purchase_price")}</Label>
+                      <NumberInput placeholder="2,500,000" value={purchasePrice} onValueChange={setPurchasePrice} className="max-w-40 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                      <div className="mt-4 flex items-center justify-between rounded-lg border border-slate-100 dark:border-border bg-slate-50/50 dark:bg-muted/50 px-4 py-3">
+                        <div className="space-y-0.5 pr-3">
+                          <Label htmlFor="include-price" className="cursor-pointer">{t("garage.include_price_in_cost")}</Label>
+                          <p className="text-[11px] text-slate-400 dark:text-muted-foreground">{t("garage.include_price_in_cost_hint")}</p>
+                        </div>
+                        <Switch id="include-price" checked={includePriceInCost} onCheckedChange={setIncludePriceInCost} />
+                      </div>
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Label>{t("garage.fuel_type")}</Label>
@@ -692,13 +702,6 @@ export default function GaragePage() {
                         ))}
                       </SelectContent>
                     </Select>
-                  </div>
-                  <div className="flex items-center justify-between rounded-lg border border-slate-100 dark:border-border bg-slate-50/50 dark:bg-muted/50 px-4 py-3 sm:max-w-sm">
-                    <div className="space-y-0.5 pr-3">
-                      <Label htmlFor="include-price" className="cursor-pointer">{t("garage.include_price_in_cost")}</Label>
-                      <p className="text-[11px] text-slate-400 dark:text-muted-foreground">{t("garage.include_price_in_cost_hint")}</p>
-                    </div>
-                    <Switch id="include-price" checked={includePriceInCost} onCheckedChange={setIncludePriceInCost} />
                   </div>
                   <div className="space-y-2">
                     <Label>{t("garage.status")}</Label>
