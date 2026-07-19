@@ -101,7 +101,7 @@ const RecordForm = ({
       </h2>
       
       <form onSubmit={onSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:gap-x-8 sm:max-w-[50rem]">
           <div className="space-y-2">
             <Label>{t("common.target_car")} <span className="text-red-500">{t("common.required")}</span></Label>
             <Select value={carId} onValueChange={setCarId} required>
@@ -125,7 +125,7 @@ const RecordForm = ({
         </div>
 
         {SUB_CATEGORIES[category] && (
-          <div className="space-y-2 w-1/2 pr-1.5">
+          <div className="space-y-2 w-1/2 pr-1.5 sm:pr-0 sm:max-w-sm">
             <Label>{t("records.subcategory")}</Label>
             <Select value={subCategory} onValueChange={setSubCategory}>
               <SelectTrigger className="w-full">
@@ -151,7 +151,7 @@ const RecordForm = ({
         </div>
 
         {category === "fuel" ? (
-          <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
+          <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4 sm:max-w-sm">
             <div className="flex items-center gap-2 mb-1">
               <Fuel size={15} className="text-slate-400 dark:text-muted-foreground" />
               <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.charge_info") : t("records.fuel_info")}</span>
@@ -211,7 +211,7 @@ const RecordForm = ({
           </div>
         ) : category === "highway" ? (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 sm:gap-x-8 sm:max-w-[50rem]">
               <div className="space-y-2">
                 <Label>{t("records.entry_ic")} <span className="text-slate-400 dark:text-muted-foreground font-normal text-[10px]">{t("records.optional")}</span></Label>
                 <Input type="text" value={entryIc} onChange={e => setEntryIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
@@ -233,7 +233,7 @@ const RecordForm = ({
           </div>
         )}
 
-        <div className="space-y-2">
+        <div className="space-y-2 sm:max-w-[50rem]">
           <Label>{t("common.memo")}</Label>
           <Textarea value={memo} onChange={e => setMemo(e.target.value)} placeholder={t("records.memo_placeholder")} className="resize-none" />
         </div>

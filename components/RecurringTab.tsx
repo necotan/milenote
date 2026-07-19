@@ -117,7 +117,7 @@ const RecurringForm = ({
 
         <form onSubmit={onSubmit} className="space-y-5">
           {/* --- 対象車 & カテゴリ --- */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 sm:gap-x-8 sm:max-w-[50rem]">
             <div className="space-y-2">
               <Label>{t("common.target_car")} <span className="text-red-500">{t("common.required")}</span></Label>
               <Select value={carId} onValueChange={setCarId} required>
@@ -141,7 +141,7 @@ const RecurringForm = ({
           </div>
 
           {SUB_CATEGORIES[category] && (
-            <div className="space-y-2 w-1/2 pr-1.5">
+            <div className="space-y-2 w-1/2 pr-1.5 sm:pr-0 sm:max-w-sm">
               <Label>{t("records.subcategory")}</Label>
               <Select value={subCategory} onValueChange={setSubCategory}>
                 <SelectTrigger className="w-full">
@@ -157,9 +157,9 @@ const RecurringForm = ({
           )}
 
           {/* --- 支払情報セクション --- */}
-          <div className="rounded-xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
+          <div className="rounded-xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4 sm:max-w-[50rem]">
             <p className="text-[11px] font-bold text-slate-400 dark:text-muted-foreground uppercase tracking-wider">支払情報</p>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-3 sm:gap-x-8">
               <div className="space-y-2">
                 <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
                 <NumberInput
@@ -203,7 +203,7 @@ const RecurringForm = ({
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 sm:max-w-[50rem]">
             <Label>{t("common.memo")}</Label>
             <Textarea value={memo} onChange={e => setMemo(e.target.value)} placeholder={t("records.memo_placeholder")} className="resize-none" />
           </div>
