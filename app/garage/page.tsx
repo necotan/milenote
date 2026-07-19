@@ -1100,7 +1100,7 @@ export default function GaragePage() {
                 </h2>
 
                 <form onSubmit={editWishId ? handleUpdateWish : handleAddWish} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-wrap gap-x-6 gap-y-3 sm:gap-x-8">
                     <div className="space-y-2">
                       <Label>{t("common.target_car")} <span className="text-red-500">{t("common.required")}</span></Label>
                       <Select value={wishCarId} onValueChange={setWishCarId} required>
@@ -1113,7 +1113,7 @@ export default function GaragePage() {
                     <div className="space-y-2">
                       <Label>{t("garage.genre")} <span className="text-red-500">{t("common.required")}</span></Label>
                       <Select value={wishGenre} onValueChange={setWishGenre} required>
-                        <SelectTrigger><SelectValue placeholder={t("garage.genre")} /></SelectTrigger>
+                        <SelectTrigger className="min-w-36"><SelectValue placeholder={t("garage.genre")} /></SelectTrigger>
                         <SelectContent>
                           {WISHLIST_GENRES.map(key => (
                             <SelectItem key={key} value={key}>{t(`wishlist_genres.${key}`)}</SelectItem>
@@ -1125,21 +1125,20 @@ export default function GaragePage() {
 
                   <div className="space-y-2">
                     <Label>{t("garage.parts_name")} <span className="text-red-500">{t("common.required")}</span></Label>
-                    <Input placeholder="" value={wishItemName} onChange={(e) => setWishItemName(e.target.value)} required />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="space-y-2">
-                      <Label>{t("garage.estimated_price")}</Label>
-                      <NumberInput placeholder="100,000" value={wishPrice} onValueChange={setWishPrice} className="max-w-40" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>{t("garage.reference_url")}</Label>
-                      <Input type="url" placeholder="https://..." value={wishUrl} onChange={(e) => setWishUrl(e.target.value)} />
-                    </div>
+                    <Input placeholder="" value={wishItemName} onChange={(e) => setWishItemName(e.target.value)} required className="sm:max-w-sm" />
                   </div>
 
                   <div className="space-y-2">
+                    <Label>{t("garage.reference_url")}</Label>
+                    <Input type="url" placeholder="https://..." value={wishUrl} onChange={(e) => setWishUrl(e.target.value)} className="sm:max-w-sm" />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>{t("garage.estimated_price")}</Label>
+                    <NumberInput placeholder="100,000" value={wishPrice} onValueChange={setWishPrice} className="max-w-40" />
+                  </div>
+
+                  <div className="space-y-2 sm:max-w-[50rem]">
                     <Label>{t("common.memo")}</Label>
                     <Textarea placeholder="" value={wishMemo} onChange={(e) => setWishMemo(e.target.value)} className="resize-none h-20" />
                   </div>
