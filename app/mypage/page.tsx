@@ -6,6 +6,7 @@ import { createClient } from "@/utils/supabase"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { NumberInput } from "@/components/ui/NumberInput"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
@@ -112,11 +113,10 @@ function ChipPresetRow({
       ))}
       {customOpen || !isPreset ? (
         <div className="relative">
-          <input
-            type="number"
+          <NumberInput
             autoFocus={customOpen}
-            value={value || ""}
-            onChange={(e) => onChange(parseInt(e.target.value) || 0)}
+            value={value ? String(value) : ""}
+            onValueChange={(raw) => onChange(parseInt(raw) || 0)}
             onFocus={() => setCustomOpen(true)}
             className="h-8 w-28 md:w-24 text-base md:text-xs font-bold text-center pr-8 rounded-full border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-card text-slate-700 dark:text-foreground outline-none focus-visible:ring-1 focus-visible:ring-slate-300"
           />

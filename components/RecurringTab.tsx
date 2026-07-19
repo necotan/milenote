@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { createClient } from "@/utils/supabase"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { NumberInput } from "@/components/ui/NumberInput"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -161,13 +162,11 @@ const RecurringForm = ({
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
-                <Input
-                  type="number"
-                  min="0"
+                <NumberInput
                   value={amount}
-                  onChange={e => setAmount(e.target.value)}
+                  onValueChange={setAmount}
                   required
-                  placeholder="5000"
+                  placeholder="5,000"
                   className="bg-white dark:bg-card"
                 />
               </div>

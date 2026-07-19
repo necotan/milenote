@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { createClient } from "@/utils/supabase"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { NumberInput } from "@/components/ui/NumberInput"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -674,11 +675,11 @@ export default function GaragePage() {
                     <div className="space-y-2"><Label>{t("garage.year")}</Label><Input type="number" placeholder="2018" value={year} onChange={(e) => setYear(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
                     <div className="space-y-2"><Label>{t("common.grade")}</Label><Input placeholder="GT Limited" value={grade} onChange={(e) => setGrade(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
                     <div className="space-y-2"><Label>{t("garage.body_color")}</Label><Input placeholder="" value={color} onChange={(e) => setColor(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
-                    <div className="space-y-2"><Label>{t("garage.current_odo")} <span className="text-red-500">{t("common.required")}</span></Label><Input type="number" min="0" placeholder="52400" value={currentOdo} onChange={(e) => setCurrentOdo(e.target.value)} required className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2"><Label>{t("garage.current_odo")} <span className="text-red-500">{t("common.required")}</span></Label><NumberInput placeholder="52,400" value={currentOdo} onValueChange={setCurrentOdo} required className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
                     <div className="space-y-2"><Label>{t("garage.first_registration")}</Label><Input type="month" value={firstRegistrationDate} onChange={(e) => setFirstRegistrationDate(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground appearance-none h-8 min-h-0" /></div>
                     <div className="space-y-2"><Label>{t("common.delivery_date")}</Label><Input type="date" value={purchaseDate} onChange={(e) => setPurchaseDate(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground appearance-none h-8 min-h-0" /></div>
-                    <div className="space-y-2"><Label>{t("garage.purchase_odo")}</Label><Input type="number" min="0" placeholder="48000" value={purchaseOdo} onChange={(e) => setPurchaseOdo(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
-                    <div className="space-y-2"><Label>{t("garage.purchase_price")}</Label><Input type="number" min="0" placeholder="2500000" value={purchasePrice} onChange={(e) => setPurchasePrice(e.target.value)} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2"><Label>{t("garage.purchase_odo")}</Label><NumberInput placeholder="48,000" value={purchaseOdo} onValueChange={setPurchaseOdo} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    <div className="space-y-2"><Label>{t("garage.purchase_price")}</Label><NumberInput placeholder="2,500,000" value={purchasePrice} onValueChange={setPurchasePrice} className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
                   </div>
                   <div className="space-y-2">
                     <Label>{t("garage.fuel_type")}</Label>
@@ -1126,7 +1127,7 @@ export default function GaragePage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-2">
                       <Label>{t("garage.estimated_price")}</Label>
-                      <Input type="number" min="0" placeholder="100000" value={wishPrice} onChange={(e) => setWishPrice(e.target.value)} />
+                      <NumberInput placeholder="100,000" value={wishPrice} onValueChange={setWishPrice} />
                     </div>
                     <div className="space-y-2">
                       <Label>{t("garage.reference_url")}</Label>

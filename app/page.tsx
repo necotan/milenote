@@ -7,6 +7,7 @@ import { Wrench, Banknote, CarFront, RefreshCw, CalendarDays, TrendingUp, Trendi
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { NumberInput } from "@/components/ui/NumberInput"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
@@ -599,11 +600,9 @@ export default function Home() {
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground">{t("common.odometer")}</label>
                 <div className="relative">
-                  <Input
-                    type="number"
-                    min="0"
+                  <NumberInput
                     value={odoValue}
-                    onChange={(e) => setOdoValue(e.target.value)}
+                    onValueChange={setOdoValue}
                     className="h-10 pr-10 bg-white dark:bg-card border-slate-200 dark:border-border"
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground pointer-events-none">{t("common.km_unit")}</span>
