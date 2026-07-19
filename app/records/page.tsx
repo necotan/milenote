@@ -142,12 +142,12 @@ const RecordForm = ({
 
         <div className="space-y-2">
           <Label>{t("records.date")} <span className="text-red-500">{t("common.required")}</span></Label>
-          <Input type="date" value={date} onChange={e => setDate(e.target.value)} required />
+          <Input type="date" value={date} onChange={e => setDate(e.target.value)} required className="max-w-40" />
         </div>
 
         <div className="space-y-2">
           <Label>{t("records.odometer_km")} <span className="text-slate-400 dark:text-muted-foreground font-normal text-xs">{t("records.optional")}</span></Label>
-          <NumberInput value={odoAtRecord} onValueChange={setOdoAtRecord} placeholder="52,500" />
+          <NumberInput value={odoAtRecord} onValueChange={setOdoAtRecord} placeholder="52,500" className="max-w-40" />
         </div>
 
         {category === "fuel" ? (
@@ -160,7 +160,7 @@ const RecordForm = ({
             {/* 単価 */}
             <div className="space-y-1">
               <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.unit_price_kwh") : t("records.unit_price")}</Label>
-              <div className="relative">
+              <div className="relative max-w-40">
                 <NumberInput
                   decimal
                   value={fuelUnitPrice}
@@ -175,7 +175,7 @@ const RecordForm = ({
             {/* リットル / kWh */}
             <div className="space-y-1">
               <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.charge_amount") : t("records.fuel_amount")}</Label>
-              <div className="relative">
+              <div className="relative max-w-40">
                 <NumberInput
                   decimal
                   value={fuelAmount}
@@ -188,7 +188,7 @@ const RecordForm = ({
             </div>
 
             {/* 区切り線 */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 max-w-40">
               <div className="flex-1 h-px bg-slate-200 dark:bg-border" />
               <span className="text-[10px] text-slate-400 dark:text-muted-foreground font-bold">=</span>
               <div className="flex-1 h-px bg-slate-200 dark:bg-border" />
@@ -197,7 +197,7 @@ const RecordForm = ({
             {/* 総額 */}
             <div className="space-y-1">
               <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("records.total_amount")} <span className="text-red-400">{t("common.required")}</span></Label>
-              <div className="relative">
+              <div className="relative max-w-40">
                 <NumberInput
                   value={amount}
                   onValueChange={value => onFuelFieldChange("amount", value)}
@@ -223,13 +223,13 @@ const RecordForm = ({
             </div>
             <div className="space-y-2">
               <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
-              <NumberInput value={amount} onValueChange={setAmount} required placeholder="1,320" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+              <NumberInput value={amount} onValueChange={setAmount} required placeholder="1,320" className="max-w-40 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
             </div>
           </div>
         ) : (
           <div className="space-y-2">
             <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
-            <NumberInput value={amount} onValueChange={setAmount} required placeholder="5,000" />
+            <NumberInput value={amount} onValueChange={setAmount} required placeholder="5,000" className="max-w-40" />
           </div>
         )}
 

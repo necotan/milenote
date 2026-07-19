@@ -167,7 +167,7 @@ const RecurringForm = ({
                   onValueChange={setAmount}
                   required
                   placeholder="5,000"
-                  className="bg-white dark:bg-card"
+                  className="max-w-40 bg-white dark:bg-card"
                 />
               </div>
               <div className="space-y-2">
@@ -193,7 +193,7 @@ const RecurringForm = ({
                 value={nextBillingDate}
                 onChange={e => setNextBillingDate(e.target.value)}
                 required
-                className="bg-white dark:bg-card"
+                className="max-w-40 bg-white dark:bg-card"
               />
               {!isEdit && (
                 <p className="text-[11px] text-slate-400 dark:text-muted-foreground">

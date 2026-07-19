@@ -599,7 +599,7 @@ export default function Home() {
 
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground">{t("common.odometer")}</label>
-                <div className="relative">
+                <div className="relative max-w-40">
                   <NumberInput
                     value={odoValue}
                     onValueChange={setOdoValue}
