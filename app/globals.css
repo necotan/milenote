@@ -85,6 +85,7 @@
   --sidebar-ring: oklch(0.708 0 0);
   --skeleton: oklch(0.968 0.007 247.896);
   --skeleton-shimmer: rgba(255, 255, 255, 0.65);
+  --autofill-bg: var(--background);
 }
 
 .dark {
@@ -124,6 +125,8 @@
   --surface-border: oklch(0.44 0 0);
   --skeleton: oklch(0.24 0 0);
   --skeleton-shimmer: rgba(255, 255, 255, 0.08);
+  /* 入力欄は bg-input/30のため、背景色と合成した近似の不透明色を使用 */
+  --autofill-bg: color-mix(in srgb, var(--input) 30%, var(--background));
 }
 
 @layer base {
@@ -226,6 +229,26 @@ svg.lucide {
   100% {
     stroke-dashoffset: 160;
   }
+}
+
+/* オートフィル時にブラウザ(Chrome/Safari)が強制する黄色背景、文字色を打ち消す */
+/* 背景は inset box-shadow で塗りつぶし、background-color 自体は超長時間の transition で変化を保留させる */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--autofill-bg) inset;
+  -webkit-text-fill-color: var(--foreground);
+  caret-color: var(--foreground);
+  transition: background-color 9999999s ease-out;
+}
+
+/* Firefox など標準の :autofill 対応ブラウザ向け */
+input:autofill,
+textarea:autofill,
+select:autofill {
+  box-shadow: 0 0 0 1000px var(--autofill-bg) inset;
 }
 
 /* 数値入力のスピナーを非表示 */
