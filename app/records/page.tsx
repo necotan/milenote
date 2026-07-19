@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, Suspense } from "react"
+import { useState, useEffect, useRef, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { createClient } from "@/utils/supabase"
 import { Button } from "@/components/ui/button"
@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, Hammer, ClipboardList, Droplets } from "lucide-react"
+import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, Hammer, ClipboardList, Droplets, SlidersHorizontal } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
@@ -312,6 +312,50 @@ function RecordsPageInner() {
     ? records.filter(r => r.date.startsWith(selectedYearMonth))
     : records
 
+  // カテゴリ、車の絞り込み用ステート
+  const [categoryFilters, setCategoryFilters] = useState<string[]>([])
+  const [carFilters, setCarFilters] = useState<string[]>([])
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
+
+  // カテゴリ絞り込みの選択切り替え
+  const toggleCategoryFilter = (key: string) => {
+    setCategoryFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
+  }
+
+  // 車絞り込みの選択切り替え
+  const toggleCarFilter = (key: string) => {
+    setCarFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
+  }
+
+  // タッチ/ペンは pointerup（実際に触れた要素で発火する）で即時処理し、その直後に届くclickは無視する
+  const lastChipTouchAt = useRef(0)
+  const chipTapHandlers = (toggle: () => void) => ({
+    onPointerUp: (e: React.PointerEvent<HTMLButtonElement>) => {
+      if (e.pointerType === "mouse") return
+      lastChipTouchAt.current = Date.now()
+      toggle()
+    },
+    onClick: () => {
+      if (Date.now() - lastChipTouchAt.current < 700) return
+      toggle()
+    },
+  })
+
+  // 絞り込みチップに出す車の一覧（元愛車の記録も含めるため cars ではなく records から導出する）
+  const filterCars: { id: string; name: string }[] = []
+  records.forEach((r) => {
+    if (!filterCars.some((c) => c.id === r.car_id)) filterCars.push({ id: r.car_id, name: r.cars?.name ?? "" })
+  })
+
+  // カテゴリ、車の絞り込みを適用した記録（月別/全期間の表示範囲が母数）
+  const filteredRecords = displayedRecords.filter((r) =>
+    (categoryFilters.length === 0 || categoryFilters.includes(r.category)) &&
+    (carFilters.length === 0 || carFilters.includes(r.car_id))
+  )
+
+  // 絞り込み中の選択数（バッジ表示用）
+  const activeFilterCount = categoryFilters.length + carFilters.length
+
   // カテゴリをユーザーが手動で切り替えたときだけサブカテゴリをデフォルト値にリセットする
   // （編集開始時の setCategory にも反応してしまうと、保存済みのサブカテゴリが上書きされてしまうため）
   const handleCategoryChange = (newCategory: string) => {
@@ -602,9 +646,27 @@ function RecordsPageInner() {
                       { value: "all", label: t("records.view_all") },
                     ]}
                   />
-                  <Button onClick={() => setIsAdding(true)} size="sm" className="font-bold">
-                    <Plus className="mr-1 h-4 w-4" /> {t("records.add_record")}
-                  </Button>
+                  <div className="flex items-center gap-4">
+                    {/* 絞り込みボタン（記録があるときのみ表示、絞り込み中は選択数をバッジ表示） */}
+                    {records.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => setIsFilterOpen(true)}
+                        title={t("records.filter_title")}
+                        className="relative h-7 flex items-center px-2.5 rounded-lg border bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+                      >
+                        <SlidersHorizontal size={15} />
+                        {activeFilterCount > 0 && (
+                          <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-slate-400 text-white dark:bg-surface-2 dark:text-foreground/80 text-[9px] font-semibold tabular-nums">
+                            {activeFilterCount}
+                          </span>
+                        )}
+                      </button>
+                    )}
+                    <Button onClick={() => setIsAdding(true)} size="sm" className="font-bold">
+                      <Plus className="mr-1 h-4 w-4" /> {t("records.add_record")}
+                    </Button>
+                  </div>
                 </div>
                 {viewMode === "month" && (
                   <div className="flex items-center justify-center gap-4">
@@ -626,7 +688,108 @@ function RecordsPageInner() {
               </div>
             )}
 
-      {isAdding && <RecordForm 
+            {/* カテゴリ・車の絞り込みモーダル */}
+            {isFilterOpen && (
+              <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => setIsFilterOpen(false)}>
+                <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+                  <CardContent className="p-6 space-y-4">
+                    <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
+                      <SlidersHorizontal size={20} />
+                      <h2 className="text-lg font-extrabold">{t("records.filter_title")}</h2>
+                    </div>
+
+                    {/* カテゴリ絞り込み */}
+                    <div className="space-y-2">
+                      <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("records.category")}</p>
+                      <div className="flex flex-wrap gap-2.5">
+                        {/* すべて */}
+                        <button
+                          type="button"
+                          {...chipTapHandlers(() => setCategoryFilters([]))}
+                          aria-pressed={categoryFilters.length === 0}
+                          className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                            categoryFilters.length === 0
+                              ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                              : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                          }`}
+                        >
+                          {t("records.filter_all")}
+                          <span className="ml-1.5 tabular-nums opacity-60">{displayedRecords.length}</span>
+                        </button>
+                        {/* 各カテゴリチップ */}
+                        {Object.keys(CATEGORIES).map((key) => {
+                          const active = categoryFilters.includes(key)
+                          const count = displayedRecords.filter((r) => r.category === key).length
+                          return (
+                            <button
+                              key={key}
+                              type="button"
+                              {...chipTapHandlers(() => toggleCategoryFilter(key))}
+                              aria-pressed={active}
+                              className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                                active
+                                  ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                                  : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                              }`}
+                            >
+                              {t(`categories.${key}`)}
+                              <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+
+                    {/* 車絞り込み */}
+                    <div className="space-y-2">
+                      <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("records.filter_car")}</p>
+                      <div className="flex flex-wrap gap-2.5">
+                        {/* すべて */}
+                        <button
+                          type="button"
+                          {...chipTapHandlers(() => setCarFilters([]))}
+                          aria-pressed={carFilters.length === 0}
+                          className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                            carFilters.length === 0
+                              ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                              : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                          }`}
+                        >
+                          {t("records.filter_all")}
+                          <span className="ml-1.5 tabular-nums opacity-60">{displayedRecords.length}</span>
+                        </button>
+                        {/* 各車チップ */}
+                        {filterCars.map((car) => {
+                          const active = carFilters.includes(car.id)
+                          const count = displayedRecords.filter((r) => r.car_id === car.id).length
+                          return (
+                            <button
+                              key={car.id}
+                              type="button"
+                              {...chipTapHandlers(() => toggleCarFilter(car.id))}
+                              aria-pressed={active}
+                              className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                                active
+                                  ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                                  : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                              }`}
+                            >
+                              {car.name}
+                              <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                    <Button variant="outline" className="w-full font-bold" onClick={() => setIsFilterOpen(false)}>
+                      {t("common.close")}
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+      {isAdding && <RecordForm
           onSubmit={handleAddRecord} 
           submitLabel={t("records.save_record")}
           isSubmitting={isSubmitting}
@@ -677,9 +840,15 @@ function RecordsPageInner() {
         </p>
       )}
 
-      {!loading && !isAdding && !editRecordId && displayedRecords.length > 0 && (
+      {!loading && !isAdding && !editRecordId && displayedRecords.length > 0 && filteredRecords.length === 0 && (
+        <p className="text-center text-slate-400 dark:text-muted-foreground py-20 font-medium">
+          {t("records.no_filtered_records")}
+        </p>
+      )}
+
+      {!loading && !isAdding && !editRecordId && filteredRecords.length > 0 && (
         <div className="space-y-4">
-          {displayedRecords.map((record) => {
+          {filteredRecords.map((record) => {
             const cat = CATEGORIES[record.category] || CATEGORIES.other
             const Icon = cat.icon
             
