@@ -364,7 +364,7 @@ export default function MyPage() {
   const [profileDialogField, setProfileDialogField] = useState<"display_name" | "user_id" | null>(null)
   const [homeOrder, setHomeOrder] = useState<string[]>(["cars", "summary", "alerts"])
   const [isColorful, setIsColorful] = useState(false)
-  const { theme, setTheme } = useTheme()
+  const { resolvedTheme, setTheme } = useTheme()
   const [themeMounted, setThemeMounted] = useState(false)
   const [loading, setLoading] = useState(true)
   const [exporting, setExporting] = useState(false)
@@ -832,7 +832,7 @@ export default function MyPage() {
                 <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.theme_mode")}</Label>
                 <div className="inline-flex rounded-lg bg-slate-100 dark:bg-surface-2 p-1 mt-2">
                   {THEME_OPTIONS.map(({ value, labelKey }) => {
-                    const active = themeMounted && theme === value
+                    const active = themeMounted && resolvedTheme === value
                     return (
                       <button
                         key={value}
