@@ -8,6 +8,7 @@ import Sidebar from "@/components/ui/Sidebar";
 import { createClient } from "@/utils/supabase";
 import { useRouter, usePathname } from "next/navigation";
 import { Toaster } from "@/components/ui/sonner";
+import ThemeColorMeta from "@/components/ui/ThemeColorMeta";
 import { ThemeProvider } from "next-themes";
 import { LanguageProvider } from "@/lib/i18n";
 import { LoadingGateProvider } from "@/lib/loadingGate";
@@ -93,6 +94,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <html lang="ja" suppressHydrationWarning>
         <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-slate-50 dark:bg-background tracking-wide`}>
           <ThemeProvider attribute="class" themes={["light", "dark"]} defaultTheme="system" enableSystem>
+            <ThemeColorMeta />
             <LanguageProvider>
               {children}
               <Toaster position="top-center" richColors />
@@ -107,6 +109,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ja" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-slate-50 dark:bg-background text-foreground tracking-wider`}>
         <ThemeProvider attribute="class" themes={["light", "dark"]} defaultTheme="system" enableSystem>
+          <ThemeColorMeta />
           <LanguageProvider>
             <LoadingGateProvider value={gateValue}>
               <AppContent loading={!revealed}>
