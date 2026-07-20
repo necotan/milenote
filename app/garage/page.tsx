@@ -110,8 +110,9 @@ export default function GaragePage() {
   const [wishUrl, setWishUrl] = useState("")
   const [wishMemo, setWishMemo] = useState("")
 
-  const fetchData = async () => {
-    setLoading(true)
+  // showLoading=false でスケルトンを出さずにサイレント再取得
+  const fetchData = async (showLoading = true) => {
+    if (showLoading) setLoading(true)
     const { data: { user } } = await supabase.auth.getUser()
     if (user) {
       // 車両データの取得
@@ -190,7 +191,7 @@ export default function GaragePage() {
       } else {
         toast.success(t("garage.car_registered"))
         resetCarForm()
-        fetchData()
+        fetchData(false)
       }
     } finally {
       setSavingCar(false)
@@ -255,7 +256,7 @@ export default function GaragePage() {
         }
         toast.success(t("garage.car_updated"))
         resetCarForm()
-        fetchData()
+        fetchData(false)
       }
     } finally {
       setSavingCar(false)
@@ -308,7 +309,14 @@ export default function GaragePage() {
         toast.success(t("garage.car_deleted", { name: deleteCarTarget.name }))
         setDeleteCarTarget(null)
         setDeleteCarConfirmName("")
-        fetchData()
+        // CASCADE で消える関連データ含め、再取得せずローカルstateから取り除く
+        const remainingCars = cars.filter((c) => c.id !== deleteCarTarget.id)
+        setCars(remainingCars)
+        setRecords(prev => prev.filter(r => r.car_id !== deleteCarTarget.id))
+        setWishlists(prev => prev.filter(w => w.car_id !== deleteCarTarget.id))
+        // 欲しいものフォームの車選択が削除した車を指したままにならないようにする
+        if (remainingCars.length === 1) setWishCarId(remainingCars[0].id)
+        else if (wishCarId === deleteCarTarget.id) setWishCarId("")
       }
     } finally {
       setDeletingCar(false)
@@ -338,7 +346,7 @@ export default function GaragePage() {
         toast.success(t("garage.wish_added"))
         setIsAddingWish(false)
         setWishItemName(""); setWishGenre(""); setWishPrice(""); setWishUrl(""); setWishMemo("");
-        fetchData()
+        fetchData(false)
       }
     } finally {
       setSavingWish(false)
@@ -378,7 +386,7 @@ export default function GaragePage() {
       } else {
         toast.success(t("garage.wish_updated"))
         resetWishForm()
-        fetchData()
+        fetchData(false)
       }
     } finally {
       setSavingWish(false)
@@ -395,7 +403,8 @@ export default function GaragePage() {
       toast.error(t("common.delete_failed") + ": " + error.message)
     } else {
       toast.success(t("garage.item_deleted"))
-      fetchData()
+      // 再取得せずローカルstateから取り除く
+      setWishlists(prev => prev.filter(w => w.id !== wishId))
     }
   }
 
@@ -417,7 +426,8 @@ export default function GaragePage() {
     }
 
     toast.success(t("garage.status_updated"))
-    fetchData()
+    // statusのみなので、全件再取得（スケルトン再表示）はせずローカルstateだけ更新
+    setWishlists(prev => prev.map(w => (w.id === id ? { ...w, status: newStatus } : w)))
   }
 
   // 画像アップロード処理
@@ -494,7 +504,7 @@ export default function GaragePage() {
       }
 
       toast.success(t("garage.photo_set"))
-      fetchData() // 画面を更新して写真を表示
+      fetchData(false) // 画面を更新して写真を表示
       // アップロード直後に位置・ズーム調整モーダルを開き、新しい画像をすぐ調整できるようにする
       const baseCar = cars.find((c) => c.id === carId) || {}
       handleStartAdjustImage({
@@ -552,7 +562,7 @@ export default function GaragePage() {
     } else {
       toast.success(t("garage.position_saved"))
       setAdjustTarget(null)
-      fetchData()
+      fetchData(false)
     }
   }
 

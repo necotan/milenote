@@ -363,8 +363,9 @@ function RecordsPageInner() {
     setSubCategory(SUB_CATEGORIES[newCategory] ? SUB_CATEGORIES[newCategory][0] : "")
   }
 
-  const fetchData = async () => {
-    setLoading(true)
+  // showLoading=false でスケルトンを出さずにサイレント再取得
+  const fetchData = async (showLoading = true) => {
+    if (showLoading) setLoading(true)
     const { data: { user } } = await supabase.auth.getUser()
     if (user) {
       const { data: carsData } = await supabase.from("cars").select("*").eq("user_id", user.id).eq("status", "active")
@@ -499,7 +500,7 @@ function RecordsPageInner() {
 
       toast.success(t("records.saved"))
       resetForm()
-      fetchData()
+      fetchData(false)
     } finally {
       setIsSubmitting(false)
     }
@@ -586,7 +587,7 @@ function RecordsPageInner() {
         await recalcCarOdo(carId)
         toast.success(t("records.updated"))
         resetForm()
-        fetchData()
+        fetchData(false)
       }
     } finally {
       setIsSubmitting(false)
@@ -605,7 +606,9 @@ function RecordsPageInner() {
     } else {
       if (targetRecord) await recalcCarOdo(targetRecord.car_id)
       toast.success(t("records.deleted"))
-      fetchData()
+      // 一覧からは即時に取り除き、ODO再計算後の車データはサイレント再取得で同期
+      setRecords(prev => prev.filter(r => r.id !== recordId))
+      fetchData(false)
     }
   }
 
