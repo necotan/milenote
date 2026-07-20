@@ -97,7 +97,7 @@ function TabsList({
         <span
           ref={indicatorRef}
           aria-hidden
-          className="pointer-events-none absolute top-[3px] bottom-[3px] rounded-full border border-slate-400 dark:border-surface-border bg-background dark:bg-surface-3 opacity-0 transition-all duration-200 ease-out"
+          className="pointer-events-none absolute top-[3px] bottom-[3px] rounded-full border border-slate-300 dark:border-surface-border bg-background dark:bg-surface-3 opacity-0 transition-all duration-200 ease-out"
         />
       )}
       {children}

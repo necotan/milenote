@@ -52,7 +52,7 @@ export function SegmentedToggle<T extends string>({
       <span
         ref={indicatorRef}
         aria-hidden
-        className="pointer-events-none absolute top-[3px] bottom-[3px] rounded-full border border-slate-400 dark:border-surface-border bg-white dark:bg-surface-3 opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        className="pointer-events-none absolute top-[3px] bottom-[3px] rounded-full border border-slate-300 dark:border-surface-border bg-white dark:bg-surface-3 opacity-0 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
       />
       {options.map((option) => {
         const active = option.value === value
