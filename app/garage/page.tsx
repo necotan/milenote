@@ -159,6 +159,8 @@ export default function GaragePage() {
   const resetCarForm = () => {
     setIsAddingCar(false)
     setEditCarId(null)
+    // フォームを閉じて一覧に戻るとき、フォーム下部までスクロールした位置が残らないようにページトップへ戻す
+    window.scrollTo({ top: 0 })
     setName(""); setMaker(""); setModelCode(""); setYear("");
     setGrade(""); setColor(""); setFuelType("regular"); setCurrentOdo("");
     setFirstRegistrationDate(""); setPurchaseDate(""); setPurchaseOdo("");
@@ -202,6 +204,8 @@ export default function GaragePage() {
   const handleStartEditCar = (car: any) => {
     setEditCarId(car.id)
     setIsAddingCar(false)
+    // 一覧の下のほうで編集を開始してもフォームが先頭から見えるようにページトップへ戻す
+    window.scrollTo({ top: 0, behavior: "smooth" })
     setName(car.name || "")
     setMaker(car.maker || "")
     setModelCode(car.model_code || "")
@@ -344,8 +348,7 @@ export default function GaragePage() {
         toast.error(t("common.error_occurred") + ": " + error.message)
       } else {
         toast.success(t("garage.wish_added"))
-        setIsAddingWish(false)
-        setWishItemName(""); setWishGenre(""); setWishPrice(""); setWishUrl(""); setWishMemo("");
+        resetWishForm()
         fetchData(false)
       }
     } finally {
@@ -357,6 +360,8 @@ export default function GaragePage() {
   const handleStartEditWish = (wish: any) => {
     setEditWishId(wish.id)
     setIsAddingWish(false)
+    // 一覧の下のほうで編集を開始してもフォームが先頭から見えるようにページトップへ戻す
+    window.scrollTo({ top: 0, behavior: "smooth" })
     setWishCarId(wish.car_id)
     setWishItemName(wish.item_name)
     setWishGenre(wish.genre || "")
@@ -412,6 +417,8 @@ export default function GaragePage() {
   const resetWishForm = () => {
     setIsAddingWish(false)
     setEditWishId(null)
+    // フォームを閉じて一覧に戻るとき、フォーム下部までスクロールした位置が残らないようにページトップへ戻す
+    window.scrollTo({ top: 0 })
     setWishItemName(""); setWishGenre(""); setWishPrice(""); setWishUrl(""); setWishMemo("");
     if (cars.length === 1) setWishCarId(cars[0].id)
   }

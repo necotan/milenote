@@ -440,6 +440,8 @@ function RecordsPageInner() {
   const resetForm = () => {
     setIsAdding(false)
     setEditRecordId(null)
+    // フォームを閉じて一覧に戻るとき、フォーム下部までスクロールした位置が残らないようにページトップへ戻す
+    window.scrollTo({ top: 0 })
     setAmount(""); setOdoAtRecord(""); setFuelAmount(""); setFuelUnitPrice(""); setMemo("")
     setEntryIc(""); setExitIc("")
     setCategory("fuel")
@@ -510,6 +512,8 @@ function RecordsPageInner() {
   const handleStartEdit = (record: any) => {
     setEditRecordId(record.id)
     setIsAdding(false)
+    // 一覧の下のほうで編集を開始してもフォームが先頭から見えるようにページトップへ戻す
+    window.scrollTo({ top: 0, behavior: "smooth" })
     setCarId(record.car_id)
     setCategory(record.category)
     setSubCategory(record.sub_category || "")

@@ -337,6 +337,8 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
   const resetForm = () => {
     setIsAdding(false)
     setEditId(null)
+    // フォームを閉じて一覧に戻るとき、フォーム下部までスクロールした位置が残らないようにページトップへ戻す
+    window.scrollTo({ top: 0 })
     setAmount("")
     setMemo("")
     setCategory("other")
