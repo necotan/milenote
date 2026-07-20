@@ -135,6 +135,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* iOSのセーフエリアに合わせてpadding-topを調整 */
+    padding-top: env(safe-area-inset-top, 0px);
   }
   html {
     @apply font-sans;
@@ -260,4 +262,34 @@ input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+/* iOSのステータスバーはバー下端から下のコンテンツの色も取り込むため、トースト(sonner)を上方向へドラッグしてホールドしてもサンプリング圏内に入らないよう追従を制限する */
+[data-sonner-toaster] [data-sonner-toast][data-swiping="true"][data-y-position="top"] {
+  transform: var(--y)
+    translateY(max(-22px, calc(max(var(--swipe-amount-y, 0px), -16px) + min(0px, (var(--swipe-amount-y, 0px) + 16px) * 0.15))))
+    translateX(var(--swipe-amount-x, 0px));
+}
+
+/* 開始位置に同じクランプを適用し、バー圏内へ入る前にフェードさせる */
+@keyframes milenote-swipe-out-up {
+  from {
+    transform: var(--y) translateY(max(var(--swipe-amount-y, 0px), -22px));
+    opacity: 1;
+  }
+  35% {
+    opacity: 0.1;
+  }
+  to {
+    transform: var(--y) translateY(calc(max(var(--swipe-amount-y, 0px), -22px) - 100%));
+    opacity: 0;
+  }
+}
+[data-sonner-toaster] [data-sonner-toast][data-swipe-out="true"][data-swipe-direction="up"] {
+  animation-name: milenote-swipe-out-up;
+}
+
+/* 開始位置をバー圏外の-20%に変更し、スライドインの質感を保ちつつ圏内を横切らないようにする */
+[data-sonner-toaster] [data-sonner-toast][data-y-position="top"]:not([data-mounted="true"]) {
+  --y: translateY(-20%);
 }
