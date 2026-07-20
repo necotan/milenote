@@ -579,22 +579,16 @@ export default function Home() {
 
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground">{t("home.target_car")}</label>
-                {cars.length > 1 ? (
-                  <Select value={odoCarId} onValueChange={handleOdoCarChange}>
-                    <SelectTrigger className="w-full h-10">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {cars.map((car) => (
-                        <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                ) : (
-                  <div className="flex h-10 items-center rounded-lg border border-slate-200 dark:border-border bg-slate-50 dark:bg-muted px-3 text-sm font-bold text-slate-700 dark:text-foreground">
-                    {cars.find((car) => car.id === odoCarId)?.name || cars[0]?.name}
-                  </div>
-                )}
+                <Select value={odoCarId} onValueChange={handleOdoCarChange}>
+                  <SelectTrigger className="w-full h-10">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="z-[70]">
+                    {cars.map((car) => (
+                      <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-1.5">
