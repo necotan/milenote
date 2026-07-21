@@ -175,7 +175,7 @@
     "unit_yen_per_kwh": "円/kWh",
     "unit_kwh": "kWh",
     "charge_amount_label": "充電量:",
-    "route_label": "【区間】",
+    "route_display_label": "区間:",
     "not_entered": "未入力",
     "view_by_month": "月別",
     "view_all": "全期間",

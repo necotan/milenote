@@ -175,7 +175,7 @@
     "unit_yen_per_kwh": "/kWh",
     "unit_kwh": "kWh",
     "charge_amount_label": "Charge:",
-    "route_label": "Route: ",
+    "route_display_label": "Route:",
     "not_entered": "N/A",
     "view_by_month": "Monthly",
     "view_all": "All Time",

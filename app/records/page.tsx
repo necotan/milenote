@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, Hammer, ClipboardList, Droplets, SlidersHorizontal } from "lucide-react"
+import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, ArrowRight, Hammer, ClipboardList, Droplets, SlidersHorizontal } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
@@ -479,11 +479,6 @@ function RecordsPageInner() {
       const targetCar = cars.find(c => c.id === carId)
       const fallbackOdo = targetCar ? targetCar.current_odo : 0
 
-      let finalMemo = memo
-      if (category === "highway" && (entryIc || exitIc)) {
-        finalMemo = `${t("records.route_label")}${entryIc || t("records.not_entered")} ➡ ${exitIc || t("records.not_entered")}\n${memo}`
-      }
-
       const { error: recordError } = await supabase.from("records").insert({
         user_id: user.id,
         car_id: carId,
@@ -493,7 +488,9 @@ function RecordsPageInner() {
         odo_at_record: odoAtRecord ? parseInt(odoAtRecord) : fallbackOdo,
         fuel_amount: category === "fuel" ? parseFloat(fuelAmount) : null,
         date,
-        memo: finalMemo,
+        memo: memo || null,
+        entry_ic: category === "highway" ? (entryIc || null) : null,
+        exit_ic: category === "highway" ? (exitIc || null) : null,
       })
 
       if (recordError) return toast.error(t("common.error_occurred") + ": " + recordError.message)
@@ -525,38 +522,14 @@ function RecordsPageInner() {
     setFuelUnitPrice(liters && total ? (total / liters).toFixed(2) : "")
     setDate(record.date)
     
-    // 高速料金のメモ復元処理
-    if (record.category === "highway" && record.memo) {
-      const match = record.memo.match(/^【区間】(.*?) ➡ (.*?)\n([\s\S]*)$/)
-      if (match) {
-        setEntryIc(match[1] === "未入力" ? "" : match[1])
-        setExitIc(match[2] === "未入力" ? "" : match[2])
-        setMemo(match[3])
-      } else {
-        const fallbackMatch = record.memo.match(/^【区間】(.*?) ➡ (.*?)$/)
-        if (fallbackMatch) {
-          setEntryIc(fallbackMatch[1] === "未入力" ? "" : fallbackMatch[1])
-          setExitIc(fallbackMatch[2] === "未入力" ? "" : fallbackMatch[2])
-          setMemo("")
-        } else {
-          // Try English format too
-          const enMatch = record.memo.match(/^Route: (.*?) ➡ (.*?)\n([\s\S]*)$/)
-          if (enMatch) {
-            setEntryIc(enMatch[1] === "N/A" ? "" : enMatch[1])
-            setExitIc(enMatch[2] === "N/A" ? "" : enMatch[2])
-            setMemo(enMatch[3])
-          } else {
-            setEntryIc("")
-            setExitIc("")
-            setMemo(record.memo)
-          }
-        }
-      }
+    if (record.category === "highway") {
+      setEntryIc(record.entry_ic || "")
+      setExitIc(record.exit_ic || "")
     } else {
       setEntryIc("")
       setExitIc("")
-      setMemo(record.memo || "")
     }
+    setMemo(record.memo || "")
   }
 
   // 記録データの更新処理
@@ -569,11 +542,6 @@ function RecordsPageInner() {
       const targetCar = cars.find(c => c.id === carId)
       const fallbackOdo = targetCar ? targetCar.current_odo : 0
 
-      let finalMemo = memo
-      if (category === "highway" && (entryIc || exitIc)) {
-        finalMemo = `${t("records.route_label")}${entryIc || t("records.not_entered")} ➡ ${exitIc || t("records.not_entered")}\n${memo}`
-      }
-
       const { error } = await supabase.from("records").update({
         car_id: carId,
         category,
@@ -582,7 +550,9 @@ function RecordsPageInner() {
         odo_at_record: odoAtRecord ? parseInt(odoAtRecord) : fallbackOdo,
         fuel_amount: category === "fuel" ? parseFloat(fuelAmount) : null,
         date,
-        memo: finalMemo,
+        memo: memo || null,
+        entry_ic: category === "highway" ? (entryIc || null) : null,
+        exit_ic: category === "highway" ? (exitIc || null) : null,
       }).eq("id", editRecordId)
 
       if (error) {
@@ -858,7 +828,7 @@ function RecordsPageInner() {
           {filteredRecords.map((record) => {
             const cat = CATEGORIES[record.category] || CATEGORIES.other
             const Icon = cat.icon
-            
+
             return (
               <Card key={record.id} className="border-none shadow-sm bg-white dark:bg-card overflow-hidden relative">
                 <CardContent className="p-0">
@@ -913,6 +883,16 @@ function RecordsPageInner() {
                         <p className="text-xs text-slate-500 dark:text-muted-foreground mb-2">
                           {record.cars?.fuel_type === "ev" ? t("records.charge_amount_label") : t("records.fuel_amount_label")} <span className="font-bold text-slate-700 dark:text-foreground">{record.fuel_amount} {record.cars?.fuel_type === "ev" ? t("records.unit_kwh") : t("records.unit_l")}</span>
                         </p>
+                      )}
+                      {record.category === "highway" && (record.entry_ic || record.exit_ic) && (
+                        <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-muted-foreground mb-2">
+                          <span>{t("records.route_display_label")}</span>
+                          <span className="inline-flex items-center gap-1 font-bold text-slate-700 dark:text-foreground">
+                            {record.entry_ic || t("records.not_entered")}
+                            <ArrowRight size={12} className="shrink-0" />
+                            {record.exit_ic || t("records.not_entered")}
+                          </span>
+                        </div>
                       )}
                       {record.memo && (
                         <p className="text-sm text-slate-600 dark:text-muted-foreground bg-slate-50 dark:bg-muted p-2 rounded-md whitespace-pre-wrap inline-block">
