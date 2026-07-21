@@ -35,14 +35,14 @@ export function ConfirmDialog({
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription className="mt-3 whitespace-pre-wrap">{message}</DialogDescription>
         <DialogFooter>
-          <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)} disabled={loading}>
+          <Button type="button" variant="outline" size="default" className="font-bold px-4" onClick={() => onOpenChange(false)} disabled={loading}>
             {cancelLabel ?? t("common.cancel")}
           </Button>
           <Button
             type="button"
-            size="sm"
+            size="default"
             variant={destructive ? "destructive" : "default"}
-            className={destructive ? "bg-red-600 dark:bg-red-600 border border-red-700 text-white hover:bg-red-700 dark:hover:bg-red-700" : undefined}
+            className={`font-bold px-4 ${destructive ? "bg-red-600 dark:bg-red-600 border border-red-700 text-white hover:bg-red-700 dark:hover:bg-red-700" : ""}`}
             onClick={onConfirm}
             disabled={loading}
           >
