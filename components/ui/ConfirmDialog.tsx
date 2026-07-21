@@ -42,7 +42,7 @@ export function ConfirmDialog({
             type="button"
             size="sm"
             variant={destructive ? "destructive" : "default"}
-            className={destructive ? "bg-red-600 border border-red-700 text-white hover:bg-red-700" : undefined}
+            className={destructive ? "bg-red-600 dark:bg-red-600 border border-red-700 text-white hover:bg-red-700 dark:hover:bg-red-700" : undefined}
             onClick={onConfirm}
             disabled={loading}
           >

@@ -903,7 +903,7 @@ export default function GaragePage() {
                   </Button>
                   <Button
                     variant="destructive"
-                    className="flex-1 font-bold bg-red-600 border border-red-700 text-white hover:bg-red-700"
+                    className="flex-1 font-bold bg-red-600 dark:bg-red-600 border border-red-700 text-white hover:bg-red-700 dark:hover:bg-red-700"
                     disabled={deleteCarConfirmName !== deleteCarTarget.name || deletingCar}
                     onClick={handleDeleteCar}
                   >
