@@ -18,6 +18,7 @@ import { usePageLoadingGate } from "@/lib/loadingGate"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
 import { Skeleton, SkeletonTabs } from "@/components/ui/skeleton"
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES } from "@/lib/subcategories"
 
@@ -262,6 +263,8 @@ function RecordsPageInner() {
   usePageLoadingGate(!loading)
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [deleteRecordId, setDeleteRecordId] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
   const [carId, setCarId] = useState("")
   const [category, setCategory] = useState("fuel")
   const [subCategory, setSubCategory] = useState("")
@@ -569,21 +572,22 @@ function RecordsPageInner() {
   }
 
   // 記録データの削除処理
-  const handleDeleteRecord = async (recordId: string) => {
-    const confirmed = window.confirm(t("records.confirm_delete"))
-    if (!confirmed) return
-
-    const targetRecord = records.find(r => r.id === recordId)
-    const { error } = await supabase.from("records").delete().eq("id", recordId)
+  const handleDeleteRecord = async () => {
+    if (!deleteRecordId) return
+    setIsDeleting(true)
+    const targetRecord = records.find(r => r.id === deleteRecordId)
+    const { error } = await supabase.from("records").delete().eq("id", deleteRecordId)
     if (error) {
       toast.error(t("common.delete_failed") + ": " + error.message)
     } else {
       if (targetRecord) await recalcCarOdo(targetRecord.car_id)
       toast.success(t("records.deleted"))
       // 一覧からは即時に取り除き、ODO再計算後の車データはサイレント再取得で同期
-      setRecords(prev => prev.filter(r => r.id !== recordId))
+      setRecords(prev => prev.filter(r => r.id !== deleteRecordId))
       fetchData(false)
     }
+    setIsDeleting(false)
+    setDeleteRecordId(null)
   }
 
 
@@ -842,7 +846,7 @@ function RecordsPageInner() {
                       <Pencil size={14} />
                     </button>
                     <button
-                      onClick={() => handleDeleteRecord(record.id)}
+                      onClick={() => setDeleteRecordId(record.id)}
                       className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
                       title={t("common.delete")}
                     >
@@ -914,6 +918,15 @@ function RecordsPageInner() {
           </TabsContent>
         </Tabs>
       )}
+
+      <ConfirmDialog
+        open={deleteRecordId !== null}
+        onOpenChange={(open) => { if (!open) setDeleteRecordId(null) }}
+        title={t("common.confirm_delete_title")}
+        message={t("records.confirm_delete")}
+        loading={isDeleting}
+        onConfirm={handleDeleteRecord}
+      />
     </main>
   )
 }

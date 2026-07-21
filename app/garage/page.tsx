@@ -12,7 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Skeleton, SkeletonTabs } from "@/components/ui/skeleton"
-import { CarFront, Plus, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, AlertTriangle, Move, SlidersHorizontal } from "lucide-react"
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
+import { CarFront, Plus, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, Move, SlidersHorizontal } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
@@ -65,6 +66,8 @@ export default function GaragePage() {
   const [deleteCarConfirmName, setDeleteCarConfirmName] = useState("")
   const [deletingCar, setDeletingCar] = useState(false)
   const [deleteCarRecurringCount, setDeleteCarRecurringCount] = useState<number | null>(null)
+  const [deleteWishId, setDeleteWishId] = useState<string | null>(null)
+  const [deletingWish, setDeletingWish] = useState(false)
 
   // 画像の位置、ズーム調整モーダル用
   const [adjustTarget, setAdjustTarget] = useState<any | null>(null)
@@ -399,18 +402,19 @@ export default function GaragePage() {
   }
 
   // ウィッシュリストアイテムの削除処理
-  const handleDeleteWish = async (wishId: string) => {
-    const confirmed = window.confirm(t("garage.confirm_delete_item"))
-    if (!confirmed) return
-
-    const { error } = await supabase.from("wishlists").delete().eq("id", wishId)
+  const handleDeleteWish = async () => {
+    if (!deleteWishId) return
+    setDeletingWish(true)
+    const { error } = await supabase.from("wishlists").delete().eq("id", deleteWishId)
     if (error) {
       toast.error(t("common.delete_failed") + ": " + error.message)
     } else {
       toast.success(t("garage.item_deleted"))
       // 再取得せずローカルstateから取り除く
-      setWishlists(prev => prev.filter(w => w.id !== wishId))
+      setWishlists(prev => prev.filter(w => w.id !== deleteWishId))
     }
+    setDeletingWish(false)
+    setDeleteWishId(null)
   }
 
   // ウィッシュリストフォームの入力値をリセット
@@ -863,10 +867,7 @@ export default function GaragePage() {
           <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => { setDeleteCarTarget(null); setDeleteCarConfirmName(""); }}>
             <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
               <CardContent className="p-6 space-y-4">
-                <div className="flex items-center gap-3 text-red-500">
-                  <AlertTriangle size={24} />
-                  <h2 className="text-lg font-extrabold text-slate-800 dark:text-foreground">{t("garage.delete_car_title")}</h2>
-                </div>
+                <h2 className="text-lg font-extrabold text-slate-800 dark:text-foreground">{t("garage.delete_car_title")}</h2>
                 <p className="text-sm text-slate-600 dark:text-muted-foreground">
                   <span className="font-bold text-slate-800 dark:text-foreground">{t("garage.delete_car_message", { name: deleteCarTarget.name })}</span><br />
                   {t("garage.delete_car_warning")}
@@ -1203,7 +1204,7 @@ export default function GaragePage() {
                         <Pencil size={14} />
                       </button>
                       <button
-                        onClick={() => handleDeleteWish(wish.id)}
+                        onClick={() => setDeleteWishId(wish.id)}
                         className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
                         title={t("common.delete")}
                       >
@@ -1265,6 +1266,15 @@ export default function GaragePage() {
           )}
         </TabsContent>
       </Tabs>
+
+      <ConfirmDialog
+        open={deleteWishId !== null}
+        onOpenChange={(open) => { if (!open) setDeleteWishId(null) }}
+        title={t("common.confirm_delete_title")}
+        message={t("garage.confirm_delete_item")}
+        loading={deletingWish}
+        onConfirm={handleDeleteWish}
+      />
     </main>
   )
 }

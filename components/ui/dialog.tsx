@@ -57,6 +57,19 @@ function DialogTitle({
   )
 }
 
+function DialogDescription({
+  className,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Description>) {
+  return (
+    <DialogPrimitive.Description
+      data-slot="dialog-description"
+      className={cn("text-sm text-slate-600 dark:text-muted-foreground", className)}
+      {...props}
+    />
+  )
+}
+
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -67,4 +80,4 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
-export { Dialog, DialogContent, DialogTitle, DialogFooter }
+export { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter }

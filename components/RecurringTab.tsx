@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Skeleton } from "@/components/ui/skeleton"
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { Plus, X, Pencil, Trash2, Pause, Play, ChevronDown, Info, RepeatIcon } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
@@ -294,6 +295,8 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
   const [loading, setLoading] = useState(true)
   const [isAdding, setIsAdding] = useState(false)
   const [editId, setEditId] = useState<string | null>(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
   const supabase = createClient()
   const { t } = useTranslation()
 
@@ -436,14 +439,15 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm(t("records.confirm_delete_recurring") || "削除しますか？")) return
+  const handleDelete = async () => {
+    if (!deleteId) return
+    setIsDeleting(true)
 
     // 楽観的UI: 先にローカル状態から削除
     const prevCosts = costs
-    setCosts(prev => prev.filter(c => c.id !== id))
+    setCosts(prev => prev.filter(c => c.id !== deleteId))
 
-    const { error } = await supabase.from("recurring_costs").delete().eq("id", id)
+    const { error } = await supabase.from("recurring_costs").delete().eq("id", deleteId)
     if (error) {
       // 失敗時はロールバック
       setCosts(prevCosts)
@@ -451,6 +455,8 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
     } else {
       toast.success(t("records.recurring_deleted"))
     }
+    setIsDeleting(false)
+    setDeleteId(null)
   }
 
   const toggleActive = async (id: string, currentStatus: boolean) => {
@@ -539,7 +545,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                     <Pencil size={14} />
                   </button>
                   <button
-                    onClick={() => handleDelete(cost.id)}
+                    onClick={() => setDeleteId(cost.id)}
                     className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
                   >
                     <Trash2 size={14} />
@@ -594,6 +600,15 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
           )
         })}
       </div>
+
+      <ConfirmDialog
+        open={deleteId !== null}
+        onOpenChange={(open) => { if (!open) setDeleteId(null) }}
+        title={t("common.confirm_delete_title")}
+        message={t("records.confirm_delete_recurring")}
+        loading={isDeleting}
+        onConfirm={handleDelete}
+      />
     </div>
   )
 }
