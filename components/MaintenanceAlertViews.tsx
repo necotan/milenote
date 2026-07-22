@@ -12,13 +12,13 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
 
   if (!alert.hasRecord) {
     return (
-      <Card className={`border-none shadow-sm bg-white dark:bg-card ${className}`}>
+      <Card className={`relative border-none shadow-sm bg-white dark:bg-card ${className}`}>
         <CardContent className="p-3.5 flex items-start gap-3">
           <div className="p-2.5 rounded-2xl shrink-0 bg-slate-50 dark:bg-surface-2 text-slate-400 dark:text-muted-foreground">
             <alert.icon size={24} />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-black text-slate-400 dark:text-muted-foreground uppercase tracking-widest truncate">{alert.carName}</p>
+            <p className="text-[10px] font-black text-slate-400 dark:text-muted-foreground uppercase tracking-widest truncate pr-16">{alert.carName}</p>
             <div className="mt-0.5 leading-tight text-slate-500 dark:text-muted-foreground">
               <p className="text-[11px] font-bold tracking-wider">{t(`subcategories.${alert.maintName}`)}</p>
               <p className="text-lg font-black tracking-widest">{t("home.unrecorded")}</p>
@@ -31,13 +31,14 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
               <div className="w-[80%] h-1.5 rounded-full" />
             </div>
           </div>
-          <Link
-            href={`/records?action=add&category=${MAINT_TYPE_CATEGORY[alert.maintName] || "maintenance"}&sub_category=${alert.maintName}`}
-            className={`shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-white dark:bg-surface-2 hover:bg-slate-50 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground text-[10px] font-bold tracking-wider transition-colors ${reserveButtonSpace ? 'mt-9' : ''}`}
-          >
-            {t("home.record_now")}
-          </Link>
         </CardContent>
+        {/* ホームの「すべて見る」と同じ配置（reserveButtonSpaceは重なり回避用） */}
+        <Link
+          href={`/records?action=add&category=${MAINT_TYPE_CATEGORY[alert.maintName] || "maintenance"}&sub_category=${alert.maintName}`}
+          className={`absolute z-10 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-white dark:bg-surface-2 hover:bg-slate-50 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground text-[10px] font-bold tracking-wider transition-colors ${reserveButtonSpace ? 'top-12 right-3' : 'top-3 right-3'}`}
+        >
+          {t("home.record_now")}
+        </Link>
       </Card>
     )
   }
