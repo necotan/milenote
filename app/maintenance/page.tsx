@@ -59,15 +59,16 @@ export default function MaintenancePage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
               {[...Array(2)].map((_, j) => (
                 <div key={j} className="rounded-xl border border-slate-200 dark:border-border overflow-hidden">
-                  <div className="flex items-start gap-3 px-4 py-3">
+                  <div className="flex items-start gap-3 px-4 pt-4 pb-5">
                     <Skeleton className="w-[18px] h-[18px] rounded-full shrink-0 mt-0.5" />
-                    <div className="flex-1 space-y-1.5">
-                      <div className="flex items-center justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <Skeleton className="h-2.5 w-16" />
+                      <div className="mt-1.5 flex items-center justify-between gap-2">
                         <Skeleton className="h-4 w-32" />
                         <Skeleton className="h-4 w-14" />
                       </div>
-                      <Skeleton className="h-2.5 w-24" />
-                      <Skeleton className="h-1.5 w-full rounded-full" />
+                      <Skeleton className="mt-2 h-2.5 w-24" />
+                      <Skeleton className="mt-1.5 h-1.5 w-[80%] rounded-full" />
                     </div>
                   </div>
                 </div>

@@ -164,12 +164,28 @@ export default function Home() {
           style={{ order: Math.min(homeOrder.indexOf("summary"), homeOrder.indexOf("alerts")) }}
         >
           <div className="space-y-6" style={{ order: homeOrder.indexOf("summary") }}>
-            {/* サマリーカードスケルトン */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border p-4 space-y-2">
-                <Skeleton className="h-3 w-20" />
-                <Skeleton className="h-7 w-28 rounded-lg" />
-                <Skeleton className="h-3 w-16" />
+            {/* 今月の費用カードスケルトン */}
+            <div className="bg-white dark:bg-card rounded-xl shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden">
+              <div className="p-3.5 flex items-start justify-between gap-4">
+                <div className="-mt-1 space-y-1.5">
+                  <Skeleton className="h-3 w-24" />
+                  <Skeleton className="h-7 w-32 rounded-lg" />
+                  <Skeleton className="h-2.5 w-20" />
+                </div>
+                <div className="flex flex-col gap-1.5 mt-1 shrink-0">
+                  <Skeleton className="h-7 w-24 rounded-lg" />
+                  <Skeleton className="h-7 w-24 rounded-lg" />
+                </div>
+              </div>
+              <div className="mx-4 border-t border-slate-100 dark:border-border" />
+              <div className="p-3.5 space-y-2.5">
+                <Skeleton className="h-2.5 w-20 mb-1" />
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="flex items-center justify-between">
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-3 w-16" />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
