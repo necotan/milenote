@@ -94,7 +94,11 @@ export default function MaintenancePage() {
   if (loading) return (
     <main className="p-4 space-y-6 max-w-4xl">
       <header className="pt-4 pb-2">
-        <Skeleton className="h-4 w-24" />
+        <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
+          <span className="font-bold text-xs">{t("home.back_to_home")}</span>
+        </Link>
+        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground mt-2">{t("home.maintenance_all_title")}</h1>
+        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("home.maintenance_all_subtitle")}</p>
       </header>
       <div className="space-y-6">
         {[...Array(3)].map((_, i) => (
@@ -132,7 +136,28 @@ export default function MaintenancePage() {
         <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
           <span className="font-bold text-xs">{t("home.back_to_home")}</span>
         </Link>
+        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground mt-2">{t("home.maintenance_all_title")}</h1>
+        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("home.maintenance_all_subtitle")}</p>
       </header>
+
+      {/* 絞り込みボタン */}
+      {alerts.length > 0 && (
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={() => setIsFilterOpen(true)}
+            title={t("records.filter_title")}
+            className="relative h-7 flex items-center px-2.5 rounded-lg border bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+          >
+            <SlidersHorizontal size={15} />
+            {activeFilterCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-slate-400 text-white dark:bg-surface-2 dark:text-foreground/80 text-[9px] font-semibold tabular-nums">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+        </div>
+      )}
 
       {/* カテゴリ、車の絞り込みモーダル */}
       {isFilterOpen && (
@@ -245,49 +270,28 @@ export default function MaintenancePage() {
         <Card className="border-none shadow-sm bg-white dark:bg-card p-6 text-center">
           <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-widest">{t("home.no_alerts")}</p>
         </Card>
+      ) : filteredAlerts.length === 0 ? (
+        <Card className="border-none shadow-sm bg-white dark:bg-card p-6 text-center">
+          <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-widest">{t("home.no_filtered_alerts")}</p>
+        </Card>
       ) : (
-        <div>
-          {/* 絞り込みボタン */}
-          <div className="flex justify-end mb-1">
-            <button
-              type="button"
-              onClick={() => setIsFilterOpen(true)}
-              className="relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors text-xs font-bold"
-            >
-              <SlidersHorizontal size={14} />
-              {t("home.filter_button")}
-              {activeFilterCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-slate-400 text-white dark:bg-surface-2 dark:text-foreground/80 text-[9px] font-semibold tabular-nums">
-                  {activeFilterCount}
-                </span>
-              )}
-            </button>
-          </div>
-
-          {filteredAlerts.length === 0 ? (
-            <Card className="border-none shadow-sm bg-white dark:bg-card p-6 text-center">
-              <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-widest">{t("home.no_filtered_alerts")}</p>
-            </Card>
-          ) : (
-            <div className="space-y-6">
-              {MAINT_CATEGORIES.map((category) => {
-                const items = category.items.flatMap((maintName) => filteredAlerts.filter((a) => a.maintName === maintName))
-                if (items.length === 0) return null
-                return (
-                  <div key={category.key}>
-                    <p className="text-[11px] font-bold text-slate-400 dark:text-muted-foreground tracking-wide mb-2 px-1">
-                      {t(`mypage.maint_category_${category.key}`)}
-                    </p>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
-                      {items.map((alert) => (
-                        <MaintAlertCard key={alert.id} alert={alert} className="h-full" />
-                      ))}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          )}
+        <div className="space-y-6">
+          {MAINT_CATEGORIES.map((category) => {
+            const items = category.items.flatMap((maintName) => filteredAlerts.filter((a) => a.maintName === maintName))
+            if (items.length === 0) return null
+            return (
+              <div key={category.key}>
+                <p className="text-sm font-bold text-slate-400 dark:text-muted-foreground tracking-wide mb-2 px-1">
+                  {t(`mypage.maint_category_${category.key}`)}
+                </p>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
+                  {items.map((alert) => (
+                    <MaintAlertCard key={alert.id} alert={alert} className="h-full" />
+                  ))}
+                </div>
+              </div>
+            )
+          })}
         </div>
       )}
     </main>

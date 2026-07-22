@@ -72,8 +72,8 @@
     "unrecorded": "Not recorded",
     "record_now": "Add record",
     "maintenance_all_title": "Maintenance",
+    "maintenance_all_subtitle": "Check when your next maintenance is due",
     "back_to_home": "Back to Home",
-    "filter_button": "Filter",
     "no_filtered_alerts": "No matching items found"
   },
   "garage": {
