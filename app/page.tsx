@@ -193,13 +193,20 @@ export default function Home() {
             {/* アラートカードスケルトン */}
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
               {[...Array(2)].map((_, i) => (
-                <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border p-4 flex items-start gap-4">
-                  <Skeleton className="w-12 h-12 rounded-2xl shrink-0" />
-                  <div className="flex-1 space-y-2">
-                    <Skeleton className="h-3 w-20" />
-                    <Skeleton className="h-3 w-24" />
-                    <Skeleton className="h-6 w-28 rounded-lg" />
-                    <Skeleton className="h-2 w-full rounded-full" />
+                <div key={i} className="rounded-xl bg-white dark:bg-card shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
+                  <div className="p-3.5 flex items-start gap-3">
+                    <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <Skeleton className="h-2.5 w-16" />
+                      <div className="mt-0.5">
+                        <Skeleton className="h-3 w-32" />
+                        <Skeleton className="mt-0.5 h-7 w-24" />
+                      </div>
+                      <div className="flex flex-col gap-1.5 mt-1">
+                        <Skeleton className="h-2.5 w-24" />
+                        <Skeleton className="h-1.5 w-[80%] rounded-full" />
+                      </div>
+                    </div>
                   </div>
                 </div>
               ))}

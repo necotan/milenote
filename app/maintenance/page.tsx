@@ -11,7 +11,7 @@ import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { MAINT_CATEGORIES } from "@/lib/subcategories"
 import { generateMaintAlerts, DEFAULT_MAINT_SETTINGS, type MaintSettings, type MaintAlertItem, type MaintAlertCar, type MaintAlertRecord } from "@/lib/maintenanceAlerts"
-import { MaintAlertRow } from "@/components/MaintenanceAlertViews"
+import { MaintAlertCard } from "@/components/MaintenanceAlertViews"
 
 export default function MaintenancePage() {
   const [cars, setCars] = useState<MaintAlertCar[]>([])
@@ -58,17 +58,19 @@ export default function MaintenancePage() {
             <Skeleton className="h-3 w-24 ml-1 mb-2" />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
               {[...Array(2)].map((_, j) => (
-                <div key={j} className="rounded-xl border border-slate-200 dark:border-border overflow-hidden">
-                  <div className="flex items-start gap-3 px-4 pt-4 pb-5">
-                    <Skeleton className="w-[18px] h-[18px] rounded-full shrink-0 mt-0.5" />
-                    <div className="flex-1 min-w-0">
+                <div key={j} className="rounded-xl bg-white dark:bg-card shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
+                  <div className="p-3.5 flex items-start gap-3">
+                    <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
+                    <div className="min-w-0 flex-1">
                       <Skeleton className="h-2.5 w-16" />
-                      <div className="mt-1.5 flex items-center justify-between gap-2">
-                        <Skeleton className="h-4 w-32" />
-                        <Skeleton className="h-4 w-14" />
+                      <div className="mt-0.5">
+                        <Skeleton className="h-3 w-32" />
+                        <Skeleton className="mt-0.5 h-7 w-24" />
                       </div>
-                      <Skeleton className="mt-2 h-2.5 w-24" />
-                      <Skeleton className="mt-1.5 h-1.5 w-[80%] rounded-full" />
+                      <div className="flex flex-col gap-1.5 mt-1">
+                        <Skeleton className="h-2.5 w-24" />
+                        <Skeleton className="h-1.5 w-[80%] rounded-full" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -110,9 +112,7 @@ export default function MaintenancePage() {
                 </p>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4 items-stretch">
                   {items.map((alert) => (
-                    <div key={alert.id} className="rounded-xl border border-slate-200 dark:border-border overflow-hidden h-full">
-                      <MaintAlertRow alert={alert} />
-                    </div>
+                    <MaintAlertCard key={alert.id} alert={alert} className="h-full" />
                   ))}
                 </div>
               </div>
