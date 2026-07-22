@@ -83,20 +83,18 @@ export function MaintAlertRow({ alert }: { alert: MaintAlertItem }) {
           <p className="text-[10px] font-black text-slate-300 dark:text-muted-foreground/70 uppercase tracking-widest truncate">{alert.carName}</p>
           <div className="mt-0.5 leading-tight lg:flex lg:items-baseline lg:gap-2">
             <p className="text-sm font-bold truncate text-slate-400 dark:text-foreground/70 lg:min-w-0">{name}</p>
-            {/* 記録済み行と縦サイズを揃えるための不可視スペーサー */}
-            <p className="text-lg font-black tracking-widest lg:shrink-0 invisible" aria-hidden="true">-</p>
+            {/* 高さを揃える不可視スペーサー（PC環境） */}
+            <p className="hidden lg:block text-lg font-black tracking-widest lg:shrink-0 invisible" aria-hidden="true">-</p>
           </div>
-          <div className="flex items-center gap-1 text-[10px] font-bold tracking-wide mt-1 invisible" aria-hidden="true">
-            <CalendarDays size={10} /> -
-          </div>
-          <div className="mt-1.5 w-[80%] h-1.5 rounded-full invisible" aria-hidden="true" />
+          <Link
+            href={`/records?action=add&category=${MAINT_TYPE_CATEGORY[alert.maintName] || "maintenance"}&sub_category=${alert.maintName}`}
+            className="mt-1.5 inline-flex shrink-0 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-white dark:bg-surface-2 hover:bg-slate-50 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground text-xs font-bold transition-colors"
+          >
+            {t("records.add_record")}
+          </Link>
+          {/* 高さを揃える不可視スペーサー（PC環境） */}
+          <div className="hidden lg:block mt-1.5 w-[80%] h-1.5 rounded-full invisible" aria-hidden="true" />
         </div>
-        <Link
-          href={`/records?action=add&category=${MAINT_TYPE_CATEGORY[alert.maintName] || "maintenance"}&sub_category=${alert.maintName}`}
-          className="self-center shrink-0 px-3 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-white dark:bg-surface-2 hover:bg-slate-50 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground text-xs font-bold transition-colors"
-        >
-          {t("records.add_record")}
-        </Link>
       </div>
     )
   }
