@@ -10,6 +10,7 @@ export type MaintAlertRecord = { car_id: string; sub_category: string | null; da
 
 type MaintAlertBase = {
   id: string
+  carId: string
   carName: string
   maintName: string
   icon: LucideIcon
@@ -66,6 +67,7 @@ export function generateMaintAlerts(cars: MaintAlertCar[], records: MaintAlertRe
       if (maintRecords.length === 0) {
         generatedAlerts.push({
           id: `${car.id}-${maintName}`,
+          carId: car.id,
           carName: car.name,
           maintName: maintName,
           icon: style.icon,
@@ -96,6 +98,7 @@ export function generateMaintAlerts(cars: MaintAlertCar[], records: MaintAlertRe
 
       generatedAlerts.push({
         id: `${car.id}-${maintName}`,
+        carId: car.id,
         carName: car.name,
         maintName: maintName,
         hasRecord: true,

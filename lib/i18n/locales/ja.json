@@ -72,7 +72,9 @@
     "unrecorded": "未記録",
     "record_now": "記録する",
     "maintenance_all_title": "メンテナンス一覧",
-    "back_to_home": "ホームに戻る"
+    "back_to_home": "ホームに戻る",
+    "filter_button": "絞り込む",
+    "no_filtered_alerts": "該当する項目がありません"
   },
   "garage": {
     "title": "ガレージ",
