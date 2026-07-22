@@ -555,6 +555,26 @@ export default function MyPage() {
     setTargetIndex(null)
   }
 
+  const carsFirst = homeOrder.indexOf("cars") === 0
+  const summaryFirst = homeOrder.indexOf("summary") < homeOrder.indexOf("alerts")
+
+  const buildHomeOrder = (carPosition: "left" | "right", firstContent: "summary" | "alerts"): string[] => {
+    const secondContent = firstContent === "summary" ? "alerts" : "summary"
+    return carPosition === "left" ? ["cars", firstContent, secondContent] : [firstContent, secondContent, "cars"]
+  }
+
+  const handleCarPositionChange = (position: "left" | "right") => {
+    const next = buildHomeOrder(position, summaryFirst ? "summary" : "alerts")
+    setHomeOrder(next)
+    localStorage.setItem("home_layout", JSON.stringify(next))
+  }
+
+  const handleContentOrderChange = (firstContent: "summary" | "alerts") => {
+    const next = buildHomeOrder(carsFirst ? "left" : "right", firstContent)
+    setHomeOrder(next)
+    localStorage.setItem("home_layout", JSON.stringify(next))
+  }
+
   const handleLogout = async () => {
     await supabase.auth.signOut()
     router.push("/login")
@@ -863,6 +883,8 @@ export default function MyPage() {
 
             {/* 右側：並び替えUI */}
             <div className="md:w-2/3 p-6">
+              {/* スマートフォン表示時 */}
+              <div className="lg:hidden">
               <div className="space-y-2 max-w-md">
                 {homeOrder.map((sectionId, index) => {
                   const isDragging = dragId === sectionId
@@ -920,6 +942,55 @@ export default function MyPage() {
               </div>
               {/* 上が一番上に表示される旨の補足 */}
               <p className="mt-3 text-[11px] text-slate-400 dark:text-muted-foreground font-medium">{t("mypage.home_order_hint")}</p>
+              </div>
+
+              {/* PC表示時 */}
+              <div className="hidden lg:block max-w-md">
+                <div className="flex items-center justify-between gap-3 mb-3">
+                  <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("mypage.home_order_pc_car_position")}</span>
+                  <div className="inline-flex bg-slate-100 dark:bg-surface-2 rounded-lg p-1 shrink-0">
+                    {(["left", "right"] as const).map((position) => {
+                      const active = carsFirst ? position === "left" : position === "right"
+                      return (
+                        <button
+                          key={position}
+                          onClick={() => handleCarPositionChange(position)}
+                          className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${
+                            active
+                              ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
+                              : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
+                          }`}
+                        >
+                          {t(`mypage.home_order_pc_car_${position}`)}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("mypage.home_order_pc_content_order")}</span>
+                  <div className="inline-flex bg-slate-100 dark:bg-surface-2 rounded-lg p-1 shrink-0">
+                    {(["summary", "alerts"] as const).map((content) => {
+                      const active = summaryFirst ? content === "summary" : content === "alerts"
+                      return (
+                        <button
+                          key={content}
+                          onClick={() => handleContentOrderChange(content)}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
+                            active
+                              ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
+                              : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
+                          }`}
+                        >
+                          {sectionIcons[content]}
+                          {content === "summary" ? t("home.this_month_cost") : t("mypage.home_sections.alerts")}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </Card>
