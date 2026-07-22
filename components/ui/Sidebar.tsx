@@ -25,7 +25,7 @@ export default function Sidebar() {
             </div>
             <nav className="flex-1 space-y-2">
                 {navItems.map((item) => {
-                    const isActive = pathname === item.href
+                    const isActive = pathname === item.href || (item.key === "home" && pathname === "/maintenance")
                     const Icon = item.icon
                     return (
                         <Link

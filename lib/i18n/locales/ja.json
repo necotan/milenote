@@ -30,7 +30,9 @@
     "distance_since_delivery": "納車後走行",
     "ownership_period": "所有期間",
     "car_age": "車齢 (初年度登録比)",
-    "required": "*"
+    "required": "*",
+    "previous": "前へ",
+    "next": "次へ"
   },
   "nav": {
     "home": "ホーム",
@@ -65,7 +67,12 @@
     "exceeded": "超過！",
     "months_since_last": "前回から {{months}}ヶ月経過",
     "more_items": "+{{count}}件",
-    "register": "登録する"
+    "register": "登録する",
+    "see_all": "すべて見る",
+    "unrecorded": "未記録",
+    "record_now": "記録する",
+    "maintenance_all_title": "メンテナンス一覧",
+    "back_to_home": "ホームに戻る"
   },
   "garage": {
     "title": "ガレージ",

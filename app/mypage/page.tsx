@@ -21,6 +21,7 @@ import { usePageLoadingGate } from "@/lib/loadingGate"
 import { recordsToCsv, downloadCsv, buildExportFilename } from "@/lib/csvExport"
 import type { ExportRecord } from "@/lib/csvExport"
 import Footer from "@/components/ui/Footer"
+import { MAINT_CATEGORIES } from "@/lib/subcategories"
 
 type MaintSetting = { km: number; months: number; months_only?: boolean; enabled?: boolean }
 type MaintSettings = Record<string, MaintSetting>
@@ -38,13 +39,7 @@ const DEFAULT_MAINT_SETTINGS: MaintSettings = {
   "periodic_inspection": { km: 0, months: 6, months_only: true },
 }
 
-// メンテナンス基準設定UIのカテゴリ分け、アイコン、プリセット値
-const MAINT_CATEGORIES: { key: string; items: string[] }[] = [
-  { key: "fluid", items: ["oil_change", "oil_filter_change", "transmission_oil_change", "coolant_change"] },
-  { key: "chassis", items: ["tire_rotation", "battery_change", "brake_pad_change"] },
-  { key: "inspection", items: ["inspection_12m", "inspection_24m", "periodic_inspection"] },
-]
-
+// メンテナンス基準設定UIのアイコン、プリセット値
 const MAINT_ITEM_ICON: Record<string, LucideIcon> = {
   oil_change: Droplet,
   oil_filter_change: Filter,

@@ -71,3 +71,24 @@ export const SUB_CATEGORIES: Record<string, SubCategorySlug[]> = {
     "parking", "loan_lease", "car_goods", "road_service", "other"
   ]
 }
+
+// ホームのメンテナンスアラート項目から遷移する際の記録カテゴリ
+export const MAINT_TYPE_CATEGORY: Record<string, "maintenance" | "inspection"> = {
+  oil_change: "maintenance",
+  oil_filter_change: "maintenance",
+  transmission_oil_change: "maintenance",
+  coolant_change: "maintenance",
+  tire_rotation: "maintenance",
+  battery_change: "maintenance",
+  brake_pad_change: "maintenance",
+  inspection_12m: "inspection",
+  inspection_24m: "inspection",
+  periodic_inspection: "inspection",
+}
+
+// メンテナンス基準設定、ホームの表示で共通利用するカテゴリ分け
+export const MAINT_CATEGORIES: { key: string; items: string[] }[] = [
+  { key: "fluid", items: ["oil_change", "oil_filter_change", "transmission_oil_change", "coolant_change"] },
+  { key: "chassis", items: ["tire_rotation", "battery_change", "brake_pad_change"] },
+  { key: "inspection", items: ["inspection_12m", "inspection_24m", "periodic_inspection"] },
+]

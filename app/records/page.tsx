@@ -20,7 +20,7 @@ import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
 import { Skeleton, SkeletonTabs } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import RecurringTab from "@/components/RecurringTab"
-import { SUB_CATEGORIES } from "@/lib/subcategories"
+import { SUB_CATEGORIES, type SubCategorySlug } from "@/lib/subcategories"
 
 export const CATEGORIES: Record<string, any> = {
   fuel: { icon: Fuel, color: "text-blue-500", bg: "bg-blue-50 dark:bg-surface-2" },
@@ -397,6 +397,10 @@ function RecordsPageInner() {
     if (!loading && searchParams.get("action") === "add") {
       const cat = searchParams.get("category") || "fuel"
       handleCategoryChange(cat)
+      const sub = searchParams.get("sub_category")
+      if (sub && SUB_CATEGORIES[cat]?.includes(sub as SubCategorySlug)) {
+        setSubCategory(sub)
+      }
       setIsAdding(true)
       // スクロールをページ上部へ
       window.scrollTo({ top: 0, behavior: "smooth" })

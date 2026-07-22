@@ -30,7 +30,9 @@
     "distance_since_delivery": "Since Delivery",
     "ownership_period": "Ownership",
     "car_age": "Age (1st reg.)",
-    "required": "*"
+    "required": "*",
+    "previous": "Previous",
+    "next": "Next"
   },
   "nav": {
     "home": "Home",
@@ -65,7 +67,12 @@
     "exceeded": "over!",
     "months_since_last": "{{months}} months since last",
     "more_items": "+{{count}} more",
-    "register": "Register"
+    "register": "Register",
+    "see_all": "See all",
+    "unrecorded": "Not recorded",
+    "record_now": "Add record",
+    "maintenance_all_title": "Maintenance",
+    "back_to_home": "Back to Home"
   },
   "garage": {
     "title": "Garage",
