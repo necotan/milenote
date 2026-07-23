@@ -415,7 +415,7 @@ export default function Home() {
                         >
                           <ChevronLeft size={18} className="text-slate-600 dark:text-muted-foreground" />
                         </button>
-                        <span className={`text-sm font-bold min-w-[48px] text-center tabular-nums ${cars.length <= 1 ? 'text-slate-700/30 dark:text-foreground/30' : 'text-slate-700 dark:text-foreground'}`}>
+                        <span className={`text-xs font-bold min-w-[48px] text-center tabular-nums ${cars.length <= 1 ? 'text-slate-700/30 dark:text-foreground/30' : 'text-slate-700 dark:text-foreground'}`}>
                           {safeIndex + 1} / {cars.length}
                         </span>
                         <button
