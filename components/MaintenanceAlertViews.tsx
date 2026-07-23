@@ -53,7 +53,7 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
           <p className={`text-[10px] font-black text-slate-400 dark:text-muted-foreground uppercase tracking-widest truncate ${reserveButtonSpace ? 'pr-16' : ''}`}>{alert.carName}</p>
           <div className={`mt-0.5 leading-tight ${alert.isUrgent ? 'text-red-600' : 'text-slate-800 dark:text-foreground'}`}>
             <p className="text-[11px] font-bold tracking-wider">{t(`subcategories.${alert.maintName}`)}{alert.isOver ? t("home.alert_overdue") : t("home.alert_remaining")}</p>
-            <p className="text-lg font-black tracking-widest">{alert.displayValue}<span className="text-[10px] ml-0.5">{alert.isOver ? (alert.isMonthsOnly ? t("common.months_unit") : "") + t("home.exceeded") : (alert.isMonthsOnly ? t("common.months_unit") : t("common.km_unit"))}</span></p>
+            <p className="text-lg font-black tracking-widest">{alert.displayValue}<span className="text-[10px] ml-0.5">{alert.isOver ? (alert.isMonthsOnly ? t("common.months_unit") : t("common.km_unit")) + t("home.exceeded") : (alert.isMonthsOnly ? t("common.months_unit") : t("common.km_unit"))}</span></p>
           </div>
           <div className="flex flex-col gap-1.5 mt-1">
             <div className="flex items-center gap-1 text-[10px] text-slate-500 dark:text-muted-foreground font-bold tracking-wide">
