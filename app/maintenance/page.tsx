@@ -92,7 +92,7 @@ export default function MaintenancePage() {
   }, [fetchData])
 
   if (loading) return (
-    <main className="p-4 space-y-6 max-w-4xl">
+    <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
         <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
           <span className="font-bold text-xs">{t("home.back_to_home")}</span>
@@ -100,38 +100,42 @@ export default function MaintenancePage() {
         <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground mt-2">{t("home.maintenance_all_title")}</h1>
         <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("home.maintenance_all_subtitle")}</p>
       </header>
-      <div className="space-y-6">
-        {[...Array(3)].map((_, i) => (
-          <div key={i}>
-            <Skeleton className="h-3 w-24 ml-1 mb-2" />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {[...Array(2)].map((_, j) => (
-                <div key={j} className="rounded-xl bg-white dark:bg-card shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
-                  <div className="p-3.5 flex items-start gap-3">
-                    <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <Skeleton className="h-2.5 w-16" />
-                      <div className="mt-0.5">
-                        <Skeleton className="h-3 w-32" />
-                        <Skeleton className="mt-0.5 h-7 w-24" />
-                      </div>
-                      <div className="flex flex-col gap-1.5 mt-1">
-                        <Skeleton className="h-2.5 w-24" />
-                        <Skeleton className="h-1.5 w-[80%] rounded-full" />
+      {/* ホームのメンテナンスアラートとカード横幅を揃えるため、同じ幅で右側の車カード用スペースを確保 */}
+      <div className="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-8">
+        <div className="flex-1 min-w-0 space-y-6">
+          {[...Array(3)].map((_, i) => (
+            <div key={i}>
+              <Skeleton className="h-3 w-24 ml-1 mb-2" />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
+                {[...Array(2)].map((_, j) => (
+                  <div key={j} className="rounded-xl bg-white dark:bg-card shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
+                    <div className="p-3.5 flex items-start gap-3">
+                      <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <Skeleton className="h-2.5 w-16" />
+                        <div className="mt-0.5">
+                          <Skeleton className="h-3 w-32" />
+                          <Skeleton className="mt-0.5 h-7 w-24" />
+                        </div>
+                        <div className="flex flex-col gap-1.5 mt-1">
+                          <Skeleton className="h-2.5 w-24" />
+                          <Skeleton className="h-1.5 w-[80%] rounded-full" />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+        <div className="hidden lg:block lg:w-[380px] lg:shrink-0" aria-hidden="true" />
       </div>
     </main>
   )
 
   return (
-    <main className="p-4 space-y-6 max-w-4xl">
+    <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
         <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
           <span className="font-bold text-xs">{t("home.back_to_home")}</span>
@@ -139,6 +143,10 @@ export default function MaintenancePage() {
         <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground mt-2">{t("home.maintenance_all_title")}</h1>
         <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("home.maintenance_all_subtitle")}</p>
       </header>
+
+      {/* ホームのメンテナンスアラートとカード横幅を揃えるため、同じ幅で右側の車カード用スペースを確保 */}
+      <div className="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-8">
+      <div className="flex-1 min-w-0 space-y-6">
 
       {/* 絞り込みボタン */}
       {alerts.length > 0 && (
@@ -284,7 +292,7 @@ export default function MaintenancePage() {
                 <p className="text-sm font-bold text-slate-400 dark:text-muted-foreground tracking-wide mb-2 px-1">
                   {t(`mypage.maint_category_${category.key}`)}
                 </p>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4 items-stretch">
                   {items.map((alert) => (
                     <MaintAlertCard key={alert.id} alert={alert} className="h-full" />
                   ))}
@@ -294,6 +302,10 @@ export default function MaintenancePage() {
           })}
         </div>
       )}
+
+      </div>
+      <div className="hidden lg:block lg:w-[380px] lg:shrink-0" aria-hidden="true" />
+      </div>
     </main>
   )
 }
