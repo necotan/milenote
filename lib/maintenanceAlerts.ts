@@ -6,7 +6,7 @@ export type MaintSetting = { km: number; months: number; months_only?: boolean; 
 export type MaintSettings = Record<string, MaintSetting>
 
 export type MaintAlertCar = { id: string; name: string; current_odo: number }
-export type MaintAlertRecord = { car_id: string; sub_category: string | null; date: string; odo_at_record: number }
+export type MaintAlertRecord = { car_id: string; sub_category: string | null; date: string; odo_at_record: number; interval_months?: number | null }
 
 type MaintAlertBase = {
   id: string
@@ -81,17 +81,22 @@ export function generateMaintAlerts(cars: MaintAlertCar[], records: MaintAlertRe
       const lastDate = new Date(lastRecord.date)
       const monthsPassed = (now.getFullYear() - lastDate.getFullYear()) * 12 + (now.getMonth() - lastDate.getMonth())
 
+      // その記録自体に周期指定があれば、マイページの全車共通設定より優先
+      const effectiveMonths = (lastRecord.interval_months && lastRecord.interval_months > 0)
+        ? lastRecord.interval_months
+        : setting.months
+
       let kmRemaining = Infinity
       let kmProgress = 0
       if (!isMonthsOnly && setting.km > 0) {
         kmRemaining = (lastRecord.odo_at_record + setting.km) - car.current_odo
         kmProgress = Math.min(100, Math.max(0, ((setting.km - kmRemaining) / setting.km) * 100))
       }
-      const monthsRemaining = setting.months - monthsPassed
-      const timeProgress = Math.min(100, Math.max(0, (monthsPassed / setting.months) * 100))
+      const monthsRemaining = effectiveMonths - monthsPassed
+      const timeProgress = Math.min(100, Math.max(0, (monthsPassed / effectiveMonths) * 100))
       const progressPercent = isMonthsOnly ? timeProgress : Math.max(kmProgress, timeProgress)
-      const isOver = isMonthsOnly ? monthsPassed >= setting.months : kmRemaining <= 0
-      const isUrgent = isOver || (!isMonthsOnly && kmRemaining <= 0) || monthsPassed >= setting.months
+      const isOver = isMonthsOnly ? monthsPassed >= effectiveMonths : kmRemaining <= 0
+      const isUrgent = isOver || (!isMonthsOnly && kmRemaining <= 0) || monthsPassed >= effectiveMonths
       const displayValue = isMonthsOnly
         ? Math.abs(monthsRemaining).toLocaleString()
         : Math.abs(kmRemaining).toLocaleString()
