@@ -73,8 +73,8 @@ export default function MaintenancePage() {
 
     if (user) {
       const { data: userData } = await supabase.from("users").select("maint_settings").eq("id", user.id).single()
-      const maintSettings: MaintSettings =
-        userData?.maint_settings && Object.keys(userData.maint_settings).length > 0 ? userData.maint_settings : DEFAULT_MAINT_SETTINGS
+      // 保存済み設定に無い項目も既定値で補って表示
+      const maintSettings: MaintSettings = { ...DEFAULT_MAINT_SETTINGS, ...(userData?.maint_settings || {}) }
 
       const { data: carsData } = await supabase.from("cars").select("id, name, current_odo").eq("user_id", user.id).eq("status", "active").eq("is_display_home", true)
       const { data: recordsData } = await supabase.from("records").select("car_id, sub_category, date, odo_at_record, interval_months, cars!inner(status)").eq("user_id", user.id).in("cars.status", ["active", "archived"])

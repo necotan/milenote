@@ -48,8 +48,8 @@ export default function Home() {
 
       if (user) {
         const { data: userData } = await supabase.from("users").select("maint_settings, display_name").eq("id", user.id).single()
-        const maintSettings: MaintSettings =
-          userData?.maint_settings && Object.keys(userData.maint_settings).length > 0 ? userData.maint_settings : DEFAULT_MAINT_SETTINGS
+        // 保存済み設定に無い項目も既定値で補って表示
+        const maintSettings: MaintSettings = { ...DEFAULT_MAINT_SETTINGS, ...(userData?.maint_settings || {}) }
         if (userData?.display_name) setDisplayName(userData.display_name)
 
         const { data: carsData } = await supabase.from("cars").select("*").eq("user_id", user.id).eq("status", "active").eq("is_display_home", true)
