@@ -1224,7 +1224,7 @@ export default function GaragePage() {
                         <h3 className="font-bold text-slate-800 dark:text-foreground text-lg leading-tight mb-1">{wish.item_name}</h3>
 
                         {wish.price_estimate > 0 && (
-                          <p className="text-sm font-bold text-blue-600 mb-2">¥{wish.price_estimate.toLocaleString()}</p>
+                          <p className="text-sm font-bold text-slate-800 dark:text-white mb-2">¥{wish.price_estimate.toLocaleString()}</p>
                         )}
 
                         {wish.memo && (
