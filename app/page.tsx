@@ -382,7 +382,7 @@ export default function Home() {
                           }</p>
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-b border-slate-100 dark:border-border bg-slate-50/30 dark:bg-muted/30">
+                      <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-b border-slate-100 dark:border-border">
                         <div className="p-4">
                           <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-widest">{t("common.distance_since_delivery")}</p>
                           <p className="text-lg font-black text-slate-800 dark:text-foreground tracking-wider">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
@@ -392,7 +392,7 @@ export default function Home() {
                           <p className="text-lg font-black text-slate-800 dark:text-foreground tracking-wider">{formatMonthsPassedLocale(car.purchase_date, locale)}</p>
                         </div>
                       </div>
-                      <div className="p-4 flex flex-col gap-2.5 text-xs bg-slate-50/50 dark:bg-muted/50">
+                      <div className="p-4 flex flex-col gap-2.5 text-xs">
                         <div className="flex justify-between items-center">
                           <span className="text-slate-400 dark:text-muted-foreground font-bold uppercase tracking-widest text-[9px]">{t("common.delivery_date")}</span>
                           <span className="font-bold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{formatDateLocale(car.purchase_date, locale)}</span>
