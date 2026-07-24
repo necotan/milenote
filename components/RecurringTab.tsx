@@ -514,6 +514,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
       )}
 
       {/* 定期費用カード一覧 */}
+      {!isAdding && !editId && (
       <div className="space-y-3">
         {costs.map(cost => {
           const cat = CATEGORIES[cost.category] || CATEGORIES.other
@@ -600,6 +601,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
           )
         })}
       </div>
+      )}
 
       <ConfirmDialog
         open={deleteId !== null}
