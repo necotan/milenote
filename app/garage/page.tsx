@@ -1228,7 +1228,7 @@ export default function GaragePage() {
                         )}
 
                         {wish.memo && (
-                          <p className="text-xs text-slate-500 dark:text-muted-foreground bg-slate-50 dark:bg-muted p-2 rounded-md mb-3 line-clamp-2">
+                          <p className="inline-block max-w-full text-xs text-slate-500 dark:text-muted-foreground bg-slate-50 dark:bg-muted p-2 rounded-md mb-3 line-clamp-2">
                             {wish.memo}
                           </p>
                         )}
