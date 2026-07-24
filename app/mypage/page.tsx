@@ -12,7 +12,7 @@ import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Dialog, DialogContent, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical, ChevronRight, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck, AtSign, Info } from "lucide-react"
+import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical, ChevronRight, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck, AtSign, Info, Lock } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { toast } from "sonner"
 import { useTheme } from "next-themes"
@@ -65,6 +65,9 @@ const MAINT_PRESETS: Record<string, { km?: number[]; months: number[] }> = {
   inspection_24m: { months: [12, 24, 36] },
   periodic_inspection: { months: [3, 6, 12] },
 }
+
+// 法定点検（12ヶ月/24ヶ月）は周期が法令で決まっているため、周期編集ダイアログを開けないようにする
+const LEGALLY_FIXED_MAINT_ITEMS = ["inspection_12m", "inspection_24m"]
 
 const THEME_OPTIONS: { value: "light" | "dark"; labelKey: string }[] = [
   { value: "light", labelKey: "mypage.theme_light" },
@@ -145,31 +148,48 @@ function MaintenanceItemRow({
 }) {
   const isEnabled = setting.enabled !== false
   const isMonthsOnly = !!setting.months_only
+  const isEditable = !LEGALLY_FIXED_MAINT_ITEMS.includes(itemKey)
   const Icon = MAINT_ITEM_ICON[itemKey]
   const itemName = t(`subcategories.${itemKey}`)
 
+  // 法定点検は周期を編集させないため、保存済みの値ではなく既定値（法令上の周期）を常に表示
+  const displaySetting = isEditable ? setting : DEFAULT_MAINT_SETTINGS[itemKey]
+
   const summary = isEnabled
     ? isMonthsOnly
-      ? t("mypage.maint_summary_months_only", { months: setting.months })
-      : t("mypage.maint_summary", { km: setting.km.toLocaleString(), months: setting.months })
+      ? t("mypage.maint_summary_months_only", { months: displaySetting.months })
+      : t("mypage.maint_summary", { km: displaySetting.km.toLocaleString(), months: displaySetting.months })
     : t("mypage.maint_disabled_desc")
+
+  const content = (
+    <>
+      <Icon size={18} className={isEnabled ? "text-slate-500 dark:text-muted-foreground" : "text-slate-300 dark:text-muted-foreground/70"} />
+      <div className="flex-1 min-w-0">
+        <p className={`text-sm font-bold truncate ${isEnabled ? "text-slate-800 dark:text-foreground" : "text-slate-400 dark:text-foreground/70"}`}>
+          {itemName}
+        </p>
+        <p className="text-xs text-slate-400 dark:text-muted-foreground truncate">{summary}</p>
+      </div>
+    </>
+  )
 
   return (
     <div className="flex items-center gap-3 px-4 py-3">
-      <button
-        type="button"
-        onClick={onOpenEdit}
-        className="flex-1 min-w-0 flex items-center gap-3 text-left"
-      >
-        <Icon size={18} className={isEnabled ? "text-slate-500 dark:text-muted-foreground" : "text-slate-300 dark:text-muted-foreground/70"} />
-        <div className="flex-1 min-w-0">
-          <p className={`text-sm font-bold truncate ${isEnabled ? "text-slate-800 dark:text-foreground" : "text-slate-400 dark:text-foreground/70"}`}>
-            {itemName}
-          </p>
-          <p className="text-xs text-slate-400 dark:text-muted-foreground truncate">{summary}</p>
+      {isEditable ? (
+        <button
+          type="button"
+          onClick={onOpenEdit}
+          className="flex-1 min-w-0 flex items-center gap-3 text-left"
+        >
+          {content}
+          <ChevronRight size={16} className="shrink-0 text-slate-300 dark:text-muted-foreground" />
+        </button>
+      ) : (
+        <div className="flex-1 min-w-0 flex items-center gap-3" title={t("mypage.maint_legally_fixed_hint")}>
+          {content}
+          <Lock size={14} className="shrink-0 text-slate-300 dark:text-muted-foreground" />
         </div>
-        <ChevronRight size={16} className="shrink-0 text-slate-300 dark:text-muted-foreground" />
-      </button>
+      )}
       <Switch checked={isEnabled} onCheckedChange={onToggleEnabled} className="shrink-0" />
     </div>
   )

@@ -86,6 +86,7 @@ const RecordForm = ({
   onFuelFieldChange,
   entryIc, setEntryIc,
   exitIc, setExitIc,
+  intervalMonths, setIntervalMonths,
 }: any) => {
   const { t } = useTranslation()
   // 選択中の車がEVのとき、給油フォームを充電(kWh建て)表示に切り替える
@@ -138,6 +139,24 @@ const RecordForm = ({
                 ))}
               </SelectContent>
             </Select>
+          </div>
+        )}
+
+        {category === "inspection" && subCategory === "periodic_inspection" && (
+          <div className="space-y-2">
+            <div className="space-y-2 w-1/2 pr-1.5 sm:pr-0 sm:max-w-sm">
+              <Label>{t("records.periodic_inspection_interval")} <span className="text-slate-400 dark:text-muted-foreground font-normal text-xs">{t("records.optional")}</span></Label>
+              <div className="relative max-w-40">
+                <NumberInput
+                  value={intervalMonths}
+                  onValueChange={setIntervalMonths}
+                  placeholder="6"
+                  className="pr-12"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{t("common.months_unit")}</span>
+              </div>
+            </div>
+            <p className="text-[11px] text-slate-400 dark:text-muted-foreground whitespace-nowrap">{t("records.periodic_inspection_interval_hint")}</p>
           </div>
         )}
 
@@ -278,6 +297,9 @@ function RecordsPageInner() {
   // 高速料金用ステート
   const [entryIc, setEntryIc] = useState("")
   const [exitIc, setExitIc] = useState("")
+
+  // 定期点検の車ごとの点検周期(月数)用ステート
+  const [intervalMonths, setIntervalMonths] = useState("")
 
   // 月別・全期間 表示切り替え
   const currentYM = (() => {
@@ -451,6 +473,7 @@ function RecordsPageInner() {
     window.scrollTo({ top: 0 })
     setAmount(""); setOdoAtRecord(""); setFuelAmount(""); setFuelUnitPrice(""); setMemo("")
     setEntryIc(""); setExitIc("")
+    setIntervalMonths("")
     setCategory("fuel")
     setSubCategory("")
     const firstCarId = cars.length === 1 ? cars[0].id : ""
@@ -498,6 +521,7 @@ function RecordsPageInner() {
         memo: memo || null,
         entry_ic: category === "highway" ? (entryIc || null) : null,
         exit_ic: category === "highway" ? (exitIc || null) : null,
+        interval_months: (category === "inspection" && subCategory === "periodic_inspection" && intervalMonths) ? parseInt(intervalMonths) : null,
       })
 
       if (recordError) return toast.error(t("common.error_occurred") + ": " + recordError.message)
@@ -536,6 +560,7 @@ function RecordsPageInner() {
       setEntryIc("")
       setExitIc("")
     }
+    setIntervalMonths(record.interval_months ? String(record.interval_months) : "")
     setMemo(record.memo || "")
   }
 
@@ -560,6 +585,7 @@ function RecordsPageInner() {
         memo: memo || null,
         entry_ic: category === "highway" ? (entryIc || null) : null,
         exit_ic: category === "highway" ? (exitIc || null) : null,
+        interval_months: (category === "inspection" && subCategory === "periodic_inspection" && intervalMonths) ? parseInt(intervalMonths) : null,
       }).eq("id", editRecordId)
 
       if (error) {
@@ -793,6 +819,7 @@ function RecordsPageInner() {
           onFuelFieldChange={handleFuelFieldChange}
           entryIc={entryIc} setEntryIc={setEntryIc}
           exitIc={exitIc} setExitIc={setExitIc}
+          intervalMonths={intervalMonths} setIntervalMonths={setIntervalMonths}
       />}
       {editRecordId && <RecordForm 
           onSubmit={handleUpdateRecord} 
@@ -813,6 +840,7 @@ function RecordsPageInner() {
           onFuelFieldChange={handleFuelFieldChange}
           entryIc={entryIc} setEntryIc={setEntryIc}
           exitIc={exitIc} setExitIc={setExitIc}
+          intervalMonths={intervalMonths} setIntervalMonths={setIntervalMonths}
       />}
 
       {!loading && !isAdding && !editRecordId && records.length === 0 && cars.length > 0 && (
