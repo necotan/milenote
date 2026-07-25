@@ -15,6 +15,7 @@ type MaintAlertBase = {
   maintName: string
   icon: LucideIcon
   color: string
+  isDisabled: boolean
 }
 export type RecordedMaintAlert = MaintAlertBase & {
   hasRecord: true
@@ -52,14 +53,21 @@ export const DEFAULT_MAINT_SETTINGS: MaintSettings = {
   "periodic_inspection": { km: 0, months: 6, months_only: true },
 }
 
-export function generateMaintAlerts(cars: MaintAlertCar[], records: MaintAlertRecord[], maintSettings: MaintSettings, now: Date = new Date()): MaintAlertItem[] {
+export function generateMaintAlerts(
+  cars: MaintAlertCar[],
+  records: MaintAlertRecord[],
+  maintSettings: MaintSettings,
+  options: { now?: Date; includeDisabled?: boolean } = {}
+): MaintAlertItem[] {
+  const { now = new Date(), includeDisabled = false } = options
   const generatedAlerts: MaintAlertItem[] = []
 
   cars.forEach(car => {
     Object.keys(maintSettings).forEach(maintName => {
       const setting = maintSettings[maintName]
-      // 通知がオフの項目はアラートを生成しない（enabled未設定は後方互換でオン扱い）
-      if (setting.enabled === false) return
+      // 通知オフの項目は既定では生成しない（enabled未設定は後方互換でオン扱い）
+      const isDisabled = setting.enabled === false
+      if (isDisabled && !includeDisabled) return
       const isMonthsOnly = !!setting.months_only
       const style = MAINT_STYLE_CONFIG[maintName] || { icon: Wrench, color: "text-slate-500 dark:text-muted-foreground" }
       const maintRecords = records.filter(r => r.car_id === car.id && r.sub_category === maintName).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -72,6 +80,7 @@ export function generateMaintAlerts(cars: MaintAlertCar[], records: MaintAlertRe
           maintName: maintName,
           icon: style.icon,
           color: style.color,
+          isDisabled,
           hasRecord: false,
         })
         return
@@ -106,6 +115,7 @@ export function generateMaintAlerts(cars: MaintAlertCar[], records: MaintAlertRe
         carId: car.id,
         carName: car.name,
         maintName: maintName,
+        isDisabled,
         hasRecord: true,
         displayValue,
         isMonthsOnly,
@@ -120,8 +130,9 @@ export function generateMaintAlerts(cars: MaintAlertCar[], records: MaintAlertRe
     })
   })
 
-  // 記録済み（期限が近い順）を優先し、未記録は末尾にまとめる
+  // 通知オフの項目は末尾に、それ以外は記録済み（期限が近い順）を優先し未記録は末尾にまとめる
   generatedAlerts.sort((a, b) => {
+    if (a.isDisabled !== b.isDisabled) return a.isDisabled ? 1 : -1
     if (a.hasRecord && !b.hasRecord) return -1
     if (!a.hasRecord && b.hasRecord) return 1
     if (a.hasRecord && b.hasRecord) return a.remaining - b.remaining

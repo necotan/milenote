@@ -4,14 +4,18 @@ import { useEffect, useState, useCallback, useRef } from "react"
 import { createClient } from "@/utils/supabase"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
 import { Skeleton } from "@/components/ui/skeleton"
-import { CarFront, SlidersHorizontal } from "lucide-react"
+import { CarFront, SlidersHorizontal, Settings2 } from "lucide-react"
 import Link from "next/link"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { MAINT_CATEGORIES } from "@/lib/subcategories"
 import { generateMaintAlerts, DEFAULT_MAINT_SETTINGS, type MaintSettings, type MaintAlertItem, type MaintAlertCar, type MaintAlertRecord } from "@/lib/maintenanceAlerts"
 import { MaintAlertCard } from "@/components/MaintenanceAlertViews"
+
+// 表示設定モーダルの各項目はlocalStorageに個別キーで保存
+const SHOW_DISABLED_STORAGE_KEY = "milenote_maintenance_show_disabled"
 
 export default function MaintenancePage() {
   const [cars, setCars] = useState<MaintAlertCar[]>([])
@@ -24,6 +28,21 @@ export default function MaintenancePage() {
   const [categoryFilters, setCategoryFilters] = useState<string[]>([])
   const [carFilters, setCarFilters] = useState<string[]>([])
   const [isFilterOpen, setIsFilterOpen] = useState(false)
+
+  // 表示設定用ステート
+  const [isDisplaySettingsOpen, setIsDisplaySettingsOpen] = useState(false)
+  // メンテナンス基準でオフにした項目もこの一覧では表示するかの切り替え
+  const [showDisabled, setShowDisabled] = useState(false)
+
+  // 表示設定は次回訪問時も維持したいのでlocalStorageから復元
+  useEffect(() => {
+    setShowDisabled(localStorage.getItem(SHOW_DISABLED_STORAGE_KEY) === "true")
+  }, [])
+
+  const handleShowDisabledChange = (checked: boolean) => {
+    setShowDisabled(checked)
+    localStorage.setItem(SHOW_DISABLED_STORAGE_KEY, String(checked))
+  }
 
   // カテゴリ絞り込みの選択切り替え
   const toggleCategoryFilter = (key: string) => {
@@ -55,8 +74,11 @@ export default function MaintenancePage() {
     category.items.forEach((maintName) => { maintNameToCategory[maintName] = category.key })
   })
 
+  // オフにした項目の表示切り替えを適用したアラート（カテゴリ、車の絞り込みの基準となる件数もこちらを使う）
+  const visibleAlerts = alerts.filter((a) => showDisabled || !a.isDisabled)
+
   // カテゴリ、車の絞り込みを適用したアラート
-  const filteredAlerts = alerts.filter((a) =>
+  const filteredAlerts = visibleAlerts.filter((a) =>
     (categoryFilters.length === 0 || categoryFilters.includes(maintNameToCategory[a.maintName])) &&
     (carFilters.length === 0 || carFilters.includes(a.carId))
   )
@@ -81,7 +103,8 @@ export default function MaintenancePage() {
 
       if (carsData) setCars(carsData)
       if (carsData && recordsData) {
-        setAlerts(generateMaintAlerts(carsData, recordsData as MaintAlertRecord[], maintSettings))
+        // オフにした項目も一覧側の表示切り替えで出し分けられるよう、生成時点では除外しない
+        setAlerts(generateMaintAlerts(carsData, recordsData as MaintAlertRecord[], maintSettings, { includeDisabled: true }))
       }
     }
     setLoading(false)
@@ -148,9 +171,9 @@ export default function MaintenancePage() {
       <div className="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-8">
       <div className="flex-1 min-w-0 space-y-6">
 
-      {/* 絞り込みボタン */}
+      {/* 絞り込み、表示設定ボタン */}
       {alerts.length > 0 && (
-        <div className="flex justify-end">
+        <div className="flex flex-col items-end gap-2">
           <button
             type="button"
             onClick={() => setIsFilterOpen(true)}
@@ -164,6 +187,41 @@ export default function MaintenancePage() {
               </span>
             )}
           </button>
+          <button
+            type="button"
+            onClick={() => setIsDisplaySettingsOpen(true)}
+            title={t("home.display_settings_title")}
+            className="h-7 flex items-center gap-1.5 px-2.5 rounded-lg border text-[11px] font-bold bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+          >
+            <Settings2 size={15} />
+            {t("home.display_settings_title")}
+          </button>
+        </div>
+      )}
+
+      {/* 表示設定モーダル */}
+      {isDisplaySettingsOpen && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => setIsDisplaySettingsOpen(false)}>
+          <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <CardContent className="p-6 space-y-4">
+              <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
+                <Settings2 size={20} />
+                <h2 className="text-lg font-extrabold">{t("home.display_settings_title")}</h2>
+              </div>
+
+              <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5">
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-slate-700 dark:text-foreground">{t("home.show_disabled_maint")}</p>
+                  <p className="text-[10px] text-slate-400 dark:text-muted-foreground mt-0.5">{t("home.show_disabled_maint_desc")}</p>
+                </div>
+                <Switch checked={showDisabled} onCheckedChange={handleShowDisabledChange} className="shrink-0" />
+              </div>
+
+              <Button variant="outline" className="w-full font-bold" onClick={() => setIsDisplaySettingsOpen(false)}>
+                {t("common.close")}
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       )}
 
@@ -192,11 +250,11 @@ export default function MaintenancePage() {
                     }`}
                   >
                     {t("records.filter_all")}
-                    <span className="ml-1.5 tabular-nums opacity-60">{alerts.length}</span>
+                    <span className="ml-1.5 tabular-nums opacity-60">{visibleAlerts.length}</span>
                   </button>
                   {MAINT_CATEGORIES.map((category) => {
                     const active = categoryFilters.includes(category.key)
-                    const count = alerts.filter((a) => maintNameToCategory[a.maintName] === category.key).length
+                    const count = visibleAlerts.filter((a) => maintNameToCategory[a.maintName] === category.key).length
                     if (count === 0) return null
                     return (
                       <button
@@ -234,11 +292,11 @@ export default function MaintenancePage() {
                       }`}
                     >
                       {t("records.filter_all")}
-                      <span className="ml-1.5 tabular-nums opacity-60">{alerts.length}</span>
+                      <span className="ml-1.5 tabular-nums opacity-60">{visibleAlerts.length}</span>
                     </button>
                     {cars.map((car) => {
                       const active = carFilters.includes(car.id)
-                      const count = alerts.filter((a) => a.carId === car.id).length
+                      const count = visibleAlerts.filter((a) => a.carId === car.id).length
                       return (
                         <button
                           key={car.id}

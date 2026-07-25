@@ -74,7 +74,10 @@
     "maintenance_all_title": "メンテナンス一覧",
     "maintenance_all_subtitle": "次のメンテナンス時期を確認できます",
     "back_to_home": "ホームに戻る",
-    "no_filtered_alerts": "該当する項目がありません"
+    "no_filtered_alerts": "該当する項目がありません",
+    "display_settings_title": "表示設定",
+    "show_disabled_maint": "オフにした項目も表示",
+    "show_disabled_maint_desc": "マイページのメンテナンス基準で通知をオフにした項目もこの一覧に表示します"
   },
   "garage": {
     "title": "ガレージ",

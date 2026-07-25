@@ -74,7 +74,10 @@
     "maintenance_all_title": "Maintenance",
     "maintenance_all_subtitle": "Check when your next maintenance is due",
     "back_to_home": "Back to Home",
-    "no_filtered_alerts": "No matching items found"
+    "no_filtered_alerts": "No matching items found",
+    "display_settings_title": "Display Settings",
+    "show_disabled_maint": "Show disabled items",
+    "show_disabled_maint_desc": "Also show items whose notifications are turned off in My Page > Maintenance Schedule"
   },
   "garage": {
     "title": "Garage",
