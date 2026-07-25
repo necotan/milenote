@@ -17,6 +17,11 @@ import { MaintAlertCard } from "@/components/MaintenanceAlertViews"
 // 表示設定モーダルの各項目はlocalStorageに個別キーで保存
 const SHOW_DISABLED_STORAGE_KEY = "milenote_maintenance_show_disabled"
 
+// カードグリッドの列数計算とボタン位置合わせで使用
+const CARD_WIDTH = 300
+const CARD_GAP = 16
+const MAX_GRID_COLUMNS = 4
+
 export default function MaintenancePage() {
   const [cars, setCars] = useState<MaintAlertCar[]>([])
   const [alerts, setAlerts] = useState<MaintAlertItem[]>([])
@@ -43,6 +48,35 @@ export default function MaintenancePage() {
     setShowDisabled(checked)
     localStorage.setItem(SHOW_DISABLED_STORAGE_KEY, String(checked))
   }
+
+  // カードグリッドの列数は実測した横幅から決定
+  const gridWrapperRef = useRef<HTMLDivElement>(null)
+  const [gridColumns, setGridColumns] = useState(1)
+
+  useEffect(() => {
+    const el = gridWrapperRef.current
+    if (!el) return
+
+    // カード半分分の余白ができる余裕がなければ列を増やさない
+    const computeColumns = (width: number) => {
+      let cols = 1
+      for (let n = 2; n <= MAX_GRID_COLUMNS; n++) {
+        const requiredWidth = n * CARD_WIDTH + (n - 1) * CARD_GAP + CARD_WIDTH / 2
+        if (width >= requiredWidth) cols = n
+      }
+      return cols
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      setGridColumns(computeColumns(entries[0].contentRect.width))
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [loading])
+
+  const gridStyle = { gridTemplateColumns: gridColumns === 1 ? "1fr" : `repeat(${gridColumns}, ${CARD_WIDTH}px)` }
+  // カード列の右端にボタンをそろえるため、グリッドの実際の表示幅と同じ幅に制限
+  const gridContentWidth = gridColumns > 1 ? gridColumns * CARD_WIDTH + (gridColumns - 1) * CARD_GAP : undefined
 
   // カテゴリ絞り込みの選択切り替え
   const toggleCategoryFilter = (key: string) => {
@@ -115,65 +149,55 @@ export default function MaintenancePage() {
   }, [fetchData])
 
   if (loading) return (
-    <main className="p-4 space-y-6">
-      <header className="pt-4 pb-2">
+    <main className="p-4 space-y-1">
+      <header className="pt-4">
         <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
           <span className="font-bold text-xs">{t("home.back_to_home")}</span>
         </Link>
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground mt-2">{t("home.maintenance_all_title")}</h1>
-        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("home.maintenance_all_subtitle")}</p>
       </header>
-      {/* ホームのメンテナンスアラートとカード横幅を揃えるため、同じ幅で右側の車カード用スペースを確保 */}
-      <div className="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-8">
-        <div className="flex-1 min-w-0 space-y-6">
-          {[...Array(3)].map((_, i) => (
-            <div key={i}>
-              <Skeleton className="h-3 w-24 ml-1 mb-2" />
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4">
-                {[...Array(2)].map((_, j) => (
-                  <div key={j} className="rounded-xl bg-white dark:bg-card shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
-                    <div className="p-3.5 flex items-start gap-3">
-                      <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
-                      <div className="min-w-0 flex-1">
-                        <Skeleton className="h-2.5 w-16" />
-                        <div className="mt-0.5">
-                          <Skeleton className="h-3 w-32" />
-                          <Skeleton className="mt-0.5 h-7 w-24" />
-                        </div>
-                        <div className="flex flex-col gap-1.5 mt-1">
-                          <Skeleton className="h-2.5 w-24" />
-                          <Skeleton className="h-1.5 w-[80%] rounded-full" />
-                        </div>
+      <div className="space-y-6">
+        {[...Array(3)].map((_, i) => (
+          <div key={i}>
+            <Skeleton className="h-3 w-24 ml-1 mb-2" />
+            <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,300px)] md:max-w-[1248px] gap-3 md:gap-4">
+              {[...Array(3)].map((_, j) => (
+                <div key={j} className="rounded-xl bg-white dark:bg-card shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
+                  <div className="p-3.5 flex items-start gap-3">
+                    <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <Skeleton className="h-2.5 w-16" />
+                      <div className="mt-0.5">
+                        <Skeleton className="h-3 w-32" />
+                        <Skeleton className="mt-0.5 h-7 w-24" />
+                      </div>
+                      <div className="flex flex-col gap-1.5 mt-1">
+                        <Skeleton className="h-2.5 w-24" />
+                        <Skeleton className="h-1.5 w-[80%] rounded-full" />
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="hidden lg:block lg:w-[380px] lg:shrink-0" aria-hidden="true" />
+          </div>
+        ))}
       </div>
     </main>
   )
 
   return (
-    <main className="p-4 space-y-6">
-      <header className="pt-4 pb-2">
+    <main className="p-4 space-y-1">
+      <header className="pt-4">
         <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
           <span className="font-bold text-xs">{t("home.back_to_home")}</span>
         </Link>
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground mt-2">{t("home.maintenance_all_title")}</h1>
-        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("home.maintenance_all_subtitle")}</p>
       </header>
 
-      {/* ホームのメンテナンスアラートとカード横幅を揃えるため、同じ幅で右側の車カード用スペースを確保 */}
-      <div className="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-8">
-      <div className="flex-1 min-w-0 space-y-6">
+      <div className="space-y-3" ref={gridWrapperRef}>
 
       {/* 絞り込み、表示設定ボタン */}
       {alerts.length > 0 && (
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex flex-col items-end gap-2" style={{ maxWidth: gridContentWidth }}>
           <button
             type="button"
             onClick={() => setIsFilterOpen(true)}
@@ -350,7 +374,7 @@ export default function MaintenancePage() {
                 <p className="text-sm font-bold text-slate-400 dark:text-muted-foreground tracking-wide mb-2 px-1">
                   {t(`mypage.maint_category_${category.key}`)}
                 </p>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-4 items-stretch">
+                <div className="grid gap-3 md:gap-4 items-stretch" style={gridStyle}>
                   {items.map((alert) => (
                     <MaintAlertCard key={alert.id} alert={alert} className="h-full" />
                   ))}
@@ -361,8 +385,6 @@ export default function MaintenancePage() {
         </div>
       )}
 
-      </div>
-      <div className="hidden lg:block lg:w-[380px] lg:shrink-0" aria-hidden="true" />
       </div>
     </main>
   )

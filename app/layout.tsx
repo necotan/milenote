@@ -22,13 +22,17 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 function AppContent({ children, loading }: { children: React.ReactNode; loading: boolean }) {
+  const pathname = usePathname();
+  // メンテナンス一覧用
+  const contentMaxWidth = pathname === "/maintenance" ? "max-w-[1600px]" : "max-w-6xl";
+
   return (
     <div className="flex min-h-screen w-full relative">
       <RecurringCostProcessor />
       <Sidebar />
 
-      {/* メインコンテンツエリア。ここに最大幅(max-w-6xl)を持たせ、中央寄せ(mx-auto)にする */}
-      <div className="flex-1 pb-20 md:pb-8 w-full min-w-0 max-w-6xl mx-auto">
+      {/* メインコンテンツエリア。ここに最大幅を持たせ、中央寄せ(mx-auto)にする */}
+      <div className={`flex-1 pb-20 md:pb-8 w-full min-w-0 mx-auto ${contentMaxWidth}`}>
         {children}
       </div>
 
