@@ -6,7 +6,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Skeleton } from "@/components/ui/skeleton"
-import { CarFront, SlidersHorizontal, Settings2 } from "lucide-react"
+import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
+import { CarFront, SlidersHorizontal, Settings2, EyeOff, LayoutList, FileX } from "lucide-react"
 import Link from "next/link"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
@@ -16,6 +17,11 @@ import { MaintAlertCard } from "@/components/MaintenanceAlertViews"
 
 // 表示設定モーダルの各項目はlocalStorageに個別キーで保存
 const SHOW_DISABLED_STORAGE_KEY = "milenote_maintenance_show_disabled"
+const HIDE_UNRECORDED_STORAGE_KEY = "milenote_maintenance_hide_unrecorded"
+const UNGROUP_STORAGE_KEY = "milenote_maintenance_ungroup"
+const SORT_MODE_STORAGE_KEY = "milenote_maintenance_sort_mode"
+
+type SortMode = "distance" | "deadline"
 
 // カードグリッドの列数計算とボタン位置合わせで使用
 const CARD_WIDTH = 300
@@ -38,15 +44,40 @@ export default function MaintenancePage() {
   const [isDisplaySettingsOpen, setIsDisplaySettingsOpen] = useState(false)
   // メンテナンス基準でオフにした項目もこの一覧では表示するかの切り替え
   const [showDisabled, setShowDisabled] = useState(false)
+  // 未記録の項目を一覧から非表示にするかの切り替え
+  const [hideUnrecorded, setHideUnrecorded] = useState(false)
+  // カテゴリごとのグループ化を解除し、1つの一覧としてまとめて表示するかの切り替え
+  const [isUngrouped, setIsUngrouped] = useState(false)
+  // 記録済み項目の並び順（残り距離が少ない順 / 期限が近い順）
+  const [sortMode, setSortMode] = useState<SortMode>("distance")
 
   // 表示設定は次回訪問時も維持したいのでlocalStorageから復元
   useEffect(() => {
     setShowDisabled(localStorage.getItem(SHOW_DISABLED_STORAGE_KEY) === "true")
+    setHideUnrecorded(localStorage.getItem(HIDE_UNRECORDED_STORAGE_KEY) === "true")
+    setIsUngrouped(localStorage.getItem(UNGROUP_STORAGE_KEY) === "true")
+    const savedSortMode = localStorage.getItem(SORT_MODE_STORAGE_KEY)
+    if (savedSortMode === "distance" || savedSortMode === "deadline") setSortMode(savedSortMode)
   }, [])
 
   const handleShowDisabledChange = (checked: boolean) => {
     setShowDisabled(checked)
     localStorage.setItem(SHOW_DISABLED_STORAGE_KEY, String(checked))
+  }
+
+  const handleHideUnrecordedChange = (checked: boolean) => {
+    setHideUnrecorded(checked)
+    localStorage.setItem(HIDE_UNRECORDED_STORAGE_KEY, String(checked))
+  }
+
+  const handleSortModeChange = (mode: SortMode) => {
+    setSortMode(mode)
+    localStorage.setItem(SORT_MODE_STORAGE_KEY, mode)
+  }
+
+  const handleUngroupedChange = (checked: boolean) => {
+    setIsUngrouped(checked)
+    localStorage.setItem(UNGROUP_STORAGE_KEY, String(checked))
   }
 
   // カードグリッドの列数は実測した横幅から決定
@@ -108,14 +139,23 @@ export default function MaintenancePage() {
     category.items.forEach((maintName) => { maintNameToCategory[maintName] = category.key })
   })
 
-  // オフにした項目の表示切り替えを適用したアラート（カテゴリ、車の絞り込みの基準となる件数もこちらを使う）
-  const visibleAlerts = alerts.filter((a) => showDisabled || !a.isDisabled)
+  // オフ/未記録の項目の表示切り替えを適用したアラート
+  const visibleAlerts = alerts.filter((a) => (showDisabled || !a.isDisabled) && (!hideUnrecorded || a.hasRecord))
 
   // カテゴリ、車の絞り込みを適用したアラート
   const filteredAlerts = visibleAlerts.filter((a) =>
     (categoryFilters.length === 0 || categoryFilters.includes(maintNameToCategory[a.maintName])) &&
     (carFilters.length === 0 || carFilters.includes(a.carId))
   )
+
+  // 選択中の並び順を適用したアラート
+  const sortedAlerts = [...filteredAlerts].sort((a, b) => {
+    if (a.isDisabled !== b.isDisabled) return a.isDisabled ? 1 : -1
+    if (a.hasRecord && !b.hasRecord) return -1
+    if (!a.hasRecord && b.hasRecord) return 1
+    if (!a.hasRecord || !b.hasRecord) return 0
+    return sortMode === "distance" ? a.kmRemaining - b.kmRemaining : a.monthsRemaining - b.monthsRemaining
+  })
 
   // 絞り込み中の選択数（バッジ表示用）
   const activeFilterCount = categoryFilters.length + carFilters.length
@@ -195,31 +235,41 @@ export default function MaintenancePage() {
 
       <div className="space-y-3" ref={gridWrapperRef}>
 
-      {/* 絞り込み、表示設定ボタン */}
+      {/* 並び替えトグル、絞り込み、表示設定ボタン（最終列のカード幅にそろえる） */}
       {alerts.length > 0 && (
-        <div className="flex flex-col items-end gap-2" style={{ maxWidth: gridContentWidth }}>
-          <button
-            type="button"
-            onClick={() => setIsFilterOpen(true)}
-            title={t("records.filter_title")}
-            className="relative h-7 flex items-center px-2.5 rounded-lg border bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
-          >
-            <SlidersHorizontal size={15} />
-            {activeFilterCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-slate-400 text-white dark:bg-surface-2 dark:text-foreground/80 text-[9px] font-semibold tabular-nums">
-                {activeFilterCount}
-              </span>
-            )}
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsDisplaySettingsOpen(true)}
-            title={t("home.display_settings_title")}
-            className="h-7 flex items-center gap-1.5 px-2.5 rounded-lg border text-[11px] font-bold bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
-          >
-            <Settings2 size={15} />
-            {t("home.display_settings_title")}
-          </button>
+        <div className="flex items-center justify-between gap-2" style={{ maxWidth: gridContentWidth }}>
+          <SegmentedToggle
+            value={sortMode}
+            onChange={handleSortModeChange}
+            options={[
+              { value: "distance", label: t("home.sort_distance") },
+              { value: "deadline", label: t("home.sort_deadline") },
+            ]}
+          />
+          <div className="flex flex-col items-end gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => setIsFilterOpen(true)}
+              title={t("records.filter_title")}
+              className="relative h-7 flex items-center px-2.5 rounded-lg border bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+            >
+              <SlidersHorizontal size={15} />
+              {activeFilterCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-slate-400 text-white dark:bg-surface-2 dark:text-foreground/80 text-[9px] font-semibold tabular-nums">
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsDisplaySettingsOpen(true)}
+              title={t("home.display_settings_title")}
+              className="h-7 flex items-center gap-1.5 px-2.5 rounded-lg border text-[11px] font-bold bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+            >
+              <Settings2 size={15} />
+              {t("home.display_settings_title")}
+            </button>
+          </div>
         </div>
       )}
 
@@ -234,15 +284,40 @@ export default function MaintenancePage() {
               </div>
 
               <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5">
-                <div className="min-w-0">
-                  <p className="text-xs font-bold text-slate-700 dark:text-foreground">{t("home.show_disabled_maint")}</p>
-                  <p className="text-[10px] text-slate-400 dark:text-muted-foreground mt-0.5">{t("home.show_disabled_maint_desc")}</p>
+                <div className="min-w-0 flex items-start gap-2.5">
+                  <EyeOff size={18} className="shrink-0 mt-0.5 text-slate-400 dark:text-muted-foreground" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-slate-700 dark:text-foreground">{t("home.show_disabled_maint")}</p>
+                    <p className="text-xs text-slate-400 dark:text-muted-foreground mt-0.5">{t("home.show_disabled_maint_desc")}</p>
+                  </div>
                 </div>
                 <Switch checked={showDisabled} onCheckedChange={handleShowDisabledChange} className="shrink-0" />
               </div>
 
+              <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5">
+                <div className="min-w-0 flex items-start gap-2.5">
+                  <FileX size={18} className="shrink-0 mt-0.5 text-slate-400 dark:text-muted-foreground" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-slate-700 dark:text-foreground">{t("home.hide_unrecorded_maint")}</p>
+                    <p className="text-xs text-slate-400 dark:text-muted-foreground mt-0.5">{t("home.hide_unrecorded_maint_desc")}</p>
+                  </div>
+                </div>
+                <Switch checked={hideUnrecorded} onCheckedChange={handleHideUnrecordedChange} className="shrink-0" />
+              </div>
+
+              <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5">
+                <div className="min-w-0 flex items-start gap-2.5">
+                  <LayoutList size={18} className="shrink-0 mt-0.5 text-slate-400 dark:text-muted-foreground" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-slate-700 dark:text-foreground">{t("home.ungroup_maint")}</p>
+                    <p className="text-xs text-slate-400 dark:text-muted-foreground mt-0.5">{t("home.ungroup_maint_desc")}</p>
+                  </div>
+                </div>
+                <Switch checked={isUngrouped} onCheckedChange={handleUngroupedChange} className="shrink-0" />
+              </div>
+
               <Button variant="outline" className="w-full font-bold" onClick={() => setIsDisplaySettingsOpen(false)}>
-                {t("common.close")}
+                {t("common.save")}
               </Button>
             </CardContent>
           </Card>
@@ -364,10 +439,16 @@ export default function MaintenancePage() {
         <Card className="border-none shadow-sm bg-white dark:bg-card p-6 text-center">
           <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-widest">{t("home.no_filtered_alerts")}</p>
         </Card>
+      ) : isUngrouped ? (
+        <div className="grid gap-3 md:gap-4 items-stretch" style={gridStyle}>
+          {sortedAlerts.map((alert) => (
+            <MaintAlertCard key={alert.id} alert={alert} className="h-full" />
+          ))}
+        </div>
       ) : (
         <div className="space-y-6">
           {MAINT_CATEGORIES.map((category) => {
-            const items = category.items.flatMap((maintName) => filteredAlerts.filter((a) => a.maintName === maintName))
+            const items = category.items.flatMap((maintName) => sortedAlerts.filter((a) => a.maintName === maintName))
             if (items.length === 0) return null
             return (
               <div key={category.key}>

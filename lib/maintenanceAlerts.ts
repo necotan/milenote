@@ -25,6 +25,9 @@ export type RecordedMaintAlert = MaintAlertBase & {
   monthsPassed: number
   isUrgent: boolean
   remaining: number
+  // 距離順、期限順の並び替え用（距離の概念がない項目はkmRemainingがInfinityになる）
+  kmRemaining: number
+  monthsRemaining: number
   progressPercent: number
 }
 export type UnrecordedMaintAlert = MaintAlertBase & { hasRecord: false }
@@ -123,6 +126,8 @@ export function generateMaintAlerts(
         monthsPassed: monthsPassed,
         isUrgent: isUrgent,
         remaining: isMonthsOnly ? -monthsRemaining : kmRemaining,
+        kmRemaining,
+        monthsRemaining,
         progressPercent: progressPercent,
         icon: style.icon,
         color: isUrgent ? "text-red-600" : style.color,

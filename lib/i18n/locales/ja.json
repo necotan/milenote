@@ -75,7 +75,13 @@
     "no_filtered_alerts": "該当する項目がありません",
     "display_settings_title": "表示設定",
     "show_disabled_maint": "オフにした項目も表示",
-    "show_disabled_maint_desc": "マイページのメンテナンス基準で通知をオフにした項目もこの一覧に表示します"
+    "show_disabled_maint_desc": "マイページのメンテナンス基準で通知をオフにした項目もこの一覧に表示します",
+    "hide_unrecorded_maint": "未記録の項目を非表示",
+    "hide_unrecorded_maint_desc": "まだ記録がないメンテナンス項目をこの一覧から隠します",
+    "ungroup_maint": "グループ化を解除",
+    "ungroup_maint_desc": "カテゴリ分けせず、1つの一覧としてまとめて表示します",
+    "sort_distance": "距離順",
+    "sort_deadline": "期限順"
   },
   "garage": {
     "title": "ガレージ",
