@@ -136,7 +136,7 @@ function ChipPresetRow({
 // 各設定カード左側のスケルトン
 function MypageSkeletonDesc({ titleWidth }: { titleWidth: string }) {
   return (
-    <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card space-y-2">
+    <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card space-y-2">
       <SkeletonText size="base" className={titleWidth} />
       {/* 実カードの説明文は leading-relaxed のため行間を明示する */}
       <SkeletonText size="xs" leading="relaxed" className="w-full" />
@@ -773,7 +773,7 @@ export default function MyPage() {
         <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
-            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
+            <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <User size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.profile")}
               </h2>
@@ -806,7 +806,7 @@ export default function MyPage() {
         <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
-            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
+            <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <Wrench size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.maintenance_settings")}
               </h2>
@@ -846,7 +846,7 @@ export default function MyPage() {
         <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
-            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
+            <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <Globe size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.language")}
               </h2>
@@ -887,7 +887,7 @@ export default function MyPage() {
         <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
-            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
+            <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <Accessibility size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.accessibility")}
               </h2>
@@ -959,7 +959,7 @@ export default function MyPage() {
         <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
-            <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
+            <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <LayoutTemplate size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.home_order")}
               </h2>
