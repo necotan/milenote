@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
-import { Skeleton, SkeletonTabs } from "@/components/ui/skeleton"
+import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { CarFront, Plus, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, Move, SlidersHorizontal } from "lucide-react"
 import { toast } from "sonner"
@@ -643,22 +643,54 @@ export default function GaragePage() {
 
         {loading && <SkeletonTabs className="mb-6" />}
 
+        {/* 「車を登録」ボタン行（!isAddingCar && !editCarId の間だけ表示される実ボタンのプレースホルダ） */}
         {loading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+          <div className="flex justify-end mb-4">
+            <Skeleton className="h-7 w-28 rounded-lg" />
+          </div>
+        )}
+
+        {loading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[...Array(2)].map((_, i) => (
               <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden">
-                <Skeleton className="h-48 rounded-none" />
-                <div className="p-4 space-y-2">
-                  <Skeleton className="h-7 w-36 rounded-lg" />
-                  <Skeleton className="h-3 w-48" />
+                <Skeleton className="aspect-[11/6] rounded-none" />
+                {/* 画像とテキストの間の余白（実要素は mt-1 だが、隣接する要素同士が接すると余白が無く見えるため広めにとる） */}
+                <div className="px-4 pt-3 pb-4 space-y-2">
+                  <SkeletonText size="2xl" className="w-36 rounded-lg" />
+                  <SkeletonText size="10px" className="w-48" />
                 </div>
-                <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-t border-slate-100 dark:border-border">
-                  {[...Array(4)].map((_, j) => (
+                <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-t border-b border-slate-100 dark:border-border">
+                  {[...Array(2)].map((_, j) => (
                     <div key={j} className="p-4 space-y-2">
-                      <Skeleton className="h-2.5 w-16" />
-                      <Skeleton className="h-5 w-20" />
+                      <SkeletonText size="9px" className="w-16" />
+                      <SkeletonText size="lg" className="w-20" />
                     </div>
                   ))}
+                </div>
+                <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-b border-slate-100 dark:border-border bg-slate-50/30 dark:bg-muted/30">
+                  {[...Array(2)].map((_, j) => (
+                    <div key={j} className="p-4 space-y-2">
+                      <SkeletonText size="9px" className="w-16" />
+                      <SkeletonText size="lg" className="w-20" />
+                    </div>
+                  ))}
+                </div>
+                {/* 実カードと同じ text-xs を付け、内側の 9px/10px が継承する行間まで一致させる */}
+                <div className="p-4 flex flex-col gap-2.5 text-xs bg-slate-50/50 dark:bg-muted/50">
+                  {[...Array(3)].map((_, j) => (
+                    <div key={j} className="flex justify-between items-center">
+                      <SkeletonText size="9px" className="w-16" />
+                      <SkeletonText size="10px" className="w-20" />
+                    </div>
+                  ))}
+                  <div className="flex justify-between items-center">
+                    <SkeletonText size="9px" className="w-16" />
+                    <div className="flex items-center gap-1">
+                      <Skeleton className="h-[26px] w-[26px] rounded-lg" />
+                      <Skeleton className="h-[26px] w-[26px] rounded-lg" />
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

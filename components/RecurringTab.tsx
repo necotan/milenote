@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { Plus, X, Pencil, Trash2, Pause, Play, ChevronDown, Info, RepeatIcon } from "lucide-react"
 import { toast } from "sonner"
@@ -247,7 +247,7 @@ const getFrequencyLabel = (freq: string, t: (key: string) => string): string => 
 const RecurringCardSkeleton = () => (
   <div className="space-y-3">
     {[...Array(3)].map((_, i) => (
-      <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden relative">
+      <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden relative py-4">
         <div className="absolute top-3 right-3 flex items-center gap-1">
           <Skeleton className="h-7 w-7 rounded-lg" />
           <Skeleton className="h-7 w-7 rounded-lg" />
@@ -256,14 +256,13 @@ const RecurringCardSkeleton = () => (
         <div className="p-4 flex gap-3 items-start">
           <Skeleton className="w-12 h-12 rounded-full shrink-0 mt-1" />
           <div className="flex-1 min-w-0 pr-24 space-y-2">
-            <Skeleton className="h-6 w-32 rounded-lg" />
+            <SkeletonText size="lg" className="w-32 rounded-lg" />
             <div className="flex gap-1.5">
               <Skeleton className="h-5 w-14 rounded-md" />
               <Skeleton className="h-5 w-20 rounded-md" />
-              <Skeleton className="h-5 w-16 rounded-md" />
             </div>
-            <Skeleton className="h-3 w-24" />
-            <Skeleton className="h-3 w-40" />
+            <SkeletonText size="11px" className="w-24" />
+            <SkeletonText size="11px" className="w-40" />
           </div>
         </div>
       </div>
@@ -505,7 +504,13 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
 
       {/* ローディング中のスケルトン */}
       {loading && !isAdding && !editId && costs.length === 0 && (
-        <RecurringCardSkeleton />
+        <>
+          {/* 「定期費用を追加」ボタン行（costs.length > 0 の間だけ表示される実ボタンのプレースホルダ） */}
+          <div className="flex justify-end mt-8 mb-8">
+            <Skeleton className="h-7 w-32 rounded-lg" />
+          </div>
+          <RecurringCardSkeleton />
+        </>
       )}
 
       {/* 空状態 */}

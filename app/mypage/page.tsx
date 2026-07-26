@@ -10,7 +10,7 @@ import { NumberInput } from "@/components/ui/NumberInput"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { Dialog, DialogContent, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical, ChevronRight, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck, AtSign, Info, Lock } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
@@ -129,6 +129,18 @@ function ChipPresetRow({
           {customLabel}
         </button>
       )}
+    </div>
+  )
+}
+
+// 各設定カード左側のスケルトン
+function MypageSkeletonDesc({ titleWidth }: { titleWidth: string }) {
+  return (
+    <div className="md:w-1/3 p-6 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card space-y-2">
+      <SkeletonText size="base" className={titleWidth} />
+      {/* 実カードの説明文は leading-relaxed のため行間を明示する */}
+      <SkeletonText size="xs" leading="relaxed" className="w-full" />
+      <SkeletonText size="xs" leading="relaxed" className="w-4/5" />
     </div>
   )
 }
@@ -640,54 +652,109 @@ export default function MyPage() {
       </header>
       <div className="space-y-8">
         {/* プロフィールカードスケルトン */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden">
+        {/* 実カードは Card 自体の py-4 により区切り線が上下の枠に接しないため、ただの div であるスケルトンにも同じ py-4 を付ける */}
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden py-4">
           <div className="md:flex">
-            <div className="md:w-1/3 p-6 bg-slate-50/50 dark:bg-muted/50 space-y-2">
-              <Skeleton className="h-5 w-24" />
-              <Skeleton className="h-3 w-full" />
-              <Skeleton className="h-3 w-4/5" />
-            </div>
-            <div className="md:w-2/3 p-6 space-y-5">
+            <MypageSkeletonDesc titleWidth="w-24" />
+            <div className="md:w-2/3 p-6 space-y-3">
               {[...Array(2)].map((_, i) => (
-                <div key={i} className="space-y-2 max-w-md">
-                  <Skeleton className="h-3 w-16" />
-                  <Skeleton className="h-10 w-full rounded-lg" />
+                <div key={i} className="flex items-center gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5">
+                  <Skeleton className="h-4 w-4 rounded-full shrink-0" />
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <SkeletonText size="10px" className="w-16" />
+                    <SkeletonText size="sm" className="w-32" />
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-          <div className="border-t border-slate-100 dark:border-border px-6 py-3 flex justify-between items-center">
-            <Skeleton className="h-3 w-48" />
-            <Skeleton className="h-8 w-16 rounded-lg" />
-          </div>
         </div>
         {/* メンテナンス設定カードスケルトン */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden py-4">
           <div className="md:flex">
-            <div className="md:w-1/3 p-6 bg-slate-50/50 dark:bg-muted/50 space-y-2">
-              <Skeleton className="h-5 w-32" />
-              <Skeleton className="h-3 w-full" />
-              <Skeleton className="h-3 w-4/5" />
-            </div>
+            <MypageSkeletonDesc titleWidth="w-32" />
             <div className="md:w-2/3 p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                {[...Array(4)].map((_, i) => (
-                  <div key={i} className="space-y-2">
-                    <Skeleton className="h-3 w-24" />
-                    <div className="flex gap-3">
-                      <Skeleton className="h-9 flex-1 rounded-lg" />
-                      <Skeleton className="h-9 flex-1 rounded-lg" />
+              <div className="space-y-5">
+                {[4, 3, 3].map((count, ci) => (
+                  <div key={ci}>
+                    <SkeletonText size="11px" className="w-20 mb-2" />
+                    <div className="rounded-xl border border-slate-200 dark:border-border divide-y divide-slate-100 dark:divide-border overflow-hidden">
+                      {[...Array(count)].map((_, i) => (
+                        <div key={i} className="flex items-center gap-3 px-4 py-3">
+                          <Skeleton className="h-[18px] w-[18px] rounded-full shrink-0" />
+                          <div className="flex-1 min-w-0 space-y-1">
+                            <SkeletonText size="sm" className="w-28" />
+                            <SkeletonText size="xs" className="w-40" />
+                          </div>
+                          <Skeleton className="h-5 w-9 rounded-full shrink-0" />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-          <div className="border-t border-slate-100 dark:border-border px-6 py-3 flex justify-between items-center">
-            <Skeleton className="h-3 w-48" />
-            <Skeleton className="h-8 w-16 rounded-lg" />
+        </div>
+        {/* 言語設定カードスケルトン */}
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden py-4">
+          <div className="md:flex">
+            <MypageSkeletonDesc titleWidth="w-28" />
+            <div className="md:w-2/3 p-6">
+              <Skeleton className="h-9 w-40 rounded-lg" />
+            </div>
           </div>
         </div>
+        {/* アクセシビリティカードスケルトン */}
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden py-4">
+          <div className="md:flex">
+            <MypageSkeletonDesc titleWidth="w-32" />
+            <div className="md:w-2/3 p-6 space-y-6">
+              {/* 実要素は Label（leading-none を内包）なので行間を明示する */}
+              <div className="space-y-2">
+                <SkeletonText size="xs" leading="none" className="w-32" />
+                <Skeleton className="h-9 w-44 rounded-lg" />
+              </div>
+              <div className="space-y-2">
+                <SkeletonText size="xs" leading="none" className="w-24" />
+                <Skeleton className="h-9 w-44 rounded-lg" />
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* ホーム画面カスタマイズカードスケルトン */}
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden py-4">
+          <div className="md:flex">
+            <MypageSkeletonDesc titleWidth="w-32" />
+            <div className="md:w-2/3 p-6">
+              <div className="lg:hidden space-y-2 max-w-md">
+                {[...Array(5)].map((_, i) => (
+                  <Skeleton key={i} className="h-[52px] w-full rounded-lg" />
+                ))}
+              </div>
+              <div className="hidden lg:block max-w-md space-y-4">
+                <Skeleton className="h-8 w-full rounded-lg" />
+                <Skeleton className="h-8 w-full rounded-lg" />
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* データエクスポートカードスケルトン */}
+        {/* 実カードはフッター(border-t)を持つCardのため、Card自体のpbは0になり、pt-4のみ効いている */}
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden pt-4">
+          <div className="p-6 space-y-2">
+            <SkeletonText size="base" className="w-28" />
+            <SkeletonText size="xs" leading="relaxed" className="w-2/3" />
+          </div>
+          <div className="border-t border-slate-100 dark:border-border p-6 flex justify-end">
+            <Skeleton className="h-8 w-32 rounded-lg" />
+          </div>
+        </div>
+      </div>
+
+      {/* ログアウトボタンスケルトン（スマホ版のみ） */}
+      <div className="md:hidden pt-8 flex justify-center mb-8">
+        <Skeleton className="h-9 w-40 rounded-lg" />
       </div>
     </main>
   )

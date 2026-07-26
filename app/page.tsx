@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { NumberInput } from "@/components/ui/NumberInput"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
@@ -143,18 +143,41 @@ export default function Home() {
         {/* 愛車カードスケルトン */}
         <div className="lg:w-[380px] lg:shrink-0" style={{ order: homeOrder.indexOf("cars") }}>
           <div className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden">
-            <Skeleton className="h-48 rounded-none" />
-            <div className="p-4 space-y-2">
-              <Skeleton className="h-7 w-36 rounded-lg" />
-              <Skeleton className="h-3 w-48" />
+            <Skeleton className="aspect-[11/6] rounded-none" />
+            {/* 画像とテキストの間の余白（実要素は mt-1 だが、隣接する要素同士が接すると余白が無く見えるため広めにとる） */}
+            <div className="px-4 pt-3 pb-4 space-y-2">
+              <SkeletonText size="2xl" className="w-36 rounded-lg" />
+              <SkeletonText size="10px" className="w-48" />
             </div>
-            <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-t border-slate-100 dark:border-border">
-              {[...Array(4)].map((_, i) => (
+            <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-t border-b border-slate-100 dark:border-border">
+              {[...Array(2)].map((_, i) => (
                 <div key={i} className="p-4 space-y-2">
-                  <Skeleton className="h-2.5 w-16" />
-                  <Skeleton className="h-5 w-20" />
+                  <SkeletonText size="9px" className="w-16" />
+                  <SkeletonText size="lg" className="w-20" />
                 </div>
               ))}
+            </div>
+            <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-b border-slate-100 dark:border-border">
+              {[...Array(2)].map((_, i) => (
+                <div key={i} className="p-4 space-y-2">
+                  <SkeletonText size="9px" className="w-16" />
+                  <SkeletonText size="lg" className="w-20" />
+                </div>
+              ))}
+            </div>
+            {/* 実カードと同じ text-xs を付け、内側の 9px/10px が継承する行間まで一致させる */}
+            <div className="p-4 flex flex-col gap-2.5 text-xs">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="flex justify-between items-center">
+                  <SkeletonText size="9px" className="w-20" />
+                  <SkeletonText size="10px" className="w-16" />
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center justify-center gap-4 py-4 border-t border-slate-100 dark:border-border">
+              <Skeleton className="h-[30px] w-[30px] rounded-lg" />
+              <SkeletonText size="xs" className="w-12" />
+              <Skeleton className="h-[30px] w-[30px] rounded-lg" />
             </div>
           </div>
         </div>
@@ -165,12 +188,12 @@ export default function Home() {
         >
           <div className="space-y-6" style={{ order: homeOrder.indexOf("summary") }}>
             {/* 今月の費用カードスケルトン */}
-            <div className="bg-white dark:bg-card rounded-xl shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden">
+            <div className="bg-white dark:bg-card rounded-xl shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
               <div className="p-3.5 flex items-start justify-between gap-4">
                 <div className="-mt-1 space-y-1.5">
-                  <Skeleton className="h-3 w-24" />
-                  <Skeleton className="h-7 w-32 rounded-lg" />
-                  <Skeleton className="h-2.5 w-20" />
+                  <SkeletonText size="sm" className="w-24" />
+                  <SkeletonText size="2xl" className="w-32 rounded-lg" />
+                  <SkeletonText size="9px" className="w-20" />
                 </div>
                 <div className="flex flex-col gap-1.5 mt-1 shrink-0">
                   <Skeleton className="h-7 w-24 rounded-lg" />
@@ -179,11 +202,11 @@ export default function Home() {
               </div>
               <div className="mx-4 border-t border-slate-100 dark:border-border" />
               <div className="p-3.5 space-y-2.5">
-                <Skeleton className="h-2.5 w-20 mb-1" />
+                <SkeletonText size="10px" className="w-20 mb-1" />
                 {[...Array(3)].map((_, i) => (
                   <div key={i} className="flex items-center justify-between">
-                    <Skeleton className="h-3 w-24" />
-                    <Skeleton className="h-3 w-16" />
+                    <SkeletonText size="11px" className="w-24" />
+                    <SkeletonText size="12px" className="w-16" />
                   </div>
                 ))}
               </div>
@@ -192,18 +215,20 @@ export default function Home() {
           <div className="space-y-6" style={{ order: homeOrder.indexOf("alerts") }}>
             {/* アラートカードスケルトン */}
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
-              {[...Array(2)].map((_, i) => (
-                <div key={i} className="rounded-xl bg-white dark:bg-card shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
+              {/* 1件目は常に表示、2〜4件目はPC版初期表示用（lg以上のみ表示）に合わせる */}
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className={`rounded-xl bg-white dark:bg-card shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4 ${i > 0 ? "hidden lg:block" : ""}`}>
                   <div className="p-3.5 flex items-start gap-3">
                     <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
                     <div className="min-w-0 flex-1">
-                      <Skeleton className="h-2.5 w-16" />
+                      <SkeletonText size="10px" className="w-16" />
+                      {/* 実カードはこのブロックが leading-tight のため行間を明示する */}
                       <div className="mt-0.5">
-                        <Skeleton className="h-3 w-32" />
-                        <Skeleton className="mt-0.5 h-7 w-24" />
+                        <SkeletonText size="11px" leading="tight" className="w-32" />
+                        <SkeletonText size="lg" leading="tight" className="mt-0.5 w-24" />
                       </div>
                       <div className="flex flex-col gap-1.5 mt-1">
-                        <Skeleton className="h-2.5 w-24" />
+                        <SkeletonText size="10px" className="w-24" />
                         <Skeleton className="h-1.5 w-[80%] rounded-full" />
                       </div>
                     </div>
