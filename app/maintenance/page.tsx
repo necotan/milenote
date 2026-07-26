@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
 import { CarFront, SlidersHorizontal, Settings2, EyeOff, LayoutList, FileX } from "lucide-react"
 import Link from "next/link"
@@ -195,32 +195,43 @@ export default function MaintenancePage() {
           <span className="font-bold text-xs">{t("home.back_to_home")}</span>
         </Link>
       </header>
-      <div className="space-y-6">
-        {[...Array(3)].map((_, i) => (
-          <div key={i}>
-            <Skeleton className="h-3 w-24 ml-1 mb-2" />
-            <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,300px)] md:max-w-[1248px] gap-3 md:gap-4">
-              {[...Array(3)].map((_, j) => (
-                <div key={j} className="rounded-xl bg-white dark:bg-card shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
-                  <div className="p-3.5 flex items-start gap-3">
-                    <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <Skeleton className="h-2.5 w-16" />
-                      <div className="mt-0.5">
-                        <Skeleton className="h-3 w-32" />
-                        <Skeleton className="mt-0.5 h-7 w-24" />
-                      </div>
-                      <div className="flex flex-col gap-1.5 mt-1">
-                        <Skeleton className="h-2.5 w-24" />
-                        <Skeleton className="h-1.5 w-[80%] rounded-full" />
+      <div className="space-y-3">
+        {/* 並び替えトグル、絞り込み、表示設定ボタン */}
+        <div className="flex items-center justify-between gap-2">
+          <Skeleton className="h-[30px] w-40 rounded-full" />
+          <div className="flex flex-col items-end gap-2 shrink-0">
+            <Skeleton className="h-7 w-9 rounded-lg" />
+            <Skeleton className="h-7 w-28 rounded-lg" />
+          </div>
+        </div>
+        <div className="space-y-6">
+          {[...Array(3)].map((_, i) => (
+            <div key={i}>
+              <SkeletonText size="sm" className="w-24 px-1 mb-2" />
+              <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,300px)] md:max-w-[1248px] gap-3 md:gap-4">
+                {[...Array(3)].map((_, j) => (
+                  <div key={j} className="rounded-xl bg-white dark:bg-card shadow-sm ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
+                    <div className="p-3.5 flex items-start gap-3">
+                      <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <SkeletonText size="10px" className="w-16" />
+                        {/* 実カードはこのブロックが leading-tight のため行間を明示する */}
+                        <div className="mt-0.5">
+                          <SkeletonText size="11px" leading="tight" className="w-32" />
+                          <SkeletonText size="lg" leading="tight" className="mt-0.5 w-24" />
+                        </div>
+                        <div className="flex flex-col gap-1.5 mt-1">
+                          <SkeletonText size="10px" className="w-24" />
+                          <Skeleton className="h-1.5 w-[80%] rounded-full" />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </main>
   )

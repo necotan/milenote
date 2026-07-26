@@ -17,7 +17,7 @@ import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
-import { Skeleton, SkeletonTabs } from "@/components/ui/skeleton"
+import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES, type SubCategorySlug } from "@/lib/subcategories"
@@ -41,24 +41,39 @@ type FuelCalcField = "amount" | "fuelUnitPrice" | "fuelAmount"
 // スケルトンUIコンポーネント
 const RecordSkeleton = () => (
   <div className="space-y-4">
-    <SkeletonTabs className="mb-6" />
+    <SkeletonTabs className="mb-4" />
+    {/* 絞り込みトグル、フィルター、登録ボタン、月ナビ行 */}
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <Skeleton className="h-[30px] w-32 rounded-full" />
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-7 w-9 rounded-lg" />
+          <Skeleton className="h-7 w-24 rounded-lg" />
+        </div>
+      </div>
+      <div className="flex items-center justify-center">
+        <Skeleton className="h-[30px] w-[212px] rounded-lg" />
+      </div>
+    </div>
     {[...Array(5)].map((_, i) => (
-      <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden">
+      <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden py-4">
         <div className="p-4 flex gap-4 items-start">
           {/* アイコン */}
           <Skeleton className="w-12 h-12 rounded-full shrink-0 mt-1" />
           <div className="flex-1 min-w-0 pr-14 space-y-2">
             {/* 金額 */}
-            <Skeleton className="h-6 w-28 rounded-lg" />
+            <SkeletonText size="lg" className="w-28 rounded-lg" />
             {/* タグ */}
             <div className="flex gap-2">
               <Skeleton className="h-5 w-16 rounded-md" />
               <Skeleton className="h-5 w-20 rounded-md" />
             </div>
             {/* 車名・ODO */}
-            <Skeleton className="h-4 w-36" />
+            <SkeletonText size="11px" className="w-36" />
             {/* 日付 */}
-            <Skeleton className="h-3 w-24" />
+            <SkeletonText size="11px" className="w-24" />
+            {/* カテゴリ別の追加行 */}
+            <SkeletonText size="xs" className="w-40" />
           </div>
         </div>
       </div>

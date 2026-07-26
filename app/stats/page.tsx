@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
-import { Skeleton, SkeletonTabs } from "@/components/ui/skeleton"
+import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Label, Legend,
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -890,19 +890,37 @@ export default function StatsPage() {
 
   // ローディング状態の表示（タイトルは即時表示し、コンテンツのみスケルトン）
   if (loading) return (
-    <main className="p-4 space-y-6 max-w-5xl mx-auto">
+    <main className="p-4 space-y-6 max-w-5xl mx-auto pb-20">
       <header className="pt-4 pb-2">
         <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
         <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
       </header>
-      <SkeletonTabs />
+      <SkeletonTabs className="mb-4" />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {[...Array(2)].map((_, i) => (
-          <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border p-4 space-y-3">
-            <Skeleton className="h-4 w-28" />
-            <Skeleton className="h-64 rounded-lg" />
+        {/* カテゴリ別内訳カード（見出し、期間絞り込み、グラフ） */}
+        <div className="bg-white dark:bg-card rounded-xl shadow-sm ring-1 ring-slate-200/50 dark:ring-border py-4">
+          {/* CardTitle が leading-snug を内包しているため行間を明示する（アイコン分は幅に含めて1つの要素にする） */}
+          <div className="p-4 pb-0">
+            <SkeletonText size="sm" leading="snug" className="w-32" />
           </div>
-        ))}
+          <div className="px-4 pb-3 pt-2 space-y-2.5">
+            <Skeleton className="h-8 w-full rounded-full" />
+            <Skeleton className="h-[42px] w-full rounded-lg" />
+          </div>
+          <div className="px-4 pb-2">
+            <Skeleton className="h-56 w-full rounded-lg" />
+          </div>
+        </div>
+        {/* 月別出費推移カード（見出し、表示切替トグル、グラフ） */}
+        <div className="bg-white dark:bg-card rounded-xl shadow-sm ring-1 ring-slate-200/50 dark:ring-border py-4">
+          <div className="p-4 pb-2 flex items-center justify-between">
+            <SkeletonText size="sm" leading="snug" className="w-32" />
+            <Skeleton className="h-8 w-24 rounded-full" />
+          </div>
+          <div className="px-4 pb-2">
+            <Skeleton className="h-56 w-full rounded-lg" />
+          </div>
+        </div>
       </div>
     </main>
   )
