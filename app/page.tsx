@@ -159,10 +159,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div
-          className="flex-1 min-w-0 flex flex-col gap-6 lg:gap-4 justify-between"
-          style={{ order: Math.min(homeOrder.indexOf("summary"), homeOrder.indexOf("alerts")) }}
-        >
+        <div className="contents lg:flex lg:flex-1 lg:min-w-0 lg:flex-col lg:gap-4 lg:justify-between">
           <div className="space-y-6" style={{ order: homeOrder.indexOf("summary") }}>
             {/* 今月の費用カードスケルトン */}
             <div className="bg-white dark:bg-card rounded-xl shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden">
@@ -226,10 +223,7 @@ export default function Home() {
 
       <div className="flex flex-col lg:flex-row lg:items-stretch gap-6 lg:gap-8">
 
-        <div
-          className="flex-1 min-w-0 flex flex-col gap-6 lg:gap-4 justify-between"
-          style={{ order: Math.min(homeOrder.indexOf("summary"), homeOrder.indexOf("alerts")) }}
-        >
+        <div className="contents lg:flex lg:flex-1 lg:min-w-0 lg:flex-col lg:gap-4 lg:justify-between">
         <section style={{ order: homeOrder.indexOf("summary") }}>
           {/* 一体型カード：今月の費用 + 給油ボタン + 直近の記録 */}
           <Card className="border-none shadow-sm bg-white dark:bg-card">
