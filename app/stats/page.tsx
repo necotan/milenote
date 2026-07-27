@@ -10,7 +10,7 @@ import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Label, Legend,
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  BarChart, Bar
+  BarChart, Bar, BarStack
 } from "recharts"
 import type { TooltipContentProps } from "recharts"
 import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, ChevronDown, Info, LineChart as LineChartIcon, Fuel, BatteryCharging } from "lucide-react"
@@ -41,7 +41,7 @@ const CATEGORY_MAP_BLUE: Record<string, { color: string }> = {
   highway: { color: "#38bdf8" },
   tax: { color: "#1e3a8a" },
   insurance: { color: "#818cf8" },
-  other: { color: "#cbd5e1" },
+  other: { color: "#64748b" },
 }
 
 const CATEGORY_KEYS = ["fuel", "maintenance", "inspection", "repair", "custom", "carwash", "highway", "tax", "insurance", "other"] as const
@@ -53,6 +53,19 @@ const normalizeCategoryKey = (cat: string): CategoryKey =>
 const buildEmptyCategoryBuckets = (): Record<CategoryKey, number> => ({
   fuel: 0, maintenance: 0, inspection: 0, repair: 0, custom: 0, carwash: 0, highway: 0, tax: 0, insurance: 0, other: 0,
 })
+
+// 円グラフのスライスに保証する最小角度
+// 区切り線（strokeWidth 2）はパスの内側にも1pxずつ食い込むため、これより細いスライスは
+// 塗りが完全に覆われて色が見えなくなる。ラベルのパーセントは値と合計から算出するので
+// 最小角度を設けても表示される数値は正確なまま
+const PIE_MIN_ANGLE_DEG = 3
+
+// 積み上げ棒グラフの出現アニメーション
+// CSS の transform アニメーションは SVG 上で描画残骸（棒の上端に残る線）を生むため、
+// Recharts 本体の矩形ジオメトリを補間するアニメーションを使う
+const BAR_ANIM_DURATION_MS = 600
+const BAR_ANIM_STAGGER_MS = 90
+const BAR_ANIM_EASING = "cubic-bezier(0.33, 1, 0.68, 1)"
 
 type Record_ = {
   category: string
@@ -103,8 +116,6 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
       return `¥${val.toLocaleString()}`;
     };
 
-    if (percent < 0.01) return null;
-
     // 金額とパーセントを2行に分けて表示
     const amountText = formatValue(value);
     const percentText = `(${(percent * 100).toFixed(1)}%)`;
@@ -142,12 +153,12 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
   return PieCustomLabel;
 };
 
-// 値がほぼ0（丸め誤差程度）のカテゴリは、ラベル文字と同様に引き出し線も非表示にする
+// 引き出し線はラベル文字と必ず同じ条件で描画する
 const createCustomizedLabelLine = (strokeColor: string) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const PieCustomLabelLine = (props: any) => {
-    const { percent, points } = props;
-    if (percent < 0.01 || !points || points.length < 2) {
+    const { points } = props;
+    if (!points || points.length < 2) {
       return <path d="" stroke="none" fill="none" />;
     }
 
@@ -598,17 +609,6 @@ export default function StatsPage() {
     [monthlyData],
   )
 
-  // 各行で実際にスタックの最上段になるカテゴリを記録（角丸描画のため）
-  const monthlyTopByRow = useMemo(() => {
-    const map = new Map<string, CategoryKey>()
-    monthlyData.forEach(row => {
-      let top: CategoryKey | null = null
-      CATEGORY_KEYS.forEach(cat => { if (row[cat] > 0) top = cat })
-      if (top) map.set(row.month, top)
-    })
-    return map
-  }, [monthlyData])
-
   // 直近3年（今年を含む過去3年）の枠を生成してから集計
   type YearlyBucket = { year: number; amount: number; hasData: boolean } & Record<CategoryKey, number>
   const yearlyData = useMemo<YearlyBucket[]>(() => {
@@ -634,16 +634,6 @@ export default function StatsPage() {
     () => CATEGORY_KEYS.filter(cat => yearlyData.some(d => d[cat] > 0)),
     [yearlyData],
   )
-
-  const yearlyTopByRow = useMemo(() => {
-    const map = new Map<string, CategoryKey>()
-    yearlyData.forEach(row => {
-      let top: CategoryKey | null = null
-      CATEGORY_KEYS.forEach(cat => { if (row[cat] > 0) top = cat })
-      if (top) map.set(String(row.year), top)
-    })
-    return map
-  }, [yearlyData])
 
   // 新しい年が上、前年比（増減額）を付与
   const yearlyTableRows = useMemo(
@@ -875,40 +865,6 @@ export default function StatsPage() {
     return LineDot
   }, [yearlyLastValidIndex, chartChrome.dotStroke])
 
-  const makeStackedBarShape = (
-    cat: CategoryKey,
-    topByRow: Map<string, CategoryKey>,
-    getKey: (payload: any) => string,
-  ) => {
-    const StackedBarShape = (props: any) => {
-      const { x, y, width, height, fill, payload } = props
-      if (!width || width <= 0 || !height || height <= 0) return <g />
-      const isTop = topByRow.get(getKey(payload)) === cat
-      if (!isTop) {
-        return <rect x={x} y={y} width={width} height={height} fill={fill} />
-      }
-      const r = Math.min(4, height, width / 2)
-      const path = `M${x},${y + r} Q${x},${y} ${x + r},${y} L${x + width - r},${y} Q${x + width},${y} ${x + width},${y + r} L${x + width},${y + height} L${x},${y + height} Z`
-      return <path d={path} fill={fill} />
-    }
-    StackedBarShape.displayName = "StackedBarShape"
-    return StackedBarShape
-  }
-  // shape prop の参照を毎レンダーで作り直すと、Recharts が同じ Bar を別物として扱い、もう一方のグラフの shape も含めて再生成されてしまうため per-category で memo 化する
-  const monthlyBarShapes = useMemo(() => {
-    const shapes: Partial<Record<CategoryKey, ReturnType<typeof makeStackedBarShape>>> = {}
-    monthlyCategoriesPresent.forEach(cat => {
-      shapes[cat] = makeStackedBarShape(cat, monthlyTopByRow, (p: { month: string }) => p.month)
-    })
-    return shapes
-  }, [monthlyCategoriesPresent, monthlyTopByRow])
-  const yearlyBarShapes = useMemo(() => {
-    const shapes: Partial<Record<CategoryKey, ReturnType<typeof makeStackedBarShape>>> = {}
-    yearlyCategoriesPresent.forEach(cat => {
-      shapes[cat] = makeStackedBarShape(cat, yearlyTopByRow, (p: { year: number }) => String(p.year))
-    })
-    return shapes
-  }, [yearlyCategoriesPresent, yearlyTopByRow])
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
   // ローディング状態の表示（タイトルは即時表示し、コンテンツのみスケルトン）
@@ -1093,22 +1049,6 @@ export default function StatsPage() {
         {/* 費用分析タブ */}
         <TabsContent value="cost" className="space-y-6 outline-none">
           <style>{`
-            @keyframes barStackRise {
-              from { transform: scaleY(0); opacity: 0; }
-              to   { transform: scaleY(1); opacity: 1; }
-            }
-            .bar-anim .recharts-bar {
-              transform-box: fill-box;
-              transform-origin: bottom;
-              animation: barStackRise 0.6s cubic-bezier(0.33, 1, 0.68, 1) backwards;
-            }
-            .bar-anim .recharts-bar:nth-of-type(1) { animation-delay: 0ms; }
-            .bar-anim .recharts-bar:nth-of-type(2) { animation-delay: 90ms; }
-            .bar-anim .recharts-bar:nth-of-type(3) { animation-delay: 180ms; }
-            .bar-anim .recharts-bar:nth-of-type(4) { animation-delay: 270ms; }
-            .bar-anim .recharts-bar:nth-of-type(5) { animation-delay: 360ms; }
-            .bar-anim .recharts-bar:nth-of-type(6) { animation-delay: 450ms; }
-            .bar-anim .recharts-bar:nth-of-type(7) { animation-delay: 540ms; }
             .bar-anim .recharts-legend-wrapper {
               animation: chartFadeIn 0.5s ease-out 0.4s backwards;
             }
@@ -1187,7 +1127,7 @@ export default function StatsPage() {
                     <div key={pieAnimKey} className="pie-anim" style={{ width: "100%", height: "100%" }}>
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
-                          <Pie data={categoryData} cx="50%" cy="45%" innerRadius={60} outerRadius={80} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill)} labelLine={createCustomizedLabelLine(chartChrome.labelLineStroke)}>
+                          <Pie data={categoryData} cx="50%" cy="45%" innerRadius={60} outerRadius={80} minAngle={PIE_MIN_ANGLE_DEG} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill)} labelLine={createCustomizedLabelLine(chartChrome.labelLineStroke)}>
                             {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                             <Label value={`¥${totalAmount.toLocaleString()}`} position="center" dy={-8} className="text-base font-black fill-slate-800 dark:fill-foreground" />
                             <Label value={t("stats.total")} position="center" dy={8} className="text-[10px] font-bold fill-slate-400 dark:fill-muted-foreground" />
@@ -1248,16 +1188,18 @@ export default function StatsPage() {
                         <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} tickFormatter={numberTickFormatter} />
                         <Tooltip cursor={{ fill: chartChrome.cursorFill }} content={renderStackedBarTooltip(monthlyTooltipLabelFormatter)} />
                         <Legend verticalAlign="bottom" content={renderGridLegend(renderCategoryLegendLabel)} />
-                        {monthlyCategoriesPresent.map((cat) => (
-                          <Bar
-                            key={cat}
-                            dataKey={cat}
-                            stackId="a"
-                            fill={activeCategoryMap[cat].color}
-                            shape={monthlyBarShapes[cat]}
-                            isAnimationActive={false}
-                          />
-                        ))}
+                        <BarStack radius={[4, 4, 0, 0]}>
+                          {monthlyCategoriesPresent.map((cat, index) => (
+                            <Bar
+                              key={cat}
+                              dataKey={cat}
+                              fill={activeCategoryMap[cat].color}
+                              animationBegin={index * BAR_ANIM_STAGGER_MS}
+                              animationDuration={BAR_ANIM_DURATION_MS}
+                              animationEasing={BAR_ANIM_EASING}
+                            />
+                          ))}
+                        </BarStack>
                       </BarChart>
                     )}
                   </ResponsiveContainer>
@@ -1315,16 +1257,18 @@ export default function StatsPage() {
                       <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} tickFormatter={numberTickFormatter} />
                       <Tooltip cursor={{ fill: chartChrome.cursorFill }} content={renderStackedBarTooltip(yearTooltipLabelFormatter)} />
                       <Legend verticalAlign="bottom" content={renderGridLegend(renderCategoryLegendLabel)} />
-                      {yearlyCategoriesPresent.map((cat) => (
-                        <Bar
-                          key={cat}
-                          dataKey={cat}
-                          stackId="a"
-                          fill={activeCategoryMap[cat].color}
-                          shape={yearlyBarShapes[cat]}
-                          isAnimationActive={false}
-                        />
-                      ))}
+                      <BarStack radius={[4, 4, 0, 0]}>
+                        {yearlyCategoriesPresent.map((cat, index) => (
+                          <Bar
+                            key={cat}
+                            dataKey={cat}
+                            fill={activeCategoryMap[cat].color}
+                            animationBegin={index * BAR_ANIM_STAGGER_MS}
+                            animationDuration={BAR_ANIM_DURATION_MS}
+                            animationEasing={BAR_ANIM_EASING}
+                          />
+                        ))}
+                      </BarStack>
                     </BarChart>
                   )}
                 </ResponsiveContainer>
