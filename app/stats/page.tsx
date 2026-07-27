@@ -142,6 +142,29 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
   return PieCustomLabel;
 };
 
+// 値がほぼ0（丸め誤差程度）のカテゴリは、ラベル文字と同様に引き出し線も非表示にする
+const createCustomizedLabelLine = (strokeColor: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const PieCustomLabelLine = (props: any) => {
+    const { percent, points } = props;
+    if (percent < 0.01 || !points || points.length < 2) {
+      return <path d="" stroke="none" fill="none" />;
+    }
+
+    return (
+      <path
+        className="recharts-pie-label-line"
+        d={`M${points[0].x},${points[0].y}L${points[1].x},${points[1].y}`}
+        stroke={strokeColor}
+        strokeWidth={1}
+        fill="none"
+      />
+    );
+  };
+  PieCustomLabelLine.displayName = "PieCustomLabelLine";
+  return PieCustomLabelLine;
+};
+
 type PeriodPreset = "3m" | "1y" | "year" | "all" | "custom"
 
 function PeriodDateRow({
@@ -1148,7 +1171,7 @@ export default function StatsPage() {
                         0%,  40% { opacity: 0; }
                         100%     { opacity: 1; }
                       }
-                      .pie-anim .recharts-layer.recharts-pie {
+                      .pie-anim .recharts-pie > .recharts-layer:not(.recharts-pie-labels) {
                         transform-box: fill-box;
                         transform-origin: center;
                         animation: pieRotateIn 0.75s cubic-bezier(0.33, 1, 0.68, 1) forwards;
@@ -1164,7 +1187,7 @@ export default function StatsPage() {
                     <div key={pieAnimKey} className="pie-anim" style={{ width: "100%", height: "100%" }}>
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
-                          <Pie data={categoryData} cx="50%" cy="45%" innerRadius={60} outerRadius={80} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill)} labelLine={{ stroke: chartChrome.labelLineStroke, strokeWidth: 1 }}>
+                          <Pie data={categoryData} cx="50%" cy="45%" innerRadius={60} outerRadius={80} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill)} labelLine={createCustomizedLabelLine(chartChrome.labelLineStroke)}>
                             {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                             <Label value={`¥${totalAmount.toLocaleString()}`} position="center" dy={-8} className="text-base font-black fill-slate-800 dark:fill-foreground" />
                             <Label value={t("stats.total")} position="center" dy={8} className="text-[10px] font-bold fill-slate-400 dark:fill-muted-foreground" />
