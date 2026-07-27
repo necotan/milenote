@@ -21,10 +21,29 @@ import RecurringCostProcessor from "@/components/RecurringCostProcessor";
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
+const LOADING_FADE_MS = 400;
+
 function AppContent({ children, loading }: { children: React.ReactNode; loading: boolean }) {
   const pathname = usePathname();
   // メンテナンス一覧用
   const contentMaxWidth = pathname === "/maintenance" ? "max-w-[1600px]" : "max-w-6xl";
+
+  // フェードアウトが終わるまでオーバーレイをマウントし続けるための状態
+  const [showOverlay, setShowOverlay] = useState(loading);
+  const [fadingOut, setFadingOut] = useState(false);
+
+  useEffect(() => {
+    if (loading) {
+      setShowOverlay(true);
+      setFadingOut(false);
+      return;
+    }
+    if (!showOverlay) return;
+    setFadingOut(true);
+    const id = setTimeout(() => setShowOverlay(false), LOADING_FADE_MS);
+    return () => clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
 
   return (
     <div className="flex min-h-screen w-full relative">
@@ -39,8 +58,11 @@ function AppContent({ children, loading }: { children: React.ReactNode; loading:
       <BottomNav />
 
       {/* 初回ローディング画面。裏側でページをマウントし、データ取得を進める */}
-      {loading && (
-        <div className="fixed inset-0 z-[100]">
+      {showOverlay && (
+        <div
+          className={`fixed inset-0 z-[100] transition-opacity ease-out ${fadingOut ? "opacity-0" : "opacity-100"}`}
+          style={{ transitionDuration: `${LOADING_FADE_MS}ms` }}
+        >
           <LoadingScreen />
         </div>
       )}
