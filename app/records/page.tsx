@@ -222,13 +222,6 @@ const RecordForm = ({
               </div>
             </div>
 
-            {/* 区切り線 */}
-            <div className="flex items-center gap-2 max-w-40">
-              <div className="flex-1 h-px bg-slate-200 dark:bg-border" />
-              <span className="text-[10px] text-slate-400 dark:text-muted-foreground font-bold">=</span>
-              <div className="flex-1 h-px bg-slate-200 dark:bg-border" />
-            </div>
-
             {/* 総額 */}
             <div className="space-y-1">
               <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("records.total_amount")} <span className="text-red-400">{t("common.required")}</span></Label>
