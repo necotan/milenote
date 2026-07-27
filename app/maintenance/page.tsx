@@ -451,7 +451,7 @@ export default function MaintenancePage() {
           <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-widest">{t("home.no_filtered_alerts")}</p>
         </Card>
       ) : isUngrouped ? (
-        <div className="grid gap-3 md:gap-4 items-stretch" style={gridStyle}>
+        <div className="grid gap-3 md:gap-4 items-stretch mt-6" style={gridStyle}>
           {sortedAlerts.map((alert) => (
             <MaintAlertCard key={alert.id} alert={alert} className="h-full" />
           ))}
