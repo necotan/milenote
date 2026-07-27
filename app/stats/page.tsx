@@ -60,6 +60,9 @@ const buildEmptyCategoryBuckets = (): Record<CategoryKey, number> => ({
 // 最小角度を設けても表示される数値は正確なまま
 const PIE_MIN_ANGLE_DEG = 3
 
+// 円グラフの外径（ラベル位置の事前計算にも使うため定数化）
+const PIE_OUTER_RADIUS = 80
+
 // 積み上げ棒グラフの出現アニメーション
 // CSS の transform アニメーションは SVG 上で描画残骸（棒の上端に残る線）を生むため、
 // Recharts 本体の矩形ジオメトリを補間するアニメーションを使う
@@ -93,11 +96,80 @@ const estimateLabelWidth = (text: string): number => {
   return width
 }
 
-const createCustomizedLabel = (t: (key: string, params?: Record<string, string | number>) => string, locale: string, fillColor: string) => {
+// 円グラフのラベル同士の最小縦間隔（重なり防止）
+// ラベルは金額・パーセントの2行表示（fontSize 10、tspan dy -0.55em/1.1em）で実際の描画高さが約32pxあるため、それより余裕を持った値にする
+const PIE_LABEL_MIN_GAP = 34
+
+// ラベル引き出し線の長さ（Recharts の label.offsetRadius デフォルト値と同じ）
+const PIE_LABEL_OFFSET_RADIUS = 20
+
+type PieLabelSide = "start" | "end" | "middle"
+
+// Recharts が内部で使う角度計算（Pie.js の computePieSectors と同じ式）を再現してラベルの本来のY位置を先に求め、近い位置にあるものを「クラスタ」として、まとめて、そのクラスタの中心を軸に均等な間隔へ配置し直す
+// cx/cy はコンテナサイズ次第で変わるが、ラベル同士のY差分は半径と角度だけで、決まるため、実際のコンテナサイズを知らなくても差分（delta）だけ事前計算できる
+// labelとlabelLineは同じ index の delta を共有することで線のズレを防ぐ
+const computePieLabelYDeltas = (
+  categoryData: { value: number }[],
+  minAngleDeg: number,
+  outerRadius: number
+): Map<number, number> => {
+  const deltas = new Map<number, number>()
+  const sum = categoryData.reduce((s, d) => s + d.value, 0)
+  const notZeroCount = categoryData.filter(d => d.value !== 0).length
+  if (sum <= 0 || notZeroCount === 0) return deltas
+
+  const realTotalAngle = 360 - notZeroCount * minAngleDeg
+  const radius = outerRadius + PIE_LABEL_OFFSET_RADIUS
+
+  type Entry = { index: number; side: PieLabelSide; y: number }
+  const entries: Entry[] = []
+  let cursor = 0
+  categoryData.forEach((d, index) => {
+    const percent = d.value / sum
+    const startAngle = cursor
+    const sweep = d.value !== 0 ? minAngleDeg + percent * realTotalAngle : 0
+    const endAngle = startAngle + sweep
+    cursor = endAngle
+    if (d.value === 0) return
+
+    const midAngle = (startAngle + endAngle) / 2
+    const rad = (midAngle * Math.PI) / 180
+    const x = radius * Math.cos(rad)
+    const y = -radius * Math.sin(rad)
+    const side: PieLabelSide = x > 0.5 ? "start" : x < -0.5 ? "end" : "middle"
+    entries.push({ index, side, y })
+  })
+
+  const sides: PieLabelSide[] = ["start", "end", "middle"]
+  for (const side of sides) {
+    const group = entries.filter(e => e.side === side).sort((a, b) => a.y - b.y)
+    let cluster: Entry[] = []
+    const flushCluster = () => {
+      if (cluster.length > 1) {
+        const avg = cluster.reduce((s, e) => s + e.y, 0) / cluster.length
+        cluster.forEach((e, k) => {
+          const newY = avg - ((cluster.length - 1) / 2) * PIE_LABEL_MIN_GAP + k * PIE_LABEL_MIN_GAP
+          deltas.set(e.index, newY - e.y)
+        })
+      }
+      cluster = []
+    }
+    group.forEach(e => {
+      const last = cluster[cluster.length - 1]
+      if (last && e.y - last.y >= PIE_LABEL_MIN_GAP) flushCluster()
+      cluster.push(e)
+    })
+    flushCluster()
+  }
+
+  return deltas
+}
+
+const createCustomizedLabel = (t: (key: string, params?: Record<string, string | number>) => string, locale: string, fillColor: string, pieLabelDeltas: Map<number, number>) => {
   // Recharts の PieLabel 型は省略可能フィールドを含む複雑な union のため any を許容
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const PieCustomLabel = (props: any) => {
-    const { x, y, cx, percent, value, textAnchor } = props;
+    const { x, y, cx, percent, value, textAnchor, index } = props;
 
     const formatValue = (val: number) => {
       const truncateToOneDecimal = (num: number, divisor: number) => {
@@ -133,10 +205,12 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
       clampedX = Math.min(Math.max(clampedX, EDGE_PAD + textWidth / 2), svgWidth - EDGE_PAD - textWidth / 2);
     }
 
+    const clampedY = Number(y) + (pieLabelDeltas.get(index) ?? 0);
+
     return (
       <text
         x={clampedX}
-        y={y}
+        y={clampedY}
         fill={fillColor}
         textAnchor={textAnchor as "start" | "middle" | "end"}
         dominantBaseline="central"
@@ -154,18 +228,23 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
 };
 
 // 引き出し線はラベル文字と必ず同じ条件で描画する
-const createCustomizedLabelLine = (strokeColor: string) => {
+// （どちらか一方だけが描かれると、どのラベルにも繋がらない線が残る）
+// 終点のY座標はラベル側と同じ delta を適用し、重なり回避で動いたラベルに追従させる
+const createCustomizedLabelLine = (strokeColor: string, pieLabelDeltas: Map<number, number>) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const PieCustomLabelLine = (props: any) => {
-    const { points } = props;
+    const { points, index } = props;
     if (!points || points.length < 2) {
       return <path d="" stroke="none" fill="none" />;
     }
 
+    const endPoint = points[1];
+    const endY = Number(endPoint.y) + (pieLabelDeltas.get(index) ?? 0);
+
     return (
       <path
         className="recharts-pie-label-line"
-        d={`M${points[0].x},${points[0].y}L${points[1].x},${points[1].y}`}
+        d={`M${points[0].x},${points[0].y}L${endPoint.x},${endY}`}
         stroke={strokeColor}
         strokeWidth={1}
         fill="none"
@@ -522,6 +601,10 @@ export default function StatsPage() {
     else acc.push({ name: label, value: curr.amount, fill: config.color })
     return acc
   }, [])
+
+  // 円グラフのラベル位置解決（重なり回避）
+  // labelとlabelLineで共有するため描画毎に生成
+  const pieLabelDeltas = computePieLabelYDeltas(categoryData, PIE_MIN_ANGLE_DEG, PIE_OUTER_RADIUS)
 
   const totalAmount = catFilteredRecords.reduce((sum, r) => sum + r.amount, 0)
 
@@ -1127,7 +1210,7 @@ export default function StatsPage() {
                     <div key={pieAnimKey} className="pie-anim" style={{ width: "100%", height: "100%" }}>
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
-                          <Pie data={categoryData} cx="50%" cy="45%" innerRadius={60} outerRadius={80} minAngle={PIE_MIN_ANGLE_DEG} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill)} labelLine={createCustomizedLabelLine(chartChrome.labelLineStroke)}>
+                          <Pie data={categoryData} cx="50%" cy="45%" innerRadius={60} outerRadius={PIE_OUTER_RADIUS} minAngle={PIE_MIN_ANGLE_DEG} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill, pieLabelDeltas)} labelLine={createCustomizedLabelLine(chartChrome.labelLineStroke, pieLabelDeltas)}>
                             {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                             <Label value={`¥${totalAmount.toLocaleString()}`} position="center" dy={-8} className="text-base font-black fill-slate-800 dark:fill-foreground" />
                             <Label value={t("stats.total")} position="center" dy={8} className="text-[10px] font-bold fill-slate-400 dark:fill-muted-foreground" />
