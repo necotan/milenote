@@ -195,9 +195,9 @@ export default function MaintenancePage() {
           <span className="font-bold text-xs">{t("home.back_to_home")}</span>
         </Link>
       </header>
-      <div className="space-y-3">
-        {/* 並び替えトグル、絞り込み、表示設定ボタン */}
-        <div className="flex items-center justify-between gap-2">
+      <div className="space-y-3" ref={gridWrapperRef}>
+        {/* 並び替えトグル、絞り込み、表示設定ボタン（実データ表示時と同じくカード列の右端にそろえる） */}
+        <div className="flex items-center justify-between gap-2" style={{ maxWidth: gridContentWidth }}>
           <Skeleton className="h-[30px] w-40 rounded-full" />
           <div className="flex flex-col items-end gap-2 shrink-0">
             <Skeleton className="h-7 w-9 rounded-lg" />
@@ -208,8 +208,8 @@ export default function MaintenancePage() {
           {[...Array(3)].map((_, i) => (
             <div key={i}>
               <SkeletonText size="sm" className="w-24 px-1 mb-2" />
-              <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fill,300px)] md:max-w-[1248px] gap-3 md:gap-4">
-                {[...Array(3)].map((_, j) => (
+              <div className="grid gap-3 md:gap-4" style={gridStyle}>
+                {[...Array(gridColumns)].map((_, j) => (
                   <div key={j} className="rounded-xl bg-white dark:bg-card shadow-sm ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
                     <div className="p-3.5 flex items-start gap-3">
                       <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
