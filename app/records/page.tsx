@@ -177,7 +177,7 @@ const RecordForm = ({
 
         <div className="space-y-2">
           <Label>{t("records.date")} <span className="text-red-500">{t("common.required")}</span></Label>
-          <Input type="date" value={date} onChange={e => setDate(e.target.value)} required className="max-w-40" />
+          <Input type="date" value={date} onChange={e => setDate(e.target.value)} required className="max-w-40 appearance-none h-8 min-h-0" />
         </div>
 
         <div className="space-y-2">
