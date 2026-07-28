@@ -188,16 +188,16 @@ export default function Home() {
         >
           <div className="space-y-6" style={{ order: homeOrder.indexOf("summary") }}>
             {/* 今月の費用カードスケルトン */}
-            <div className="bg-white dark:bg-card rounded-xl shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
-              <div className="p-3.5 flex items-start justify-between gap-4">
+            <div className="relative bg-white dark:bg-card rounded-xl shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
+              <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
+                <Skeleton className="h-7 w-24 rounded-lg" />
+                <Skeleton className="h-7 w-24 rounded-lg" />
+              </div>
+              <div className="p-3.5 pr-32">
                 <div className="-mt-1 space-y-1.5">
                   <SkeletonText size="sm" className="w-24" />
                   <SkeletonText size="2xl" className="w-32 rounded-lg" />
                   <SkeletonText size="9px" className="w-20" />
-                </div>
-                <div className="flex flex-col gap-1.5 mt-1 shrink-0">
-                  <Skeleton className="h-7 w-24 rounded-lg" />
-                  <Skeleton className="h-7 w-24 rounded-lg" />
                 </div>
               </div>
               <div className="mx-4 border-t border-slate-100 dark:border-border" />
@@ -257,11 +257,27 @@ export default function Home() {
         >
         <section style={{ order: homeOrder.indexOf("summary") }}>
           {/* 一体型カード：今月の費用 + 給油ボタン + 直近の記録 */}
-          <Card className="border-none shadow-sm bg-white dark:bg-card">
+          <Card className="relative border-none shadow-sm bg-white dark:bg-card">
               <CardContent className="p-0">
 
-                {/* トップ：今月の費用 + 給油ボタン */}
-                <div className="p-3.5 flex items-start justify-between gap-4">
+                {/* 給油を記録、ODO更新ボタン */}
+                {cars.length > 0 && (
+                  <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
+                    <Link href="/records?action=add&category=fuel">
+                      <button className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-white dark:bg-surface-2 hover:bg-slate-50 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground transition-colors group">
+                        <Fuel size={12} className="text-slate-500 dark:text-muted-foreground group-hover:scale-110 transition-transform" />
+                        <span className="text-[10px] font-bold tracking-wider">{t("home.record_fuel")}</span>
+                      </button>
+                    </Link>
+                    <button onClick={openOdoModal} className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-white dark:bg-surface-2 hover:bg-slate-50 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground transition-colors group">
+                      <Gauge size={12} className="text-slate-500 dark:text-muted-foreground group-hover:scale-110 transition-transform" />
+                      <span className="text-[10px] font-bold tracking-wider">{t("home.update_odo")}</span>
+                    </button>
+                  </div>
+                )}
+
+                {/* 今月の費用 */}
+                <div className={`p-3.5 ${cars.length > 0 ? "pr-32" : ""}`}>
                   <div className="-mt-1">
                     <p className="text-sm font-bold text-slate-600 dark:text-muted-foreground flex items-center gap-1 uppercase tracking-widest mb-1">
                       <Banknote size={14} /> {t("home.this_month_cost")}
@@ -290,22 +306,6 @@ export default function Home() {
                       </>
                     )}
                   </div>
-
-                  {/* 給油を記録・ODO更新ボタン */}
-                  {cars.length > 0 && (
-                    <div className="flex flex-col gap-1.5 mt-1 shrink-0">
-                      <Link href="/records?action=add&category=fuel">
-                        <button className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-white dark:bg-surface-2 hover:bg-slate-50 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground transition-colors group">
-                          <Fuel size={12} className="text-slate-500 dark:text-muted-foreground group-hover:scale-110 transition-transform" />
-                          <span className="text-[10px] font-bold tracking-wider">{t("home.record_fuel")}</span>
-                        </button>
-                      </Link>
-                      <button onClick={openOdoModal} className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-white dark:bg-surface-2 hover:bg-slate-50 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground transition-colors group">
-                        <Gauge size={12} className="text-slate-500 dark:text-muted-foreground group-hover:scale-110 transition-transform" />
-                        <span className="text-[10px] font-bold tracking-wider">{t("home.update_odo")}</span>
-                      </button>
-                    </div>
-                  )}
                 </div>
 
                 {/* 区切り線 */}
