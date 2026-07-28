@@ -817,7 +817,7 @@ function RecordsPageInner() {
                         })}
                       </div>
                     </div>
-                    <div className="flex justify-center pt-1">
+                    <div className="flex justify-center pt-6">
                       <Button variant="outline" className="px-10 font-bold" onClick={() => setIsFilterOpen(false)}>
                         {t("common.save")}
                       </Button>

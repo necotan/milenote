@@ -344,7 +344,7 @@ export default function MaintenancePage() {
                 <Switch checked={isUngrouped} onCheckedChange={handleUngroupedChange} className="shrink-0" />
               </div>
 
-              <div className="flex justify-center pt-1">
+              <div className="flex justify-center pt-6">
                 <Button variant="outline" className="px-10 font-bold" onClick={() => setIsDisplaySettingsOpen(false)}>
                   {t("common.save")}
                 </Button>
@@ -447,7 +447,7 @@ export default function MaintenancePage() {
                 </div>
               )}
 
-              <div className="flex justify-center pt-1">
+              <div className="flex justify-center pt-6">
                 <Button variant="outline" className="px-10 font-bold" onClick={() => setIsFilterOpen(false)}>
                   {t("common.save")}
                 </Button>
