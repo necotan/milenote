@@ -101,9 +101,27 @@ export default function GaragePage() {
   const [carStatus, setCarStatus] = useState<CarStatus>("active")
 
   // ウィッシュリストのステータス・ジャンル絞り込み
+  // 欲しいものリストの絞り込み用ステート（localStorageに保存）
   const [wishFilters, setWishFilters] = useState<WishStatus[]>([])
   const [wishGenreFilters, setWishGenreFilters] = useState<WishlistGenreSlug[]>([])
   const [isFilterOpen, setIsFilterOpen] = useState(false)
+
+  useEffect(() => {
+    try {
+      const savedStatus = localStorage.getItem("garage_wish_status_filters")
+      if (savedStatus) setWishFilters(JSON.parse(savedStatus))
+      const savedGenre = localStorage.getItem("garage_wish_genre_filters")
+      if (savedGenre) setWishGenreFilters(JSON.parse(savedGenre))
+    } catch {}
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem("garage_wish_status_filters", JSON.stringify(wishFilters))
+  }, [wishFilters])
+
+  useEffect(() => {
+    localStorage.setItem("garage_wish_genre_filters", JSON.stringify(wishGenreFilters))
+  }, [wishGenreFilters])
 
   // ウィッシュリスト追加フォームの状態管理
   const [wishCarId, setWishCarId] = useState("")
@@ -1125,9 +1143,11 @@ export default function GaragePage() {
                       })}
                     </div>
                   </div>
-                  <Button variant="outline" className="w-full font-bold" onClick={() => setIsFilterOpen(false)}>
-                    {t("common.close")}
-                  </Button>
+                  <div className="flex justify-center pt-1">
+                    <Button variant="outline" className="px-10 font-bold" onClick={() => setIsFilterOpen(false)}>
+                      {t("common.save")}
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>
