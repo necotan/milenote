@@ -217,6 +217,7 @@
     "next_billing_date": "Next Billing",
     "first_billing_date": "First Billing Date",
     "recurring_form_hint": "A record will be created automatically on the billing date",
+    "past_billing_date_hint": "* If you set a date in the past, all past occurrences will be recorded automatically at once when saved",
     "recurring_saved": "Recurring cost saved",
     "recurring_updated": "Recurring cost updated",
     "confirm_delete_recurring": "Delete this recurring cost?",

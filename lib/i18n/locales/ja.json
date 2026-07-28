@@ -217,6 +217,7 @@
     "next_billing_date": "次回支払日",
     "first_billing_date": "初回支払日",
     "recurring_form_hint": "支払日になると自動的に記録されます",
+    "past_billing_date_hint": "※ 過去の日付を設定すると、保存時に過去分がまとめて自動記録されます",
     "recurring_saved": "定期費用を保存しました",
     "recurring_updated": "定期費用を更新しました",
     "confirm_delete_recurring": "この定期費用設定を削除しますか？",

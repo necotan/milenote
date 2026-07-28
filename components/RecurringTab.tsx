@@ -198,7 +198,7 @@ const RecurringForm = ({
               />
               {!isEdit && (
                 <p className="text-[11px] text-slate-400 dark:text-muted-foreground">
-                  ※ 過去の日付を設定すると、保存時に過去分がまとめて自動記録されます
+                  {t("records.past_billing_date_hint")}
                 </p>
               )}
             </div>
