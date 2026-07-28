@@ -111,8 +111,7 @@ const RecurringForm = ({
         <h2 className="text-xl font-extrabold text-slate-800 dark:text-foreground mb-1">
           {isEdit ? t("records.edit_recurring") : t("records.add_recurring")}
         </h2>
-        <p className="text-xs text-slate-400 dark:text-muted-foreground mb-6 flex items-center gap-1">
-          <RepeatIcon size={11} />
+        <p className="text-xs text-slate-400 dark:text-muted-foreground mb-6">
           {t("records.recurring_form_hint")}
         </p>
 
