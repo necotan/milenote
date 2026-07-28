@@ -345,10 +345,27 @@ function RecordsPageInner() {
     ? records.filter(r => r.date.startsWith(selectedYearMonth))
     : records
 
-  // カテゴリ、車の絞り込み用ステート
+  // カテゴリ、車の絞り込み用ステート（localStorageに保存）
   const [categoryFilters, setCategoryFilters] = useState<string[]>([])
   const [carFilters, setCarFilters] = useState<string[]>([])
   const [isFilterOpen, setIsFilterOpen] = useState(false)
+
+  useEffect(() => {
+    try {
+      const savedCategory = localStorage.getItem("records_category_filters")
+      if (savedCategory) setCategoryFilters(JSON.parse(savedCategory))
+      const savedCar = localStorage.getItem("records_car_filters")
+      if (savedCar) setCarFilters(JSON.parse(savedCar))
+    } catch {}
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem("records_category_filters", JSON.stringify(categoryFilters))
+  }, [categoryFilters])
+
+  useEffect(() => {
+    localStorage.setItem("records_car_filters", JSON.stringify(carFilters))
+  }, [carFilters])
 
   // カテゴリ絞り込みの選択切り替え
   const toggleCategoryFilter = (key: string) => {
@@ -800,9 +817,11 @@ function RecordsPageInner() {
                         })}
                       </div>
                     </div>
-                    <Button variant="outline" className="w-full font-bold" onClick={() => setIsFilterOpen(false)}>
-                      {t("common.close")}
-                    </Button>
+                    <div className="flex justify-center pt-1">
+                      <Button variant="outline" className="px-10 font-bold" onClick={() => setIsFilterOpen(false)}>
+                        {t("common.save")}
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               </div>

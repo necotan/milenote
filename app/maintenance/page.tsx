@@ -20,6 +20,9 @@ const SHOW_DISABLED_STORAGE_KEY = "milenote_maintenance_show_disabled"
 const HIDE_UNRECORDED_STORAGE_KEY = "milenote_maintenance_hide_unrecorded"
 const UNGROUP_STORAGE_KEY = "milenote_maintenance_ungroup"
 const SORT_MODE_STORAGE_KEY = "milenote_maintenance_sort_mode"
+// 絞り込みモーダルの選択状態もlocalStorageに保存
+const CATEGORY_FILTERS_STORAGE_KEY = "milenote_maintenance_category_filters"
+const CAR_FILTERS_STORAGE_KEY = "milenote_maintenance_car_filters"
 
 type SortMode = "distance" | "deadline"
 
@@ -51,14 +54,28 @@ export default function MaintenancePage() {
   // 記録済み項目の並び順（残り距離が少ない順 / 期限が近い順）
   const [sortMode, setSortMode] = useState<SortMode>("distance")
 
-  // 表示設定は次回訪問時も維持したいのでlocalStorageから復元
+  // 表示設定、絞り込みをlocalStorageから復元
   useEffect(() => {
     setShowDisabled(localStorage.getItem(SHOW_DISABLED_STORAGE_KEY) === "true")
     setHideUnrecorded(localStorage.getItem(HIDE_UNRECORDED_STORAGE_KEY) === "true")
     setIsUngrouped(localStorage.getItem(UNGROUP_STORAGE_KEY) === "true")
     const savedSortMode = localStorage.getItem(SORT_MODE_STORAGE_KEY)
     if (savedSortMode === "distance" || savedSortMode === "deadline") setSortMode(savedSortMode)
+    try {
+      const savedCategory = localStorage.getItem(CATEGORY_FILTERS_STORAGE_KEY)
+      if (savedCategory) setCategoryFilters(JSON.parse(savedCategory))
+      const savedCar = localStorage.getItem(CAR_FILTERS_STORAGE_KEY)
+      if (savedCar) setCarFilters(JSON.parse(savedCar))
+    } catch {}
   }, [])
+
+  useEffect(() => {
+    localStorage.setItem(CATEGORY_FILTERS_STORAGE_KEY, JSON.stringify(categoryFilters))
+  }, [categoryFilters])
+
+  useEffect(() => {
+    localStorage.setItem(CAR_FILTERS_STORAGE_KEY, JSON.stringify(carFilters))
+  }, [carFilters])
 
   const handleShowDisabledChange = (checked: boolean) => {
     setShowDisabled(checked)
@@ -327,9 +344,11 @@ export default function MaintenancePage() {
                 <Switch checked={isUngrouped} onCheckedChange={handleUngroupedChange} className="shrink-0" />
               </div>
 
-              <Button variant="outline" className="w-full font-bold" onClick={() => setIsDisplaySettingsOpen(false)}>
-                {t("common.save")}
-              </Button>
+              <div className="flex justify-center pt-1">
+                <Button variant="outline" className="px-10 font-bold" onClick={() => setIsDisplaySettingsOpen(false)}>
+                  {t("common.save")}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -428,9 +447,11 @@ export default function MaintenancePage() {
                 </div>
               )}
 
-              <Button variant="outline" className="w-full font-bold" onClick={() => setIsFilterOpen(false)}>
-                {t("common.close")}
-              </Button>
+              <div className="flex justify-center pt-1">
+                <Button variant="outline" className="px-10 font-bold" onClick={() => setIsFilterOpen(false)}>
+                  {t("common.save")}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
