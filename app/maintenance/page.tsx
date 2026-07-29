@@ -206,17 +206,17 @@ export default function MaintenancePage() {
   }, [fetchData])
 
   if (loading) return (
-    <main className="p-4 space-y-1">
-      <header className="pt-4">
+    <main className="p-4 space-y-6">
+      <header className="pt-4 pb-2">
         <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
           <span className="font-bold text-xs">{t("home.back_to_home")}</span>
         </Link>
       </header>
       <div className="space-y-3" ref={gridWrapperRef}>
         {/* 並び替えトグル、絞り込み、表示設定ボタン（実データ表示時と同じくカード列の右端にそろえる） */}
-        <div className="flex items-center justify-between gap-2" style={{ maxWidth: gridContentWidth }}>
+        <div className="flex items-start justify-between gap-2" style={{ maxWidth: gridContentWidth }}>
           <Skeleton className="h-[30px] w-40 rounded-full" />
-          <div className="flex flex-col items-end gap-2 shrink-0">
+          <div className="flex flex-col items-end gap-2 shrink-0 mt-1">
             <Skeleton className="h-7 w-9 rounded-lg" />
             <Skeleton className="h-7 w-28 rounded-lg" />
           </div>
@@ -254,8 +254,8 @@ export default function MaintenancePage() {
   )
 
   return (
-    <main className="p-4 space-y-1">
-      <header className="pt-4">
+    <main className="p-4 space-y-6">
+      <header className="pt-4 pb-2">
         <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
           <span className="font-bold text-xs">{t("home.back_to_home")}</span>
         </Link>
@@ -265,7 +265,7 @@ export default function MaintenancePage() {
 
       {/* 並び替えトグル、絞り込み、表示設定ボタン（最終列のカード幅にそろえる） */}
       {alerts.length > 0 && (
-        <div className="flex items-center justify-between gap-2" style={{ maxWidth: gridContentWidth }}>
+        <div className="flex items-start justify-between gap-2" style={{ maxWidth: gridContentWidth }}>
           <SegmentedToggle
             value={sortMode}
             onChange={handleSortModeChange}
@@ -274,7 +274,7 @@ export default function MaintenancePage() {
               { value: "deadline", label: t("home.sort_deadline") },
             ]}
           />
-          <div className="flex flex-col items-end gap-2 shrink-0">
+          <div className="flex flex-col items-end gap-2 shrink-0 mt-1">
             <button
               type="button"
               onClick={() => setIsFilterOpen(true)}
