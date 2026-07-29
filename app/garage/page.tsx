@@ -650,10 +650,10 @@ export default function GaragePage() {
         {/* タブ選択状態を再取得時にも保持するため、Tabsルートは常にマウントしたまま中身だけ切り替える */}
         {!loading && (
           <TabsList className="grid w-full grid-cols-2 mb-6 bg-slate-100 dark:bg-muted p-[3px]">
-            <TabsTrigger value="mycars" className="flex items-center gap-2 font-bold uppercase tracking-wider">
+            <TabsTrigger value="mycars" className="flex items-center gap-2 font-bold">
               <CarFront size={14} /> {t("garage.my_cars")}
             </TabsTrigger>
-            <TabsTrigger value="wishlist" className="flex items-center gap-2 font-bold uppercase tracking-wider">
+            <TabsTrigger value="wishlist" className="flex items-center gap-2 font-bold">
               <ListTodo size={14} /> {t("garage.wishlist")}
             </TabsTrigger>
           </TabsList>
