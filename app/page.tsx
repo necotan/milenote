@@ -174,10 +174,8 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <div className="flex items-center justify-center gap-4 py-4 border-t border-slate-100 dark:border-border">
-              <Skeleton className="h-[30px] w-[30px] rounded-lg" />
-              <SkeletonText size="xs" className="w-12" />
-              <Skeleton className="h-[30px] w-[30px] rounded-lg" />
+            <div className="flex items-center justify-center py-4 border-t border-slate-100 dark:border-border">
+              <Skeleton className="h-[30px] w-[140px] rounded-lg" />
             </div>
           </div>
         </div>
