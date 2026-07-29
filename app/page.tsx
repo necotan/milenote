@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react"
 import { createClient } from "@/utils/supabase"
 import { Card, CardContent } from "@/components/ui/card"
-import { Banknote, CarFront, TrendingUp, TrendingDown, Minus, List, ChevronLeft, ChevronRight, Fuel, Gauge } from "lucide-react"
+import { Banknote, CarFront, TrendingUp, TrendingDown, Minus, List, ChevronLeft, ChevronRight, Fuel, Gauge, Image as ImageIcon } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -387,7 +387,13 @@ export default function Home() {
                 return (
                   <Card key={car.id} className="border-none shadow-sm overflow-hidden bg-white dark:bg-card p-0">
                     <div className="relative aspect-[11/6] bg-neutral-800 w-full m-0 border-b border-slate-100 dark:border-border overflow-hidden">
-                      {car.image_url && <img src={car.image_url} alt={car.name} className="absolute inset-0 w-full h-full object-cover" style={getCarImageStyle(car)} />}
+                      {car.image_url ? (
+                        <img src={car.image_url} alt={car.name} className="absolute inset-0 w-full h-full object-cover" style={getCarImageStyle(car)} />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <ImageIcon className="h-16 w-16 text-neutral-600" strokeWidth={1.5} />
+                        </div>
+                      )}
                     </div>
                     <CardContent className="p-0 m-0">
                       <div className="px-4 pb-4 bg-white dark:bg-card relative z-20">
