@@ -1030,9 +1030,17 @@ export default function StatsPage() {
 
                 {/* 月進捗セクション */}
                 <div className="space-y-3 md:border-l md:border-slate-100 dark:border-border md:pl-8">
+                  <svg width="0" height="0" className="absolute">
+                    <defs>
+                      <linearGradient id="moonProgressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#3b82f6" />
+                        <stop offset="100%" stopColor="#a855f7" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Moon className="text-yellow-500 w-5 h-5" />
+                      <Moon className="w-5 h-5" style={{ stroke: "url(#moonProgressGradient)" }} />
                       <span className="font-bold text-slate-700 dark:text-foreground text-sm">{t("stats.moon_progress")}</span>
                     </div>
                     <span className="text-sm font-black text-slate-800 dark:text-foreground tabular-nums">{moonPercent}%</span>
