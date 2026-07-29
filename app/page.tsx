@@ -136,7 +136,7 @@ export default function Home() {
   if (loading) return (
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-extrabold tracking-widest text-slate-900 dark:text-foreground">{t("home.title")}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("home.title")}</h1>
         <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{getGreeting(t)}</p>
       </header>
       <div className="flex flex-col lg:flex-row lg:items-stretch gap-6 lg:gap-8">
@@ -245,7 +245,7 @@ export default function Home() {
   return (
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-extrabold tracking-widest text-slate-900 dark:text-foreground">{t("home.title")}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("home.title")}</h1>
         <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{getGreeting(t)}{displayName ? t("home.greeting_suffix", { name: displayName }) : ""}</p>
       </header>
 
