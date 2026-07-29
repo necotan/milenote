@@ -27,7 +27,7 @@
     "please_select": "選択してください",
     "year_format": "{{year}}年式",
     "total_cost": "累計維持費",
-    "distance_since_delivery": "納車後走行",
+    "distance_since_delivery": "納車後走行距離",
     "ownership_period": "所有期間",
     "car_age": "車齢 (初年度登録比)",
     "required": "*",
