@@ -55,17 +55,15 @@ const buildEmptyCategoryBuckets = (): Record<CategoryKey, number> => ({
 })
 
 // 円グラフのスライスに保証する最小角度
-// 区切り線（strokeWidth 2）はパスの内側にも1pxずつ食い込むため、これより細いスライスは
-// 塗りが完全に覆われて色が見えなくなる。ラベルのパーセントは値と合計から算出するので
-// 最小角度を設けても表示される数値は正確なまま
+// 区切り線（strokeWidth 2）はパスの内側にも1pxずつ食い込むため、これより細いスライスは、塗りが完全に覆われて色が見えなくなる
+// ラベルのパーセントは値と合計から算出するので最小角度を設けても表示される数値は正確なままになるが、最小角度を設けると、スライスの面積が本来より大きくなるため、パーセント表示は実際より小さく見える
 const PIE_MIN_ANGLE_DEG = 3
 
 // 円グラフの外径（ラベル位置の事前計算にも使うため定数化）
 const PIE_OUTER_RADIUS = 80
 
 // 積み上げ棒グラフの出現アニメーション
-// CSS の transform アニメーションは SVG 上で描画残骸（棒の上端に残る線）を生むため、
-// Recharts 本体の矩形ジオメトリを補間するアニメーションを使う
+// CSS の transform アニメーションは SVG 上で描画残骸を生むため、Recharts 本体の矩形ジオメトリを補間するアニメーションを使用する
 const BAR_ANIM_DURATION_MS = 600
 const BAR_ANIM_STAGGER_MS = 90
 const BAR_ANIM_EASING = "cubic-bezier(0.33, 1, 0.68, 1)"
@@ -192,7 +190,7 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
     const amountText = formatValue(value);
     const percentText = `(${(percent * 100).toFixed(1)}%)`;
 
-    // ラベルがカード（SVG）の端に張り付かないよう、テキスト幅を概算して左右に最低限の余白を確保
+    // ラベルがカード（SVG）の端に張り付かないよう、テキスト幅を概算して左右に最低限の余白を確保する
     const EDGE_PAD = 8;
     const svgWidth = Number(cx) * 2;
     const textWidth = Math.max(estimateLabelWidth(amountText), estimateLabelWidth(percentText));
@@ -227,8 +225,7 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
   return PieCustomLabel;
 };
 
-// 引き出し線はラベル文字と必ず同じ条件で描画する
-// （どちらか一方だけが描かれると、どのラベルにも繋がらない線が残る）
+// 引き出し線はラベル文字と必ず同じ条件で描画する（どちらか一方だけが描かれると、どのラベルにも繋がらない線が残る）
 // 終点のY座標はラベル側と同じ delta を適用し、重なり回避で動いたラベルに追従させる
 const createCustomizedLabelLine = (strokeColor: string, pieLabelDeltas: Map<number, number>) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -290,7 +287,7 @@ function PeriodDateRow({
 
 // 期間フィルターUIコンポーネント
 // 上段のタブでプリセットを選択し、下段のボタンに現在の期間を常に表示
-// ボタンをタップすると開始日/終了日の編集行が開閉
+// ボタンをタップすると開始日/終了日の編集行が開閉する
 function PeriodFilter({
   preset, onPresetChange,
   start, end, onStartChange, onEndChange,
@@ -453,15 +450,14 @@ export default function StatsPage() {
   const currentYear = new Date().getFullYear()
 
   // 折れ線グラフの線の描画と点の出現を同期
-  // タブ切替時に DOM がマウントされたタイミングで測定を発火させるため、callback ref として state を使う
+  // タブ切替時に DOM がマウントされたタイミングで測定を発火させるため、callback ref として state を使用する
   const [monthlyLineContainer, setMonthlyLineContainer] = useState<HTMLDivElement | null>(null)
   const [yearlyLineContainer, setYearlyLineContainer] = useState<HTMLDivElement | null>(null)
   const [monthlyLineReady, setMonthlyLineReady] = useState(false)
   const [yearlyLineReady, setYearlyLineReady] = useState(false)
   const LINE_ANIM_DURATION_MS = 900
 
-  // createClient() は呼ぶたびに新しい BrowserClient を返すため、毎レンダーで supabase 参照が変わると
-  // useEffect([supabase]) が毎回発火して records が再フェッチされ、メモ化したチャートデータも参照が変わってしまう
+  // createClient() は呼ぶたびに新しい BrowserClient を返すため、毎レンダーで supabase 参照が変わると、useEffect([supabase]) が毎回発火して records が再フェッチされ、メモ化したチャートデータも参照が変わってしまう
   const supabase = useMemo(() => createClient(), [])
   const { t, locale } = useTranslation()
 
@@ -772,11 +768,7 @@ export default function StatsPage() {
   const totalChargeCost = chargeRecords.reduce((sum, r) => sum + r.amount, 0)
   const avgChargeUnitPrice = totalChargeAmount > 0 ? totalChargeCost / totalChargeAmount : 0
 
-  // Recharts の <XAxis>/<YAxis>/<Tooltip> 等は内部で memo 比較しており、tickFormatter / formatter の参照が
-  // 毎レンダーで変わると axis 設定が replaceXAxis として Redux に再 dispatch され、folded line の points 参照が
-  // 変わり useAnimationId が再発行 → JavascriptAnimate が remount → CSS lineDraw が再生されてしまう。
-  // そのため useCallback で安定化させる。
-  // ロケール対応の月フォーマッター
+  // ロケール対応の月フォーマッター（tickFormatter の参照を useCallback で固定し、line アニメの再生を防ぐ）
   const monthFormatter = useCallback((v: string) => {
     const monthNum = parseInt(v.split('-')[1], 10)
     if (locale === "en") {
@@ -789,8 +781,7 @@ export default function StatsPage() {
   // 年別推移の年フォーマッター（軸は数値のみ、Tooltipはロケールに応じて年表記）
   const yearFormatter = useCallback((y: number) => String(y), [])
 
-  // Recharts のコールバック型（PieLabelRenderProps / Formatter / LabelFormatter 等）は
-  // 省略可能フィールドを含む複雑な union のため、本ファイル内では any を許容する
+  // Recharts のコールバック型（PieLabelRenderProps / Formatter / LabelFormatter 等）は、省略可能フィールドを含む複雑な union のため、本ファイル内では any を許容する
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const numberTickFormatter = useCallback((v: any) => Number(v).toLocaleString(), [])
   const expenditureTooltipFormatter = useCallback((value: any): [string, string] => [

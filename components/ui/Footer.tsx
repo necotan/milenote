@@ -5,8 +5,7 @@ import { useTranslation } from "@/lib/i18n"
 import { cn } from "@/lib/utils"
 
 // ログイン、新規登録、設定画面の下部に表示する共通フッター
-// 規約、プライバシーページ自身に置く場合は replaceNav を true にし、
-// ページ間の移動で履歴を積まない（戻るボタンで元の画面に一度で戻れる）ようにする
+// 規約、プライバシーページ自身に置く場合は replaceNav を true にし、ページ間の移動で履歴を積まない（戻るボタンで元の画面に一度で戻れる）ようにする
 export default function Footer({ className, replaceNav = false }: { className?: string; replaceNav?: boolean }) {
   const { t } = useTranslation()
 

@@ -81,7 +81,7 @@ const RecordSkeleton = () => (
   </div>
 )
 
-// 新規追加 or 編集に使うフォームのJSX
+// 新規追加・編集に使うフォームのJSX
 const RecordForm = ({
   onSubmit,
   submitLabel,
@@ -895,7 +895,7 @@ function RecordsPageInner() {
             return (
               <Card key={record.id} className="border-none shadow-sm bg-white dark:bg-card overflow-hidden relative">
                 <CardContent className="p-0">
-                  {/* 編集・削除ボタン（右上に常時表示） */}
+                  {/* 編集・削除ボタン */}
                   <div className="absolute top-3 right-3 flex items-center gap-1">
                     <button
                       onClick={() => handleStartEdit(record)}

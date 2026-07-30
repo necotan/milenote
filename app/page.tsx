@@ -213,7 +213,7 @@ export default function Home() {
           <div className="space-y-6" style={{ order: homeOrder.indexOf("alerts") }}>
             {/* アラートカードスケルトン */}
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
-              {/* 1件目は常に表示、2〜4件目はPC版初期表示用（lg以上のみ表示）に合わせる */}
+              {/* 1件目は常に表示、2〜4件目はPC初期表示用（lg以上のみ表示）に合わせる */}
               {[...Array(4)].map((_, i) => (
                 <div key={i} className={`rounded-xl bg-white dark:bg-card shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4 ${i > 0 ? "hidden lg:block" : ""}`}>
                   <div className="p-3.5 flex items-start gap-3">
@@ -254,7 +254,7 @@ export default function Home() {
           style={{ order: Math.min(homeOrder.indexOf("summary"), homeOrder.indexOf("alerts")) }}
         >
         <section style={{ order: homeOrder.indexOf("summary") }}>
-          {/* 一体型カード：今月の費用 + 給油ボタン + 直近の記録 */}
+          {/* 一体型カード：今月の費用、給油ボタン、直近の記録 */}
           <Card className="relative border-none shadow-sm bg-white dark:bg-card">
               <CardContent className="p-0">
 

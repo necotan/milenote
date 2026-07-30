@@ -116,7 +116,7 @@ const RecurringForm = ({
         </p>
 
         <form onSubmit={onSubmit} className="space-y-5">
-          {/* --- 対象車 & カテゴリ --- */}
+          {/* 対象車・カテゴリ */}
           <div className="grid grid-cols-2 gap-3 sm:gap-x-8 sm:max-w-[50rem]">
             <div className="space-y-2">
               <Label>{t("common.target_car")} <span className="text-red-500">{t("common.required")}</span></Label>
@@ -156,7 +156,7 @@ const RecurringForm = ({
             </div>
           )}
 
-          {/* --- 支払情報セクション --- */}
+          {/* 支払情報セクション */}
           <div className="rounded-xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4 sm:max-w-[50rem]">
             <p className="text-[11px] font-bold text-slate-400 dark:text-muted-foreground uppercase tracking-wider">支払情報</p>
             <div className="grid grid-cols-2 gap-3 sm:gap-x-8">
@@ -385,7 +385,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
         advanceByFrequency(cursor, frequency)
       }
 
-      // 次回支払日：過去分があれば計算済みの cursor、なければ入力値そのまま
+      // 次回支払日 (過去分があれば計算済みの cursor、なければ入力値のまま)
       const resolvedNextBillingDate = pastDates.length > 0 ? toDateStr(cursor) : nextBillingDate
 
       const { error } = await supabase.from("recurring_costs").insert({
@@ -441,7 +441,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
     if (!deleteId) return
     setIsDeleting(true)
 
-    // 楽観的UI: 先にローカル状態から削除
+    // 楽観的UI (先にローカル状態から削除)
     const prevCosts = costs
     setCosts(prev => prev.filter(c => c.id !== deleteId))
 
@@ -458,7 +458,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
   }
 
   const toggleActive = async (id: string, currentStatus: boolean) => {
-    // 楽観的UI: 先にローカル状態を反転
+    // 楽観的UI (先にローカル状態を反転)
     const prevCosts = costs
     setCosts(prev => prev.map(c => c.id === id ? { ...c, is_active: !currentStatus } : c))
 
@@ -570,7 +570,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                       </span>
                     </h3>
 
-                    {/* ジャンルタグ + ステータスバッジ */}
+                    {/* ジャンルタグ・ステータスバッジ */}
                     <div className="flex items-center gap-1.5 mb-2">
                       <span className="text-[10px] font-bold bg-slate-100 dark:bg-surface-2 text-slate-500 dark:text-muted-foreground px-2 py-1 rounded-md whitespace-nowrap">
                         {t(`categories.${cost.category}`)}

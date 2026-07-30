@@ -20,7 +20,7 @@ function SkeletonTabs({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 // 実要素のフォントサイズ指定に対応するトークン
-// xs 〜 2xl はTailwindの名前付きトークン、9px 〜 12px は text-[11px] のような任意サイズに対応する
+// xs から 2xl はTailwindの名前付きトークン、9px から 12px は text-[11px] のような任意サイズに対応する
 type SkeletonTextSize = "9px" | "10px" | "11px" | "12px" | "xs" | "sm" | "base" | "lg" | "xl" | "2xl"
 type SkeletonTextLeading = "none" | "tight" | "snug" | "normal" | "relaxed" | "loose"
 
@@ -48,10 +48,8 @@ const LEADING_CLASS: Record<SkeletonTextLeading, string> = {
   loose: "leading-loose",
 }
 
-// 文字1行分のプレースホルダ
-// 実要素と同じ text-* / leading-* を当て、ゼロ幅スペースが作る行ボックスの高さをそのまま使用することで、フォントサイズや行間の指定を変えても、スケルトンの高さが自動的に追従
-// 幅（w-*）や余白（mt-*）は内容次第で決まるため、従来どおり className で指定
-// 行間を上書きしている場合（leading-tight のラッパー内など）は leading で明示する
+// 文字1行分のプレースホルダ (実要素と同じ text-* / leading-* を当て、高さをフォントサイズ・行間に自動追従させる)
+// 幅・余白は className で指定、行間を上書きしている場合は leading で明示する
 function SkeletonText({
   size,
   leading,

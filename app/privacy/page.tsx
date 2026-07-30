@@ -9,10 +9,10 @@ export default function PrivacyPage() {
   const router = useRouter()
   const { t } = useTranslation()
 
-  // 条項の見出し、本文をまとめて描画
+  // 条項の見出し、本文をまとめて描画する
   const sections = ["collection", "usage", "external", "images", "thirdparty", "management", "disclosure", "changes"]
 
-  // 導入文中の運営者名をGitHubリンクに置き換えて描画
+  // 導入文中の運営者名をGitHubリンクに置き換え
   const [introBefore, introAfter] = t("privacy.intro").split("{{operator}}")
 
   return (

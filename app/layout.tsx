@@ -50,14 +50,14 @@ function AppContent({ children, loading }: { children: React.ReactNode; loading:
       <RecurringCostProcessor />
       <Sidebar />
 
-      {/* メインコンテンツエリア。ここに最大幅を持たせ、中央寄せ(mx-auto)にする */}
+      {/* メインコンテンツエリア (最大幅を持たせ、中央寄せ(mx-auto)にする) */}
       <div className={`flex-1 pb-20 md:pb-8 w-full min-w-0 mx-auto ${contentMaxWidth}`}>
         {children}
       </div>
 
       <BottomNav />
 
-      {/* 初回ローディング画面。裏側でページをマウントし、データ取得を進める */}
+      {/* 初回ローディング画面 (裏側でページをマウントし、データ取得を進める) */}
       {showOverlay && (
         <div
           className={`fixed inset-0 z-[100] transition-opacity ease-out ${fadingOut ? "opacity-0" : "opacity-100"}`}
@@ -83,7 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const pathname = usePathname();
   const supabase = createClient();
 
-  // 認証チェック。未認証で保護ルートならログインへ。リダイレクト中はオーバーレイを維持する
+  // 認証チェック (未認証で保護ルートならログインへ、リダイレクト中はオーバーレイを維持する)
   useEffect(() => {
     let active = true;
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -104,7 +104,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     return () => { clearTimeout(minId); clearTimeout(maxId); };
   }, []);
 
-  // 表示条件がそろったら実画面を出す。expectingPage なページはデータ取得完了(pageReady)を待つ
+  // 表示条件がそろったら実画面を出す (expectingPage なページはデータ取得完了(pageReady)を待つ)
   useEffect(() => {
     if (revealed) return;
     if (authChecked && minElapsed && (pageReady || !expectingPage || maxElapsed)) {

@@ -63,7 +63,7 @@ export function useTranslation() {
   return context
 }
 
-/** Locale-aware date formatting */
+/** ロケールに応じた日付フォーマット */
 export function formatDateLocale(dateStr: string | null, locale: Locale): string {
   if (!dateStr) return "-"
   const d = new Date(dateStr)
@@ -73,7 +73,7 @@ export function formatDateLocale(dateStr: string | null, locale: Locale): string
   return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
 }
 
-/** Locale-aware months-passed formatting */
+/** ロケールに応じた経過月数のフォーマット */
 export function formatMonthsPassedLocale(dateStr: string | null, locale: Locale): string {
   if (!dateStr) return "-"
   const d = new Date(dateStr)

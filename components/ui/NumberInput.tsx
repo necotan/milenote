@@ -4,7 +4,7 @@ import * as React from "react"
 import { Input } from "@/components/ui/input"
 
 // 表示上は「52,500」のようにフォーマットし、親のstateには生の数値文字列（"52500"）を渡す
-// type="number" はブラウザ仕様でカンマを表示できないため、type="text" + inputMode で実装する
+// type="number" はブラウザ仕様でカンマを表示できないため、type="text"、inputMode で実装する
 type NumberInputProps = Omit<React.ComponentProps<"input">, "type" | "value" | "onChange"> & {
   value: string
   onValueChange: (value: string) => void

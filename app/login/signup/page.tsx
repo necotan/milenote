@@ -42,8 +42,8 @@ export default function SignUpPage() {
 
     try {
       // Supabase Auth でアカウント作成
-      // ユーザーIDの一意性は users.username の UNIQUE 制約で担保する。
-      // 未認証では RLS により users を SELECT できず事前の重複チェックは機能しないため、ここでは行わない。
+      // ユーザーIDの一意性は users.username の UNIQUE 制約で担保する
+      // 未認証では RLS により users を SELECT できず事前の重複チェックは機能しないため、ここでは行わない
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -63,9 +63,9 @@ export default function SignUpPage() {
           // メールアドレス重複
           setErrorPopup(t("signup.email_taken"))
         } else if (error.code === "unexpected_failure" || message.includes("database error saving new user")) {
-          // 新規ユーザー作成トリガーが users.username の UNIQUE 制約違反で失敗したケース。
-          // メール重複は上で処理済みのため、この段階のDBエラーは実質的にユーザーID重複。
-          // 生のエラー文言を出さずフレンドリーなメッセージに変換する。
+          // 新規ユーザー作成トリガーが users.username の UNIQUE 制約違反で失敗したケース
+          // メール重複は上で処理済みのため、この段階のDBエラーは実質的にユーザーID重複とみなす
+          // 生のエラー文言を出さず、ユーザーID重複のメッセージに置き換える
           setErrorPopup(t("signup.user_id_taken"))
         } else {
           // 想定外のエラーは生文言を表示させず汎用メッセージにする

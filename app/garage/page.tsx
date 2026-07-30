@@ -301,8 +301,8 @@ export default function GaragePage() {
   }
 
   // 車両の物理削除処理
-  // records / wishlists / recurring_costs は FK の ON DELETE CASCADE で車本体と一緒に削除される。
-  // Storage の車画像は FK では消えないため、削除前に明示的に削除する。
+  // records、wishlists、recurring_costs は FK の ON DELETE CASCADE で車本体と一緒に削除される
+  // Storage の車画像は FK では消えないため、削除前に明示的に削除する
   const handleDeleteCar = async () => {
     if (!deleteCarTarget) return
     if (deleteCarConfirmName !== deleteCarTarget.name) {
@@ -362,7 +362,7 @@ export default function GaragePage() {
         price_estimate: parseInt(wishPrice) || 0,
         url: wishUrl,
         memo: wishMemo,
-        status: 'considering' // 初期状態は検討中
+        status: 'considering'
       })
 
       if (error) {

@@ -24,7 +24,7 @@ export default function RecurringCostProcessor() {
       const day = String(today.getDate()).padStart(2, '0')
       const todayStr = `${year}-${month}-${day}`
 
-      // Fetch due recurring costs
+      // 支払日を過ぎた定期費用を取得
       const { data: costs, error } = await supabase
         .from("recurring_costs")
         .select("*, cars!inner(current_odo, status)")
@@ -38,17 +38,15 @@ export default function RecurringCostProcessor() {
       let processedCount = 0
 
       for (const cost of costs) {
-        // While multiple months might have passed, for simplicity, we process one cycle at a time.
-        // If it's way overdue, it will process one record per page load, or we can use a loop.
-        // Let's use a loop to catch up if multiple billing cycles have passed.
-        
+        // 複数サイクル分の未処理があればループでまとめて追いつかせる（無限ループ防止に上限120回）
+
         let currentNextDate = new Date(cost.next_billing_date)
         let cyclesProcessed = 0
 
-        while (currentNextDate <= today && cyclesProcessed < 120) { // max 120 cycles at once to prevent infinite loop
+        while (currentNextDate <= today && cyclesProcessed < 120) {
           const currentNextDateStr = `${currentNextDate.getFullYear()}-${String(currentNextDate.getMonth() + 1).padStart(2, '0')}-${String(currentNextDate.getDate()).padStart(2, '0')}`
           
-          const autoPrefix = t("records.auto_recorded") || "【自動記録】"
+          const autoPrefix = t("records.auto_recorded")
           const finalMemo = `${autoPrefix}${cost.memo || ""}`
 
           const { error: insertError } = await supabase.from("records").insert({
@@ -64,7 +62,7 @@ export default function RecurringCostProcessor() {
 
           if (insertError) break
 
-          // Calculate next billing date
+          // 次回請求日を計算
           if (cost.frequency === "weekly") {
             currentNextDate.setDate(currentNextDate.getDate() + 7)
           } else if (cost.frequency === "monthly") {
@@ -92,8 +90,7 @@ export default function RecurringCostProcessor() {
       }
 
       if (processedCount > 0) {
-        // Notify user. (Use Japanese for now if translation isn't available)
-        toast.success(`${processedCount}件の定期費用を自動記録しました`)
+        toast.success(t("records.auto_recorded_toast", { count: processedCount }))
       }
     }
 
