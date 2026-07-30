@@ -1377,21 +1377,21 @@ export default function StatsPage() {
                   <tbody className="divide-y divide-slate-100 dark:divide-border">
                     {yearlyTableRows.map(row => (
                       <tr key={row.year}>
-                        <td className="py-4 pr-3 text-[15px] font-bold text-slate-700 dark:text-foreground tabular-nums">
+                        <td className="py-4 pr-3 text-[15px] font-medium text-slate-700 dark:text-foreground tabular-nums">
                           {locale === "en" ? row.year : `${row.year}年`}
                         </td>
                         {row.hasData ? (
                           <>
-                            <td className="py-4 px-3 text-right text-sm font-bold text-slate-800 dark:text-foreground tabular-nums">
+                            <td className="py-4 px-3 text-right text-sm font-medium text-slate-800 dark:text-foreground tabular-nums">
                               ¥{row.amount.toLocaleString()}
                             </td>
                             <td className="py-4 pl-3 text-right text-xs tabular-nums">
                               {row.diff === null ? (
                                 <span className="text-slate-300 dark:text-muted-foreground">—</span>
                               ) : row.diff > 0 ? (
-                                <span className="font-semibold text-rose-500">+¥{row.diff.toLocaleString()}</span>
+                                <span className="font-medium text-rose-500">+¥{row.diff.toLocaleString()}</span>
                               ) : row.diff < 0 ? (
-                                <span className="font-semibold text-emerald-500">-¥{Math.abs(row.diff).toLocaleString()}</span>
+                                <span className="font-medium text-emerald-500">-¥{Math.abs(row.diff).toLocaleString()}</span>
                               ) : (
                                 <span className="text-slate-400 dark:text-muted-foreground">±¥0</span>
                               )}
