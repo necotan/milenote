@@ -32,7 +32,11 @@
     "car_age": "車齢 (初年度登録比)",
     "required": "*",
     "previous": "前へ",
-    "next": "次へ"
+    "next": "次へ",
+    "year_suffix": "{{year}}年",
+    "month_suffix": "{{month}}月",
+    "year_month": "{{year}}年{{month}}月",
+    "date_full": "{{y}}年{{m}}月{{d}}日"
   },
   "nav": {
     "home": "ホーム",
@@ -188,6 +192,7 @@
     "unit_yen_per_l": "円/L",
     "unit_l": "L",
     "unit_yen": "円",
+    "payment_info": "支払情報",
     "charge_info": "充電情報",
     "unit_price_kwh": "単価 (円/kWh)",
     "charge_amount": "充電量 (kWh)",

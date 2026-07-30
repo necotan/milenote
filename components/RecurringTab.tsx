@@ -158,7 +158,7 @@ const RecurringForm = ({
 
           {/* 支払情報セクション */}
           <div className="rounded-xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4 sm:max-w-[50rem]">
-            <p className="text-[11px] font-bold text-slate-400 dark:text-muted-foreground uppercase tracking-wider">支払情報</p>
+            <p className="text-[11px] font-bold text-slate-400 dark:text-muted-foreground uppercase tracking-wider">{t("records.payment_info")}</p>
             <div className="grid grid-cols-2 gap-3 sm:gap-x-8">
               <div className="space-y-2">
                 <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
@@ -398,7 +398,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
 
       // 過去分を自動記録
       if (pastDates.length > 0) {
-        const autoPrefix = t("records.auto_recorded") || "自動記録"
+        const autoPrefix = t("records.auto_recorded")
         const targetCar = cars.find((c: any) => c.id === carId)
         const fallbackOdo = targetCar?.current_odo ?? 0
         let insertedCount = 0
@@ -413,7 +413,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
           })
           if (!recErr) insertedCount++
         }
-        toast.success(`定期費用を登録しました。過去${insertedCount}件の記録を自動作成しました。`)
+        toast.success(`${t("records.recurring_saved")} ${t("records.auto_recorded_toast", { count: insertedCount })}`)
         onRecordsChanged?.()
       } else {
         toast.success(t("records.recurring_saved"))

@@ -308,7 +308,7 @@ function PeriodFilter({
       const names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
       return `${names[m - 1]} ${d}, ${y}`
     }
-    return `${y}年${m}月${d}日`
+    return t("common.date_full", { y, m, d })
   }
 
   const formatSummaryDate = (iso: string) => {
@@ -775,8 +775,8 @@ export default function StatsPage() {
       const names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
       return names[monthNum - 1]
     }
-    return `${monthNum}月`
-  }, [locale])
+    return t("common.month_suffix", { month: monthNum })
+  }, [locale, t])
 
   // 年別推移の年フォーマッター（軸は数値のみ、Tooltipはロケールに応じて年表記）
   const yearFormatter = useCallback((y: number) => String(y), [])
@@ -789,8 +789,8 @@ export default function StatsPage() {
     t("stats.expenditure"),
   ], [t])
   const yearTooltipLabelFormatter = useCallback(
-    (label: any) => (locale === "en" ? String(label) : `${label}年`),
-    [locale],
+    (label: any) => t("common.year_suffix", { year: label }),
+    [t],
   )
   const monthlyTooltipLabelFormatter = useCallback((label: any) => {
     const [year, month] = String(label).split("-")
@@ -799,8 +799,8 @@ export default function StatsPage() {
       const names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
       return `${names[monthNum - 1]} ${year}`
     }
-    return `${year}年${monthNum}月`
-  }, [locale])
+    return t("common.year_month", { year, month: monthNum })
+  }, [locale, t])
   // 凡例ラベルの整形（カテゴリキーを翻訳して表示）
   const renderCategoryLegendLabel = useCallback((value: string) => (
     <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t(`categories.${value}`)}</span>
@@ -1369,7 +1369,7 @@ export default function StatsPage() {
                     {yearlyTableRows.map(row => (
                       <tr key={row.year}>
                         <td className="py-4 pr-3 text-xs font-medium text-slate-700 dark:text-foreground tabular-nums">
-                          {locale === "en" ? row.year : `${row.year}年`}
+                          {t("common.year_suffix", { year: row.year })}
                         </td>
                         {row.hasData ? (
                           <>

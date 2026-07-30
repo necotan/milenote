@@ -30,6 +30,10 @@
     "distance_since_delivery": "Since Delivery",
     "ownership_period": "Ownership",
     "car_age": "Age (1st reg.)",
+    "year_suffix": "{{year}}",
+    "month_suffix": "{{month}}",
+    "year_month": "{{month}}/{{year}}",
+    "date_full": "{{m}}/{{d}}/{{y}}",
     "required": "*",
     "previous": "Previous",
     "next": "Next"
@@ -188,6 +192,7 @@
     "unit_yen_per_l": "/L",
     "unit_l": "L",
     "unit_yen": "",
+    "payment_info": "Payment Details",
     "charge_info": "Charging Details",
     "unit_price_kwh": "Price per kWh",
     "charge_amount": "Charge (kWh)",
