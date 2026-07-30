@@ -1368,7 +1368,7 @@ export default function StatsPage() {
                   <tbody className="divide-y divide-slate-100 dark:divide-border">
                     {yearlyTableRows.map(row => (
                       <tr key={row.year}>
-                        <td className="py-4 pr-3 text-[15px] font-medium text-slate-700 dark:text-foreground tabular-nums">
+                        <td className="py-4 pr-3 text-xs font-medium text-slate-700 dark:text-foreground tabular-nums">
                           {locale === "en" ? row.year : `${row.year}年`}
                         </td>
                         {row.hasData ? (
