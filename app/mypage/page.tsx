@@ -652,7 +652,7 @@ export default function MyPage() {
       </header>
       <div className="space-y-8">
         {/* プロフィールカードスケルトン */}
-        {/* 実カードは Card 自体の py-4 により区切り線が上下の枠に接しないため、ただの div であるスケルトンにも同じ py-4 を付ける */}
+        {/* 実カードは Card 自体の py-4 により区切り線が上下の枠に接しないため、ただの div であるスケルトンにも同じ py-4 を付与する */}
         <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-24" />
@@ -752,7 +752,7 @@ export default function MyPage() {
         </div>
       </div>
 
-      {/* ログアウトボタンスケルトン（スマホ版のみ） */}
+      {/* ログアウトボタンスケルトン（モバイル） */}
       <div className="md:hidden pt-8 flex justify-center mb-8">
         <Skeleton className="h-9 w-40 rounded-lg" />
       </div>
@@ -1124,7 +1124,7 @@ export default function MyPage() {
         t={t}
       />
 
-      {/* ログアウトボタン (スマホ版のみ表示、PC版はサイドバーに移動予定) */}
+      {/* ログアウトボタン (モバイル) */}
       <div className="md:hidden pt-8 flex justify-center mb-8">
         <Button variant="outline" className="px-8 h-9 font-bold rounded-lg bg-white dark:bg-card border-slate-200 dark:border-border shadow-sm text-slate-400 dark:text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors text-xs" onClick={handleLogout}>
           <LogOut className="w-4 h-4 mr-2" />

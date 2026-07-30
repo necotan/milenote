@@ -68,7 +68,7 @@ export default function LoadingScreen() {
         <circle className="text-neutral-800 dark:text-neutral-200" cx="50" cy="50" r="3.5" fill="currentColor" />
       </svg>
 
-      {/* 全文字ぶんの幅を最初から確保し、中央位置を固定する */}
+      {/* 全文字分の幅を最初から確保し、中央位置を固定する */}
       <div className="flex items-baseline justify-center font-bold tracking-widest text-slate-400 dark:text-muted-foreground">
         {text.split("").map((ch, i) => (
           <span key={i} style={{ opacity: i < typedCount ? 1 : 0 }}>{ch}</span>

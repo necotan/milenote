@@ -232,6 +232,7 @@
     "pause_recurring": "Pause",
     "resume_recurring": "Resume",
     "auto_recorded": "Auto ",
+    "auto_recorded_toast": "Automatically recorded {{count}} recurring cost(s)",
     "recurring_banner_title": "How Auto-Recording Works",
     "recurring_banner_body": "When you open the app, any recurring costs past their billing date are automatically added to your Manual Records. The next billing date is then updated automatically."
   },

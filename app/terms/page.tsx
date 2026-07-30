@@ -9,7 +9,7 @@ export default function TermsPage() {
   const router = useRouter()
   const { t } = useTranslation()
 
-  // 条文の見出し・本文をまとめて描画
+  // 条文の見出し・本文をまとめて描画する
   const articles = ["applicability", "registration", "prohibited", "data", "suspension", "ip", "disclaimer", "changes"]
 
   // 導入文中の運営者名をGitHubリンクに置き換えて描画

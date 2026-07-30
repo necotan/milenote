@@ -22,7 +22,7 @@ function neutralizeFormula(str: string): string {
 }
 
 // CSVの1セルをエスケープする
-// 文字列セルは先に数式インジェクションを無害化する。数値セルは集計に使うため無害化しない
+// 文字列セルは先に数式インジェクションを無害化する (数値セルは集計に使うため無害化しない)
 // カンマ・ダブルクォート・改行を含む場合はダブルクォートで囲み、内部の " は "" にする
 function escapeCell(value: string | number | null | undefined): string {
   if (value === null || value === undefined) return ""

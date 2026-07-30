@@ -232,6 +232,7 @@
     "pause_recurring": "一時停止",
     "resume_recurring": "再開する",
     "auto_recorded": "自動記録 ",
+    "auto_recorded_toast": "{{count}}件の定期費用を自動記録しました",
     "recurring_banner_title": "自動記録について",
     "recurring_banner_body": "アプリを開いたとき、支払日を過ぎた定期費用が自動的に「手動記録」タブに記録されます。記録後は次回支払日が自動的に更新されます。"
   },
