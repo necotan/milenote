@@ -340,7 +340,7 @@ function RecordsPageInner() {
   const [displayYear, displayMonth] = selectedYearMonth.split('-').map(Number)
   const monthLabel = locale === "en"
     ? new Date(displayYear, displayMonth - 1).toLocaleDateString("en-US", { year: "numeric", month: "long" })
-    : `${displayYear}年${displayMonth}月`
+    : t("common.year_month", { year: displayYear, month: displayMonth })
   const displayedRecords = viewMode === "month"
     ? records.filter(r => r.date.startsWith(selectedYearMonth))
     : records
