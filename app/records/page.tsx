@@ -134,18 +134,20 @@ const RecordForm = ({
     </>
   )
 
-  // 日付・ODOメーター
-  const dateOdoFields = (
-    <>
-      <div className="space-y-2">
-        <Label>{t("records.date")} <span className="text-red-500">{t("common.required")}</span></Label>
-        <Input type="date" value={date} onChange={e => setDate(e.target.value)} required className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 appearance-none h-8 min-h-0" />
-      </div>
-      <div className="space-y-2">
-        <Label>{t("records.odometer_km")}</Label>
-        <NumberInput value={odoAtRecord} onValueChange={setOdoAtRecord} placeholder="52,500" className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
-      </div>
-    </>
+  // 日付
+  const dateField = (
+    <div className="space-y-2">
+      <Label>{t("records.date")} <span className="text-red-500">{t("common.required")}</span></Label>
+      <Input type="date" value={date} onChange={e => setDate(e.target.value)} required className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 appearance-none h-8 min-h-0" />
+    </div>
+  )
+
+  // ODOメーター
+  const odoField = (
+    <div className="space-y-2">
+      <Label>{t("records.odometer_km")}</Label>
+      <NumberInput value={odoAtRecord} onValueChange={setOdoAtRecord} placeholder="52,500" className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
+    </div>
   )
 
   return (
@@ -163,7 +165,8 @@ const RecordForm = ({
           <div className="sm:grid sm:grid-cols-2 sm:gap-x-8 sm:items-start">
             <div className="space-y-4">
               {carCategoryFields}
-              {dateOdoFields}
+              {dateField}
+              {odoField}
             </div>
 
             <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
@@ -247,20 +250,26 @@ const RecordForm = ({
               </div>
 
               {category === "highway" ? (
-                <div className="mt-4 sm:mt-0 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>{t("records.entry_ic")}</Label>
-                      <Input type="text" value={entryIc} onChange={e => setEntryIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>{t("records.exit_ic")}</Label>
-                      <Input type="text" value={exitIc} onChange={e => setExitIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
-                    </div>
+                <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
+                  <div className="flex items-center gap-2 mb-6">
+                    <Ticket size={15} className="text-slate-400 dark:text-muted-foreground" />
+                    <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.highway_details")}</span>
+                  </div>
+
+                  {dateField}
+                  {odoField}
+
+                  <div className="space-y-2">
+                    <Label>{t("records.entry_ic")}</Label>
+                    <Input type="text" value={entryIc} onChange={e => setEntryIc(e.target.value)} placeholder="" className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>{t("records.exit_ic")}</Label>
+                    <Input type="text" value={exitIc} onChange={e => setExitIc(e.target.value)} placeholder="" className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
                   </div>
                   <div className="space-y-2">
                     <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
-                    <NumberInput value={amount} onValueChange={setAmount} required placeholder="1,320" className="max-w-40 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                    <NumberInput value={amount} onValueChange={setAmount} required placeholder="1,320" className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
                   </div>
                 </div>
               ) : (
@@ -270,7 +279,8 @@ const RecordForm = ({
                     <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.record_details")}</span>
                   </div>
 
-                  {dateOdoFields}
+                  {dateField}
+                  {odoField}
 
                   <div className="space-y-2">
                     <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>

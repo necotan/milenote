@@ -171,6 +171,7 @@
     "subcategory": "Subcategory",
     "basic_info": "Basic Info",
     "record_details": "Record Details",
+    "highway_details": "Toll Details",
     "date": "Date",
     "odometer_km": "Odometer (km)",
     "fuel_info": "Fuel Details",
