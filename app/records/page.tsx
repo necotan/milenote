@@ -108,13 +108,13 @@ const RecordForm = ({
   const selectedCar = cars.find((c: { id: string; fuel_type?: string }) => c.id === carId)
   const isEv = selectedCar?.fuel_type === "ev"
 
-  // 対象車・カテゴリ・日付・ODOメーター（fuelは2列レイアウトの左側、それ以外は単独で使う）
-  const commonFields = (
+  // 対象車・カテゴリ（fuelは2列レイアウトの左側、それ以外は単独で使い、サブカテゴリは直下に差し込む）
+  const carCategoryFields = (
     <>
       <div className="space-y-2">
         <Label>{t("common.target_car")} <span className="text-red-500">{t("common.required")}</span></Label>
         <Select value={carId} onValueChange={setCarId} required>
-          <SelectTrigger className="w-full"><SelectValue placeholder={t("common.select_car")} /></SelectTrigger>
+          <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400"><SelectValue placeholder={t("common.select_car")} /></SelectTrigger>
           <SelectContent>
             {cars.map((car: any) => <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>)}
           </SelectContent>
@@ -123,7 +123,7 @@ const RecordForm = ({
       <div className="space-y-2">
         <Label>{t("records.category")} <span className="text-red-500">{t("common.required")}</span></Label>
         <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className="w-full"><SelectValue placeholder={t("records.category")} /></SelectTrigger>
+          <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400"><SelectValue placeholder={t("records.category")} /></SelectTrigger>
           <SelectContent>
             {Object.keys(CATEGORIES).map(key => (
               <SelectItem key={key} value={key}>{t(`categories.${key}`)}</SelectItem>
@@ -131,13 +131,19 @@ const RecordForm = ({
           </SelectContent>
         </Select>
       </div>
+    </>
+  )
+
+  // 日付・ODOメーター
+  const dateOdoFields = (
+    <>
       <div className="space-y-2">
         <Label>{t("records.date")} <span className="text-red-500">{t("common.required")}</span></Label>
-        <Input type="date" value={date} onChange={e => setDate(e.target.value)} required className="appearance-none h-8 min-h-0" />
+        <Input type="date" value={date} onChange={e => setDate(e.target.value)} required className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 appearance-none h-8 min-h-0" />
       </div>
       <div className="space-y-2">
         <Label>{t("records.odometer_km")}</Label>
-        <NumberInput value={odoAtRecord} onValueChange={setOdoAtRecord} placeholder="52,500" />
+        <NumberInput value={odoAtRecord} onValueChange={setOdoAtRecord} placeholder="52,500" className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
       </div>
     </>
   )
@@ -156,7 +162,8 @@ const RecordForm = ({
         {category === "fuel" ? (
           <div className="sm:grid sm:grid-cols-2 sm:gap-x-8 sm:items-start">
             <div className="space-y-4">
-              {commonFields}
+              {carCategoryFields}
+              {dateOdoFields}
             </div>
 
             <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
@@ -213,25 +220,65 @@ const RecordForm = ({
           </div>
         ) : (
           <>
-            <div className="space-y-4 sm:max-w-[50rem]">
-              {commonFields}
-            </div>
+            <div className="sm:grid sm:grid-cols-2 sm:gap-x-8 sm:items-start">
+              <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
+                <div className="flex items-center gap-2 mb-6">
+                  <CarFront size={15} className="text-slate-400 dark:text-muted-foreground" />
+                  <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.basic_info")}</span>
+                </div>
 
-            {SUB_CATEGORIES[category] && (
-              <div className="space-y-2 w-1/2 pr-1.5 sm:pr-0 sm:max-w-sm">
-                <Label>{t("records.subcategory")}</Label>
-                <Select value={subCategory} onValueChange={setSubCategory}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder={t("common.please_select")} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SUB_CATEGORIES[category].map(sub => (
-                      <SelectItem key={sub} value={sub}>{t(`subcategories.${sub}`)}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                {carCategoryFields}
+
+                {SUB_CATEGORIES[category] && (
+                  <div className="space-y-2">
+                    <Label>{t("records.subcategory")}</Label>
+                    <Select value={subCategory} onValueChange={setSubCategory}>
+                      <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400">
+                        <SelectValue placeholder={t("common.please_select")} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SUB_CATEGORIES[category].map(sub => (
+                          <SelectItem key={sub} value={sub}>{t(`subcategories.${sub}`)}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
-            )}
+
+              {category === "highway" ? (
+                <div className="mt-4 sm:mt-0 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>{t("records.entry_ic")}</Label>
+                      <Input type="text" value={entryIc} onChange={e => setEntryIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>{t("records.exit_ic")}</Label>
+                      <Input type="text" value={exitIc} onChange={e => setExitIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
+                    <NumberInput value={amount} onValueChange={setAmount} required placeholder="1,320" className="max-w-40 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
+                  <div className="flex items-center gap-2 mb-6">
+                    <Receipt size={15} className="text-slate-400 dark:text-muted-foreground" />
+                    <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.record_details")}</span>
+                  </div>
+
+                  {dateOdoFields}
+
+                  <div className="space-y-2">
+                    <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
+                    <NumberInput value={amount} onValueChange={setAmount} required placeholder="5,000" className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
+                  </div>
+                </div>
+              )}
+            </div>
 
             {category === "inspection" && subCategory === "periodic_inspection" && (
               <div className="space-y-2">
@@ -248,30 +295,6 @@ const RecordForm = ({
                   </div>
                 </div>
                 <p className="text-[11px] text-slate-400 dark:text-muted-foreground whitespace-nowrap">{t("records.periodic_inspection_interval_hint")}</p>
-              </div>
-            )}
-
-            {category === "highway" ? (
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4 sm:gap-x-8 sm:max-w-[50rem]">
-                  <div className="space-y-2">
-                    <Label>{t("records.entry_ic")}</Label>
-                    <Input type="text" value={entryIc} onChange={e => setEntryIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>{t("records.exit_ic")}</Label>
-                    <Input type="text" value={exitIc} onChange={e => setExitIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
-                  <NumberInput value={amount} onValueChange={setAmount} required placeholder="1,320" className="max-w-40 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
-                <NumberInput value={amount} onValueChange={setAmount} required placeholder="5,000" className="max-w-40" />
               </div>
             )}
           </>
