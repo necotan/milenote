@@ -160,7 +160,7 @@ const RecordForm = ({
         {category === "inspection" && subCategory === "periodic_inspection" && (
           <div className="space-y-2">
             <div className="space-y-2 w-1/2 pr-1.5 sm:pr-0 sm:max-w-sm">
-              <Label>{t("records.periodic_inspection_interval")} <span className="text-slate-400 dark:text-muted-foreground font-normal text-xs">{t("records.optional")}</span></Label>
+              <Label>{t("records.periodic_inspection_interval")}</Label>
               <div className="relative max-w-40">
                 <NumberInput
                   value={intervalMonths}
@@ -181,7 +181,7 @@ const RecordForm = ({
         </div>
 
         <div className="space-y-2">
-          <Label>{t("records.odometer_km")} <span className="text-slate-400 dark:text-muted-foreground font-normal text-xs">{t("records.optional")}</span></Label>
+          <Label>{t("records.odometer_km")}</Label>
           <NumberInput value={odoAtRecord} onValueChange={setOdoAtRecord} placeholder="52,500" className="max-w-40" />
         </div>
 
@@ -241,11 +241,11 @@ const RecordForm = ({
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4 sm:gap-x-8 sm:max-w-[50rem]">
               <div className="space-y-2">
-                <Label>{t("records.entry_ic")} <span className="text-slate-400 dark:text-muted-foreground font-normal text-[10px]">{t("records.optional")}</span></Label>
+                <Label>{t("records.entry_ic")}</Label>
                 <Input type="text" value={entryIc} onChange={e => setEntryIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
               </div>
               <div className="space-y-2">
-                <Label>{t("records.exit_ic")} <span className="text-slate-400 dark:text-muted-foreground font-normal text-[10px]">{t("records.optional")}</span></Label>
+                <Label>{t("records.exit_ic")}</Label>
                 <Input type="text" value={exitIc} onChange={e => setExitIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
               </div>
             </div>

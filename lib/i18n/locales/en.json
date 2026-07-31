@@ -166,7 +166,6 @@
     "subcategory": "Subcategory",
     "date": "Date",
     "odometer_km": "Odometer (km)",
-    "optional": "Optional",
     "fuel_info": "Fuel Details",
     "unit_price": "Price per L",
     "fuel_amount": "Volume (L)",
