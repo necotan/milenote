@@ -169,6 +169,8 @@
     "new_record": "New Record",
     "category": "Category",
     "subcategory": "Subcategory",
+    "basic_info": "Basic Info",
+    "record_details": "Record Details",
     "date": "Date",
     "odometer_km": "Odometer (km)",
     "fuel_info": "Fuel Details",
