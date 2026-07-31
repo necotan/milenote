@@ -163,7 +163,12 @@ const RecordForm = ({
       <form onSubmit={onSubmit} className="space-y-4">
         {category === "fuel" ? (
           <div className="sm:grid sm:grid-cols-2 sm:gap-x-8 sm:items-start">
-            <div className="space-y-4">
+            <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
+              <div className="flex items-center gap-2 mb-6">
+                <CarFront size={15} className="text-slate-400 dark:text-muted-foreground" />
+                <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.basic_info")}</span>
+              </div>
+
               {carCategoryFields}
               {dateField}
               {odoField}
