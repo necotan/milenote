@@ -107,6 +107,41 @@ const RecordForm = ({
   // 選択中の車がEVのとき、給油フォームを充電(kWh建て)表示に切り替える
   const selectedCar = cars.find((c: { id: string; fuel_type?: string }) => c.id === carId)
   const isEv = selectedCar?.fuel_type === "ev"
+
+  // 対象車・カテゴリ・日付・ODOメーター（fuelは2列レイアウトの左側、それ以外は単独で使う）
+  const commonFields = (
+    <>
+      <div className="space-y-2">
+        <Label>{t("common.target_car")} <span className="text-red-500">{t("common.required")}</span></Label>
+        <Select value={carId} onValueChange={setCarId} required>
+          <SelectTrigger className="w-full"><SelectValue placeholder={t("common.select_car")} /></SelectTrigger>
+          <SelectContent>
+            {cars.map((car: any) => <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>)}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label>{t("records.category")} <span className="text-red-500">{t("common.required")}</span></Label>
+        <Select value={category} onValueChange={setCategory}>
+          <SelectTrigger className="w-full"><SelectValue placeholder={t("records.category")} /></SelectTrigger>
+          <SelectContent>
+            {Object.keys(CATEGORIES).map(key => (
+              <SelectItem key={key} value={key}>{t(`categories.${key}`)}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label>{t("records.date")} <span className="text-red-500">{t("common.required")}</span></Label>
+        <Input type="date" value={date} onChange={e => setDate(e.target.value)} required className="appearance-none h-8 min-h-0" />
+      </div>
+      <div className="space-y-2">
+        <Label>{t("records.odometer_km")}</Label>
+        <NumberInput value={odoAtRecord} onValueChange={setOdoAtRecord} placeholder="52,500" />
+      </div>
+    </>
+  )
+
   return (
   <Card className="border-none shadow-lg bg-white dark:bg-card">
     <CardContent className="p-6 relative">
@@ -118,150 +153,131 @@ const RecordForm = ({
       </h2>
       
       <form onSubmit={onSubmit} className="space-y-4">
-        <div className="grid grid-cols-2 gap-3 sm:gap-x-8 sm:max-w-[50rem]">
-          <div className="space-y-2">
-            <Label>{t("common.target_car")} <span className="text-red-500">{t("common.required")}</span></Label>
-            <Select value={carId} onValueChange={setCarId} required>
-              <SelectTrigger className="w-full"><SelectValue placeholder={t("common.select_car")} /></SelectTrigger>
-              <SelectContent>
-                {cars.map((car: any) => <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>)}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label>{t("records.category")} <span className="text-red-500">{t("common.required")}</span></Label>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-full"><SelectValue placeholder={t("records.category")} /></SelectTrigger>
-              <SelectContent>
-                {Object.keys(CATEGORIES).map(key => (
-                  <SelectItem key={key} value={key}>{t(`categories.${key}`)}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {SUB_CATEGORIES[category] && (
-          <div className="space-y-2 w-1/2 pr-1.5 sm:pr-0 sm:max-w-sm">
-            <Label>{t("records.subcategory")}</Label>
-            <Select value={subCategory} onValueChange={setSubCategory}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder={t("common.please_select")} />
-              </SelectTrigger>
-              <SelectContent>
-                {SUB_CATEGORIES[category].map(sub => (
-                  <SelectItem key={sub} value={sub}>{t(`subcategories.${sub}`)}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        )}
-
-        {category === "inspection" && subCategory === "periodic_inspection" && (
-          <div className="space-y-2">
-            <div className="space-y-2 w-1/2 pr-1.5 sm:pr-0 sm:max-w-sm">
-              <Label>{t("records.periodic_inspection_interval")}</Label>
-              <div className="relative max-w-40">
-                <NumberInput
-                  value={intervalMonths}
-                  onValueChange={setIntervalMonths}
-                  placeholder="6"
-                  className="pr-12"
-                />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{t("common.months_unit")}</span>
-              </div>
-            </div>
-            <p className="text-[11px] text-slate-400 dark:text-muted-foreground whitespace-nowrap">{t("records.periodic_inspection_interval_hint")}</p>
-          </div>
-        )}
-
-        <div className="space-y-2">
-          <Label>{t("records.date")} <span className="text-red-500">{t("common.required")}</span></Label>
-          <Input type="date" value={date} onChange={e => setDate(e.target.value)} required className="max-w-40 appearance-none h-8 min-h-0" />
-        </div>
-
-        <div className="space-y-2">
-          <Label>{t("records.odometer_km")}</Label>
-          <NumberInput value={odoAtRecord} onValueChange={setOdoAtRecord} placeholder="52,500" className="max-w-40" />
-        </div>
-
         {category === "fuel" ? (
-          <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4 sm:max-w-sm">
-            <div className="flex items-center gap-2 mb-6">
-              <Fuel size={15} className="text-slate-400 dark:text-muted-foreground" />
-              <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.charge_info") : t("records.fuel_info")}</span>
+          <div className="sm:grid sm:grid-cols-2 sm:gap-x-8 sm:items-start">
+            <div className="space-y-4">
+              {commonFields}
             </div>
 
-            {/* 単価 */}
-            <div className="space-y-1">
-              <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.unit_price_kwh") : t("records.unit_price")}</Label>
-              <div className="relative max-w-40">
-                <NumberInput
-                  decimal
-                  value={fuelUnitPrice}
-                  onValueChange={value => onFuelFieldChange("fuelUnitPrice", value)}
-                  placeholder={isEv ? "30" : "170"}
-                  className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 pr-12 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
-                />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{isEv ? t("records.unit_yen_per_kwh") : t("records.unit_yen_per_l")}</span>
+            <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
+              <div className="flex items-center gap-2 mb-6">
+                <Fuel size={15} className="text-slate-400 dark:text-muted-foreground" />
+                <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.charge_info") : t("records.fuel_info")}</span>
               </div>
-            </div>
 
-            {/* リットル / kWh */}
-            <div className="space-y-1">
-              <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.charge_amount") : t("records.fuel_amount")}</Label>
-              <div className="relative max-w-40">
-                <NumberInput
-                  decimal
-                  value={fuelAmount}
-                  onValueChange={value => onFuelFieldChange("fuelAmount", value)}
-                  placeholder={isEv ? "30.0" : "40.0"}
-                  className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 pr-8 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
-                />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{isEv ? t("records.unit_kwh") : t("records.unit_l")}</span>
+              {/* 単価 */}
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.unit_price_kwh") : t("records.unit_price")}</Label>
+                <div className="relative">
+                  <NumberInput
+                    decimal
+                    value={fuelUnitPrice}
+                    onValueChange={value => onFuelFieldChange("fuelUnitPrice", value)}
+                    placeholder={isEv ? "30" : "170"}
+                    className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 pr-12 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{isEv ? t("records.unit_yen_per_kwh") : t("records.unit_yen_per_l")}</span>
+                </div>
               </div>
-            </div>
 
-            {/* 総額 */}
-            <div className="space-y-1">
-              <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("records.total_amount")} <span className="text-red-400">{t("common.required")}</span></Label>
-              <div className="relative max-w-40">
-                <NumberInput
-                  value={amount}
-                  onValueChange={value => onFuelFieldChange("amount", value)}
-                  required
-                  placeholder="6,800"
-                  className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 font-bold text-slate-800 dark:text-foreground pr-8 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
-                />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{t("records.unit_yen")}</span>
+              {/* リットル / kWh */}
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.charge_amount") : t("records.fuel_amount")}</Label>
+                <div className="relative">
+                  <NumberInput
+                    decimal
+                    value={fuelAmount}
+                    onValueChange={value => onFuelFieldChange("fuelAmount", value)}
+                    placeholder={isEv ? "30.0" : "40.0"}
+                    className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 pr-8 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{isEv ? t("records.unit_kwh") : t("records.unit_l")}</span>
+                </div>
               </div>
-            </div>
-          </div>
-        ) : category === "highway" ? (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4 sm:gap-x-8 sm:max-w-[50rem]">
-              <div className="space-y-2">
-                <Label>{t("records.entry_ic")}</Label>
-                <Input type="text" value={entryIc} onChange={e => setEntryIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+
+              {/* 総額 */}
+              <div className="space-y-1">
+                <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("records.total_amount")} <span className="text-red-400">{t("common.required")}</span></Label>
+                <div className="relative">
+                  <NumberInput
+                    value={amount}
+                    onValueChange={value => onFuelFieldChange("amount", value)}
+                    required
+                    placeholder="6,800"
+                    className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 font-bold text-slate-800 dark:text-foreground pr-8 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{t("records.unit_yen")}</span>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>{t("records.exit_ic")}</Label>
-                <Input type="text" value={exitIc} onChange={e => setExitIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
-              <NumberInput value={amount} onValueChange={setAmount} required placeholder="1,320" className="max-w-40 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
             </div>
           </div>
         ) : (
-          <div className="space-y-2">
-            <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
-            <NumberInput value={amount} onValueChange={setAmount} required placeholder="5,000" className="max-w-40" />
-          </div>
+          <>
+            <div className="space-y-4 sm:max-w-[50rem]">
+              {commonFields}
+            </div>
+
+            {SUB_CATEGORIES[category] && (
+              <div className="space-y-2 w-1/2 pr-1.5 sm:pr-0 sm:max-w-sm">
+                <Label>{t("records.subcategory")}</Label>
+                <Select value={subCategory} onValueChange={setSubCategory}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder={t("common.please_select")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {SUB_CATEGORIES[category].map(sub => (
+                      <SelectItem key={sub} value={sub}>{t(`subcategories.${sub}`)}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {category === "inspection" && subCategory === "periodic_inspection" && (
+              <div className="space-y-2">
+                <div className="space-y-2 w-1/2 pr-1.5 sm:pr-0 sm:max-w-sm">
+                  <Label>{t("records.periodic_inspection_interval")}</Label>
+                  <div className="relative max-w-40">
+                    <NumberInput
+                      value={intervalMonths}
+                      onValueChange={setIntervalMonths}
+                      placeholder="6"
+                      className="pr-12"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{t("common.months_unit")}</span>
+                  </div>
+                </div>
+                <p className="text-[11px] text-slate-400 dark:text-muted-foreground whitespace-nowrap">{t("records.periodic_inspection_interval_hint")}</p>
+              </div>
+            )}
+
+            {category === "highway" ? (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4 sm:gap-x-8 sm:max-w-[50rem]">
+                  <div className="space-y-2">
+                    <Label>{t("records.entry_ic")}</Label>
+                    <Input type="text" value={entryIc} onChange={e => setEntryIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>{t("records.exit_ic")}</Label>
+                    <Input type="text" value={exitIc} onChange={e => setExitIc(e.target.value)} placeholder="" className="placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
+                  <NumberInput value={amount} onValueChange={setAmount} required placeholder="1,320" className="max-w-40 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
+                <NumberInput value={amount} onValueChange={setAmount} required placeholder="5,000" className="max-w-40" />
+              </div>
+            )}
+          </>
         )}
 
-        <div className="space-y-2 sm:max-w-[50rem]">
+        <div className="space-y-2">
           <Label>{t("common.memo")}</Label>
           <Textarea value={memo} onChange={e => setMemo(e.target.value)} placeholder={t("records.memo_placeholder")} className="resize-none" />
         </div>
