@@ -182,7 +182,7 @@ const RecordForm = ({
 
               {/* 単価 */}
               <div className="space-y-1">
-                <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.unit_price_kwh") : t("records.unit_price")}</Label>
+                <Label>{isEv ? t("records.unit_price_kwh") : t("records.unit_price")}</Label>
                 <div className="relative">
                   <NumberInput
                     decimal
@@ -197,7 +197,7 @@ const RecordForm = ({
 
               {/* リットル / kWh */}
               <div className="space-y-1">
-                <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.charge_amount") : t("records.fuel_amount")}</Label>
+                <Label>{isEv ? t("records.charge_amount") : t("records.fuel_amount")}</Label>
                 <div className="relative">
                   <NumberInput
                     decimal
@@ -212,7 +212,7 @@ const RecordForm = ({
 
               {/* 総額 */}
               <div className="space-y-1">
-                <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("records.total_amount")} <span className="text-red-400">{t("common.required")}</span></Label>
+                <Label>{t("records.total_amount")} <span className="text-red-500">{t("common.required")}</span></Label>
                 <div className="relative">
                   <NumberInput
                     value={amount}
@@ -266,11 +266,11 @@ const RecordForm = ({
 
                   <div className="space-y-2">
                     <Label>{t("records.entry_ic")}</Label>
-                    <Input type="text" value={entryIc} onChange={e => setEntryIc(e.target.value)} placeholder="" className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                    <Input type="text" value={entryIc} onChange={e => setEntryIc(e.target.value)} placeholder={t("records.entry_ic_placeholder")} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
                   </div>
                   <div className="space-y-2">
                     <Label>{t("records.exit_ic")}</Label>
-                    <Input type="text" value={exitIc} onChange={e => setExitIc(e.target.value)} placeholder="" className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                    <Input type="text" value={exitIc} onChange={e => setExitIc(e.target.value)} placeholder={t("records.exit_ic_placeholder")} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
                   </div>
                   <div className="space-y-2">
                     <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
