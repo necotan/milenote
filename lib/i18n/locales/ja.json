@@ -100,6 +100,7 @@
     "model_code": "型式",
     "year": "年式 (西暦)",
     "body_color": "ボディカラー",
+    "body_color_placeholder": "クリスタルホワイトパール",
     "basic_info": "基本情報",
     "odo_info": "走行距離",
     "current_odo": "現在のODO (km)",

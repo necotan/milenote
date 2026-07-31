@@ -100,6 +100,7 @@
     "model_code": "Model Code",
     "year": "Year",
     "body_color": "Body Color",
+    "body_color_placeholder": "Crystal White Pearl",
     "basic_info": "Basic Info",
     "odo_info": "Odometer",
     "current_odo": "Current ODO (km)",
