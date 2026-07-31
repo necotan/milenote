@@ -187,7 +187,7 @@ const RecordForm = ({
 
         {category === "fuel" ? (
           <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4 sm:max-w-sm">
-            <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-6">
               <Fuel size={15} className="text-slate-400 dark:text-muted-foreground" />
               <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.charge_info") : t("records.fuel_info")}</span>
             </div>
