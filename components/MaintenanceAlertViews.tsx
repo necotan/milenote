@@ -35,7 +35,7 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
         {/* ホームの「すべて見る」と同じ配置（reserveButtonSpaceは重なり回避用） */}
         <Link
           href={`/records?action=add&category=${MAINT_TYPE_CATEGORY[alert.maintName] || "maintenance"}&sub_category=${alert.maintName}`}
-          className={`absolute z-10 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-white dark:bg-surface-2 hover:bg-slate-50 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground text-[10px] font-bold tracking-wider transition-colors ${reserveButtonSpace ? 'top-12 right-3' : 'top-3 right-3'}`}
+          className={`absolute z-10 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-slate-50 dark:bg-surface-2 hover:bg-slate-100 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground text-[10px] font-bold tracking-wider transition-colors ${reserveButtonSpace ? 'top-12 right-3' : 'top-3 right-3'}`}
         >
           {t("home.record_now")}
         </Link>

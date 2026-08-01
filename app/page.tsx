@@ -262,12 +262,12 @@ export default function Home() {
                 {cars.length > 0 && (
                   <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
                     <Link href="/records?action=add&category=fuel">
-                      <button className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-white dark:bg-surface-2 hover:bg-slate-50 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground transition-colors group">
+                      <button className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-slate-50 dark:bg-surface-2 hover:bg-slate-100 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground transition-colors group">
                         <Fuel size={12} className="text-slate-500 dark:text-muted-foreground group-hover:scale-110 transition-transform" />
                         <span className="text-[10px] font-bold tracking-wider">{t("home.record_fuel")}</span>
                       </button>
                     </Link>
-                    <button onClick={openOdoModal} className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-white dark:bg-surface-2 hover:bg-slate-50 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground transition-colors group">
+                    <button onClick={openOdoModal} className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-slate-50 dark:bg-surface-2 hover:bg-slate-100 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground transition-colors group">
                       <Gauge size={12} className="text-slate-500 dark:text-muted-foreground group-hover:scale-110 transition-transform" />
                       <span className="text-[10px] font-bold tracking-wider">{t("home.update_odo")}</span>
                     </button>
@@ -349,7 +349,7 @@ export default function Home() {
                   {alerts.length > 1 && (
                     <Link
                       href="/maintenance"
-                      className={`absolute top-3 right-3 z-10 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border text-[10px] font-bold tracking-wider transition-colors group bg-white dark:bg-surface-2 text-slate-600 dark:text-foreground border-slate-300 dark:border-surface-border hover:bg-slate-50 dark:hover:bg-surface-3 ${alerts.length <= 4 ? 'lg:hidden' : ''}`}
+                      className={`absolute top-3 right-3 z-10 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border text-[10px] font-bold tracking-wider transition-colors group bg-slate-50 dark:bg-surface-2 text-slate-600 dark:text-foreground border-slate-300 dark:border-surface-border hover:bg-slate-100 dark:hover:bg-surface-3 ${alerts.length <= 4 ? 'lg:hidden' : ''}`}
                     >
                       <List size={11} className="text-slate-500 dark:text-muted-foreground group-hover:scale-110 transition-transform" />
                       {t("home.see_all")}
