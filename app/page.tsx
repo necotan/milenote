@@ -281,7 +281,7 @@ export default function Home() {
                       <Banknote size={14} /> {t("home.this_month_cost")}
                     </p>
                     {thisMonthRecords.length === 0 ? (
-                      <p className="text-sm font-bold text-slate-400 dark:text-muted-foreground tracking-wider py-1.5">{t("home.no_cost_data")}</p>
+                      <p className="text-xs text-slate-400 dark:text-muted-foreground tracking-wider py-1.5">{t("home.no_cost_data")}</p>
                     ) : (
                       <>
                         <p className="text-2xl font-black text-slate-800 dark:text-foreground tracking-wider">¥{thisMonthCost.toLocaleString()}</p>
