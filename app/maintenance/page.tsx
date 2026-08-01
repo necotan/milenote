@@ -345,7 +345,11 @@ export default function MaintenancePage() {
               </div>
 
               <div className="flex justify-center pt-6">
-                <Button variant="outline" className="px-10 font-bold" onClick={() => setIsDisplaySettingsOpen(false)}>
+                <Button
+                  variant="outline"
+                  className="px-10 font-bold bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background dark:bg-foreground dark:text-background dark:border-foreground dark:hover:bg-foreground/90"
+                  onClick={() => setIsDisplaySettingsOpen(false)}
+                >
                   {t("common.save")}
                 </Button>
               </div>
@@ -374,7 +378,7 @@ export default function MaintenancePage() {
                     aria-pressed={categoryFilters.length === 0}
                     className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                       categoryFilters.length === 0
-                        ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                        ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                         : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                     }`}
                   >
@@ -393,7 +397,7 @@ export default function MaintenancePage() {
                         aria-pressed={active}
                         className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                           active
-                            ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                            ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                             : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                         }`}
                       >
@@ -416,7 +420,7 @@ export default function MaintenancePage() {
                       aria-pressed={carFilters.length === 0}
                       className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                         carFilters.length === 0
-                          ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                          ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                           : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                       }`}
                     >
@@ -434,7 +438,7 @@ export default function MaintenancePage() {
                           aria-pressed={active}
                           className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                             active
-                              ? "bg-slate-800 text-white border-slate-800 dark:bg-foreground dark:text-background dark:border-foreground"
+                              ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                               : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                           }`}
                         >
@@ -448,7 +452,11 @@ export default function MaintenancePage() {
               )}
 
               <div className="flex justify-center pt-6">
-                <Button variant="outline" className="px-10 font-bold" onClick={() => setIsFilterOpen(false)}>
+                <Button
+                  variant="outline"
+                  className="px-10 font-bold bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background dark:bg-foreground dark:text-background dark:border-foreground dark:hover:bg-foreground/90"
+                  onClick={() => setIsFilterOpen(false)}
+                >
                   {t("common.save")}
                 </Button>
               </div>
