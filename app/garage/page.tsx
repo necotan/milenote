@@ -869,13 +869,13 @@ export default function GaragePage() {
                     </Label>
                   </div>
 
-                  <div className="relative aspect-[11/6] bg-neutral-800 w-full m-0 border-b border-slate-100 dark:border-border overflow-hidden">
+                  <div className="relative aspect-[11/6] bg-neutral-300 dark:bg-neutral-800 w-full m-0 border-b border-slate-100 dark:border-border overflow-hidden">
                     {/* 登録済みの画像がある場合は表示、なければプレースホルダーアイコンを表示 */}
                     {car.image_url ? (
                       <img src={car.image_url} alt={car.name} className="absolute inset-0 w-full h-full object-cover" style={getCarImageStyle(car)} />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <ImageIcon className="h-16 w-16 text-neutral-600" strokeWidth={1.5} />
+                        <ImageIcon className="h-16 w-16 text-neutral-500 dark:text-neutral-600" strokeWidth={1.5} />
                       </div>
                     )}
                   </div>
