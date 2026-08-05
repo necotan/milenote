@@ -1176,7 +1176,7 @@ export default function StatsPage() {
                 start={catDisplayStart} end={catDisplayEnd}
                 onStartChange={changeCatStart} onEndChange={changeCatEnd}
               />
-              <CardContent className="h-80 p-0">
+              <CardContent className="h-[21rem] p-0">
                 {categoryData.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-slate-300 dark:text-muted-foreground gap-2">
                     <PieIcon size={40} strokeWidth={1.5} />
@@ -1209,7 +1209,7 @@ export default function StatsPage() {
                     <div key={pieAnimKey} className="pie-anim" style={{ width: "100%", height: "100%" }}>
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
-                          <Pie data={categoryData} cx="50%" cy="45%" innerRadius={60} outerRadius={PIE_OUTER_RADIUS} minAngle={PIE_MIN_ANGLE_DEG} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill, pieLabelDeltas)} labelLine={createCustomizedLabelLine(chartChrome.labelLineStroke, pieLabelDeltas)}>
+                          <Pie data={categoryData} cx="50%" cy="50%" innerRadius={60} outerRadius={PIE_OUTER_RADIUS} minAngle={PIE_MIN_ANGLE_DEG} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill, pieLabelDeltas)} labelLine={createCustomizedLabelLine(chartChrome.labelLineStroke, pieLabelDeltas)}>
                             {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                             <Label value={`¥${totalAmount.toLocaleString()}`} position="center" dy={-8} className="text-base font-black fill-slate-800 dark:fill-foreground" />
                             <Label value={t("stats.total")} position="center" dy={8} className="text-[10px] font-bold fill-slate-400 dark:fill-muted-foreground" />
@@ -1241,7 +1241,7 @@ export default function StatsPage() {
                   ]}
                 />
               </CardHeader>
-              <CardContent className="h-80 p-4 pt-0">
+              <CardContent className="h-[21rem] p-4 pt-0">
                 {records.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-slate-300 dark:text-muted-foreground gap-2">
                     <BarChart3 size={40} strokeWidth={1.5} />
