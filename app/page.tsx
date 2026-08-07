@@ -479,7 +479,7 @@ export default function Home() {
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground">{t("home.target_car")}</label>
                 <Select value={odoCarId} onValueChange={handleOdoCarChange}>
-                  <SelectTrigger className="w-full h-10">
+                  <SelectTrigger className="w-full h-10 bg-white dark:bg-card border-slate-200 dark:border-border">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="z-[70]">
