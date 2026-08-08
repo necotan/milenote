@@ -955,6 +955,10 @@ function RecordsPageInner() {
           {filteredRecords.map((record) => {
             const cat = CATEGORIES[record.category] || CATEGORIES.other
             const Icon = cat.icon
+            const recordFuelUnit = record.category === "fuel" ? getFuelUnit(record.cars?.fuel_type) : "l"
+            const categoryLabel = recordFuelUnit !== "l"
+              ? t(recordFuelUnit === "kwh" ? "home.record_charge_label" : "home.record_hydrogen_label")
+              : t(`categories.${record.category}`)
 
             return (
               <Card key={record.id} className="border-none shadow-sm bg-white dark:bg-card overflow-hidden relative">
@@ -987,7 +991,7 @@ function RecordsPageInner() {
                       
                       {/* ジャンルタグ */}
                       <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 dark:text-muted-foreground mb-2 flex-wrap">
-                        <span className="bg-slate-100 dark:bg-surface-2 px-2 py-1 rounded-md">{t(`categories.${record.category}`)}</span>
+                        <span className="bg-slate-100 dark:bg-surface-2 px-2 py-1 rounded-md">{categoryLabel}</span>
                         {record.sub_category && (
                           <span className="border border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground px-2 py-1 rounded-md">
                             {t(`subcategories.${record.sub_category}`)}
