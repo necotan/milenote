@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, ArrowRight, Hammer, ClipboardList, Droplets, SlidersHorizontal } from "lucide-react"
+import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, ArrowRight, Hammer, ClipboardList, Droplets, SlidersHorizontal, BatteryCharging, Atom } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
@@ -954,8 +954,8 @@ function RecordsPageInner() {
         <div className="space-y-4">
           {filteredRecords.map((record) => {
             const cat = CATEGORIES[record.category] || CATEGORIES.other
-            const Icon = cat.icon
             const recordFuelUnit = record.category === "fuel" ? getFuelUnit(record.cars?.fuel_type) : "l"
+            const Icon = recordFuelUnit === "kwh" ? BatteryCharging : recordFuelUnit === "kg" ? Atom : cat.icon
             const categoryLabel = recordFuelUnit !== "l"
               ? t(recordFuelUnit === "kwh" ? "home.record_charge_label" : "home.record_hydrogen_label")
               : t(`categories.${record.category}`)
