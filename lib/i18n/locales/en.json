@@ -62,6 +62,7 @@
     "update_odo_invalid": "Please enter a valid odometer reading",
     "target_car": "Target car",
     "record_charge_label": "Charging",
+    "record_hydrogen_label": "Refueling",
     "recent_records": "Recent Records",
     "no_records": "No records yet",
     "no_alerts": "No alerts to display",
@@ -208,6 +209,12 @@
     "unit_yen_per_kwh": "/kWh",
     "unit_kwh": "kWh",
     "charge_amount_label": "Charge:",
+    "hydrogen_info": "Hydrogen Refueling Details",
+    "unit_price_kg": "Price per kg",
+    "hydrogen_amount": "Refuel (kg)",
+    "unit_yen_per_kg": "/kg",
+    "unit_kg": "kg",
+    "hydrogen_amount_label": "Refuel:",
     "route_display_label": "Route:",
     "not_entered": "N/A",
     "view_by_month": "Monthly",
@@ -288,7 +295,7 @@
     "total_fuel_cost": "Total Fuel Cost",
     "avg_unit_price": "Avg. Unit Price",
     "co2_emission": "CO₂ Emissions",
-    "co2_note": "Gasoline 2.32 / Diesel 2.62 / EV 0 kg-CO₂/L",
+    "co2_note": "Gasoline 2.32 / Diesel 2.62 / EV & FCV 0 kg-CO₂/L",
     "unit_liter": "L",
     "unit_count_times": "times",
     "unit_yen_per_liter": "¥/L",
@@ -300,7 +307,13 @@
     "total_charge_cost": "Total Charge Cost",
     "avg_charge_unit_price": "Avg. Unit Price",
     "unit_kwh": "kWh",
-    "unit_yen_per_kwh": "¥/kWh"
+    "unit_yen_per_kwh": "¥/kWh",
+    "hydrogen_summary": "Hydrogen Refueling Summary",
+    "total_hydrogen": "Total Hydrogen",
+    "hydrogen_count": "Refuels",
+    "total_hydrogen_cost": "Total Hydrogen Cost",
+    "avg_hydrogen_unit_price": "Avg. Price",
+    "unit_yen_per_kg": "¥/kg"
   },
   "mypage": {
     "title": "My Page",
@@ -558,6 +571,7 @@
     "premium": "Premium",
     "diesel": "Diesel",
     "ev": "EV (Electric)",
+    "hydrogen": "FCV (Hydrogen)",
     "other": "Other"
   },
   "wishlist_genres": {

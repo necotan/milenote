@@ -62,6 +62,7 @@
     "update_odo_invalid": "正しい走行距離を入力してください",
     "target_car": "対象の車",
     "record_charge_label": "充電",
+    "record_hydrogen_label": "充填",
     "recent_records": "直近の記録",
     "no_records": "まだ記録がありません",
     "no_alerts": "表示するアラートはありません",
@@ -208,6 +209,12 @@
     "unit_yen_per_kwh": "円/kWh",
     "unit_kwh": "kWh",
     "charge_amount_label": "充電量:",
+    "hydrogen_info": "水素充填情報",
+    "unit_price_kg": "単価 (円/kg)",
+    "hydrogen_amount": "充填量 (kg)",
+    "unit_yen_per_kg": "円/kg",
+    "unit_kg": "kg",
+    "hydrogen_amount_label": "充填量:",
     "route_display_label": "区間:",
     "not_entered": "未入力",
     "view_by_month": "月別",
@@ -288,7 +295,7 @@
     "total_fuel_cost": "累計給油代",
     "avg_unit_price": "平均単価",
     "co2_emission": "CO₂排出量",
-    "co2_note": "ガソリン2.32 / 軽油2.62 / EV 0 kg-CO₂/L",
+    "co2_note": "ガソリン2.32 / 軽油2.62 / EV・FCV 0 kg-CO₂/L",
     "unit_liter": "L",
     "unit_count_times": "回",
     "unit_yen_per_liter": "円/L",
@@ -300,7 +307,13 @@
     "total_charge_cost": "累計充電代",
     "avg_charge_unit_price": "平均単価",
     "unit_kwh": "kWh",
-    "unit_yen_per_kwh": "円/kWh"
+    "unit_yen_per_kwh": "円/kWh",
+    "hydrogen_summary": "水素充填サマリー",
+    "total_hydrogen": "累計充填量",
+    "hydrogen_count": "充填回数",
+    "total_hydrogen_cost": "累計充填代",
+    "avg_hydrogen_unit_price": "平均単価",
+    "unit_yen_per_kg": "円/kg"
   },
   "mypage": {
     "title": "マイページ",
@@ -558,6 +571,7 @@
     "premium": "ハイオク",
     "diesel": "軽油",
     "ev": "EV (電気)",
+    "hydrogen": "FCV (水素)",
     "other": "その他"
   },
   "wishlist_genres": {

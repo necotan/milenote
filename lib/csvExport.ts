@@ -1,3 +1,4 @@
+import { getFuelUnit } from "./fuelTypes"
 
 type TFunc = (key: string, params?: Record<string, string | number>) => string
 
@@ -49,10 +50,11 @@ export function recordsToCsv(records: ExportRecord[], t: TFunc): string {
     t("mypage.export_col_memo"),
   ]
 
+  const fuelUnitKey = { l: "records.unit_l", kwh: "records.unit_kwh", kg: "records.unit_kg" } as const
+
   const rows = records.map((r) => {
-    const isEv = r.cars?.fuel_type === "ev"
     const fuel = r.fuel_amount != null
-      ? `${r.fuel_amount}${isEv ? t("records.unit_kwh") : t("records.unit_l")}`
+      ? `${r.fuel_amount}${t(fuelUnitKey[getFuelUnit(r.cars?.fuel_type)])}`
       : ""
     return [
       r.date.replace(/-/g, "/"),

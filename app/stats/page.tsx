@@ -13,7 +13,7 @@ import {
   BarChart, Bar, BarStack
 } from "recharts"
 import type { TooltipContentProps } from "recharts"
-import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, ChevronDown, Info, LineChart as LineChartIcon, Fuel, BatteryCharging } from "lucide-react"
+import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, ChevronDown, Info, LineChart as LineChartIcon, Fuel, BatteryCharging, Atom } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
@@ -77,12 +77,13 @@ type Record_ = {
 }
 
 // 燃料種別ごとのCO₂排出係数 (kg-CO₂/L)
-// EVは走行時排出ゼロ、その他/未設定はガソリン相当として扱う
+// EV・FCV(水素)は走行時排出ゼロ、その他/未設定はガソリン相当として扱う
 const CO2_COEFFICIENT: Record<string, number> = {
   "regular": 2.32,
   "premium": 2.32,
   "diesel": 2.62,
   "ev": 0,
+  "hydrogen": 0,
   "other": 2.32,
 }
 const CO2_COEFFICIENT_DEFAULT = 2.32
@@ -738,9 +739,10 @@ export default function StatsPage() {
   const moonPercent = Math.min(((totalOdo / distanceToMoon) * 100), 100).toFixed(1)
   const remainingMoonDist = Math.max(distanceToMoon - totalOdo, 0)
 
-  // 給油系統計（EV車の充電記録は別集計するためここでは除外）
+  // 給油系統計（EV車の充電記録・FCV車の充填記録は別集計するためここでは除外）
   const isEvRecord = (r: Record_) => (r.car_id ? carFuelTypes.get(r.car_id) : null) === "ev"
-  const fuelRecords = records.filter(r => r.category === "fuel" && !isEvRecord(r))
+  const isHydrogenRecord = (r: Record_) => (r.car_id ? carFuelTypes.get(r.car_id) : null) === "hydrogen"
+  const fuelRecords = records.filter(r => r.category === "fuel" && !isEvRecord(r) && !isHydrogenRecord(r))
   const totalFuelAmount = fuelRecords.reduce((sum, r) => {
     const liters = r.fuel_amount ? parseFloat(String(r.fuel_amount)) : 0
     return sum + (isNaN(liters) ? 0 : liters)
@@ -767,6 +769,16 @@ export default function StatsPage() {
   const chargeCount = chargeRecords.length
   const totalChargeCost = chargeRecords.reduce((sum, r) => sum + r.amount, 0)
   const avgChargeUnitPrice = totalChargeAmount > 0 ? totalChargeCost / totalChargeAmount : 0
+
+  // FCV充填系統計（FCV車の給油カテゴリ記録を kg 建てで集計）
+  const hydrogenRecords = records.filter(r => r.category === "fuel" && isHydrogenRecord(r))
+  const totalHydrogenAmount = hydrogenRecords.reduce((sum, r) => {
+    const kg = r.fuel_amount ? parseFloat(String(r.fuel_amount)) : 0
+    return sum + (isNaN(kg) ? 0 : kg)
+  }, 0)
+  const hydrogenCount = hydrogenRecords.length
+  const totalHydrogenCost = hydrogenRecords.reduce((sum, r) => sum + r.amount, 0)
+  const avgHydrogenUnitPrice = totalHydrogenAmount > 0 ? totalHydrogenCost / totalHydrogenAmount : 0
 
   // ロケール対応の月フォーマッター（tickFormatter の参照を useCallback で固定し、line アニメの再生を防ぐ）
   const monthFormatter = useCallback((v: string) => {
@@ -1121,6 +1133,41 @@ export default function StatsPage() {
                     label={t("stats.avg_charge_unit_price")}
                     value={Math.round(avgChargeUnitPrice).toLocaleString()}
                     unit={t("stats.unit_yen_per_kwh")}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* FCV充填サマリーカード（水素車の充填記録がある場合のみ表示） */}
+          {hydrogenCount > 0 && (
+            <Card className="border-none shadow-sm bg-white dark:bg-card">
+              <CardHeader className="p-4 pb-2">
+                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
+                  <Atom size={16} /> {t("stats.hydrogen_summary")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="px-4 pb-4 pt-0">
+                <div className="divide-y divide-slate-100 dark:divide-border">
+                  <StatRow
+                    label={t("stats.total_hydrogen")}
+                    value={totalHydrogenAmount.toFixed(1)}
+                    unit={t("stats.unit_kg")}
+                  />
+                  <StatRow
+                    label={t("stats.hydrogen_count")}
+                    value={hydrogenCount.toLocaleString()}
+                    unit={t("stats.unit_count_times")}
+                  />
+                  <StatRow
+                    label={t("stats.total_hydrogen_cost")}
+                    value={`¥${totalHydrogenCost.toLocaleString()}`}
+                    unit=""
+                  />
+                  <StatRow
+                    label={t("stats.avg_hydrogen_unit_price")}
+                    value={Math.round(avgHydrogenUnitPrice).toLocaleString()}
+                    unit={t("stats.unit_yen_per_kg")}
                   />
                 </div>
               </CardContent>
