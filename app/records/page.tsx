@@ -21,6 +21,7 @@ import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES, type SubCategorySlug } from "@/lib/subcategories"
+import { getFuelUnit } from "@/lib/fuelTypes"
 
 export const CATEGORIES: Record<string, any> = {
   fuel: { icon: Fuel, color: "text-blue-500", bg: "bg-blue-50 dark:bg-surface-2" },
@@ -104,9 +105,14 @@ const RecordForm = ({
   intervalMonths, setIntervalMonths,
 }: any) => {
   const { t } = useTranslation()
-  // 選択中の車がEVのとき、給油フォームを充電(kWh建て)表示に切り替える
+  // 選択中の車の燃料種別に応じて、給油フォームを給油(L)/充電(kWh)/充填(kg)表示に切り替える
   const selectedCar = cars.find((c: { id: string; fuel_type?: string }) => c.id === carId)
-  const isEv = selectedCar?.fuel_type === "ev"
+  const fuelUnit = getFuelUnit(selectedCar?.fuel_type)
+  const fuelFieldText = {
+    l: { info: t("records.fuel_info"), priceLabel: t("records.unit_price"), pricePh: "170", priceUnit: t("records.unit_yen_per_l"), amountLabel: t("records.fuel_amount"), amountPh: "40.0", amountUnit: t("records.unit_l") },
+    kwh: { info: t("records.charge_info"), priceLabel: t("records.unit_price_kwh"), pricePh: "30", priceUnit: t("records.unit_yen_per_kwh"), amountLabel: t("records.charge_amount"), amountPh: "30.0", amountUnit: t("records.unit_kwh") },
+    kg: { info: t("records.hydrogen_info"), priceLabel: t("records.unit_price_kg"), pricePh: "1100", priceUnit: t("records.unit_yen_per_kg"), amountLabel: t("records.hydrogen_amount"), amountPh: "4.5", amountUnit: t("records.unit_kg") },
+  }[fuelUnit]
 
   // 対象車・カテゴリ（fuelは2列レイアウトの左側、それ以外は単独で使い、サブカテゴリは直下に差し込む）
   const carCategoryFields = (
@@ -177,36 +183,36 @@ const RecordForm = ({
             <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
               <div className="flex items-center gap-2 mb-6">
                 <Fuel size={15} className="text-slate-400 dark:text-muted-foreground" />
-                <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{isEv ? t("records.charge_info") : t("records.fuel_info")}</span>
+                <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{fuelFieldText.info}</span>
               </div>
 
               {/* 単価 */}
               <div className="space-y-1">
-                <Label>{isEv ? t("records.unit_price_kwh") : t("records.unit_price")}</Label>
+                <Label>{fuelFieldText.priceLabel}</Label>
                 <div className="relative">
                   <NumberInput
                     decimal
                     value={fuelUnitPrice}
                     onValueChange={value => onFuelFieldChange("fuelUnitPrice", value)}
-                    placeholder={isEv ? "30" : "170"}
+                    placeholder={fuelFieldText.pricePh}
                     className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 pr-12 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{isEv ? t("records.unit_yen_per_kwh") : t("records.unit_yen_per_l")}</span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{fuelFieldText.priceUnit}</span>
                 </div>
               </div>
 
-              {/* リットル / kWh */}
+              {/* リットル / kWh / kg */}
               <div className="space-y-1">
-                <Label>{isEv ? t("records.charge_amount") : t("records.fuel_amount")}</Label>
+                <Label>{fuelFieldText.amountLabel}</Label>
                 <div className="relative">
                   <NumberInput
                     decimal
                     value={fuelAmount}
                     onValueChange={value => onFuelFieldChange("fuelAmount", value)}
-                    placeholder={isEv ? "30.0" : "40.0"}
+                    placeholder={fuelFieldText.amountPh}
                     className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 pr-8 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{isEv ? t("records.unit_kwh") : t("records.unit_l")}</span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{fuelFieldText.amountUnit}</span>
                 </div>
               </div>
 
@@ -1000,11 +1006,16 @@ function RecordsPageInner() {
                       {/* 日付 */}
                       <p className="text-[11px] font-medium text-slate-400 dark:text-muted-foreground mb-2">{record.date.replace(/-/g, '/')}</p>
 
-                      {record.category === "fuel" && record.fuel_amount && (
-                        <p className="text-xs text-slate-500 dark:text-muted-foreground mb-2">
-                          {record.cars?.fuel_type === "ev" ? t("records.charge_amount_label") : t("records.fuel_amount_label")} <span className="font-bold text-slate-700 dark:text-foreground">{record.fuel_amount} {record.cars?.fuel_type === "ev" ? t("records.unit_kwh") : t("records.unit_l")}</span>
-                        </p>
-                      )}
+                      {record.category === "fuel" && record.fuel_amount && (() => {
+                        const unit = getFuelUnit(record.cars?.fuel_type)
+                        const amountLabel = { l: t("records.fuel_amount_label"), kwh: t("records.charge_amount_label"), kg: t("records.hydrogen_amount_label") }[unit]
+                        const amountUnit = { l: t("records.unit_l"), kwh: t("records.unit_kwh"), kg: t("records.unit_kg") }[unit]
+                        return (
+                          <p className="text-xs text-slate-500 dark:text-muted-foreground mb-2">
+                            {amountLabel} <span className="font-bold text-slate-700 dark:text-foreground">{record.fuel_amount} {amountUnit}</span>
+                          </p>
+                        )
+                      })()}
                       {record.category === "highway" && (record.entry_ic || record.exit_ic) && (
                         <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-muted-foreground mb-2">
                           <span>{t("records.route_display_label")}</span>

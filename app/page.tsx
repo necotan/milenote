@@ -16,6 +16,7 @@ import { usePageLoadingGate } from "@/lib/loadingGate"
 import { getCarImageStyle } from "@/utils/carImage"
 import { generateMaintAlerts, DEFAULT_MAINT_SETTINGS, type MaintSettings, type MaintAlertItem } from "@/lib/maintenanceAlerts"
 import { MaintAlertCard } from "@/components/MaintenanceAlertViews"
+import { getFuelUnit } from "@/lib/fuelTypes"
 
 const getGreeting = (t: (key: string) => string) => {
   const hour = new Date().getHours()
@@ -320,10 +321,14 @@ export default function Home() {
                         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime() || new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                         .slice(0, 3)
                         .map((r) => {
+                          const fuelUnit = getFuelUnit(r.cars?.fuel_type)
+                          const categoryLabel = r.category === "fuel" && fuelUnit !== "l"
+                            ? t(fuelUnit === "kwh" ? "home.record_charge_label" : "home.record_hydrogen_label")
+                            : t(`categories.${r.category}`)
                           return (
                             <div key={r.id} className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <span className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground">{r.category === "fuel" && r.cars?.fuel_type === "ev" ? t("home.record_charge_label") : t(`categories.${r.category}`)}</span>
+                                <span className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground">{categoryLabel}</span>
                                 <span className="text-[10px] text-slate-400 dark:text-muted-foreground">{r.date.replace(/-/g, '/')}</span>
                               </div>
                               <span className="text-[12px] font-black text-slate-700 dark:text-foreground">¥{r.amount.toLocaleString()}</span>
