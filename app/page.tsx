@@ -484,7 +484,7 @@ export default function Home() {
               <div className="space-y-1.5">
                 <label className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground">{t("home.target_car")}</label>
                 <Select value={odoCarId} onValueChange={handleOdoCarChange}>
-                  <SelectTrigger className="w-full h-10 bg-white dark:bg-card border-slate-200 dark:border-border">
+                  <SelectTrigger className="w-full data-[size=default]:h-9 bg-white dark:bg-card border-slate-200 dark:border-border">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="z-[70]">
@@ -501,7 +501,7 @@ export default function Home() {
                   <NumberInput
                     value={odoValue}
                     onValueChange={setOdoValue}
-                    className="h-10 pr-10 bg-white dark:bg-card border-slate-200 dark:border-border"
+                    className="h-9 pr-10 bg-white dark:bg-card border-slate-200 dark:border-border"
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground pointer-events-none">{t("common.km_unit")}</span>
                 </div>
