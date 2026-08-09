@@ -363,7 +363,7 @@ function ProfileFieldDialog({
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="milenote_user"
-            className="bg-white dark:bg-card border-slate-200 dark:border-border h-10 text-base md:text-sm focus-visible:ring-1 focus-visible:ring-slate-300"
+            className="bg-white dark:bg-card border-slate-200 dark:border-border text-base md:text-sm focus-visible:ring-1 focus-visible:ring-slate-300"
           />
           {field === "user_id" && (
             <p className="text-xs text-slate-400 dark:text-muted-foreground">{t("signup.user_id_hint")}</p>

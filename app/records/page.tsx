@@ -144,7 +144,7 @@ const RecordForm = ({
   const dateField = (
     <div className="space-y-2">
       <Label>{t("records.date")} <span className="text-red-500">{t("common.required")}</span></Label>
-      <Input type="date" value={date} onChange={e => setDate(e.target.value)} required className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 appearance-none h-8 min-h-0" />
+      <Input type="date" value={date} onChange={e => setDate(e.target.value)} required className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 appearance-none h-9 min-h-0" />
     </div>
   )
 
