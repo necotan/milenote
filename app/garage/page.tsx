@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { createClient } from "@/utils/supabase"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { DatePicker } from "@/components/ui/date-picker"
 import { NumberInput } from "@/components/ui/NumberInput"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
@@ -787,7 +788,7 @@ export default function GaragePage() {
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
                         <div className="space-y-1"><Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("garage.first_registration")}</Label><Input type="month" value={firstRegistrationDate} onChange={(e) => setFirstRegistrationDate(e.target.value)} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground appearance-none h-9 min-h-0" /></div>
-                        <div className="space-y-1"><Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("common.delivery_date")}</Label><Input type="date" value={purchaseDate} onChange={(e) => setPurchaseDate(e.target.value)} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground appearance-none h-9 min-h-0" /></div>
+                        <div className="space-y-1"><Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("common.delivery_date")}</Label><DatePicker value={purchaseDate} onChange={setPurchaseDate} clearable className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-9 min-h-0" /></div>
                       </div>
                     </div>
 

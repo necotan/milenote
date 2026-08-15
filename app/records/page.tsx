@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { createClient } from "@/utils/supabase"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { DatePicker } from "@/components/ui/date-picker"
 import { NumberInput } from "@/components/ui/NumberInput"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
@@ -144,7 +145,7 @@ const RecordForm = ({
   const dateField = (
     <div className="space-y-2">
       <Label>{t("records.date")} <span className="text-red-500">{t("common.required")}</span></Label>
-      <Input type="date" value={date} onChange={e => setDate(e.target.value)} required className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 appearance-none h-9 min-h-0" />
+      <DatePicker value={date} onChange={setDate} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-9 min-h-0" />
     </div>
   )
 

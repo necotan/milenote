@@ -36,7 +36,11 @@
     "date_full": "{{m}}/{{d}}/{{y}}",
     "required": "*",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "today": "Today",
+    "clear": "Clear",
+    "reset": "Reset",
+    "confirm": "Confirm"
   },
   "nav": {
     "home": "Home",

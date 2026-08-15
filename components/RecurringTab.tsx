@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { createClient } from "@/utils/supabase"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { DatePicker } from "@/components/ui/date-picker"
 import { NumberInput } from "@/components/ui/NumberInput"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
@@ -188,12 +188,10 @@ const RecurringForm = ({
                 {isEdit ? t("records.next_billing_date") : t("records.first_billing_date")}
                 <span className="text-red-500 ml-1">{t("common.required")}</span>
               </Label>
-              <Input
-                type="date"
+              <DatePicker
                 value={nextBillingDate}
-                onChange={e => setNextBillingDate(e.target.value)}
-                required
-                className="max-w-40 bg-white dark:bg-card appearance-none h-8 min-h-0"
+                onChange={setNextBillingDate}
+                className="max-w-40 bg-white dark:bg-card h-8 min-h-0"
               />
               {!isEdit && (
                 <p className="text-[11px] text-slate-400 dark:text-muted-foreground">

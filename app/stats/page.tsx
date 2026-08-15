@@ -15,6 +15,7 @@ import {
 import type { TooltipContentProps } from "recharts"
 import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, ChevronDown, Info, LineChart as LineChartIcon, Fuel, BatteryCharging, Atom } from "lucide-react"
 import { useTheme } from "next-themes"
+import { DatePicker } from "@/components/ui/date-picker"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 
@@ -266,22 +267,14 @@ function PeriodDateRow({
   return (
     <div className="flex items-center justify-between py-2.5">
       <span className="text-xs font-semibold text-slate-500 dark:text-muted-foreground">{label}</span>
-      <div className="group relative">
-        <span className="text-sm font-semibold text-slate-800 dark:text-foreground tabular-nums transition-opacity group-hover:opacity-70 group-active:opacity-50">
-          {display}
-        </span>
-        <input
-          type="date"
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          onClick={e => {
-            try { e.currentTarget.showPicker() } catch { /* 非対応、非ジェスチャ時は無視 */ }
-          }}
-          aria-label={label}
-          className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
-          style={{ fontSize: 16 }}
-        />
-      </div>
+      <DatePicker
+        variant="inline"
+        value={value}
+        onChange={onChange}
+        formatLabel={() => display}
+        aria-label={label}
+        className="text-sm font-semibold text-slate-800 dark:text-foreground tabular-nums"
+      />
     </div>
   )
 }
