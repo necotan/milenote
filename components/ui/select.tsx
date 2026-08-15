@@ -6,10 +6,48 @@ import { Select as SelectPrimitive } from "radix-ui"
 import { cn } from "@/lib/utils"
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react"
 
+const SELECT_CLOSE_ANIMATION_MS = 150
+
+const SelectClosingContext = React.createContext(false)
+
 function Select({
+  onOpenChange,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Root>) {
-  return <SelectPrimitive.Root data-slot="select" {...props} />
+  const [open, setOpen] = React.useState(false)
+  const [closing, setClosing] = React.useState(false)
+  const closeTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+
+  React.useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
+    }
+  }, [])
+
+  const handleOpenChange = (next: boolean) => {
+    if (next) {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current)
+        closeTimeoutRef.current = undefined
+      }
+      setClosing(false)
+      setOpen(true)
+      onOpenChange?.(true)
+      return
+    }
+    setClosing(true)
+    closeTimeoutRef.current = setTimeout(() => {
+      setOpen(false)
+      setClosing(false)
+      onOpenChange?.(false)
+    }, SELECT_CLOSE_ANIMATION_MS)
+  }
+
+  return (
+    <SelectClosingContext.Provider value={closing}>
+      <SelectPrimitive.Root data-slot="select" open={open} onOpenChange={handleOpenChange} {...props} />
+    </SelectClosingContext.Provider>
+  )
 }
 
 function SelectGroup({
@@ -65,12 +103,14 @@ function SelectContent({
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Content>) {
+  const closing = React.useContext(SelectClosingContext)
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
         data-slot="select-content"
         data-align-trigger={position === "item-aligned"}
-        className={cn("relative z-50 max-h-(--radix-select-content-available-height) w-(--radix-select-trigger-width) min-w-(--radix-select-trigger-width) origin-(--radix-select-content-transform-origin) overflow-x-hidden overflow-y-auto rounded-lg border border-input bg-popover dark:bg-surface-2 text-popover-foreground shadow-lg duration-100 data-[align-trigger=true]:animate-none data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95", position ==="popper"&&"data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1", className )}
+        data-select-state={closing ? "closing" : "open"}
+        className={cn("relative z-50 max-h-(--radix-select-content-available-height) w-(--radix-select-trigger-width) min-w-(--radix-select-trigger-width) overflow-x-hidden overflow-y-auto rounded-lg border border-input bg-popover dark:bg-surface-2 text-popover-foreground shadow-lg data-[align-trigger=true]:animate-none data-[select-state=open]:animate-in data-[select-state=open]:fade-in-0 data-[select-state=open]:ease-out data-[select-state=open]:duration-200 data-[select-state=closing]:animate-out data-[select-state=closing]:fade-out-0 data-[select-state=closing]:ease-in data-[select-state=closing]:duration-150 data-[select-state=closing]:pointer-events-none", position ==="popper"&&"data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1", className )}
         position={position}
         align={align}
         sideOffset={sideOffset}
