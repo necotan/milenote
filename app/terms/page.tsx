@@ -23,10 +23,10 @@ export default function TermsPage() {
           onClick={() => router.back()}
           className="flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors mb-8"
         >
-          <span className="font-bold text-xs">{t("terms.back")}</span>
+          <span className="font-semibold text-xs">{t("terms.back")}</span>
         </button>
 
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-foreground">{t("terms.title")}</h1>
+        <h1 className="text-2xl font-semibold text-slate-900 dark:text-foreground">{t("terms.title")}</h1>
         <p className="text-xs text-slate-400 dark:text-muted-foreground mt-2">
           {t("terms.last_updated")}：{t("terms.updated_date")}
         </p>
@@ -37,7 +37,7 @@ export default function TermsPage() {
             href="https://github.com/necotan"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-bold text-slate-700 dark:text-foreground underline underline-offset-2 hover:text-slate-900 dark:hover:text-foreground"
+            className="font-semibold text-slate-700 dark:text-foreground underline underline-offset-2 hover:text-slate-900 dark:hover:text-foreground"
           >
             {t("terms.operator")}
           </a>
@@ -47,7 +47,7 @@ export default function TermsPage() {
         <div className="mt-8 space-y-7">
           {articles.map((key, index) => (
             <section key={key} className="space-y-2">
-              <h2 className="text-base font-bold text-slate-800 dark:text-foreground">
+              <h2 className="text-base font-semibold text-slate-800 dark:text-foreground">
                 {t("terms.article", { n: index + 1 })}　{t(`terms.articles.${key}.heading`)}
               </h2>
               <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed whitespace-pre-line">

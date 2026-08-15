@@ -419,8 +419,8 @@ function StatRow({
     <div className="flex items-center justify-between py-2.5">
       <span className="text-sm font-semibold text-slate-600 dark:text-muted-foreground">{label}</span>
       <div className="flex items-baseline gap-1">
-        <span className="text-lg font-bold text-slate-800 dark:text-foreground tabular-nums tracking-wide">{value}</span>
-        {unit && <span className="text-sm font-bold text-slate-400 dark:text-muted-foreground">{unit}</span>}
+        <span className="text-lg font-semibold text-slate-800 dark:text-foreground tabular-nums tracking-wide">{value}</span>
+        {unit && <span className="text-sm font-semibold text-slate-400 dark:text-muted-foreground">{unit}</span>}
       </div>
     </div>
   )
@@ -815,11 +815,11 @@ export default function StatsPage() {
   }, [locale, t])
   // 凡例ラベルの整形（カテゴリキーを翻訳して表示）
   const renderCategoryLegendLabel = useCallback((value: string) => (
-    <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t(`categories.${value}`)}</span>
+    <span className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t(`categories.${value}`)}</span>
   ), [t])
   // 凡例ラベルの整形
   const renderRawLegendLabel = useCallback((value: string) => (
-    <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{value}</span>
+    <span className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{value}</span>
   ), [])
   // 凡例を列揃えのグリッドで描画し、ブロック全体を中央寄せする
   // formatLabel でラベルの整形方法を切り替える
@@ -868,7 +868,7 @@ export default function StatsPage() {
               padding: '10px 14px',
             }}
           >
-            <p className="mb-1.5 text-xs font-bold text-slate-500 dark:text-muted-foreground">{labelFormatter(String(label))}</p>
+            <p className="mb-1.5 text-xs font-semibold text-slate-500 dark:text-muted-foreground">{labelFormatter(String(label))}</p>
             {items.length === 0 ? (
               <p className="text-xs text-slate-400 dark:text-muted-foreground">{t("stats.no_data")}</p>
             ) : (
@@ -880,7 +880,7 @@ export default function StatsPage() {
                       style={{ width: 6, height: 6, backgroundColor: entry.color }}
                     />
                     <span className="text-slate-500 dark:text-muted-foreground">{t(`categories.${String(entry.dataKey)}`)}</span>
-                    <span className="ml-auto font-bold text-slate-700 dark:text-foreground">¥{Number(entry.value).toLocaleString()}</span>
+                    <span className="ml-auto font-semibold text-slate-700 dark:text-foreground">¥{Number(entry.value).toLocaleString()}</span>
                   </li>
                 ))}
               </ul>
@@ -957,8 +957,8 @@ export default function StatsPage() {
   if (loading) return (
     <main className="p-4 space-y-6 max-w-5xl mx-auto pb-20">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
-        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
+        <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
       </header>
       <SkeletonTabs className="mb-4" />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -993,17 +993,17 @@ export default function StatsPage() {
   return (
     <main className="p-4 space-y-6 max-w-5xl mx-auto pb-20">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
-        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
+        <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
       </header>
 
       <Tabs defaultValue="cost" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-4">
-          <TabsTrigger value="cost" className="font-bold">
+          <TabsTrigger value="cost" className="font-semibold">
             <BarChart3 size={14} className="mr-1.5" />
             {t("stats.tab_cost")}
           </TabsTrigger>
-          <TabsTrigger value="distance" className="font-bold">
+          <TabsTrigger value="distance" className="font-semibold">
             <Globe size={14} className="mr-1.5" />
             {t("stats.tab_distance")}
           </TabsTrigger>
@@ -1022,11 +1022,11 @@ export default function StatsPage() {
                     <Globe className="text-blue-500 w-10 h-10" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-2xl font-black text-slate-800 dark:text-foreground tracking-wide tabular-nums">
+                    <h3 className="text-2xl font-semibold text-slate-800 dark:text-foreground tracking-wide tabular-nums">
                       {t("stats.earth_rounds", { rounds: earthRounds })}
                     </h3>
                     <p className="text-[10px] text-slate-500 dark:text-muted-foreground mt-1 font-medium tracking-wide">
-                      {t("stats.total_odo")}: <span className="font-bold text-slate-700 dark:text-foreground tabular-nums">{totalOdo.toLocaleString()}</span> {t("stats.unit_km")}
+                      {t("stats.total_odo")}: <span className="font-semibold text-slate-700 dark:text-foreground tabular-nums">{totalOdo.toLocaleString()}</span> {t("stats.unit_km")}
                     </p>
                   </div>
                 </div>
@@ -1044,9 +1044,9 @@ export default function StatsPage() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Moon className="w-5 h-5" style={{ stroke: "url(#moonProgressGradient)" }} />
-                      <span className="font-bold text-slate-700 dark:text-foreground text-sm">{t("stats.moon_progress")}</span>
+                      <span className="font-semibold text-slate-700 dark:text-foreground text-sm">{t("stats.moon_progress")}</span>
                     </div>
-                    <span className="text-sm font-black text-slate-800 dark:text-foreground tabular-nums">{moonPercent}%</span>
+                    <span className="text-sm font-semibold text-slate-800 dark:text-foreground tabular-nums">{moonPercent}%</span>
                   </div>
                   <div className="w-full bg-slate-100 dark:bg-surface-3 h-2.5 rounded-full overflow-hidden">
                     <div
@@ -1065,7 +1065,7 @@ export default function StatsPage() {
           {/* 給油サマリーカード */}
           <Card className="border-none shadow-sm bg-white dark:bg-card">
             <CardHeader className="p-4 pb-2">
-              <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
+              <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                 <Fuel size={16} /> {t("stats.fuel_summary")}
               </CardTitle>
             </CardHeader>
@@ -1108,7 +1108,7 @@ export default function StatsPage() {
           {chargeCount > 0 && (
             <Card className="border-none shadow-sm bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                   <BatteryCharging size={16} /> {t("stats.charge_summary")}
                 </CardTitle>
               </CardHeader>
@@ -1143,7 +1143,7 @@ export default function StatsPage() {
           {hydrogenCount > 0 && (
             <Card className="border-none shadow-sm bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                   <Atom size={16} /> {t("stats.hydrogen_summary")}
                 </CardTitle>
               </CardHeader>
@@ -1213,7 +1213,7 @@ export default function StatsPage() {
             {/* カテゴリ別内訳 */}
             <Card className="border-none shadow-sm bg-white dark:bg-card">
               <CardHeader className="p-4 pb-0">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                   <PieIcon size={16} /> {t("stats.category_breakdown")}
                 </CardTitle>
               </CardHeader>
@@ -1258,8 +1258,8 @@ export default function StatsPage() {
                         <PieChart>
                           <Pie data={categoryData} cx="50%" cy="50%" innerRadius={60} outerRadius={PIE_OUTER_RADIUS} minAngle={PIE_MIN_ANGLE_DEG} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill, pieLabelDeltas)} labelLine={createCustomizedLabelLine(chartChrome.labelLineStroke, pieLabelDeltas)}>
                             {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
-                            <Label value={`¥${totalAmount.toLocaleString()}`} position="center" dy={-8} className="text-base font-black fill-slate-800 dark:fill-foreground" />
-                            <Label value={t("stats.total")} position="center" dy={8} className="text-[10px] font-bold fill-slate-400 dark:fill-muted-foreground" />
+                            <Label value={`¥${totalAmount.toLocaleString()}`} position="center" dy={-8} className="text-base font-semibold fill-slate-800 dark:fill-foreground" />
+                            <Label value={t("stats.total")} position="center" dy={8} className="text-[10px] font-semibold fill-slate-400 dark:fill-muted-foreground" />
                           </Pie>
                           {/* Recharts のコールバック型が複雑なため any を許容 */}
                           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
@@ -1276,7 +1276,7 @@ export default function StatsPage() {
             {/* 月別出費推移 */}
             <Card className="border-none shadow-sm bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                   <BarChart3 size={16} /> {t("stats.monthly_trend")}
                 </CardTitle>
                 <SegmentedToggle
@@ -1342,7 +1342,7 @@ export default function StatsPage() {
           <Card className="border-none shadow-sm bg-white dark:bg-card">
             <CardHeader className="p-4 pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
+                <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                   <CalendarDays size={16} /> {t("stats.yearly_trend")}
                 </CardTitle>
                 {/* グラフ切り替えボタン */}

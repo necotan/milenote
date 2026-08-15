@@ -642,18 +642,18 @@ export default function GaragePage() {
   return (
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("garage.title")}</h1>
-        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("garage.subtitle")}</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-foreground">{t("garage.title")}</h1>
+        <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("garage.subtitle")}</p>
       </header>
 
       <Tabs defaultValue="mycars" className="w-full">
         {/* タブ選択状態を再取得時にも保持するため、Tabsルートは常にマウントしたまま中身だけ切り替える */}
         {!loading && (
           <TabsList className="grid w-full grid-cols-2 mb-6 bg-slate-100 dark:bg-muted p-[3px]">
-            <TabsTrigger value="mycars" className="flex items-center gap-2 font-bold">
+            <TabsTrigger value="mycars" className="flex items-center gap-2 font-semibold">
               <CarFront size={14} /> {t("garage.my_cars")}
             </TabsTrigger>
-            <TabsTrigger value="wishlist" className="flex items-center gap-2 font-bold">
+            <TabsTrigger value="wishlist" className="flex items-center gap-2 font-semibold">
               <ListTodo size={14} /> {t("garage.wishlist")}
             </TabsTrigger>
           </TabsList>
@@ -719,7 +719,7 @@ export default function GaragePage() {
         <TabsContent value="mycars" className="space-y-4">
           <div className="flex justify-end">
             {!loading && !isAddingCar && !editCarId && (
-              <Button onClick={() => setIsAddingCar(true)} size="sm" className="font-bold">
+              <Button onClick={() => setIsAddingCar(true)} size="sm" className="font-semibold">
                 <Plus className="mr-1 h-4 w-4" /> {t("garage.register_car")}
               </Button>
             )}
@@ -731,7 +731,7 @@ export default function GaragePage() {
                 <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetCarForm}>
                   <X className="h-4 w-4" />
                 </Button>
-                <h2 className="text-xl font-extrabold text-slate-800 dark:text-foreground mb-6">
+                <h2 className="text-xl font-semibold text-slate-800 dark:text-foreground mb-6">
                   {editCarId ? t("garage.edit_car") : t("garage.add_car")}
                 </h2>
 
@@ -741,7 +741,7 @@ export default function GaragePage() {
                     <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
                       <div className="flex items-center gap-2 mb-6">
                         <IdCard size={15} className="text-slate-400 dark:text-muted-foreground" />
-                        <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("garage.basic_info")}</span>
+                        <span className="text-sm font-semibold text-slate-600 dark:text-muted-foreground">{t("garage.basic_info")}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
                         <div className="space-y-1">
@@ -771,7 +771,7 @@ export default function GaragePage() {
                     <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
                       <div className="flex items-center gap-2 mb-6">
                         <Gauge size={15} className="text-slate-400 dark:text-muted-foreground" />
-                        <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("garage.odo_info")}</span>
+                        <span className="text-sm font-semibold text-slate-600 dark:text-muted-foreground">{t("garage.odo_info")}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
                         <div className="space-y-1"><Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("garage.current_odo")} <span className="text-red-500">{t("common.required")}</span></Label><NumberInput placeholder="52,400" value={currentOdo} onValueChange={setCurrentOdo} required className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
@@ -783,7 +783,7 @@ export default function GaragePage() {
                     <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
                       <div className="flex items-center gap-2 mb-6">
                         <CalendarDays size={15} className="text-slate-400 dark:text-muted-foreground" />
-                        <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("garage.registration_info")}</span>
+                        <span className="text-sm font-semibold text-slate-600 dark:text-muted-foreground">{t("garage.registration_info")}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
                         <div className="space-y-1"><Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("garage.first_registration")}</Label><Input type="month" value={firstRegistrationDate} onChange={(e) => setFirstRegistrationDate(e.target.value)} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground appearance-none h-9 min-h-0" /></div>
@@ -795,7 +795,7 @@ export default function GaragePage() {
                     <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
                       <div className="flex items-center gap-2 mb-6">
                         <Wallet size={15} className="text-slate-400 dark:text-muted-foreground" />
-                        <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("garage.price_info")}</span>
+                        <span className="text-sm font-semibold text-slate-600 dark:text-muted-foreground">{t("garage.price_info")}</span>
                       </div>
                       <div className="space-y-1">
                         <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("garage.purchase_price")}</Label>
@@ -825,7 +825,7 @@ export default function GaragePage() {
                     )}
                   </div>
                   <div className="pt-4 flex justify-center">
-                    <Button type="submit" className="px-12 font-bold" disabled={savingCar}>
+                    <Button type="submit" className="px-12 font-semibold" disabled={savingCar}>
                       {savingCar ? t("common.saving") : (editCarId ? t("common.update") : t("common.register"))}
                     </Button>
                   </div>
@@ -882,17 +882,17 @@ export default function GaragePage() {
 
                   <CardContent className="p-0 m-0">
                     <div className="px-4 pb-4 bg-white dark:bg-card relative z-20">
-                      <h3 className="text-2xl font-black text-slate-800 dark:text-foreground tracking-wider mt-1">{car.name}</h3>
-                      <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground tracking-widest">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
+                      <h3 className="text-2xl font-semibold text-slate-800 dark:text-foreground tracking-wider mt-1">{car.name}</h3>
+                      <p className="text-[10px] font-semibold text-slate-400 dark:text-muted-foreground tracking-wide">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
                     </div>
                     <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-t border-b border-slate-100 dark:border-border">
                       <div className="p-4">
-                        <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-widest">{t("common.odometer")}</p>
-                        <p className="text-lg font-black text-slate-800 dark:text-foreground tracking-wider">{car.current_odo.toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
+                        <p className="text-[9px] font-semibold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.odometer")}</p>
+                        <p className="text-lg font-semibold text-slate-800 dark:text-foreground tracking-wider">{car.current_odo.toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
                       </div>
                       <div className="p-4">
-                        <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-widest">{t("common.total_cost")}</p>
-                        <p className="text-lg font-black text-slate-800 dark:text-foreground tracking-wider">¥{
+                        <p className="text-[9px] font-semibold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.total_cost")}</p>
+                        <p className="text-lg font-semibold text-slate-800 dark:text-foreground tracking-wider">¥{
                           (records.filter(r => r.car_id === car.id).reduce((sum, r) => sum + r.amount, 0)
                             + (car.include_price_in_cost ? (car.purchase_price || 0) : 0)).toLocaleString()
                         }</p>
@@ -900,31 +900,31 @@ export default function GaragePage() {
                     </div>
                     <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-b border-slate-100 dark:border-border bg-slate-50/30 dark:bg-muted/30">
                       <div className="p-4">
-                        <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-widest">{t("common.distance_since_delivery")}</p>
-                        <p className="text-lg font-black text-slate-800 dark:text-foreground tracking-wider">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
+                        <p className="text-[9px] font-semibold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.distance_since_delivery")}</p>
+                        <p className="text-lg font-semibold text-slate-800 dark:text-foreground tracking-wider">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
                       </div>
                       <div className="p-4">
-                        <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-widest">{t("common.ownership_period")}</p>
-                        <p className="text-lg font-black text-slate-800 dark:text-foreground tracking-wider">{formatMonthsPassedLocale(car.purchase_date, locale)}</p>
+                        <p className="text-[9px] font-semibold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.ownership_period")}</p>
+                        <p className="text-lg font-semibold text-slate-800 dark:text-foreground tracking-wider">{formatMonthsPassedLocale(car.purchase_date, locale)}</p>
                       </div>
                     </div>
                     <div className="p-4 flex flex-col gap-2.5 text-xs bg-slate-50/50 dark:bg-muted/50">
                       <div className="flex justify-between items-center">
-                        <span className="text-slate-400 dark:text-muted-foreground font-bold uppercase tracking-widest text-[9px]">{t("common.delivery_date")}</span>
-                        <span className="font-bold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{formatDateLocale(car.purchase_date, locale)}</span>
+                        <span className="text-slate-400 dark:text-muted-foreground font-semibold uppercase tracking-wide text-[9px]">{t("common.delivery_date")}</span>
+                        <span className="font-semibold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{formatDateLocale(car.purchase_date, locale)}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-slate-400 dark:text-muted-foreground font-bold uppercase tracking-widest text-[9px]">{t("common.car_age")}</span>
-                        <span className="font-bold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{formatMonthsPassedLocale(car.first_registration_date, locale)}</span>
+                        <span className="text-slate-400 dark:text-muted-foreground font-semibold uppercase tracking-wide text-[9px]">{t("common.car_age")}</span>
+                        <span className="font-semibold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{formatMonthsPassedLocale(car.first_registration_date, locale)}</span>
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="text-slate-400 dark:text-muted-foreground font-bold uppercase tracking-widest text-[9px]">{t("common.grade")}</span>
-                        <span className="font-bold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{car.grade || "-"}</span>
+                        <span className="text-slate-400 dark:text-muted-foreground font-semibold uppercase tracking-wide text-[9px]">{t("common.grade")}</span>
+                        <span className="font-semibold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{car.grade || "-"}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-4">
-                          <span className="text-slate-400 dark:text-muted-foreground font-bold uppercase tracking-widest text-[9px]">{t("garage.status")}</span>
-                          <span className="font-bold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{t(`garage.car_status_${car.status}`)}</span>
+                          <span className="text-slate-400 dark:text-muted-foreground font-semibold uppercase tracking-wide text-[9px]">{t("garage.status")}</span>
+                          <span className="font-semibold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{t(`garage.car_status_${car.status}`)}</span>
                         </div>
                         {/* 編集・削除アクション */}
                         <div className="flex items-center gap-1">
@@ -957,12 +957,12 @@ export default function GaragePage() {
           <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => { setDeleteCarTarget(null); setDeleteCarConfirmName(""); }}>
             <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
               <CardContent className="p-6 space-y-4">
-                <h2 className="text-lg font-extrabold text-slate-800 dark:text-foreground">{t("garage.delete_car_title")}</h2>
+                <h2 className="text-lg font-semibold text-slate-800 dark:text-foreground">{t("garage.delete_car_title")}</h2>
                 <p className="text-sm text-slate-600 dark:text-muted-foreground">
-                  <span className="font-bold text-slate-800 dark:text-foreground">{t("garage.delete_car_message", { name: deleteCarTarget.name })}</span><br />
+                  <span className="font-semibold text-slate-800 dark:text-foreground">{t("garage.delete_car_message", { name: deleteCarTarget.name })}</span><br />
                   {t("garage.delete_car_warning")}
                 </p>
-                <p className="text-xs font-bold text-red-600 dark:text-red-300 bg-red-50 dark:bg-red-950/40 rounded-lg px-3 py-2">
+                <p className="text-xs font-semibold text-red-600 dark:text-red-300 bg-red-50 dark:bg-red-950/40 rounded-lg px-3 py-2">
                   {t("garage.delete_car_data_count", {
                     records: records.filter((r) => r.car_id === deleteCarTarget.id).length,
                     wishlists: wishlists.filter((w) => w.car_id === deleteCarTarget.id).length,
@@ -973,7 +973,7 @@ export default function GaragePage() {
                   {t("garage.delete_car_archive_hint")}
                 </p>
                 <div className="space-y-2">
-                  <p className="text-xs font-bold text-slate-800 dark:text-foreground">
+                  <p className="text-xs font-semibold text-slate-800 dark:text-foreground">
                     {t("garage.delete_confirm_instruction")}
                   </p>
                   <Input
@@ -986,14 +986,14 @@ export default function GaragePage() {
                 <div className="flex gap-3 pt-2">
                   <Button
                     variant="outline"
-                    className="flex-1 font-bold"
+                    className="flex-1 font-semibold"
                     onClick={() => { setDeleteCarTarget(null); setDeleteCarConfirmName(""); }}
                   >
                     {t("common.cancel")}
                   </Button>
                   <Button
                     variant="destructive"
-                    className="flex-1 font-bold bg-red-600 dark:bg-red-600 border border-red-700 text-white hover:bg-red-700 dark:hover:bg-red-700"
+                    className="flex-1 font-semibold bg-red-600 dark:bg-red-600 border border-red-700 text-white hover:bg-red-700 dark:hover:bg-red-700"
                     disabled={deleteCarConfirmName !== deleteCarTarget.name || deletingCar}
                     onClick={handleDeleteCar}
                   >
@@ -1012,7 +1012,7 @@ export default function GaragePage() {
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
                   <Move size={20} />
-                  <h2 className="text-lg font-extrabold">{t("garage.adjust_image_title")}</h2>
+                  <h2 className="text-lg font-semibold">{t("garage.adjust_image_title")}</h2>
                 </div>
                 <p className="text-xs text-slate-500 dark:text-muted-foreground font-medium">{t("garage.adjust_image_hint")}</p>
 
@@ -1037,8 +1037,8 @@ export default function GaragePage() {
                 {/* ズームスライダー */}
                 <div className="space-y-1">
                   <div className="flex justify-between items-center">
-                    <Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.zoom")}</Label>
-                    <span className="text-xs font-bold text-slate-400 dark:text-muted-foreground tabular-nums">{adjustScale.toFixed(1)}x</span>
+                    <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("garage.zoom")}</Label>
+                    <span className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tabular-nums">{adjustScale.toFixed(1)}x</span>
                   </div>
                   <input
                     type="range"
@@ -1052,10 +1052,10 @@ export default function GaragePage() {
                 </div>
 
                 <div className="flex gap-3 pt-2">
-                  <Button variant="outline" className="flex-1 font-bold" onClick={() => setAdjustTarget(null)}>
+                  <Button variant="outline" className="flex-1 font-semibold" onClick={() => setAdjustTarget(null)}>
                     {t("common.cancel")}
                   </Button>
-                  <Button className="flex-1 font-bold" disabled={savingPosition} onClick={handleSaveImagePosition}>
+                  <Button className="flex-1 font-semibold" disabled={savingPosition} onClick={handleSaveImagePosition}>
                     {savingPosition ? t("common.saving") : t("common.save")}
                   </Button>
                 </div>
@@ -1084,7 +1084,7 @@ export default function GaragePage() {
               </button>
             )}
             {!loading && !isAddingWish && !editWishId && cars.length > 0 && (
-              <Button onClick={() => setIsAddingWish(true)} size="sm" className="font-bold shrink-0">
+              <Button onClick={() => setIsAddingWish(true)} size="sm" className="font-semibold shrink-0">
                 <Plus className="mr-1 h-4 w-4" /> {t("common.add")}
               </Button>
             )}
@@ -1097,19 +1097,19 @@ export default function GaragePage() {
                 <CardContent className="p-6 space-y-4">
                   <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
                     <SlidersHorizontal size={20} />
-                    <h2 className="text-lg font-extrabold">{t("garage.wish_filter_title")}</h2>
+                    <h2 className="text-lg font-semibold">{t("garage.wish_filter_title")}</h2>
                   </div>
 
                   {/* ステータス絞り込み */}
                   <div className="space-y-2">
-                    <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("garage.status")}</p>
+                    <p className="text-xs font-semibold text-slate-500 dark:text-muted-foreground">{t("garage.status")}</p>
                     <div className="flex flex-wrap gap-2.5">
                       {/* すべて */}
                       <button
                         type="button"
                         {...chipTapHandlers(() => setWishFilters([]))}
                         aria-pressed={wishFilters.length === 0}
-                        className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                        className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                           wishFilters.length === 0
                             ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                             : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -1128,7 +1128,7 @@ export default function GaragePage() {
                             type="button"
                             {...chipTapHandlers(() => toggleWishFilter(key))}
                             aria-pressed={active}
-                            className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                            className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                               active
                                 ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                                 : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -1144,14 +1144,14 @@ export default function GaragePage() {
 
                   {/* ジャンル絞り込み */}
                   <div className="space-y-2">
-                    <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("garage.genre")}</p>
+                    <p className="text-xs font-semibold text-slate-500 dark:text-muted-foreground">{t("garage.genre")}</p>
                     <div className="flex flex-wrap gap-2.5">
                       {/* すべて */}
                       <button
                         type="button"
                         {...chipTapHandlers(() => setWishGenreFilters([]))}
                         aria-pressed={wishGenreFilters.length === 0}
-                        className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                        className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                           wishGenreFilters.length === 0
                             ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                             : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -1170,7 +1170,7 @@ export default function GaragePage() {
                             type="button"
                             {...chipTapHandlers(() => toggleWishGenreFilter(key))}
                             aria-pressed={active}
-                            className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                            className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                               active
                                 ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                                 : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -1186,7 +1186,7 @@ export default function GaragePage() {
                   <div className="flex justify-center pt-6">
                     <Button
                       variant="outline"
-                      className="px-10 font-bold bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background dark:bg-foreground dark:text-background dark:border-foreground dark:hover:bg-foreground/90"
+                      className="px-10 font-semibold bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background dark:bg-foreground dark:text-background dark:border-foreground dark:hover:bg-foreground/90"
                       onClick={() => setIsFilterOpen(false)}
                     >
                       {t("common.save")}
@@ -1209,7 +1209,7 @@ export default function GaragePage() {
                 <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetWishForm}>
                   <X className="h-4 w-4" />
                 </Button>
-                <h2 className="text-xl font-extrabold text-slate-800 dark:text-foreground mb-6">
+                <h2 className="text-xl font-semibold text-slate-800 dark:text-foreground mb-6">
                   {editWishId ? t("garage.edit_wish") : t("garage.add_wish")}
                 </h2>
 
@@ -1258,7 +1258,7 @@ export default function GaragePage() {
                   </div>
 
                   <div className="pt-4 flex justify-center">
-                    <Button type="submit" className="px-12 font-bold" disabled={savingWish}>
+                    <Button type="submit" className="px-12 font-semibold" disabled={savingWish}>
                       {savingWish ? t("common.saving") : (editWishId ? t("common.update") : t("common.add"))}
                     </Button>
                   </div>
@@ -1310,17 +1310,17 @@ export default function GaragePage() {
                     <CardContent className="p-4 flex flex-col justify-between h-full">
                       <div>
                         <div className="flex flex-wrap items-center gap-2 mb-2 pr-16">
-                          <span className="text-[10px] font-bold text-slate-500 dark:text-muted-foreground bg-slate-100 dark:bg-surface-2 px-2 py-0.5 rounded-sm">
+                          <span className="text-[10px] font-semibold text-slate-500 dark:text-muted-foreground bg-slate-100 dark:bg-surface-2 px-2 py-0.5 rounded-sm">
                             {t(`wishlist_genres.${wish.genre}`)} / {wish.cars.name}
                           </span>
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusStyle}`}>
+                          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${statusStyle}`}>
                             {t(`wishlist_statuses.${wish.status}`)}
                           </span>
                         </div>
-                        <h3 className="font-bold text-slate-800 dark:text-foreground text-lg leading-tight mb-1">{wish.item_name}</h3>
+                        <h3 className="font-semibold text-slate-800 dark:text-foreground text-lg leading-tight mb-1">{wish.item_name}</h3>
 
                         {wish.price_estimate > 0 && (
-                          <p className="text-sm font-bold text-slate-800 dark:text-white mb-2">¥{wish.price_estimate.toLocaleString()}</p>
+                          <p className="text-sm font-semibold text-slate-800 dark:text-white mb-2">¥{wish.price_estimate.toLocaleString()}</p>
                         )}
 
                         {wish.memo && (
@@ -1332,7 +1332,7 @@ export default function GaragePage() {
 
                       <div className="flex items-center justify-between mt-2 pt-3 border-t border-slate-50 dark:border-border">
                         {safeUrl ? (
-                          <a href={safeUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-blue-500 hover:text-blue-700 flex items-center gap-1 transition-colors">
+                          <a href={safeUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-blue-500 hover:text-blue-700 flex items-center gap-1 transition-colors">
                             <ExternalLink size={12} /> {t("garage.open_link")}
                           </a>
                         ) : (
@@ -1342,7 +1342,7 @@ export default function GaragePage() {
                         {/* ステータス変更ドロップダウン */}
                         <div className="w-32">
                           <Select defaultValue={wish.status} onValueChange={(val) => updateWishStatus(wish.id, val)}>
-                            <SelectTrigger className="h-7 text-xs font-bold bg-slate-50 dark:bg-muted border-none">
+                            <SelectTrigger className="h-7 text-xs font-semibold bg-slate-50 dark:bg-muted border-none">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>

@@ -162,7 +162,7 @@ const RecordForm = ({
       <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetForm}>
         <X className="h-4 w-4" />
       </Button>
-      <h2 className="text-xl font-extrabold text-slate-800 dark:text-foreground mb-6">
+      <h2 className="text-xl font-semibold text-slate-800 dark:text-foreground mb-6">
         {editRecordId ? t("records.edit_record") : t("records.new_record")}
       </h2>
       
@@ -172,7 +172,7 @@ const RecordForm = ({
             <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
               <div className="flex items-center gap-2 mb-6">
                 <CarFront size={15} className="text-slate-400 dark:text-muted-foreground" />
-                <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.basic_info")}</span>
+                <span className="text-sm font-semibold text-slate-600 dark:text-muted-foreground">{t("records.basic_info")}</span>
               </div>
 
               {carCategoryFields}
@@ -183,7 +183,7 @@ const RecordForm = ({
             <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
               <div className="flex items-center gap-2 mb-6">
                 <Fuel size={15} className="text-slate-400 dark:text-muted-foreground" />
-                <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{fuelFieldText.info}</span>
+                <span className="text-sm font-semibold text-slate-600 dark:text-muted-foreground">{fuelFieldText.info}</span>
               </div>
 
               {/* 単価 */}
@@ -225,7 +225,7 @@ const RecordForm = ({
                     onValueChange={value => onFuelFieldChange("amount", value)}
                     required
                     placeholder="6,800"
-                    className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 font-bold text-slate-800 dark:text-foreground pr-8 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
+                    className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 font-semibold text-slate-800 dark:text-foreground pr-8 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
                   />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{t("records.unit_yen")}</span>
                 </div>
@@ -238,7 +238,7 @@ const RecordForm = ({
               <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
                 <div className="flex items-center gap-2 mb-6">
                   <CarFront size={15} className="text-slate-400 dark:text-muted-foreground" />
-                  <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.basic_info")}</span>
+                  <span className="text-sm font-semibold text-slate-600 dark:text-muted-foreground">{t("records.basic_info")}</span>
                 </div>
 
                 {carCategoryFields}
@@ -267,7 +267,7 @@ const RecordForm = ({
                 <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
                   <div className="flex items-center gap-2 mb-6">
                     <Ticket size={15} className="text-slate-400 dark:text-muted-foreground" />
-                    <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.highway_details")}</span>
+                    <span className="text-sm font-semibold text-slate-600 dark:text-muted-foreground">{t("records.highway_details")}</span>
                   </div>
 
                   <div className="space-y-2">
@@ -287,7 +287,7 @@ const RecordForm = ({
                 <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
                   <div className="flex items-center gap-2 mb-6">
                     <Receipt size={15} className="text-slate-400 dark:text-muted-foreground" />
-                    <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.record_details")}</span>
+                    <span className="text-sm font-semibold text-slate-600 dark:text-muted-foreground">{t("records.record_details")}</span>
                   </div>
 
                   {dateField}
@@ -327,7 +327,7 @@ const RecordForm = ({
         </div>
 
         <div className="pt-4 flex justify-center">
-          <Button type="submit" className="px-12 font-bold" disabled={isSubmitting}>
+          <Button type="submit" className="px-12 font-semibold" disabled={isSubmitting}>
             {isSubmitting ? t("common.saving") : submitLabel}
           </Button>
         </div>
@@ -709,8 +709,8 @@ function RecordsPageInner() {
   return (
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-foreground">{t("records.title")}</h1>
-        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("records.subtitle")}</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-foreground">{t("records.title")}</h1>
+        <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("records.subtitle")}</p>
       </header>
 
       {loading && <RecordSkeleton />}
@@ -719,15 +719,15 @@ function RecordsPageInner() {
         <div className="text-center py-20">
           <CarFront className="mx-auto h-12 w-12 text-slate-300 dark:text-muted-foreground mb-3" />
           <p className="text-slate-500 dark:text-muted-foreground font-medium mb-4">{t("records.register_car_first_line1")}<br/>{t("records.register_car_first_line2")}</p>
-          <Link href="/garage"><Button className="font-bold">{t("records.go_to_garage")}</Button></Link>
+          <Link href="/garage"><Button className="font-semibold">{t("records.go_to_garage")}</Button></Link>
         </div>
       )}
 
       {!loading && cars.length > 0 && (
         <Tabs defaultValue="manual" className="w-full">
           <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="manual" className="font-bold">{t("records.tab_manual")}</TabsTrigger>
-            <TabsTrigger value="recurring" className="font-bold">{t("records.tab_recurring")}</TabsTrigger>
+            <TabsTrigger value="manual" className="font-semibold">{t("records.tab_manual")}</TabsTrigger>
+            <TabsTrigger value="recurring" className="font-semibold">{t("records.tab_recurring")}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="manual" className="space-y-6 outline-none">
@@ -759,7 +759,7 @@ function RecordsPageInner() {
                         )}
                       </button>
                     )}
-                    <Button onClick={() => setIsAdding(true)} size="sm" className="font-bold">
+                    <Button onClick={() => setIsAdding(true)} size="sm" className="font-semibold">
                       <Plus className="mr-1 h-4 w-4" /> {t("records.add_record")}
                     </Button>
                   </div>
@@ -769,7 +769,7 @@ function RecordsPageInner() {
                     <button onClick={goToPrevMonth} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-muted transition-colors">
                       <ChevronLeft size={18} className="text-slate-600 dark:text-muted-foreground" />
                     </button>
-                    <span className="font-bold text-slate-700 dark:text-foreground min-w-[120px] text-center">
+                    <span className="font-semibold text-slate-700 dark:text-foreground min-w-[120px] text-center">
                       {monthLabel}
                     </span>
                     <button
@@ -791,19 +791,19 @@ function RecordsPageInner() {
                   <CardContent className="p-6 space-y-4">
                     <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
                       <SlidersHorizontal size={20} />
-                      <h2 className="text-lg font-extrabold">{t("records.filter_title")}</h2>
+                      <h2 className="text-lg font-semibold">{t("records.filter_title")}</h2>
                     </div>
 
                     {/* カテゴリ絞り込み */}
                     <div className="space-y-2">
-                      <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("records.category")}</p>
+                      <p className="text-xs font-semibold text-slate-500 dark:text-muted-foreground">{t("records.category")}</p>
                       <div className="flex flex-wrap gap-2.5">
                         {/* すべて */}
                         <button
                           type="button"
                           {...chipTapHandlers(() => setCategoryFilters([]))}
                           aria-pressed={categoryFilters.length === 0}
-                          className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                          className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                             categoryFilters.length === 0
                               ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                               : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -822,7 +822,7 @@ function RecordsPageInner() {
                               type="button"
                               {...chipTapHandlers(() => toggleCategoryFilter(key))}
                               aria-pressed={active}
-                              className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                              className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                                 active
                                   ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                                   : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -838,14 +838,14 @@ function RecordsPageInner() {
 
                     {/* 車絞り込み */}
                     <div className="space-y-2">
-                      <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("records.filter_car")}</p>
+                      <p className="text-xs font-semibold text-slate-500 dark:text-muted-foreground">{t("records.filter_car")}</p>
                       <div className="flex flex-wrap gap-2.5">
                         {/* すべて */}
                         <button
                           type="button"
                           {...chipTapHandlers(() => setCarFilters([]))}
                           aria-pressed={carFilters.length === 0}
-                          className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                          className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                             carFilters.length === 0
                               ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                               : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -864,7 +864,7 @@ function RecordsPageInner() {
                               type="button"
                               {...chipTapHandlers(() => toggleCarFilter(car.id))}
                               aria-pressed={active}
-                              className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                              className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                                 active
                                   ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                                   : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -880,7 +880,7 @@ function RecordsPageInner() {
                     <div className="flex justify-center pt-6">
                       <Button
                         variant="outline"
-                        className="px-10 font-bold bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background dark:bg-foreground dark:text-background dark:border-foreground dark:hover:bg-foreground/90"
+                        className="px-10 font-semibold bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background dark:bg-foreground dark:text-background dark:border-foreground dark:hover:bg-foreground/90"
                         onClick={() => setIsFilterOpen(false)}
                       >
                         {t("common.save")}
@@ -987,10 +987,10 @@ function RecordsPageInner() {
                     </div>
                     <div className="flex-1 min-w-0 pr-14">
                       {/* 金額 */}
-                      <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1">¥{record.amount.toLocaleString()}</h3>
+                      <h3 className="font-semibold text-slate-800 dark:text-foreground text-lg mb-1">¥{record.amount.toLocaleString()}</h3>
                       
                       {/* ジャンルタグ */}
-                      <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 dark:text-muted-foreground mb-2 flex-wrap">
+                      <div className="flex items-center gap-2 text-[10px] font-semibold text-slate-500 dark:text-muted-foreground mb-2 flex-wrap">
                         <span className="bg-slate-100 dark:bg-surface-2 px-2 py-1 rounded-md">{categoryLabel}</span>
                         {record.sub_category && (
                           <span className="border border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground px-2 py-1 rounded-md">
@@ -1001,7 +1001,7 @@ function RecordsPageInner() {
 
                       {/* 車名・走行距離 */}
                       <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-muted-foreground mb-1">
-                        <span className="font-bold">{record.cars.name}</span>
+                        <span className="font-semibold">{record.cars.name}</span>
                         {record.odo_at_record != null && (
                           <span>{record.odo_at_record.toLocaleString()} {t("common.km_unit")}</span>
                         )}
@@ -1016,14 +1016,14 @@ function RecordsPageInner() {
                         const amountUnit = { l: t("records.unit_l"), kwh: t("records.unit_kwh"), kg: t("records.unit_kg") }[unit]
                         return (
                           <p className="text-xs text-slate-500 dark:text-muted-foreground mb-2">
-                            {amountLabel} <span className="font-bold text-slate-700 dark:text-foreground">{record.fuel_amount} {amountUnit}</span>
+                            {amountLabel} <span className="font-semibold text-slate-700 dark:text-foreground">{record.fuel_amount} {amountUnit}</span>
                           </p>
                         )
                       })()}
                       {record.category === "highway" && (record.entry_ic || record.exit_ic) && (
                         <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-muted-foreground mb-2">
                           <span>{t("records.route_display_label")}</span>
-                          <span className="inline-flex items-center gap-1 font-bold text-slate-700 dark:text-foreground">
+                          <span className="inline-flex items-center gap-1 font-semibold text-slate-700 dark:text-foreground">
                             {record.entry_ic || t("records.not_entered")}
                             <ArrowRight size={12} className="shrink-0" />
                             {record.exit_ic || t("records.not_entered")}

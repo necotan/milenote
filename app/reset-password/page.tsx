@@ -80,7 +80,7 @@ function ResetPasswordContent() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-200">
           <div className="bg-white dark:bg-card rounded-2xl border border-slate-200 dark:border-border shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
             <div className="flex items-start justify-between mb-3">
-              <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("reset.error_title")}</h3>
+              <h3 className="text-sm font-semibold text-slate-800 dark:text-foreground">{t("reset.error_title")}</h3>
               <button
                 onClick={() => setErrorPopup(null)}
                 className="text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors -mt-1 -mr-1"
@@ -90,7 +90,7 @@ function ResetPasswordContent() {
             </div>
             <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">{errorPopup}</p>
             <Button
-              className="w-full mt-6 font-bold"
+              className="w-full mt-6 font-semibold"
               onClick={() => setErrorPopup(null)}
             >
               OK
@@ -103,10 +103,10 @@ function ResetPasswordContent() {
       {succeeded && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-200">
           <div className="bg-white dark:bg-card rounded-2xl border border-slate-200 dark:border-border shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
-            <h3 className="text-sm font-bold text-slate-800 dark:text-foreground mb-3">{t("reset.success_title")}</h3>
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-foreground mb-3">{t("reset.success_title")}</h3>
             <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">{t("reset.success_message")}</p>
             <Button
-              className="w-full mt-6 font-bold"
+              className="w-full mt-6 font-semibold"
               onClick={() => router.push("/")}
             >
               OK
@@ -117,7 +117,7 @@ function ResetPasswordContent() {
 
       <div className="w-full max-w-sm">
         <div className="space-y-1 mb-6 text-center">
-          <h1 className="text-2xl font-bold">Milenote</h1>
+          <h1 className="text-2xl font-semibold">Milenote</h1>
           <p className="text-sm text-slate-500 dark:text-muted-foreground">{t("reset.new_password_title")}</p>
         </div>
 
@@ -149,7 +149,7 @@ function ResetPasswordContent() {
               </div>
             </div>
             <div className="flex flex-col items-center gap-3 pt-2">
-              <Button className="font-bold min-w-[200px]" type="submit" disabled={loading}>
+              <Button className="font-semibold min-w-[200px]" type="submit" disabled={loading}>
                 {loading ? t("login.processing") : t("reset.update")}
               </Button>
             </div>

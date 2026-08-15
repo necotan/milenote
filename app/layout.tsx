@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import BottomNav from "@/components/ui/BottomNav";
 import Sidebar from "@/components/ui/Sidebar";
@@ -20,6 +20,10 @@ import RecurringCostProcessor from "@/components/RecurringCostProcessor";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const notoSansJP = Noto_Sans_JP({
+  variable: "--font-noto-sans-jp",
+  weight: ["400", "500", "700"],
+});
 
 const LOADING_FADE_MS = 400;
 
@@ -119,7 +123,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   if (isPublicRoute(pathname)) {
     return (
       <html lang="ja" suppressHydrationWarning>
-        <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-slate-50 dark:bg-background tracking-wide`}>
+        <body className={`${geistSans.variable} ${geistMono.variable} ${notoSansJP.variable} font-sans antialiased bg-slate-50 dark:bg-background tracking-wide`}>
           <ThemeProvider attribute="class" themes={["light", "dark"]} defaultTheme="system" enableSystem>
             <ThemeColorMeta />
             <StandaloneStatusBar />
@@ -135,7 +139,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="ja" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-slate-50 dark:bg-background text-foreground tracking-wider`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${notoSansJP.variable} font-sans antialiased bg-slate-50 dark:bg-background text-foreground tracking-wide`}>
         <ThemeProvider attribute="class" themes={["light", "dark"]} defaultTheme="system" enableSystem>
           <ThemeColorMeta />
           <StandaloneStatusBar />

@@ -108,7 +108,7 @@ const RecurringForm = ({
         <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetForm}>
           <X className="h-4 w-4" />
         </Button>
-        <h2 className="text-xl font-extrabold text-slate-800 dark:text-foreground mb-1">
+        <h2 className="text-xl font-semibold text-slate-800 dark:text-foreground mb-1">
           {isEdit ? t("records.edit_recurring") : t("records.add_recurring")}
         </h2>
         <p className="text-xs text-slate-400 dark:text-muted-foreground mb-6">
@@ -158,7 +158,7 @@ const RecurringForm = ({
 
           {/* 支払情報セクション */}
           <div className="rounded-xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4 sm:max-w-[50rem]">
-            <p className="text-[11px] font-bold text-slate-400 dark:text-muted-foreground uppercase tracking-wider">{t("records.payment_info")}</p>
+            <p className="text-[11px] font-semibold text-slate-400 dark:text-muted-foreground uppercase tracking-wider">{t("records.payment_info")}</p>
             <div className="grid grid-cols-2 gap-3 sm:gap-x-8">
               <div className="space-y-2">
                 <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
@@ -209,7 +209,7 @@ const RecurringForm = ({
           </div>
 
           <div className="pt-2 flex justify-center">
-            <Button type="submit" className="px-12 font-bold">{submitLabel}</Button>
+            <Button type="submit" className="px-12 font-semibold">{submitLabel}</Button>
           </div>
         </form>
       </CardContent>
@@ -222,14 +222,14 @@ const StatusBadge = ({ isActive }: { isActive: boolean }) => {
   const { t } = useTranslation()
   if (isActive) {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 whitespace-nowrap shrink-0">
+      <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-md bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 whitespace-nowrap shrink-0">
         <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shrink-0" />
         {t("records.status_active")}
       </span>
     )
   }
   return (
-    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 whitespace-nowrap shrink-0">
+    <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-md bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 whitespace-nowrap shrink-0">
       <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
       {t("records.status_paused")}
     </span>
@@ -279,7 +279,7 @@ const EmptyState = ({ onAdd }: { onAdd: () => void }) => {
       </div>
       <p className="text-slate-600 dark:text-muted-foreground font-semibold mb-1">{t("records.no_recurring")}</p>
       <p className="text-sm text-slate-400 dark:text-muted-foreground mb-6 w-[260px]">{t("records.no_recurring_desc")}</p>
-      <Button onClick={onAdd} size="sm" className="font-bold gap-1.5">
+      <Button onClick={onAdd} size="sm" className="font-semibold gap-1.5">
         <Plus size={14} />
         {t("records.add_recurring")}
       </Button>
@@ -478,7 +478,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
       {/* 追加ボタン（コスト一覧がある場合のみ右上に表示） */}
       {!isAdding && !editId && cars.length > 0 && costs.length > 0 && (
         <div className="flex justify-end mt-8 mb-8">
-          <Button onClick={() => setIsAdding(true)} size="sm" className="font-bold gap-1">
+          <Button onClick={() => setIsAdding(true)} size="sm" className="font-semibold gap-1">
             <Plus className="h-4 w-4" /> {t("records.add_recurring")}
           </Button>
         </div>
@@ -563,7 +563,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                   </div>
                   <div className="flex-1 min-w-0 pr-24">
                     {/* 金額 */}
-                    <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1">
+                    <h3 className="font-semibold text-slate-800 dark:text-foreground text-lg mb-1">
                       ¥{cost.amount.toLocaleString()}
                       <span className="text-xs text-slate-400 dark:text-muted-foreground font-medium ml-1">
                         / {getFrequencyLabel(cost.frequency, t)}
@@ -572,11 +572,11 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
 
                     {/* ジャンルタグ・ステータスバッジ */}
                     <div className="flex items-center gap-1.5 mb-2">
-                      <span className="text-[10px] font-bold bg-slate-100 dark:bg-surface-2 text-slate-500 dark:text-muted-foreground px-2 py-1 rounded-md whitespace-nowrap">
+                      <span className="text-[10px] font-semibold bg-slate-100 dark:bg-surface-2 text-slate-500 dark:text-muted-foreground px-2 py-1 rounded-md whitespace-nowrap">
                         {t(`categories.${cost.category}`)}
                       </span>
                       {cost.sub_category && (
-                        <span className="text-[10px] font-bold border border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground px-2 py-1 rounded-md whitespace-nowrap">
+                        <span className="text-[10px] font-semibold border border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground px-2 py-1 rounded-md whitespace-nowrap">
                           {t(`subcategories.${cost.sub_category}`)}
                         </span>
                       )}
@@ -584,7 +584,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                     </div>
 
                     {/* 車名 */}
-                    <div className="text-[11px] text-slate-500 dark:text-muted-foreground font-bold mb-2">
+                    <div className="text-[11px] text-slate-500 dark:text-muted-foreground font-semibold mb-2">
                       {cost.cars.name}
                     </div>
 
