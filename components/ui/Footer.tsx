@@ -15,7 +15,7 @@ export default function Footer({ className, replaceNav = false }: { className?: 
         <Link
           href="/terms"
           replace={replaceNav}
-          className="text-xs font-bold text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors"
+          className="text-xs font-semibold text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors"
         >
           {t("footer.terms")}
         </Link>
@@ -23,7 +23,7 @@ export default function Footer({ className, replaceNav = false }: { className?: 
         <Link
           href="/privacy"
           replace={replaceNav}
-          className="text-xs font-bold text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors"
+          className="text-xs font-semibold text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors"
         >
           {t("footer.privacy")}
         </Link>

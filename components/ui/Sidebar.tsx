@@ -21,7 +21,7 @@ export default function Sidebar() {
         // サイドバーの背景をメインコンテンツと同じにし、区切り線をなくす
         <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 bg-slate-50 dark:bg-background p-6 z-10">
             <div className="mb-12 px-2 pt-2">
-                <h1 className="text-3xl font-black tracking-widest text-slate-900 dark:text-foreground">Milenote</h1>
+                <h1 className="text-3xl font-semibold tracking-wide text-slate-900 dark:text-foreground">Milenote</h1>
             </div>
             <nav className="flex-1 space-y-2">
                 {navItems.map((item) => {
@@ -32,7 +32,7 @@ export default function Sidebar() {
                             key={item.key}
                             href={item.href}
                             className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all ${isActive
-                                    ? "bg-white dark:bg-card shadow-[0_2px_10px_rgba(0,0,0,0.04)] dark:shadow-none text-slate-900 dark:text-foreground font-bold" // アクティブ時は白背景とドロップシャドウで強調表示
+                                    ? "bg-white dark:bg-card shadow-[0_2px_10px_rgba(0,0,0,0.04)] dark:shadow-none text-slate-900 dark:text-foreground font-semibold" // アクティブ時は白背景とドロップシャドウで強調表示
                                     : "text-slate-500 hover:bg-white/50 hover:text-slate-900 dark:text-muted-foreground dark:hover:bg-card/50 dark:hover:text-foreground font-medium"
                                 }`}
                         >
