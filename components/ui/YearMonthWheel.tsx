@@ -17,9 +17,11 @@ interface YearMonthWheelProps {
   maxYear: number
   onConfirm: (year: number, month: number) => void
   onReset: () => void
+  clearable?: boolean
+  onClear?: () => void
 }
 
-function YearMonthWheel({ year, month, minYear, maxYear, onConfirm, onReset }: YearMonthWheelProps) {
+function YearMonthWheel({ year, month, minYear, maxYear, onConfirm, onReset, clearable, onClear }: YearMonthWheelProps) {
   const { t } = useTranslation()
   const rows = React.useMemo(() => {
     const list: { year: number; month: number }[] = []
@@ -113,21 +115,34 @@ function YearMonthWheel({ year, month, minYear, maxYear, onConfirm, onReset }: Y
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-4 pt-2 mt-1 border-t border-border">
-        <button
-          type="button"
-          onClick={handleReset}
-          className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
-        >
-          {t("common.reset")}
-        </button>
-        <button
-          type="button"
-          onClick={handleConfirm}
-          className="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
-        >
-          {t("common.confirm")}
-        </button>
+      <div className="flex items-center justify-between pt-2 mt-1 border-t border-border">
+        {clearable ? (
+          <button
+            type="button"
+            onClick={onClear}
+            className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t("common.clear")}
+          </button>
+        ) : (
+          <span />
+        )}
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={handleReset}
+            className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t("common.reset")}
+          </button>
+          <button
+            type="button"
+            onClick={handleConfirm}
+            className="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            {t("common.confirm")}
+          </button>
+        </div>
       </div>
     </div>
   )
