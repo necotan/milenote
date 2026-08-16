@@ -82,7 +82,7 @@ function MonthPicker({
           data-slot="month-picker-content"
           sideOffset={4}
           align="start"
-          className="z-50 w-[280px] rounded-lg border border-input bg-popover p-3 text-popover-foreground shadow-lg dark:bg-surface-2 data-open:animate-in data-open:fade-in-0 data-open:ease-out data-open:duration-200 data-closed:animate-out data-closed:fade-out-0 data-closed:ease-in data-closed:duration-150"
+          className="z-50 w-[280px] rounded-lg border border-input bg-popover p-3 text-popover-foreground shadow-lg dark:bg-surface-2 data-open:animate-in data-open:fade-in-0 data-open:ease-out data-open:duration-100 data-closed:animate-out data-closed:fade-out-0 data-closed:ease-in data-closed:duration-100"
         >
           <YearMonthWheel
             year={current.year}
