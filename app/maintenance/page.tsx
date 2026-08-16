@@ -227,7 +227,7 @@ export default function MaintenancePage() {
               <SkeletonText size="sm" className="w-24 px-1 mb-2" />
               <div className="grid gap-3 md:gap-4" style={gridStyle}>
                 {[...Array(gridColumns)].map((_, j) => (
-                  <div key={j} className="rounded-xl bg-white dark:bg-card ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
+                  <div key={j} className="rounded-xl bg-white dark:bg-card ring-1 ring-slate-300 dark:ring-border overflow-hidden py-4">
                     <div className="p-3.5 flex items-start gap-3">
                       <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
                       <div className="min-w-0 flex-1">

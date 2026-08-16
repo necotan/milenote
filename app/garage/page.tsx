@@ -673,14 +673,14 @@ export default function GaragePage() {
         {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[...Array(2)].map((_, i) => (
-              <div key={i} className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-200/50 dark:ring-border overflow-hidden">
+              <div key={i} className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-300 dark:ring-border overflow-hidden">
                 <Skeleton className="aspect-[11/6] rounded-none" />
                 {/* 画像とテキストの間の余白（実要素は mt-1 だが、隣接する要素同士が接すると余白が無く見えるため広めにとる） */}
                 <div className="px-4 pt-3 pb-4 space-y-2">
                   <SkeletonText size="2xl" className="w-36 rounded-lg" />
                   <SkeletonText size="10px" className="w-48" />
                 </div>
-                <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-t border-b border-slate-100 dark:border-border">
+                <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
                   {[...Array(2)].map((_, j) => (
                     <div key={j} className="p-4 space-y-2">
                       <SkeletonText size="9px" className="w-16" />
@@ -688,7 +688,7 @@ export default function GaragePage() {
                     </div>
                   ))}
                 </div>
-                <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-b border-slate-100 dark:border-border bg-slate-50/30 dark:bg-muted/30">
+                <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border bg-slate-50/30 dark:bg-muted/30">
                   {[...Array(2)].map((_, j) => (
                     <div key={j} className="p-4 space-y-2">
                       <SkeletonText size="9px" className="w-16" />
@@ -803,7 +803,7 @@ export default function GaragePage() {
                         <Label className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("garage.purchase_price")}</Label>
                         <NumberInput placeholder="2,500,000" value={purchasePrice} onValueChange={setPurchasePrice} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
                       </div>
-                      <div className="flex items-center justify-between rounded-lg border border-slate-100 dark:border-border bg-white/60 dark:bg-muted/50 px-4 py-3">
+                      <div className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-border bg-white/60 dark:bg-muted/50 px-4 py-3">
                         <div className="space-y-0.5 pr-3">
                           <Label htmlFor="include-price" className="cursor-pointer">{t("garage.include_price_in_cost")}</Label>
                           <p className="text-[11px] text-slate-400 dark:text-muted-foreground">{t("garage.include_price_in_cost_hint")}</p>
@@ -871,7 +871,7 @@ export default function GaragePage() {
                     </Label>
                   </div>
 
-                  <div className="relative aspect-[11/6] bg-neutral-300 dark:bg-neutral-800 w-full m-0 border-b border-slate-100 dark:border-border overflow-hidden">
+                  <div className="relative aspect-[11/6] bg-neutral-300 dark:bg-neutral-800 w-full m-0 border-b border-slate-200 dark:border-border overflow-hidden">
                     {/* 登録済みの画像がある場合は表示、なければプレースホルダーアイコンを表示 */}
                     {car.image_url ? (
                       <img src={car.image_url} alt={car.name} className="absolute inset-0 w-full h-full object-cover" style={getCarImageStyle(car)} />
@@ -887,7 +887,7 @@ export default function GaragePage() {
                       <h3 className="text-2xl font-semibold text-slate-800 dark:text-foreground tracking-wider mt-1">{car.name}</h3>
                       <p className="text-[10px] font-semibold text-slate-400 dark:text-muted-foreground tracking-wide">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
                     </div>
-                    <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-t border-b border-slate-100 dark:border-border">
+                    <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
                       <div className="p-4">
                         <p className="text-[9px] font-semibold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.odometer")}</p>
                         <p className="text-lg font-semibold text-slate-800 dark:text-foreground tracking-wider">{car.current_odo.toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
@@ -900,7 +900,7 @@ export default function GaragePage() {
                         }</p>
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-b border-slate-100 dark:border-border bg-slate-50/30 dark:bg-muted/30">
+                    <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border bg-slate-50/30 dark:bg-muted/30">
                       <div className="p-4">
                         <p className="text-[9px] font-semibold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.distance_since_delivery")}</p>
                         <p className="text-lg font-semibold text-slate-800 dark:text-foreground tracking-wider">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
@@ -1291,7 +1291,7 @@ export default function GaragePage() {
                 // http(s) 以外のスキームは弾き、安全なURLのみリンク化
                 const safeUrl = getSafeExternalUrl(wish.url)
                 return (
-                  <Card key={wish.id} className="border border-slate-100 dark:border-border bg-white dark:bg-card overflow-hidden relative">
+                  <Card key={wish.id} className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden relative">
                     {/* 編集・削除ボタン（右上に常時表示） */}
                     <div className="absolute top-3 right-3 flex items-center gap-1 z-10">
                       <button

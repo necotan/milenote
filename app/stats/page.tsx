@@ -368,7 +368,7 @@ function PeriodFilter({
       >
         <div className="min-h-0 overflow-hidden">
           <div className={`mt-2.5 ${expanded ? "" : "pointer-events-none"}`}>
-            <div className="rounded-lg bg-slate-100 dark:bg-muted px-3 divide-y divide-slate-200 dark:divide-border">
+            <div className="rounded-lg bg-slate-100 dark:bg-muted px-3 divide-y divide-slate-300 dark:divide-border">
               <div style={fadeItemStyle(0)}>
                 <PeriodDateRow
                   label={t("stats.start_date")}
@@ -956,7 +956,7 @@ export default function StatsPage() {
       <SkeletonTabs className="mb-4" />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* カテゴリ別内訳カード（見出し、期間絞り込み、グラフ） */}
-        <div className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-200/50 dark:ring-border py-4">
+        <div className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-300 dark:ring-border py-4">
           {/* CardTitle が leading-snug を内包しているため行間を明示する（アイコン分は幅に含めて1つの要素にする） */}
           <div className="p-4 pb-0">
             <SkeletonText size="sm" leading="snug" className="w-32" />
@@ -970,7 +970,7 @@ export default function StatsPage() {
           </div>
         </div>
         {/* 月別出費推移カード（見出し、表示切替トグル、グラフ） */}
-        <div className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-200/50 dark:ring-border py-4">
+        <div className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-300 dark:ring-border py-4">
           <div className="p-4 pb-2 flex items-center justify-between">
             <SkeletonText size="sm" leading="snug" className="w-32" />
             <Skeleton className="h-8 w-24 rounded-full" />
@@ -1025,7 +1025,7 @@ export default function StatsPage() {
                 </div>
 
                 {/* 月進捗セクション */}
-                <div className="space-y-3 md:border-l md:border-slate-100 dark:border-border md:pl-8">
+                <div className="space-y-3 md:border-l md:border-slate-200 dark:border-border md:pl-8">
                   <svg width="0" height="0" className="absolute">
                     <defs>
                       <linearGradient id="moonProgressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -1063,7 +1063,7 @@ export default function StatsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="px-4 pb-4 pt-0">
-              <div className="divide-y divide-slate-100 dark:divide-border">
+              <div className="divide-y divide-slate-200 dark:divide-border">
                 <StatRow
                   label={t("stats.total_fuel")}
                   value={totalFuelAmount.toFixed(1)}
@@ -1086,7 +1086,7 @@ export default function StatsPage() {
                 />
               </div>
               {/* CO₂セクション */}
-              <div className="mt-2 pt-1 border-t-2 border-slate-100 dark:border-border">
+              <div className="mt-2 pt-1 border-t-2 border-slate-200 dark:border-border">
                 <StatRow
                   label={t("stats.co2_emission")}
                   value={Math.round(co2Emission).toLocaleString()}
@@ -1106,7 +1106,7 @@ export default function StatsPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4 pt-0">
-                <div className="divide-y divide-slate-100 dark:divide-border">
+                <div className="divide-y divide-slate-200 dark:divide-border">
                   <StatRow
                     label={t("stats.total_charge")}
                     value={totalChargeAmount.toFixed(1)}
@@ -1141,7 +1141,7 @@ export default function StatsPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4 pt-0">
-                <div className="divide-y divide-slate-100 dark:divide-border">
+                <div className="divide-y divide-slate-200 dark:divide-border">
                   <StatRow
                     label={t("stats.total_hydrogen")}
                     value={totalHydrogenAmount.toFixed(1)}
@@ -1399,13 +1399,13 @@ export default function StatsPage() {
               <div className="mt-4 px-2 lg:mt-0 lg:w-[40%] lg:shrink-0 lg:pl-0 lg:pr-6">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-slate-100 dark:border-border text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-muted-foreground">
+                    <tr className="border-b border-slate-200 dark:border-border text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-muted-foreground">
                       <th className="pb-2.5 pr-3 text-left font-semibold">{t("stats.col_year")}</th>
                       <th className="pb-2.5 px-3 text-right font-semibold">{t("stats.total")}</th>
                       <th className="pb-2.5 pl-3 text-right font-semibold">{t("stats.col_yoy")}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-border">
+                  <tbody className="divide-y divide-slate-200 dark:divide-border">
                     {yearlyTableRows.map(row => (
                       <tr key={row.year}>
                         <td className="py-4 pr-3 text-xs font-medium text-slate-700 dark:text-foreground tabular-nums">
