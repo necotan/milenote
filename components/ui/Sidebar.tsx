@@ -44,7 +44,7 @@ export default function Sidebar() {
             </nav>
 
             {/* ログアウトボタン (PC設定) */}
-            <div className="mt-auto pt-8 border-t border-slate-200/50 dark:border-border">
+            <div className="mt-auto pt-8 border-t border-slate-300 dark:border-border">
                 <button
                     onClick={async () => {
                         const { createClient } = await import("@/utils/supabase")

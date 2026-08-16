@@ -58,7 +58,7 @@ const RecordSkeleton = () => (
       </div>
     </div>
     {[...Array(5)].map((_, i) => (
-      <div key={i} className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
+      <div key={i} className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-300 dark:ring-border overflow-hidden py-4">
         <div className="p-4 flex gap-4 items-start">
           {/* アイコン */}
           <Skeleton className="w-12 h-12 rounded-full shrink-0 mt-1" />

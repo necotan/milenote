@@ -143,14 +143,14 @@ export default function Home() {
       <div className="flex flex-col lg:flex-row lg:items-stretch gap-6 lg:gap-8">
         {/* 愛車カードスケルトン */}
         <div className="lg:w-[380px] lg:shrink-0" style={{ order: homeOrder.indexOf("cars") }}>
-          <div className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-200/50 dark:ring-border overflow-hidden">
+          <div className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-300 dark:ring-border overflow-hidden">
             <Skeleton className="aspect-[11/6] rounded-none" />
             {/* 画像とテキストの間の余白（実要素は mt-1 だが、隣接する要素同士が接すると余白が無く見えるため広めにとる） */}
             <div className="px-4 pt-3 pb-4 space-y-2">
               <SkeletonText size="2xl" className="w-36 rounded-lg" />
               <SkeletonText size="10px" className="w-48" />
             </div>
-            <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-t border-b border-slate-100 dark:border-border">
+            <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
               {[...Array(2)].map((_, i) => (
                 <div key={i} className="p-4 space-y-2">
                   <SkeletonText size="9px" className="w-16" />
@@ -158,7 +158,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-b border-slate-100 dark:border-border">
+            <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
               {[...Array(2)].map((_, i) => (
                 <div key={i} className="p-4 space-y-2">
                   <SkeletonText size="9px" className="w-16" />
@@ -175,7 +175,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <div className="flex items-center justify-center py-4 border-t border-slate-100 dark:border-border">
+            <div className="flex items-center justify-center py-4 border-t border-slate-200 dark:border-border">
               <Skeleton className="h-[30px] w-[140px] rounded-lg" />
             </div>
           </div>
@@ -187,7 +187,7 @@ export default function Home() {
         >
           <div className="space-y-6" style={{ order: homeOrder.indexOf("summary") }}>
             {/* 今月の費用カードスケルトン */}
-            <div className="relative bg-white dark:bg-card rounded-xl ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
+            <div className="relative bg-white dark:bg-card rounded-xl ring-1 ring-slate-300 dark:ring-border overflow-hidden py-4">
               <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
                 <Skeleton className="h-7 w-24 rounded-lg" />
                 <Skeleton className="h-7 w-24 rounded-lg" />
@@ -199,7 +199,7 @@ export default function Home() {
                   <SkeletonText size="9px" className="w-20" />
                 </div>
               </div>
-              <div className="mx-4 border-t border-slate-100 dark:border-border" />
+              <div className="mx-4 border-t border-slate-200 dark:border-border" />
               <div className="p-3.5 space-y-2.5">
                 <SkeletonText size="10px" className="w-20 mb-1" />
                 {[...Array(3)].map((_, i) => (
@@ -216,7 +216,7 @@ export default function Home() {
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
               {/* 1件目は常に表示、2〜4件目はPC初期表示用（lg以上のみ表示）に合わせる */}
               {[...Array(4)].map((_, i) => (
-                <div key={i} className={`rounded-xl bg-white dark:bg-card ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4 ${i > 0 ? "hidden lg:block" : ""}`}>
+                <div key={i} className={`rounded-xl bg-white dark:bg-card ring-1 ring-slate-300 dark:ring-border overflow-hidden py-4 ${i > 0 ? "hidden lg:block" : ""}`}>
                   <div className="p-3.5 flex items-start gap-3">
                     <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
                     <div className="min-w-0 flex-1">
@@ -308,7 +308,7 @@ export default function Home() {
                 </div>
 
                 {/* 区切り線 */}
-                <div className="mx-4 border-t border-slate-100 dark:border-border" />
+                <div className="mx-4 border-t border-slate-200 dark:border-border" />
 
                 {/* 直近の記録 */}
                 <div className="p-3.5">
@@ -389,7 +389,7 @@ export default function Home() {
                 const car = cars[safeIndex]
                 return (
                   <Card key={car.id} className="border-none overflow-hidden bg-white dark:bg-card p-0">
-                    <div className="relative aspect-[11/6] bg-neutral-300 dark:bg-neutral-800 w-full m-0 border-b border-slate-100 dark:border-border overflow-hidden">
+                    <div className="relative aspect-[11/6] bg-neutral-300 dark:bg-neutral-800 w-full m-0 border-b border-slate-200 dark:border-border overflow-hidden">
                       {car.image_url ? (
                         <img src={car.image_url} alt={car.name} className="absolute inset-0 w-full h-full object-cover" style={getCarImageStyle(car)} />
                       ) : (
@@ -403,7 +403,7 @@ export default function Home() {
                         <h3 className="text-2xl font-semibold text-slate-800 dark:text-foreground tracking-wider mt-1">{car.name}</h3>
                         <p className="text-[10px] font-semibold text-slate-400 dark:text-muted-foreground tracking-wide">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
                       </div>
-                      <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-t border-b border-slate-100 dark:border-border">
+                      <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
                         <div className="p-4">
                           <p className="text-[9px] font-semibold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.odometer")}</p>
                           <p className="text-lg font-semibold text-slate-800 dark:text-foreground tracking-wider">{car.current_odo.toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
@@ -416,7 +416,7 @@ export default function Home() {
                           }</p>
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-100 dark:divide-border border-b border-slate-100 dark:border-border">
+                      <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
                         <div className="p-4">
                           <p className="text-[9px] font-semibold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.distance_since_delivery")}</p>
                           <p className="text-lg font-semibold text-slate-800 dark:text-foreground tracking-wider">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
@@ -440,7 +440,7 @@ export default function Home() {
                           <span className="font-semibold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{car.grade || "-"}</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-center gap-4 py-4 border-t border-slate-100 dark:border-border">
+                      <div className="flex items-center justify-center gap-4 py-4 border-t border-slate-200 dark:border-border">
                         <button
                           onClick={() => setCarIndex(v => (v - 1 + cars.length) % cars.length)}
                           disabled={cars.length <= 1}

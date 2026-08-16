@@ -20,7 +20,7 @@ export default function BottomNav() {
   return (
     // PC画面 (md以上) では下部ナビゲーションを非表示にする
     // スマホでは画面下から少し浮かせ、角を丸くしたダイナミックアイランド風デザインに変更
-    <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md z-50 h-16 rounded-full bg-white/90 dark:bg-card/90 backdrop-blur-md shadow-lg border border-slate-100 dark:border-border">
+    <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md z-50 h-16 rounded-full bg-white/90 dark:bg-card/90 backdrop-blur-md shadow-lg border border-slate-300 dark:border-border">
       <div className="flex w-full max-w-md mx-auto justify-around items-center h-full">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.key === "home" && pathname === "/maintenance")
