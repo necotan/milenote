@@ -50,7 +50,7 @@ function Calendar({ month, onMonthChange, selected, onSelect, onOpenWheel, minDa
         </button>
       </div>
 
-      <div className="grid grid-cols-7" role="row">
+      <div className="grid grid-cols-7 gap-x-1" role="row">
         {weekdayLabels.map((label, i) => (
           <div
             key={i}
@@ -64,7 +64,7 @@ function Calendar({ month, onMonthChange, selected, onSelect, onOpenWheel, minDa
 
       <div role="grid">
         {weeks.map((week, wi) => (
-          <div key={wi} role="row" className="grid grid-cols-7 gap-y-1">
+          <div key={wi} role="row" className="grid grid-cols-7 gap-x-1 gap-y-1">
             {week.map((cell, di) => {
               const disabled = (minDate && cell.date < minDate) || (maxDate && cell.date > maxDate)
               const isSelected = selected ? isSameDay(cell.date, selected) : false
