@@ -770,7 +770,7 @@ export default function MyPage() {
 
       <div className="space-y-8">
         {/* プロフィール設定 */}
-        <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
+        <Card className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
@@ -803,7 +803,7 @@ export default function MyPage() {
         </Card>
 
         {/* メンテナンス基準設定 */}
-        <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
+        <Card className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
@@ -843,7 +843,7 @@ export default function MyPage() {
         </Card>
 
         {/* 言語設定 */}
-        <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
+        <Card className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
@@ -884,7 +884,7 @@ export default function MyPage() {
         </Card>
 
         {/* アクセシビリティ */}
-        <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
+        <Card className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
@@ -956,7 +956,7 @@ export default function MyPage() {
         </Card>
 
         {/* ホーム画面のカスタマイズ */}
-        <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
+        <Card className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
@@ -1083,7 +1083,7 @@ export default function MyPage() {
         </Card>
 
         {/* データのエクスポート */}
-        <Card className="border border-slate-200 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden rounded-xl">
+        <Card className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="p-6">
             <h2 className="text-base font-semibold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
               <Download size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.export")}

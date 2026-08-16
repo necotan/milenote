@@ -304,7 +304,7 @@ export default function MaintenancePage() {
       {/* 表示設定モーダル */}
       {isDisplaySettingsOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => setIsDisplaySettingsOpen(false)}>
-          <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+          <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
                 <Settings2 size={20} />
@@ -361,7 +361,7 @@ export default function MaintenancePage() {
       {/* カテゴリ、車の絞り込みモーダル */}
       {isFilterOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => setIsFilterOpen(false)}>
-          <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+          <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
                 <SlidersHorizontal size={20} />
@@ -466,17 +466,17 @@ export default function MaintenancePage() {
       )}
 
       {cars.length === 0 ? (
-        <Card className="border-none shadow-sm bg-white dark:bg-card p-10 text-center">
+        <Card className="border-none bg-white dark:bg-card p-10 text-center">
           <CarFront className="mx-auto h-12 w-12 text-slate-200 dark:text-muted-foreground mb-3" />
           <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground mb-4 tracking-tighter">{t("home.no_cars_registered")}</p>
           <Link href="/garage"><Button className="font-semibold text-xs px-6 tracking-wide">{t("home.register")}</Button></Link>
         </Card>
       ) : alerts.length === 0 ? (
-        <Card className="border-none shadow-sm bg-white dark:bg-card p-6 text-center">
+        <Card className="border-none bg-white dark:bg-card p-6 text-center">
           <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wide">{t("home.no_alerts")}</p>
         </Card>
       ) : filteredAlerts.length === 0 ? (
-        <Card className="border-none shadow-sm bg-white dark:bg-card p-6 text-center">
+        <Card className="border-none bg-white dark:bg-card p-6 text-center">
           <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wide">{t("home.no_filtered_alerts")}</p>
         </Card>
       ) : isUngrouped ? (

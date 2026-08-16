@@ -103,7 +103,7 @@ const RecurringForm = ({
   const { t } = useTranslation()
 
   return (
-    <Card className="border-none shadow-lg bg-white dark:bg-card mb-6">
+    <Card className="border-none bg-white dark:bg-card mb-6">
       <CardContent className="p-6 relative">
         <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetForm}>
           <X className="h-4 w-4" />

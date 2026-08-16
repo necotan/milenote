@@ -728,7 +728,7 @@ export default function GaragePage() {
           </div>
 
           {(isAddingCar || editCarId) && (
-            <Card className="border-none shadow-md bg-white dark:bg-card mb-6">
+            <Card className="border-none bg-white dark:bg-card mb-6">
               <CardContent className="p-6 relative">
                 <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetCarForm}>
                   <X className="h-4 w-4" />
@@ -846,7 +846,7 @@ export default function GaragePage() {
           {!loading && !isAddingCar && !editCarId && cars.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {cars.map((car) => (
-                <Card key={car.id} className="border-none shadow-sm overflow-hidden bg-white dark:bg-card p-0 relative group">
+                <Card key={car.id} className="border-none overflow-hidden bg-white dark:bg-card p-0 relative group">
                   <div className="absolute top-3 right-3 flex items-center gap-2 z-20">
                     {/* 画像の位置、ズーム調整ボタン（画像が設定済みの場合のみ） */}
                     {car.image_url && (
@@ -957,7 +957,7 @@ export default function GaragePage() {
         {/* 車両削除確認モーダル */}
         {deleteCarTarget && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => { setDeleteCarTarget(null); setDeleteCarConfirmName(""); }}>
-            <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
               <CardContent className="p-6 space-y-4">
                 <h2 className="text-lg font-semibold text-slate-800 dark:text-foreground">{t("garage.delete_car_title")}</h2>
                 <p className="text-sm text-slate-600 dark:text-muted-foreground">
@@ -1010,7 +1010,7 @@ export default function GaragePage() {
         {/* 画像の位置、ズーム調整モーダル */}
         {adjustTarget && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => setAdjustTarget(null)}>
-            <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
                   <Move size={20} />
@@ -1095,7 +1095,7 @@ export default function GaragePage() {
           {/* ステータス絞り込みモーダル */}
           {isFilterOpen && (
             <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => setIsFilterOpen(false)}>
-              <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+              <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
                 <CardContent className="p-6 space-y-4">
                   <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
                     <SlidersHorizontal size={20} />
@@ -1206,7 +1206,7 @@ export default function GaragePage() {
           )}
 
           {(isAddingWish || editWishId) && (
-            <Card className="border-none shadow-md bg-white dark:bg-card mb-6">
+            <Card className="border-none bg-white dark:bg-card mb-6">
               <CardContent className="p-6 relative">
                 <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetWishForm}>
                   <X className="h-4 w-4" />
@@ -1291,7 +1291,7 @@ export default function GaragePage() {
                 // http(s) 以外のスキームは弾き、安全なURLのみリンク化
                 const safeUrl = getSafeExternalUrl(wish.url)
                 return (
-                  <Card key={wish.id} className="border border-slate-100 dark:border-border shadow-sm bg-white dark:bg-card overflow-hidden relative">
+                  <Card key={wish.id} className="border border-slate-100 dark:border-border bg-white dark:bg-card overflow-hidden relative">
                     {/* 編集・削除ボタン（右上に常時表示） */}
                     <div className="absolute top-3 right-3 flex items-center gap-1 z-10">
                       <button

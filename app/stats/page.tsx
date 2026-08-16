@@ -1006,7 +1006,7 @@ export default function StatsPage() {
         <TabsContent value="distance" className="space-y-6 outline-none">
 
           {/* ヒーローバナー：地球周、月進捗 */}
-          <Card className="border-none shadow-sm overflow-hidden bg-white dark:bg-card">
+          <Card className="border-none overflow-hidden bg-white dark:bg-card">
             <CardContent className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-11 md:gap-8">
                 {/* 地球周セクション */}
@@ -1056,7 +1056,7 @@ export default function StatsPage() {
           </Card>
 
           {/* 給油サマリーカード */}
-          <Card className="border-none shadow-sm bg-white dark:bg-card">
+          <Card className="border-none bg-white dark:bg-card">
             <CardHeader className="p-4 pb-2">
               <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                 <Fuel size={16} /> {t("stats.fuel_summary")}
@@ -1099,7 +1099,7 @@ export default function StatsPage() {
 
           {/* 充電サマリーカード（EV車の充電記録がある場合のみ表示） */}
           {chargeCount > 0 && (
-            <Card className="border-none shadow-sm bg-white dark:bg-card">
+            <Card className="border-none bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2">
                 <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                   <BatteryCharging size={16} /> {t("stats.charge_summary")}
@@ -1134,7 +1134,7 @@ export default function StatsPage() {
 
           {/* FCV充填サマリーカード（水素車の充填記録がある場合のみ表示） */}
           {hydrogenCount > 0 && (
-            <Card className="border-none shadow-sm bg-white dark:bg-card">
+            <Card className="border-none bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2">
                 <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                   <Atom size={16} /> {t("stats.hydrogen_summary")}
@@ -1204,7 +1204,7 @@ export default function StatsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
             {/* カテゴリ別内訳 */}
-            <Card className="border-none shadow-sm bg-white dark:bg-card">
+            <Card className="border-none bg-white dark:bg-card">
               <CardHeader className="p-4 pb-0">
                 <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                   <PieIcon size={16} /> {t("stats.category_breakdown")}
@@ -1267,7 +1267,7 @@ export default function StatsPage() {
             </Card>
 
             {/* 月別出費推移 */}
-            <Card className="border-none shadow-sm bg-white dark:bg-card">
+            <Card className="border-none bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
                 <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
                   <BarChart3 size={16} /> {t("stats.monthly_trend")}
@@ -1332,7 +1332,7 @@ export default function StatsPage() {
           </div>
 
           {/* 年別推移セクション */}
-          <Card className="border-none shadow-sm bg-white dark:bg-card">
+          <Card className="border-none bg-white dark:bg-card">
             <CardHeader className="p-4 pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm font-semibold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">

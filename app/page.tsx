@@ -256,7 +256,7 @@ export default function Home() {
         >
         <section style={{ order: homeOrder.indexOf("summary") }}>
           {/* 一体型カード：今月の費用、給油ボタン、直近の記録 */}
-          <Card className="relative border-none shadow-sm bg-white dark:bg-card">
+          <Card className="relative border-none bg-white dark:bg-card">
               <CardContent className="p-0">
 
                 {/* 給油を記録、ODO更新ボタン */}
@@ -368,7 +368,7 @@ export default function Home() {
                 ))}
               </div>
             ) : (
-              <Card className="border-none shadow-sm bg-white dark:bg-card p-6 text-center">
+              <Card className="border-none bg-white dark:bg-card p-6 text-center">
                 <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wide">{t("home.no_alerts")}</p>
               </Card>
             )}
@@ -377,7 +377,7 @@ export default function Home() {
 
         <section className="lg:w-[380px] lg:shrink-0" style={{ order: homeOrder.indexOf("cars") }}>
           {cars.length === 0 ? (
-            <Card className="border-none shadow-sm bg-white dark:bg-card p-10 text-center">
+            <Card className="border-none bg-white dark:bg-card p-10 text-center">
               <CarFront className="mx-auto h-12 w-12 text-slate-200 dark:text-muted-foreground mb-3" />
               <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground mb-4 tracking-tighter">{t("home.no_cars_registered")}</p>
               <Link href="/garage"><Button className="font-semibold text-xs px-6 tracking-wide">{t("home.register")}</Button></Link>
@@ -388,7 +388,7 @@ export default function Home() {
                 const safeIndex = Math.min(carIndex, cars.length - 1)
                 const car = cars[safeIndex]
                 return (
-                  <Card key={car.id} className="border-none shadow-sm overflow-hidden bg-white dark:bg-card p-0">
+                  <Card key={car.id} className="border-none overflow-hidden bg-white dark:bg-card p-0">
                     <div className="relative aspect-[11/6] bg-neutral-300 dark:bg-neutral-800 w-full m-0 border-b border-slate-100 dark:border-border overflow-hidden">
                       {car.image_url ? (
                         <img src={car.image_url} alt={car.name} className="absolute inset-0 w-full h-full object-cover" style={getCarImageStyle(car)} />
@@ -473,7 +473,7 @@ export default function Home() {
       {/* ODO更新モーダル */}
       {odoModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => setOdoModalOpen(false)}>
-          <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
+          <Card className="border-none bg-white dark:bg-card max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3">
                 <Gauge size={22} className="text-slate-500 dark:text-muted-foreground" />
