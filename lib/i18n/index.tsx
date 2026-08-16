@@ -73,6 +73,14 @@ export function formatDateLocale(dateStr: string | null, locale: Locale): string
   return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
 }
 
+/** ロケールに応じた年月のフォーマット（monthは1始まり） */
+export function formatYearMonthLocale(year: number, month: number, locale: Locale): string {
+  if (locale === "en") {
+    return new Date(year, month - 1, 1).toLocaleDateString("en-US", { year: "numeric", month: "short" })
+  }
+  return `${year}年${month}月`
+}
+
 /** ロケールに応じた経過月数のフォーマット */
 export function formatMonthsPassedLocale(dateStr: string | null, locale: Locale): string {
   if (!dateStr) return "-"

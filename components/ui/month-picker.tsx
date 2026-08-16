@@ -5,7 +5,7 @@ import { Popover as PopoverPrimitive } from "radix-ui"
 import { CalendarDays } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { useTranslation } from "@/lib/i18n"
+import { useTranslation, formatYearMonthLocale } from "@/lib/i18n"
 import { getDefaultWheelYearRange } from "@/lib/date/calendar"
 import { YearMonthWheel } from "@/components/ui/YearMonthWheel"
 
@@ -45,7 +45,7 @@ function MonthPicker({
   minYear,
   maxYear,
 }: MonthPickerProps) {
-  const { t } = useTranslation()
+  const { locale, t } = useTranslation()
   const [open, setOpen] = React.useState(false)
   const parsed = parseYearMonth(value)
   const now = new Date()
@@ -56,7 +56,7 @@ function MonthPicker({
   const wheelMaxYear = maxYear ?? defaultRange.maxYear
 
   const label = value
-    ? t("common.year_month", { year: current.year, month: current.month + 1 })
+    ? formatYearMonthLocale(current.year, current.month + 1, locale)
     : (placeholder ?? t("common.please_select"))
 
   return (

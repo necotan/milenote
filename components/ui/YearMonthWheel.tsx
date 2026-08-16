@@ -3,7 +3,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { useTranslation } from "@/lib/i18n"
+import { useTranslation, formatYearMonthLocale } from "@/lib/i18n"
 
 const ROW_HEIGHT = 48
 const CONTAINER_HEIGHT = 240
@@ -22,7 +22,7 @@ interface YearMonthWheelProps {
 }
 
 function YearMonthWheel({ year, month, minYear, maxYear, onConfirm, onReset, clearable, onClear }: YearMonthWheelProps) {
-  const { t } = useTranslation()
+  const { locale, t } = useTranslation()
   const rows = React.useMemo(() => {
     const list: { year: number; month: number }[] = []
     for (let y = minYear; y <= maxYear; y++) {
@@ -107,7 +107,7 @@ function YearMonthWheel({ year, month, minYear, maxYear, onConfirm, onReset, cle
                 )}
                 style={{ height: ROW_HEIGHT }}
               >
-                {t("common.year_month", { year: row.year, month: row.month + 1 })}
+                {formatYearMonthLocale(row.year, row.month + 1, locale)}
               </div>
             )
           })}
