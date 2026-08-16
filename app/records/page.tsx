@@ -158,7 +158,7 @@ const RecordForm = ({
   )
 
   return (
-  <Card className="border-none shadow-lg bg-white dark:bg-card">
+  <Card className="border-none bg-white dark:bg-card">
     <CardContent className="p-6 relative">
       <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetForm}>
         <X className="h-4 w-4" />
@@ -788,7 +788,7 @@ function RecordsPageInner() {
             {/* カテゴリ・車の絞り込みモーダル */}
             {isFilterOpen && (
               <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => setIsFilterOpen(false)}>
-                <Card className="border-none shadow-2xl bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+                <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
                   <CardContent className="p-6 space-y-4">
                     <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
                       <SlidersHorizontal size={20} />
@@ -962,7 +962,7 @@ function RecordsPageInner() {
               : t(`categories.${record.category}`)
 
             return (
-              <Card key={record.id} className="border-none shadow-sm bg-white dark:bg-card overflow-hidden relative">
+              <Card key={record.id} className="border-none bg-white dark:bg-card overflow-hidden relative">
                 <CardContent className="p-0">
                   {/* 編集・削除ボタン */}
                   <div className="absolute top-3 right-3 flex items-center gap-1">

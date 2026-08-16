@@ -12,7 +12,7 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
 
   if (!alert.hasRecord) {
     return (
-      <Card className={`relative border-none shadow-sm bg-white dark:bg-card ${alert.isDisabled ? "opacity-50" : ""} ${className}`}>
+      <Card className={`relative border-none bg-white dark:bg-card ${alert.isDisabled ? "opacity-50" : ""} ${className}`}>
         <CardContent className="p-3.5 flex items-start gap-3">
           <div className="p-2.5 rounded-2xl shrink-0 bg-slate-50 dark:bg-surface-2 text-slate-400 dark:text-muted-foreground">
             <alert.icon size={24} />
@@ -44,7 +44,7 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
   }
 
   return (
-    <Card className={`border-none shadow-sm bg-white dark:bg-card ${alert.isDisabled ? "opacity-50" : ""} ${className}`}>
+    <Card className={`border-none bg-white dark:bg-card ${alert.isDisabled ? "opacity-50" : ""} ${className}`}>
       <CardContent className="p-3.5 flex items-start gap-3">
         <div className={`p-2.5 rounded-2xl shrink-0 ${alert.isUrgent ? 'bg-red-50 dark:bg-red-950/40' : 'bg-slate-50 dark:bg-surface-2'} ${alert.color}`}>
           <alert.icon size={24} />
