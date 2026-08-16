@@ -956,7 +956,7 @@ export default function StatsPage() {
       <SkeletonTabs className="mb-4" />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* カテゴリ別内訳カード（見出し、期間絞り込み、グラフ） */}
-        <div className="bg-white dark:bg-card rounded-xl shadow-sm ring-1 ring-slate-200/50 dark:ring-border py-4">
+        <div className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-200/50 dark:ring-border py-4">
           {/* CardTitle が leading-snug を内包しているため行間を明示する（アイコン分は幅に含めて1つの要素にする） */}
           <div className="p-4 pb-0">
             <SkeletonText size="sm" leading="snug" className="w-32" />
@@ -970,7 +970,7 @@ export default function StatsPage() {
           </div>
         </div>
         {/* 月別出費推移カード（見出し、表示切替トグル、グラフ） */}
-        <div className="bg-white dark:bg-card rounded-xl shadow-sm ring-1 ring-slate-200/50 dark:ring-border py-4">
+        <div className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-200/50 dark:ring-border py-4">
           <div className="p-4 pb-2 flex items-center justify-between">
             <SkeletonText size="sm" leading="snug" className="w-32" />
             <Skeleton className="h-8 w-24 rounded-full" />

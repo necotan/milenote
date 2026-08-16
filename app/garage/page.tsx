@@ -673,7 +673,7 @@ export default function GaragePage() {
         {loading && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[...Array(2)].map((_, i) => (
-              <div key={i} className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden">
+              <div key={i} className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-200/50 dark:ring-border overflow-hidden">
                 <Skeleton className="aspect-[11/6] rounded-none" />
                 {/* 画像とテキストの間の余白（実要素は mt-1 だが、隣接する要素同士が接すると余白が無く見えるため広めにとる） */}
                 <div className="px-4 pt-3 pb-4 space-y-2">

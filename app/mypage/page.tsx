@@ -653,7 +653,7 @@ export default function MyPage() {
       <div className="space-y-8">
         {/* プロフィールカードスケルトン */}
         {/* 実カードは Card 自体の py-4 により区切り線が上下の枠に接しないため、ただの div であるスケルトンにも同じ py-4 を付与する */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden py-4">
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-24" />
             <div className="md:w-2/3 p-6 space-y-3">
@@ -670,7 +670,7 @@ export default function MyPage() {
           </div>
         </div>
         {/* メンテナンス設定カードスケルトン */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden py-4">
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-32" />
             <div className="md:w-2/3 p-6">
@@ -697,7 +697,7 @@ export default function MyPage() {
           </div>
         </div>
         {/* 言語設定カードスケルトン */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden py-4">
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-28" />
             <div className="md:w-2/3 p-6">
@@ -706,7 +706,7 @@ export default function MyPage() {
           </div>
         </div>
         {/* アクセシビリティカードスケルトン */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden py-4">
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-32" />
             <div className="md:w-2/3 p-6 space-y-6">
@@ -723,7 +723,7 @@ export default function MyPage() {
           </div>
         </div>
         {/* ホーム画面カスタマイズカードスケルトン */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden py-4">
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-32" />
             <div className="md:w-2/3 p-6">
@@ -741,7 +741,7 @@ export default function MyPage() {
         </div>
         {/* データエクスポートカードスケルトン */}
         {/* 実カードはフッター(border-t)を持つCardのため、Card自体のpbは0になり、pt-4のみ効いている */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border shadow-sm overflow-hidden pt-4">
+        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border overflow-hidden pt-4">
           <div className="p-6 space-y-2">
             <SkeletonText size="base" className="w-28" />
             <SkeletonText size="xs" leading="relaxed" className="w-2/3" />
@@ -770,7 +770,7 @@ export default function MyPage() {
 
       <div className="space-y-8">
         {/* プロフィール設定 */}
-        <Card className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden rounded-xl">
+        <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
@@ -803,7 +803,7 @@ export default function MyPage() {
         </Card>
 
         {/* メンテナンス基準設定 */}
-        <Card className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden rounded-xl">
+        <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
@@ -843,7 +843,7 @@ export default function MyPage() {
         </Card>
 
         {/* 言語設定 */}
-        <Card className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden rounded-xl">
+        <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
@@ -884,7 +884,7 @@ export default function MyPage() {
         </Card>
 
         {/* アクセシビリティ */}
-        <Card className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden rounded-xl">
+        <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
@@ -956,7 +956,7 @@ export default function MyPage() {
         </Card>
 
         {/* ホーム画面のカスタマイズ */}
-        <Card className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden rounded-xl">
+        <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-100 dark:border-border bg-white dark:bg-card">
@@ -1083,7 +1083,7 @@ export default function MyPage() {
         </Card>
 
         {/* データのエクスポート */}
-        <Card className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden rounded-xl">
+        <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="p-6">
             <h2 className="text-base font-semibold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
               <Download size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.export")}

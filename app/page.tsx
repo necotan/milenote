@@ -143,7 +143,7 @@ export default function Home() {
       <div className="flex flex-col lg:flex-row lg:items-stretch gap-6 lg:gap-8">
         {/* 愛車カードスケルトン */}
         <div className="lg:w-[380px] lg:shrink-0" style={{ order: homeOrder.indexOf("cars") }}>
-          <div className="bg-white dark:bg-card rounded-xl shadow-sm dark:border dark:border-border overflow-hidden">
+          <div className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-200/50 dark:ring-border overflow-hidden">
             <Skeleton className="aspect-[11/6] rounded-none" />
             {/* 画像とテキストの間の余白（実要素は mt-1 だが、隣接する要素同士が接すると余白が無く見えるため広めにとる） */}
             <div className="px-4 pt-3 pb-4 space-y-2">
@@ -187,7 +187,7 @@ export default function Home() {
         >
           <div className="space-y-6" style={{ order: homeOrder.indexOf("summary") }}>
             {/* 今月の費用カードスケルトン */}
-            <div className="relative bg-white dark:bg-card rounded-xl shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
+            <div className="relative bg-white dark:bg-card rounded-xl ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4">
               <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
                 <Skeleton className="h-7 w-24 rounded-lg" />
                 <Skeleton className="h-7 w-24 rounded-lg" />
@@ -216,7 +216,7 @@ export default function Home() {
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
               {/* 1件目は常に表示、2〜4件目はPC初期表示用（lg以上のみ表示）に合わせる */}
               {[...Array(4)].map((_, i) => (
-                <div key={i} className={`rounded-xl bg-white dark:bg-card shadow-[0_2px_12px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4 ${i > 0 ? "hidden lg:block" : ""}`}>
+                <div key={i} className={`rounded-xl bg-white dark:bg-card ring-1 ring-slate-200/50 dark:ring-border overflow-hidden py-4 ${i > 0 ? "hidden lg:block" : ""}`}>
                   <div className="p-3.5 flex items-start gap-3">
                     <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
                     <div className="min-w-0 flex-1">
