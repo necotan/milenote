@@ -27,27 +27,29 @@ function Calendar({ month, onMonthChange, selected, onSelect, onOpenWheel, minDa
       <div className="flex items-center justify-between px-1 pb-2">
         <button
           type="button"
-          aria-label={t("common.previous")}
-          onClick={() => onMonthChange(new Date(month.getFullYear(), month.getMonth() - 1, 1))}
-          className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-        >
-          <ChevronLeft size={16} />
-        </button>
-        <button
-          type="button"
           onClick={onOpenWheel}
           className="text-sm font-semibold text-slate-800 dark:text-foreground hover:opacity-70 transition-opacity"
         >
           {formatYearMonthLocale(month.getFullYear(), month.getMonth() + 1, locale)}
         </button>
-        <button
-          type="button"
-          aria-label={t("common.next")}
-          onClick={() => onMonthChange(new Date(month.getFullYear(), month.getMonth() + 1, 1))}
-          className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-        >
-          <ChevronRight size={16} />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            aria-label={t("common.previous")}
+            onClick={() => onMonthChange(new Date(month.getFullYear(), month.getMonth() - 1, 1))}
+            className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+          >
+            <ChevronLeft size={16} />
+          </button>
+          <button
+            type="button"
+            aria-label={t("common.next")}
+            onClick={() => onMonthChange(new Date(month.getFullYear(), month.getMonth() + 1, 1))}
+            className="inline-flex size-7 items-center justify-center rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+          >
+            <ChevronRight size={16} />
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-7 gap-x-1" role="row">
