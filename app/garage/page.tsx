@@ -1342,9 +1342,9 @@ export default function GaragePage() {
                         )}
 
                         {/* ステータス変更ドロップダウン */}
-                        <div className="w-32">
+                        <div className="w-36">
                           <Select defaultValue={wish.status} onValueChange={(val) => updateWishStatus(wish.id, val)}>
-                            <SelectTrigger className="h-7 text-xs font-semibold bg-slate-50 dark:bg-muted border-none">
+                            <SelectTrigger className="w-full h-7 text-xs font-semibold bg-slate-50 dark:bg-muted border-none">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
