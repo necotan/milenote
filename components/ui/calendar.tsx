@@ -64,9 +64,9 @@ function Calendar({ month, onMonthChange, selected, onSelect, onOpenWheel, minDa
         ))}
       </div>
 
-      <div role="grid">
+      <div role="grid" className="flex flex-col gap-y-[7px]">
         {weeks.map((week, wi) => (
-          <div key={wi} role="row" className="grid grid-cols-7 gap-x-1 gap-y-1">
+          <div key={wi} role="row" className="grid grid-cols-7 gap-x-1">
             {week.map((cell, di) => {
               const disabled = (minDate && cell.date < minDate) || (maxDate && cell.date > maxDate)
               const isSelected = selected ? isSameDay(cell.date, selected) : false
