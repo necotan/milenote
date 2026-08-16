@@ -6,7 +6,7 @@ import { Select as SelectPrimitive } from "radix-ui"
 import { cn } from "@/lib/utils"
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react"
 
-const SELECT_CLOSE_ANIMATION_MS = 150
+const SELECT_CLOSE_ANIMATION_MS = 100
 
 const SelectClosingContext = React.createContext(false)
 
@@ -110,7 +110,7 @@ function SelectContent({
         data-slot="select-content"
         data-align-trigger={position === "item-aligned"}
         data-select-state={closing ? "closing" : "open"}
-        className={cn("relative z-50 max-h-(--radix-select-content-available-height) w-(--radix-select-trigger-width) min-w-(--radix-select-trigger-width) overflow-x-hidden overflow-y-auto rounded-lg border border-input bg-popover dark:bg-surface-2 text-popover-foreground shadow-lg data-[align-trigger=true]:animate-none data-[select-state=open]:animate-in data-[select-state=open]:fade-in-0 data-[select-state=open]:ease-out data-[select-state=open]:duration-200 data-[select-state=closing]:animate-out data-[select-state=closing]:fade-out-0 data-[select-state=closing]:ease-in data-[select-state=closing]:duration-150 data-[select-state=closing]:pointer-events-none", position ==="popper"&&"data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1", className )}
+        className={cn("relative z-50 max-h-(--radix-select-content-available-height) w-(--radix-select-trigger-width) min-w-(--radix-select-trigger-width) overflow-x-hidden overflow-y-auto rounded-lg border border-input bg-popover dark:bg-surface-2 text-popover-foreground shadow-lg data-[align-trigger=true]:animate-none data-[select-state=open]:animate-in data-[select-state=open]:fade-in-0 data-[select-state=open]:ease-out data-[select-state=open]:duration-100 data-[select-state=closing]:animate-out data-[select-state=closing]:fade-out-0 data-[select-state=closing]:ease-in data-[select-state=closing]:duration-100 data-[select-state=closing]:pointer-events-none", position ==="popper"&&"data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1", className )}
         position={position}
         align={align}
         sideOffset={sideOffset}
