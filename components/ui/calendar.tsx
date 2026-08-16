@@ -4,7 +4,7 @@ import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { useTranslation } from "@/lib/i18n"
+import { useTranslation, formatYearMonthLocale } from "@/lib/i18n"
 import { getMonthMatrix, getWeekdayLabels, isSameDay, isToday } from "@/lib/date/calendar"
 
 interface CalendarProps {
@@ -38,7 +38,7 @@ function Calendar({ month, onMonthChange, selected, onSelect, onOpenWheel, minDa
           onClick={onOpenWheel}
           className="text-sm font-semibold text-slate-800 dark:text-foreground hover:opacity-70 transition-opacity"
         >
-          {t("common.year_month", { year: month.getFullYear(), month: month.getMonth() + 1 })}
+          {formatYearMonthLocale(month.getFullYear(), month.getMonth() + 1, locale)}
         </button>
         <button
           type="button"
