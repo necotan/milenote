@@ -18,14 +18,14 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
             <alert.icon size={24} />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-semibold text-slate-400 dark:text-muted-foreground uppercase tracking-wide truncate pr-16">{alert.carName}</p>
+            <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground uppercase tracking-wide truncate pr-16">{alert.carName}</p>
             <div className="mt-0.5 leading-tight text-slate-500 dark:text-muted-foreground">
-              <p className="text-[11px] font-semibold tracking-wider">{t(`subcategories.${alert.maintName}`)}{alert.isDisabled ? ` (${t("mypage.maint_disabled_desc")})` : ""}</p>
-              <p className="text-lg font-semibold tracking-wider">{t("home.unrecorded")}</p>
+              <p className="text-[11px] font-bold tracking-wider">{t(`subcategories.${alert.maintName}`)}{alert.isDisabled ? ` (${t("mypage.maint_disabled_desc")})` : ""}</p>
+              <p className="text-lg font-bold tracking-wider">{t("home.unrecorded")}</p>
             </div>
             {/* 記録済みカードと縦サイズを揃えるための不可視スペーサー */}
             <div className="flex flex-col gap-1.5 mt-1 invisible" aria-hidden="true">
-              <div className="flex items-center gap-1 text-[10px] font-semibold tracking-wide">
+              <div className="flex items-center gap-1 text-[10px] font-bold tracking-wide">
                 <CalendarDays size={10} /> -
               </div>
               <div className="w-[80%] h-1.5 rounded-full" />
@@ -35,7 +35,7 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
         {/* ホームの「すべて見る」と同じ配置（reserveButtonSpaceは重なり回避用） */}
         <Link
           href={`/records?action=add&category=${MAINT_TYPE_CATEGORY[alert.maintName] || "maintenance"}&sub_category=${alert.maintName}`}
-          className={`absolute z-10 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-slate-50 dark:bg-surface-2 hover:bg-slate-100 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground text-[10px] font-semibold tracking-wider transition-colors ${reserveButtonSpace ? 'top-12 right-3' : 'top-3 right-3'}`}
+          className={`absolute z-10 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-slate-50 dark:bg-surface-2 hover:bg-slate-100 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground text-[10px] font-bold tracking-wider transition-colors ${reserveButtonSpace ? 'top-12 right-3' : 'top-3 right-3'}`}
         >
           {t("home.record_now")}
         </Link>
@@ -50,13 +50,13 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
           <alert.icon size={24} />
         </div>
         <div className="min-w-0 flex-1">
-          <p className={`text-[10px] font-semibold text-slate-400 dark:text-muted-foreground uppercase tracking-wide truncate ${reserveButtonSpace ? 'pr-16' : ''}`}>{alert.carName}</p>
+          <p className={`text-[10px] font-bold text-slate-400 dark:text-muted-foreground uppercase tracking-wide truncate ${reserveButtonSpace ? 'pr-16' : ''}`}>{alert.carName}</p>
           <div className={`mt-0.5 leading-tight ${alert.isUrgent ? 'text-red-600' : 'text-slate-800 dark:text-foreground'}`}>
-            <p className="text-[11px] font-semibold tracking-wider">{t(`subcategories.${alert.maintName}`)}{alert.isDisabled ? ` (${t("mypage.maint_disabled_desc")})` : (alert.isOver ? t("home.alert_overdue") : t("home.alert_remaining"))}</p>
-            <p className="text-lg font-semibold tracking-wider">{alert.displayValue}<span className="text-[10px] ml-0.5">{alert.isOver ? (alert.isMonthsOnly ? t("common.months_unit") : t("common.km_unit")) + t("home.exceeded") : (alert.isMonthsOnly ? t("common.months_unit") : t("common.km_unit"))}</span></p>
+            <p className="text-[11px] font-bold tracking-wider">{t(`subcategories.${alert.maintName}`)}{alert.isDisabled ? ` (${t("mypage.maint_disabled_desc")})` : (alert.isOver ? t("home.alert_overdue") : t("home.alert_remaining"))}</p>
+            <p className="text-lg font-bold tracking-wider">{alert.displayValue}<span className="text-[10px] ml-0.5">{alert.isOver ? (alert.isMonthsOnly ? t("common.months_unit") : t("common.km_unit")) + t("home.exceeded") : (alert.isMonthsOnly ? t("common.months_unit") : t("common.km_unit"))}</span></p>
           </div>
           <div className="flex flex-col gap-1.5 mt-1">
-            <div className="flex items-center gap-1 text-[10px] text-slate-500 dark:text-muted-foreground font-semibold tracking-wide">
+            <div className="flex items-center gap-1 text-[10px] text-slate-500 dark:text-muted-foreground font-bold tracking-wide">
               <CalendarDays size={10} /> {t("home.months_since_last", { months: alert.monthsPassed })}
             </div>
             <div className="w-[80%] bg-slate-100 dark:bg-surface-3 h-1.5 rounded-full overflow-hidden">

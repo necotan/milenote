@@ -209,7 +209,7 @@ export default function MaintenancePage() {
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
         <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
-          <span className="font-semibold text-xs">{t("home.back_to_home")}</span>
+          <span className="font-bold text-xs">{t("home.back_to_home")}</span>
         </Link>
       </header>
       <div className="space-y-3" ref={gridWrapperRef}>
@@ -257,7 +257,7 @@ export default function MaintenancePage() {
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
         <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
-          <span className="font-semibold text-xs">{t("home.back_to_home")}</span>
+          <span className="font-bold text-xs">{t("home.back_to_home")}</span>
         </Link>
       </header>
 
@@ -283,7 +283,7 @@ export default function MaintenancePage() {
             >
               <SlidersHorizontal size={15} />
               {activeFilterCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-slate-400 text-white dark:bg-surface-2 dark:text-foreground/80 text-[9px] font-semibold tabular-nums">
+                <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-slate-400 text-white dark:bg-surface-2 dark:text-foreground/80 text-[9px] font-bold tabular-nums">
                   {activeFilterCount}
                 </span>
               )}
@@ -292,7 +292,7 @@ export default function MaintenancePage() {
               type="button"
               onClick={() => setIsDisplaySettingsOpen(true)}
               title={t("home.display_settings_title")}
-              className="h-7 flex items-center gap-1.5 px-2.5 rounded-lg border text-[11px] font-semibold bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+              className="h-7 flex items-center gap-1.5 px-2.5 rounded-lg border text-[11px] font-bold bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
             >
               <Settings2 size={15} />
               {t("home.display_settings_title")}
@@ -308,14 +308,14 @@ export default function MaintenancePage() {
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
                 <Settings2 size={20} />
-                <h2 className="text-lg font-semibold">{t("home.display_settings_title")}</h2>
+                <h2 className="text-lg font-bold">{t("home.display_settings_title")}</h2>
               </div>
 
               <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5">
                 <div className="min-w-0 flex items-start gap-2.5">
                   <EyeOff size={18} className="shrink-0 mt-0.5 text-slate-400 dark:text-muted-foreground" />
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-slate-700 dark:text-foreground">{t("home.show_disabled_maint")}</p>
+                    <p className="text-sm font-bold text-slate-700 dark:text-foreground">{t("home.show_disabled_maint")}</p>
                     <p className="text-xs text-slate-400 dark:text-muted-foreground mt-0.5">{t("home.show_disabled_maint_desc")}</p>
                   </div>
                 </div>
@@ -326,7 +326,7 @@ export default function MaintenancePage() {
                 <div className="min-w-0 flex items-start gap-2.5">
                   <FileX size={18} className="shrink-0 mt-0.5 text-slate-400 dark:text-muted-foreground" />
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-slate-700 dark:text-foreground">{t("home.hide_unrecorded_maint")}</p>
+                    <p className="text-sm font-bold text-slate-700 dark:text-foreground">{t("home.hide_unrecorded_maint")}</p>
                     <p className="text-xs text-slate-400 dark:text-muted-foreground mt-0.5">{t("home.hide_unrecorded_maint_desc")}</p>
                   </div>
                 </div>
@@ -337,7 +337,7 @@ export default function MaintenancePage() {
                 <div className="min-w-0 flex items-start gap-2.5">
                   <LayoutList size={18} className="shrink-0 mt-0.5 text-slate-400 dark:text-muted-foreground" />
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-slate-700 dark:text-foreground">{t("home.ungroup_maint")}</p>
+                    <p className="text-sm font-bold text-slate-700 dark:text-foreground">{t("home.ungroup_maint")}</p>
                     <p className="text-xs text-slate-400 dark:text-muted-foreground mt-0.5">{t("home.ungroup_maint_desc")}</p>
                   </div>
                 </div>
@@ -347,7 +347,7 @@ export default function MaintenancePage() {
               <div className="flex justify-center pt-6">
                 <Button
                   variant="outline"
-                  className="px-10 font-semibold bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background dark:bg-foreground dark:text-background dark:border-foreground dark:hover:bg-foreground/90"
+                  className="px-10 font-bold bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background dark:bg-foreground dark:text-background dark:border-foreground dark:hover:bg-foreground/90"
                   onClick={() => setIsDisplaySettingsOpen(false)}
                 >
                   {t("common.save")}
@@ -365,18 +365,18 @@ export default function MaintenancePage() {
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
                 <SlidersHorizontal size={20} />
-                <h2 className="text-lg font-semibold">{t("records.filter_title")}</h2>
+                <h2 className="text-lg font-bold">{t("records.filter_title")}</h2>
               </div>
 
               {/* カテゴリ絞り込み */}
               <div className="space-y-2">
-                <p className="text-xs font-semibold text-slate-500 dark:text-muted-foreground">{t("records.category")}</p>
+                <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("records.category")}</p>
                 <div className="flex flex-wrap gap-2.5">
                   <button
                     type="button"
                     {...chipTapHandlers(() => setCategoryFilters([]))}
                     aria-pressed={categoryFilters.length === 0}
-                    className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                    className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                       categoryFilters.length === 0
                         ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                         : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -395,7 +395,7 @@ export default function MaintenancePage() {
                         type="button"
                         {...chipTapHandlers(() => toggleCategoryFilter(category.key))}
                         aria-pressed={active}
-                        className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                        className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                           active
                             ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                             : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -412,13 +412,13 @@ export default function MaintenancePage() {
               {/* 車絞り込み */}
               {cars.length > 1 && (
                 <div className="space-y-2">
-                  <p className="text-xs font-semibold text-slate-500 dark:text-muted-foreground">{t("records.filter_car")}</p>
+                  <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("records.filter_car")}</p>
                   <div className="flex flex-wrap gap-2.5">
                     <button
                       type="button"
                       {...chipTapHandlers(() => setCarFilters([]))}
                       aria-pressed={carFilters.length === 0}
-                      className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                      className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                         carFilters.length === 0
                           ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                           : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -436,7 +436,7 @@ export default function MaintenancePage() {
                           type="button"
                           {...chipTapHandlers(() => toggleCarFilter(car.id))}
                           aria-pressed={active}
-                          className={`text-xs font-semibold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                          className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                             active
                               ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
                               : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
@@ -454,7 +454,7 @@ export default function MaintenancePage() {
               <div className="flex justify-center pt-6">
                 <Button
                   variant="outline"
-                  className="px-10 font-semibold bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background dark:bg-foreground dark:text-background dark:border-foreground dark:hover:bg-foreground/90"
+                  className="px-10 font-bold bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background dark:bg-foreground dark:text-background dark:border-foreground dark:hover:bg-foreground/90"
                   onClick={() => setIsFilterOpen(false)}
                 >
                   {t("common.save")}
@@ -468,16 +468,16 @@ export default function MaintenancePage() {
       {cars.length === 0 ? (
         <Card className="border-none bg-white dark:bg-card p-10 text-center">
           <CarFront className="mx-auto h-12 w-12 text-slate-200 dark:text-muted-foreground mb-3" />
-          <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground mb-4 tracking-tighter">{t("home.no_cars_registered")}</p>
-          <Link href="/garage"><Button className="font-semibold text-xs px-6 tracking-wide">{t("home.register")}</Button></Link>
+          <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground mb-4 tracking-tighter">{t("home.no_cars_registered")}</p>
+          <Link href="/garage"><Button className="font-bold text-xs px-6 tracking-wide">{t("home.register")}</Button></Link>
         </Card>
       ) : alerts.length === 0 ? (
         <Card className="border-none bg-white dark:bg-card p-6 text-center">
-          <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wide">{t("home.no_alerts")}</p>
+          <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wide">{t("home.no_alerts")}</p>
         </Card>
       ) : filteredAlerts.length === 0 ? (
         <Card className="border-none bg-white dark:bg-card p-6 text-center">
-          <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wide">{t("home.no_filtered_alerts")}</p>
+          <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wide">{t("home.no_filtered_alerts")}</p>
         </Card>
       ) : isUngrouped ? (
         <div className="grid gap-3 md:gap-4 items-stretch mt-6" style={gridStyle}>
@@ -492,7 +492,7 @@ export default function MaintenancePage() {
             if (items.length === 0) return null
             return (
               <div key={category.key}>
-                <p className="text-sm font-semibold text-slate-400 dark:text-muted-foreground tracking-wide mb-2 px-1">
+                <p className="text-sm font-bold text-slate-400 dark:text-muted-foreground tracking-wide mb-2 px-1">
                   {t(`mypage.maint_category_${category.key}`)}
                 </p>
                 <div className="grid gap-3 md:gap-4 items-stretch" style={gridStyle}>
