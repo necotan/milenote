@@ -137,8 +137,8 @@ export default function Home() {
   if (loading) return (
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-foreground">{t("home.title")}</h1>
-        <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{getGreeting(t)}</p>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("home.title")}</h1>
+        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{getGreeting(t)}</p>
       </header>
       <div className="flex flex-col lg:flex-row lg:items-stretch gap-6 lg:gap-8">
         {/* 愛車カードスケルトン */}
@@ -244,8 +244,8 @@ export default function Home() {
   return (
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-foreground">{t("home.title")}</h1>
-        <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{getGreeting(t)}{displayName ? t("home.greeting_suffix", { name: displayName }) : ""}</p>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("home.title")}</h1>
+        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{getGreeting(t)}{displayName ? t("home.greeting_suffix", { name: displayName }) : ""}</p>
       </header>
 
       <div className="flex flex-col lg:flex-row lg:items-stretch gap-6 lg:gap-8">
@@ -265,12 +265,12 @@ export default function Home() {
                     <Link href="/records?action=add&category=fuel">
                       <button className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-slate-50 dark:bg-surface-2 hover:bg-slate-100 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground transition-colors group">
                         <Fuel size={12} className="text-slate-500 dark:text-muted-foreground group-hover:scale-110 transition-transform" />
-                        <span className="text-[10px] font-semibold tracking-wider">{t("home.record_fuel")}</span>
+                        <span className="text-[10px] font-bold tracking-wider">{t("home.record_fuel")}</span>
                       </button>
                     </Link>
                     <button onClick={openOdoModal} className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-slate-50 dark:bg-surface-2 hover:bg-slate-100 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground transition-colors group">
                       <Gauge size={12} className="text-slate-500 dark:text-muted-foreground group-hover:scale-110 transition-transform" />
-                      <span className="text-[10px] font-semibold tracking-wider">{t("home.update_odo")}</span>
+                      <span className="text-[10px] font-bold tracking-wider">{t("home.update_odo")}</span>
                     </button>
                   </div>
                 )}
@@ -278,26 +278,26 @@ export default function Home() {
                 {/* 今月の費用 */}
                 <div className={`p-3.5 ${cars.length > 0 ? "pr-32" : ""}`}>
                   <div className="-mt-1">
-                    <p className="text-sm font-semibold text-slate-600 dark:text-muted-foreground flex items-center gap-1 uppercase tracking-wide mb-1">
+                    <p className="text-sm font-bold text-slate-600 dark:text-muted-foreground flex items-center gap-1 uppercase tracking-wide mb-1">
                       <Banknote size={14} /> {t("home.this_month_cost")}
                     </p>
                     {thisMonthRecords.length === 0 ? (
                       <p className="text-xs text-slate-400 dark:text-muted-foreground tracking-wider py-1.5">{t("home.no_cost_data")}</p>
                     ) : (
                       <>
-                        <p className="text-2xl font-semibold text-slate-800 dark:text-foreground tracking-wider">¥{thisMonthCost.toLocaleString()}</p>
+                        <p className="text-2xl font-bold text-slate-800 dark:text-foreground tracking-wider">¥{thisMonthCost.toLocaleString()}</p>
                         <div className="flex items-center gap-1.5 mt-1">
-                          <p className="text-[9px] text-slate-400 dark:text-muted-foreground font-semibold tracking-wide">{t("home.vs_last_month")}</p>
+                          <p className="text-[9px] text-slate-400 dark:text-muted-foreground font-bold tracking-wide">{t("home.vs_last_month")}</p>
                           {diffCost > 0 ? (
-                            <span className="flex items-baseline text-red-500 font-semibold text-[10px] tracking-wide">
+                            <span className="flex items-baseline text-red-500 font-bold text-[10px] tracking-wide">
                               <TrendingUp size={10} className="mr-0.5 self-center" /> +¥{diffCost.toLocaleString()}
                             </span>
                           ) : diffCost < 0 ? (
-                            <span className="flex items-baseline text-blue-500 font-semibold text-[10px] tracking-wide">
+                            <span className="flex items-baseline text-blue-500 font-bold text-[10px] tracking-wide">
                               <TrendingDown size={10} className="mr-0.5 self-center" /> -¥{Math.abs(diffCost).toLocaleString()}
                             </span>
                           ) : (
-                            <span className="flex items-baseline text-slate-400 dark:text-muted-foreground font-semibold text-[10px] tracking-wide">
+                            <span className="flex items-baseline text-slate-400 dark:text-muted-foreground font-bold text-[10px] tracking-wide">
                               <Minus size={10} className="mr-0.5 self-center" /> ±¥0
                             </span>
                           )}
@@ -312,7 +312,7 @@ export default function Home() {
 
                 {/* 直近の記録 */}
                 <div className="p-3.5">
-                  <p className="text-[10px] font-semibold text-slate-400 dark:text-muted-foreground uppercase tracking-wide mb-2">{t("home.recent_records")}</p>
+                  <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground uppercase tracking-wide mb-2">{t("home.recent_records")}</p>
                   {records.length === 0 ? (
                     <p className="text-[11px] text-slate-400 dark:text-muted-foreground">{t("home.no_records")}</p>
                   ) : (
@@ -328,10 +328,10 @@ export default function Home() {
                           return (
                             <div key={r.id} className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
-                                <span className="text-[11px] font-semibold text-slate-500 dark:text-muted-foreground">{categoryLabel}</span>
+                                <span className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground">{categoryLabel}</span>
                                 <span className="text-[10px] text-slate-400 dark:text-muted-foreground">{r.date.replace(/-/g, '/')}</span>
                               </div>
-                              <span className="text-[12px] font-semibold text-slate-700 dark:text-foreground">¥{r.amount.toLocaleString()}</span>
+                              <span className="text-[12px] font-bold text-slate-700 dark:text-foreground">¥{r.amount.toLocaleString()}</span>
                             </div>
                           )
                         })
@@ -354,7 +354,7 @@ export default function Home() {
                   {alerts.length > 1 && (
                     <Link
                       href="/maintenance"
-                      className={`absolute top-3 right-3 z-10 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border text-[10px] font-semibold tracking-wider transition-colors group bg-slate-50 dark:bg-surface-2 text-slate-600 dark:text-foreground border-slate-300 dark:border-surface-border hover:bg-slate-100 dark:hover:bg-surface-3 ${alerts.length <= 4 ? 'lg:hidden' : ''}`}
+                      className={`absolute top-3 right-3 z-10 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border text-[10px] font-bold tracking-wider transition-colors group bg-slate-50 dark:bg-surface-2 text-slate-600 dark:text-foreground border-slate-300 dark:border-surface-border hover:bg-slate-100 dark:hover:bg-surface-3 ${alerts.length <= 4 ? 'lg:hidden' : ''}`}
                     >
                       <List size={11} className="text-slate-500 dark:text-muted-foreground group-hover:scale-110 transition-transform" />
                       {t("home.see_all")}
@@ -369,7 +369,7 @@ export default function Home() {
               </div>
             ) : (
               <Card className="border-none bg-white dark:bg-card p-6 text-center">
-                <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wide">{t("home.no_alerts")}</p>
+                <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wide">{t("home.no_alerts")}</p>
               </Card>
             )}
         </section>
@@ -379,8 +379,8 @@ export default function Home() {
           {cars.length === 0 ? (
             <Card className="border-none bg-white dark:bg-card p-10 text-center">
               <CarFront className="mx-auto h-12 w-12 text-slate-200 dark:text-muted-foreground mb-3" />
-              <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground mb-4 tracking-tighter">{t("home.no_cars_registered")}</p>
-              <Link href="/garage"><Button className="font-semibold text-xs px-6 tracking-wide">{t("home.register")}</Button></Link>
+              <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground mb-4 tracking-tighter">{t("home.no_cars_registered")}</p>
+              <Link href="/garage"><Button className="font-bold text-xs px-6 tracking-wide">{t("home.register")}</Button></Link>
             </Card>
           ) : (
             <div>
@@ -400,17 +400,17 @@ export default function Home() {
                     </div>
                     <CardContent className="p-0 m-0">
                       <div className="px-4 pb-4 bg-white dark:bg-card relative z-20">
-                        <h3 className="text-2xl font-semibold text-slate-800 dark:text-foreground tracking-wider mt-1">{car.name}</h3>
-                        <p className="text-[10px] font-semibold text-slate-400 dark:text-muted-foreground tracking-wide">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
+                        <h3 className="text-2xl font-bold text-slate-800 dark:text-foreground tracking-wider mt-1">{car.name}</h3>
+                        <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground tracking-wide">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
                       </div>
                       <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
                         <div className="p-4">
-                          <p className="text-[9px] font-semibold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.odometer")}</p>
-                          <p className="text-lg font-semibold text-slate-800 dark:text-foreground tracking-wider">{car.current_odo.toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
+                          <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.odometer")}</p>
+                          <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-wider">{car.current_odo.toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
                         </div>
                         <div className="p-4">
-                          <p className="text-[9px] font-semibold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.total_cost")}</p>
-                          <p className="text-lg font-semibold text-slate-800 dark:text-foreground tracking-wider">¥{
+                          <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.total_cost")}</p>
+                          <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-wider">¥{
                             (records.filter(r => r.car_id === car.id).reduce((sum, r) => sum + r.amount, 0)
                               + (car.include_price_in_cost ? (car.purchase_price || 0) : 0)).toLocaleString()
                           }</p>
@@ -418,26 +418,26 @@ export default function Home() {
                       </div>
                       <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
                         <div className="p-4">
-                          <p className="text-[9px] font-semibold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.distance_since_delivery")}</p>
-                          <p className="text-lg font-semibold text-slate-800 dark:text-foreground tracking-wider">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
+                          <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.distance_since_delivery")}</p>
+                          <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-wider">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
                         </div>
                         <div className="p-4">
-                          <p className="text-[9px] font-semibold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.ownership_period")}</p>
-                          <p className="text-lg font-semibold text-slate-800 dark:text-foreground tracking-wider">{formatMonthsPassedLocale(car.purchase_date, locale)}</p>
+                          <p className="text-[9px] font-bold text-slate-400 dark:text-muted-foreground mb-1 uppercase tracking-wide">{t("common.ownership_period")}</p>
+                          <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-wider">{formatMonthsPassedLocale(car.purchase_date, locale)}</p>
                         </div>
                       </div>
                       <div className="p-4 flex flex-col gap-2.5 text-xs">
                         <div className="flex justify-between items-center">
-                          <span className="text-slate-400 dark:text-muted-foreground font-semibold uppercase tracking-wide text-[9px]">{t("common.delivery_date")}</span>
-                          <span className="font-semibold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{formatDateLocale(car.purchase_date, locale)}</span>
+                          <span className="text-slate-400 dark:text-muted-foreground font-bold uppercase tracking-wide text-[9px]">{t("common.delivery_date")}</span>
+                          <span className="font-bold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{formatDateLocale(car.purchase_date, locale)}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-slate-400 dark:text-muted-foreground font-semibold uppercase tracking-wide text-[9px]">{t("common.car_age")}</span>
-                          <span className="font-semibold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{formatMonthsPassedLocale(car.first_registration_date, locale)}</span>
+                          <span className="text-slate-400 dark:text-muted-foreground font-bold uppercase tracking-wide text-[9px]">{t("common.car_age")}</span>
+                          <span className="font-bold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{formatMonthsPassedLocale(car.first_registration_date, locale)}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-slate-400 dark:text-muted-foreground font-semibold uppercase tracking-wide text-[9px]">{t("common.grade")}</span>
-                          <span className="font-semibold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{car.grade || "-"}</span>
+                          <span className="text-slate-400 dark:text-muted-foreground font-bold uppercase tracking-wide text-[9px]">{t("common.grade")}</span>
+                          <span className="font-bold text-slate-700 dark:text-foreground tracking-wider text-[10px]">{car.grade || "-"}</span>
                         </div>
                       </div>
                       <div className="flex items-center justify-center gap-4 py-4 border-t border-slate-200 dark:border-border">
@@ -449,7 +449,7 @@ export default function Home() {
                         >
                           <ChevronLeft size={18} className="text-slate-600 dark:text-muted-foreground" />
                         </button>
-                        <span className={`text-xs font-semibold min-w-[48px] text-center tabular-nums ${cars.length <= 1 ? 'text-slate-700/30 dark:text-foreground/30' : 'text-slate-700 dark:text-foreground'}`}>
+                        <span className={`text-xs font-bold min-w-[48px] text-center tabular-nums ${cars.length <= 1 ? 'text-slate-700/30 dark:text-foreground/30' : 'text-slate-700 dark:text-foreground'}`}>
                           {safeIndex + 1} / {cars.length}
                         </span>
                         <button
@@ -477,12 +477,12 @@ export default function Home() {
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3">
                 <Gauge size={22} className="text-slate-500 dark:text-muted-foreground" />
-                <h2 className="text-lg font-semibold text-slate-800 dark:text-foreground">{t("home.update_odo_title")}</h2>
+                <h2 className="text-lg font-bold text-slate-800 dark:text-foreground">{t("home.update_odo_title")}</h2>
               </div>
               <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed">{t("home.update_odo_desc")}</p>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold text-slate-500 dark:text-muted-foreground">{t("home.target_car")}</label>
+                <label className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground">{t("home.target_car")}</label>
                 <Select value={odoCarId} onValueChange={handleOdoCarChange}>
                   <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border">
                     <SelectValue />
@@ -496,22 +496,22 @@ export default function Home() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold text-slate-500 dark:text-muted-foreground">{t("common.odometer")}</label>
+                <label className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground">{t("common.odometer")}</label>
                 <div className="relative max-w-40">
                   <NumberInput
                     value={odoValue}
                     onValueChange={setOdoValue}
                     className="pr-10 bg-white dark:bg-card border-slate-200 dark:border-border"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-slate-400 dark:text-muted-foreground pointer-events-none">{t("common.km_unit")}</span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground pointer-events-none">{t("common.km_unit")}</span>
                 </div>
               </div>
 
               <div className="flex gap-3 pt-1">
-                <Button variant="outline" className="flex-1 font-semibold" onClick={() => setOdoModalOpen(false)}>
+                <Button variant="outline" className="flex-1 font-bold" onClick={() => setOdoModalOpen(false)}>
                   {t("common.cancel")}
                 </Button>
-                <Button className="flex-1 font-semibold" disabled={odoSaving} onClick={handleSaveOdo}>
+                <Button className="flex-1 font-bold" disabled={odoSaving} onClick={handleSaveOdo}>
                   {odoSaving ? t("common.saving") : t("common.save")}
                 </Button>
               </div>

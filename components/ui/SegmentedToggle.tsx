@@ -65,7 +65,7 @@ export function SegmentedToggle<T extends string>({
             aria-pressed={active}
             title={option.label}
             className={cn(
-              "relative z-10 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold transition-colors",
+              "relative z-10 flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold transition-colors",
               active ? "text-slate-800 dark:text-foreground" : "text-slate-500 hover:text-slate-700 dark:text-muted-foreground dark:hover:text-foreground"
             )}
           >

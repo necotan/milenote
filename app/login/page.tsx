@@ -62,7 +62,7 @@ export default function LoginPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-200">
           <div className="bg-white dark:bg-card rounded-2xl border border-slate-200 dark:border-border shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
             <div className="flex items-start justify-between mb-3">
-              <h3 className="text-sm font-semibold text-slate-800 dark:text-foreground">{t("login.error_title")}</h3>
+              <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("login.error_title")}</h3>
               <button
                 onClick={() => setErrorPopup(null)}
                 className="text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors -mt-1 -mr-1"
@@ -72,7 +72,7 @@ export default function LoginPage() {
             </div>
             <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">{errorPopup}</p>
             <Button
-              className="w-full mt-6 font-semibold"
+              className="w-full mt-6 font-bold"
               onClick={() => setErrorPopup(null)}
             >
               OK
@@ -86,7 +86,7 @@ export default function LoginPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-200">
           <div className="bg-white dark:bg-card rounded-2xl border border-slate-200 dark:border-border shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
             <div className="flex items-start justify-between mb-3">
-              <h3 className="text-sm font-semibold text-slate-800 dark:text-foreground">{t("reset.request_title")}</h3>
+              <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("reset.request_title")}</h3>
               <button
                 onClick={() => setResetOpen(false)}
                 className="text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors -mt-1 -mr-1"
@@ -98,7 +98,7 @@ export default function LoginPage() {
               <>
                 <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed whitespace-pre-line">{t("reset.sent_message")}</p>
                 <Button
-                  className="w-full mt-6 font-semibold"
+                  className="w-full mt-6 font-bold"
                   onClick={() => setResetOpen(false)}
                 >
                   OK
@@ -111,7 +111,7 @@ export default function LoginPage() {
                   <Label htmlFor="reset-email">{t("login.email")}</Label>
                   <Input id="reset-email" type="email" placeholder="example@mail.com" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} required className="border-slate-300 dark:border-border" />
                 </div>
-                <Button className="w-full font-semibold" type="submit" disabled={resetLoading}>
+                <Button className="w-full font-bold" type="submit" disabled={resetLoading}>
                   {resetLoading ? t("login.processing") : t("reset.send")}
                 </Button>
               </form>
@@ -122,7 +122,7 @@ export default function LoginPage() {
 
       <div className="w-full max-w-sm">
         <div className="space-y-1 mb-6">
-          <h1 className="text-2xl font-semibold text-center">Milenote</h1>
+          <h1 className="text-2xl font-bold text-center">Milenote</h1>
           <p className="text-sm text-slate-500 dark:text-muted-foreground text-center">{t("login.subtitle")}</p>
         </div>
         <form onSubmit={handleLogin} className="space-y-4">
@@ -140,7 +140,7 @@ export default function LoginPage() {
             </div>
           </div>
           <div className="flex flex-col items-center gap-3 pt-2">
-            <Button className="font-semibold min-w-[200px]" type="submit" disabled={loading}>
+            <Button className="font-bold min-w-[200px]" type="submit" disabled={loading}>
               {loading ? t("login.processing") : t("login.login")}
             </Button>
             <Button variant="outline" className="min-w-[200px]" type="button" onClick={() => router.push("/login/signup")}>

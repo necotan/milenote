@@ -101,7 +101,7 @@ function YearMonthWheel({ year, month, minYear, maxYear, onConfirm, onReset, cle
                 key={`${row.year}-${row.month}`}
                 className={cn(
                   "flex items-center justify-center snap-center text-base tabular-nums transition-colors",
-                  distance === 0 && "text-foreground font-semibold",
+                  distance === 0 && "text-foreground font-bold",
                   distance === 1 && "text-muted-foreground",
                   distance >= 2 && "text-muted-foreground/50"
                 )}
@@ -138,7 +138,7 @@ function YearMonthWheel({ year, month, minYear, maxYear, onConfirm, onReset, cle
           <button
             type="button"
             onClick={handleConfirm}
-            className="rounded-md bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            className="rounded-md bg-primary px-3 py-1 text-xs font-bold text-primary-foreground transition-opacity hover:opacity-90"
           >
             {t("common.confirm")}
           </button>

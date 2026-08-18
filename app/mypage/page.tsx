@@ -100,7 +100,7 @@ function ChipPresetRow({
           key={p}
           type="button"
           onClick={() => { setCustomOpen(false); onChange(p) }}
-          className={`px-3 h-8 rounded-full text-xs font-semibold border-2 transition-colors ${
+          className={`px-3 h-8 rounded-full text-xs font-bold border-2 transition-colors ${
             !customOpen && value === p
               ? "bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground border-slate-900 dark:border-primary"
               : "bg-white dark:bg-card text-slate-600 dark:text-muted-foreground border-neutral-300 dark:border-neutral-600"
@@ -116,15 +116,15 @@ function ChipPresetRow({
             value={value ? String(value) : ""}
             onValueChange={(raw) => onChange(parseInt(raw) || 0)}
             onFocus={() => setCustomOpen(true)}
-            className="h-8 w-28 md:w-24 text-base md:text-xs font-semibold text-center pr-8 rounded-full border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-card text-slate-700 dark:text-foreground outline-none focus-visible:ring-1 focus-visible:ring-slate-300"
+            className="h-8 w-28 md:w-24 text-base md:text-xs font-bold text-center pr-8 rounded-full border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-card text-slate-700 dark:text-foreground outline-none focus-visible:ring-1 focus-visible:ring-slate-300"
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-slate-400 dark:text-muted-foreground pointer-events-none">{suffix}</span>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground pointer-events-none">{suffix}</span>
         </div>
       ) : (
         <button
           type="button"
           onClick={() => setCustomOpen(true)}
-          className="px-3 h-8 rounded-full text-xs font-semibold border border-dashed border-neutral-300 dark:border-neutral-600 text-slate-500 dark:text-muted-foreground"
+          className="px-3 h-8 rounded-full text-xs font-bold border border-dashed border-neutral-300 dark:border-neutral-600 text-slate-500 dark:text-muted-foreground"
         >
           {customLabel}
         </button>
@@ -177,7 +177,7 @@ function MaintenanceItemRow({
     <>
       <Icon size={18} className={isEnabled ? "text-slate-500 dark:text-muted-foreground" : "text-slate-300 dark:text-muted-foreground/70"} />
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-semibold truncate ${isEnabled ? "text-slate-800 dark:text-foreground" : "text-slate-400 dark:text-foreground/70"}`}>
+        <p className={`text-sm font-bold truncate ${isEnabled ? "text-slate-800 dark:text-foreground" : "text-slate-400 dark:text-foreground/70"}`}>
           {itemName}
         </p>
         <p className="text-xs text-slate-400 dark:text-muted-foreground truncate">{summary}</p>
@@ -253,7 +253,7 @@ function MaintEditDialog({
         <div className="mt-6 space-y-6">
           {!isMonthsOnly && presets?.km && (
             <div className="space-y-2.5">
-              <p className="text-[10px] font-semibold text-slate-400 dark:text-muted-foreground">{t("mypage.maint_distance_label")}</p>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{t("mypage.maint_distance_label")}</p>
               <ChipPresetRow
                 value={draftKm}
                 presets={presets.km}
@@ -265,7 +265,7 @@ function MaintEditDialog({
           )}
           {presets?.months && (
             <div className="space-y-2.5">
-              <p className="text-[10px] font-semibold text-slate-400 dark:text-muted-foreground">{t("mypage.maint_period_label")}</p>
+              <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{t("mypage.maint_period_label")}</p>
               <ChipPresetRow
                 value={draftMonths}
                 presets={presets.months}
@@ -311,8 +311,8 @@ function ProfileFieldRow({
     >
       <Icon size={16} className="shrink-0 text-slate-400 dark:text-muted-foreground" />
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] font-semibold text-slate-400 dark:text-muted-foreground">{label}</p>
-        <p className={`text-sm font-semibold truncate ${value ? "text-slate-800 dark:text-foreground" : "text-slate-300 dark:text-muted-foreground/70"}`}>
+        <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{label}</p>
+        <p className={`text-sm font-bold truncate ${value ? "text-slate-800 dark:text-foreground" : "text-slate-300 dark:text-muted-foreground/70"}`}>
           {value || placeholder}
         </p>
       </div>
@@ -646,8 +646,8 @@ export default function MyPage() {
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2 flex justify-between items-start">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>
-          <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("mypage.subtitle")}</p>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>
+          <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("mypage.subtitle")}</p>
         </div>
       </header>
       <div className="space-y-8">
@@ -763,8 +763,8 @@ export default function MyPage() {
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2 flex justify-between items-start">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>
-          <p className="text-xs font-semibold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("mypage.subtitle")}</p>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>
+          <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("mypage.subtitle")}</p>
         </div>
       </header>
 
@@ -774,7 +774,7 @@ export default function MyPage() {
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
-              <h2 className="text-base font-semibold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
+              <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <User size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.profile")}
               </h2>
               <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed">
@@ -807,7 +807,7 @@ export default function MyPage() {
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
-              <h2 className="text-base font-semibold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
+              <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <Wrench size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.maintenance_settings")}
               </h2>
               <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
@@ -820,7 +820,7 @@ export default function MyPage() {
               <div className="space-y-5">
                 {MAINT_CATEGORIES.map((category) => (
                   <div key={category.key}>
-                    <p className="text-[11px] font-semibold text-slate-400 dark:text-muted-foreground tracking-wide mb-2 px-1">
+                    <p className="text-[11px] font-bold text-slate-400 dark:text-muted-foreground tracking-wide mb-2 px-1">
                       {t(`mypage.maint_category_${category.key}`)}
                     </p>
                     <div className="rounded-xl border border-slate-200 dark:border-border divide-y divide-slate-200 dark:divide-border overflow-hidden">
@@ -847,7 +847,7 @@ export default function MyPage() {
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
-              <h2 className="text-base font-semibold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
+              <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <Globe size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.language")}
               </h2>
               <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
@@ -860,7 +860,7 @@ export default function MyPage() {
               <div className="inline-flex rounded-lg bg-slate-100 dark:bg-surface-2 p-1">
                 <button
                   onClick={() => setLocale("ja")}
-                  className={`px-5 py-1.5 rounded-md text-sm font-semibold transition-all ${
+                  className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                     locale === "ja"
                       ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                       : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
@@ -870,7 +870,7 @@ export default function MyPage() {
                 </button>
                 <button
                   onClick={() => setLocale("en")}
-                  className={`px-5 py-1.5 rounded-md text-sm font-semibold transition-all ${
+                  className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                     locale === "en"
                       ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                       : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
@@ -888,7 +888,7 @@ export default function MyPage() {
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
-              <h2 className="text-base font-semibold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
+              <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <Accessibility size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.accessibility")}
               </h2>
               <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
@@ -898,7 +898,7 @@ export default function MyPage() {
 
             {/* 右側：カラーモード選択UI */}
             <div className="md:w-2/3 p-6">
-              <Label className="text-slate-700 dark:text-foreground font-semibold text-xs flex items-center gap-1">
+              <Label className="text-slate-700 dark:text-foreground font-bold text-xs flex items-center gap-1">
                 {t("mypage.chart_color_mode")}
                 <span title={t("mypage.chart_color_mode_tooltip")}>
                   <Info size={13} className="text-slate-400 dark:text-muted-foreground cursor-help" />
@@ -907,7 +907,7 @@ export default function MyPage() {
               <div className="inline-flex rounded-lg bg-slate-100 dark:bg-surface-2 p-1 mt-2">
                 <button
                   onClick={() => handleColorfulChange(false)}
-                  className={`px-5 py-1.5 rounded-md text-sm font-semibold transition-all ${
+                  className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                     !isColorful
                       ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                       : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
@@ -917,7 +917,7 @@ export default function MyPage() {
                 </button>
                 <button
                   onClick={() => handleColorfulChange(true)}
-                  className={`px-5 py-1.5 rounded-md text-sm font-semibold transition-all ${
+                  className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                     isColorful
                       ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                       : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
@@ -931,7 +931,7 @@ export default function MyPage() {
               </p>
 
               <div className="mt-6">
-                <Label className="text-slate-700 dark:text-foreground font-semibold text-xs">{t("mypage.theme_mode")}</Label>
+                <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.theme_mode")}</Label>
                 <div className="inline-flex rounded-lg bg-slate-100 dark:bg-surface-2 p-1 mt-2">
                   {THEME_OPTIONS.map(({ value, labelKey }) => {
                     const active = themeMounted && resolvedTheme === value
@@ -939,7 +939,7 @@ export default function MyPage() {
                       <button
                         key={value}
                         onClick={() => setTheme(value)}
-                        className={`px-5 py-1.5 rounded-md text-sm font-semibold transition-all ${
+                        className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                           active
                             ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                             : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
@@ -960,7 +960,7 @@ export default function MyPage() {
           <div className="md:flex">
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
-              <h2 className="text-base font-semibold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
+              <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <LayoutTemplate size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.home_order")}
               </h2>
               <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
@@ -1010,7 +1010,7 @@ export default function MyPage() {
                         {sectionIcons[sectionId]}
                       </span>
                       {/* ラベル */}
-                      <span className="flex-1 min-w-0 text-sm font-semibold text-slate-700 dark:text-foreground truncate">{t(`mypage.home_sections.${sectionId}`)}</span>
+                      <span className="flex-1 min-w-0 text-sm font-bold text-slate-700 dark:text-foreground truncate">{t(`mypage.home_sections.${sectionId}`)}</span>
                       {/* ドラッグハンドル */}
                       <span
                         onPointerDown={(e) => handleDragStart(e, index)}
@@ -1034,7 +1034,7 @@ export default function MyPage() {
               {/* PC表示時 */}
               <div className="hidden lg:block max-w-md">
                 <div className="flex items-center justify-between gap-3 mb-3">
-                  <span className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("mypage.home_order_pc_car_position")}</span>
+                  <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("mypage.home_order_pc_car_position")}</span>
                   <div className="inline-flex bg-slate-100 dark:bg-surface-2 rounded-lg p-1 shrink-0">
                     {(["left", "right"] as const).map((position) => {
                       const active = carsFirst ? position === "left" : position === "right"
@@ -1042,7 +1042,7 @@ export default function MyPage() {
                         <button
                           key={position}
                           onClick={() => handleCarPositionChange(position)}
-                          className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                          className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${
                             active
                               ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                               : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
@@ -1056,7 +1056,7 @@ export default function MyPage() {
                 </div>
 
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-xs font-semibold text-slate-600 dark:text-muted-foreground">{t("mypage.home_order_pc_content_order")}</span>
+                  <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("mypage.home_order_pc_content_order")}</span>
                   <div className="inline-flex bg-slate-100 dark:bg-surface-2 rounded-lg p-1 shrink-0">
                     {(["summary", "alerts"] as const).map((content) => {
                       const active = summaryFirst ? content === "summary" : content === "alerts"
@@ -1064,7 +1064,7 @@ export default function MyPage() {
                         <button
                           key={content}
                           onClick={() => handleContentOrderChange(content)}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
                             active
                               ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                               : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
@@ -1085,7 +1085,7 @@ export default function MyPage() {
         {/* データのエクスポート */}
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="p-6">
-            <h2 className="text-base font-semibold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
+            <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
               <Download size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.export")}
             </h2>
             <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed">
@@ -1098,7 +1098,7 @@ export default function MyPage() {
             <Button
               onClick={handleExportCsv}
               disabled={exporting}
-              className="shrink-0 px-4 h-8 text-[11px] font-semibold bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground hover:bg-slate-800 dark:hover:bg-primary/90 rounded-lg shadow-sm"
+              className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground hover:bg-slate-800 dark:hover:bg-primary/90 rounded-lg shadow-sm"
             >
               <Download className="w-3.5 h-3.5 mr-1.5" />
               {exporting ? t("mypage.exporting") : t("mypage.export_button")}
@@ -1126,7 +1126,7 @@ export default function MyPage() {
 
       {/* ログアウトボタン (モバイル) */}
       <div className="md:hidden pt-8 flex justify-center mb-8">
-        <Button variant="outline" className="px-8 h-9 font-semibold rounded-lg bg-white dark:bg-card border-slate-200 dark:border-border shadow-sm text-slate-400 dark:text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors text-xs" onClick={handleLogout}>
+        <Button variant="outline" className="px-8 h-9 font-bold rounded-lg bg-white dark:bg-card border-slate-200 dark:border-border shadow-sm text-slate-400 dark:text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors text-xs" onClick={handleLogout}>
           <LogOut className="w-4 h-4 mr-2" />
           {t("common.logout")}
         </Button>

@@ -28,7 +28,7 @@ function Calendar({ month, onMonthChange, selected, onSelect, onOpenWheel, minDa
         <button
           type="button"
           onClick={onOpenWheel}
-          className="text-sm font-semibold text-slate-800 dark:text-foreground hover:opacity-70 transition-opacity"
+          className="text-sm font-bold text-slate-800 dark:text-foreground hover:opacity-70 transition-opacity"
         >
           {formatYearMonthLocale(month.getFullYear(), month.getMonth() + 1, locale)}
         </button>
