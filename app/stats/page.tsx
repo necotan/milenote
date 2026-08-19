@@ -419,6 +419,34 @@ function StatRow({
   )
 }
 
+// 統計タイルの共通コンポーネント
+function BentoTile({
+  label, value, unit, note, className = "",
+}: {
+  label: string
+  value: string
+  unit: string
+  note?: ReactElement
+  className?: string
+}) {
+  return (
+    <div className={`rounded-xl p-4 bg-slate-50 dark:bg-surface-2 ${className}`}>
+      <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{label}</p>
+      <div className="flex items-baseline gap-1 mt-1.5">
+        <span className="text-xl font-bold tabular-nums tracking-wide text-slate-800 dark:text-foreground">
+          {value}
+        </span>
+        {unit && (
+          <span className="text-xs font-bold text-slate-400 dark:text-muted-foreground">
+            {unit}
+          </span>
+        )}
+      </div>
+      {note && <div className="mt-1.5">{note}</div>}
+    </div>
+  )
+}
+
 export default function StatsPage() {
   const [records, setRecords] = useState<Record_[]>([])
   const [carFuelTypes, setCarFuelTypes] = useState<Map<string, string>>(new Map())
@@ -1063,41 +1091,42 @@ export default function StatsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="px-4 pb-4 pt-0">
-              <div className="divide-y divide-slate-200 dark:divide-border">
-                <StatRow
+              <div className="grid grid-cols-2 gap-3">
+                <BentoTile
                   label={t("stats.total_fuel")}
                   value={totalFuelAmount.toFixed(1)}
                   unit={t("stats.unit_liter")}
                 />
-                <StatRow
+                <BentoTile
                   label={t("stats.fuel_count")}
                   value={fuelCount.toLocaleString()}
                   unit={t("stats.unit_count_times")}
                 />
-                <StatRow
+                <BentoTile
                   label={t("stats.total_fuel_cost")}
                   value={`¥${totalFuelCost.toLocaleString()}`}
                   unit=""
                 />
-                <StatRow
+                <BentoTile
                   label={t("stats.avg_unit_price")}
                   value={Math.round(avgUnitPrice).toLocaleString()}
                   unit={t("stats.unit_yen_per_liter")}
                 />
-              </div>
-              {/* CO₂セクション */}
-              <div className="mt-2 pt-1 border-t-2 border-slate-200 dark:border-border">
-                <StatRow
+                {/* CO₂タイル(1枠だけ余るため2列分を使って1行にまとめる) */}
+                <BentoTile
                   label={t("stats.co2_emission")}
                   value={Math.round(co2Emission).toLocaleString()}
                   unit={t("stats.unit_kg")}
+                  className="col-span-2"
+                  note={
+                    <p className="text-[10px] text-slate-400 dark:text-muted-foreground flex items-center gap-1">
+                      <span title={t("stats.co2_note_tooltip")}>
+                        <Info size={11} className="text-slate-400 dark:text-muted-foreground cursor-help shrink-0" />
+                      </span>
+                      {t("stats.co2_note")}
+                    </p>
+                  }
                 />
-                <p className="text-[10px] text-slate-400 dark:text-muted-foreground flex items-center gap-1">
-                  <span title={t("stats.co2_note_tooltip")}>
-                    <Info size={11} className="text-slate-400 dark:text-muted-foreground cursor-help shrink-0" />
-                  </span>
-                  {t("stats.co2_note")}
-                </p>
               </div>
             </CardContent>
           </Card>
