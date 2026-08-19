@@ -49,7 +49,7 @@ export const SUB_CATEGORIES: Record<string, SubCategorySlug[]> = {
     "key_battery_change", "wiper_blade_change", "vehicle_inspection", "wash_coating", "other"
   ],
   inspection: [
-    "inspection_12m", "inspection_24m", "periodic_inspection", "other"
+    "inspection_12m", "inspection_24m", "periodic_inspection"
   ],
   repair: [
     "breakdown_repair", "bodywork_paint", "accident_towing", "recall", "other"
