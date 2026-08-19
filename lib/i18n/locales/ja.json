@@ -31,6 +31,8 @@
     "ownership_period": "所有期間",
     "car_age": "車齢 (初年度登録比)",
     "required": "*",
+    "validation_required": "この項目を入力してください",
+    "validation_invalid": "入力内容を確認してください",
     "previous": "前へ",
     "next": "次へ",
     "year_suffix": "{{year}}年",
