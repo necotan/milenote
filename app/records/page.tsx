@@ -188,7 +188,7 @@ const RecordForm = ({
               </div>
 
               {/* 単価 */}
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <Label>{fuelFieldText.priceLabel}</Label>
                 <div className="relative">
                   <NumberInput
@@ -203,7 +203,7 @@ const RecordForm = ({
               </div>
 
               {/* リットル / kWh / kg */}
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <Label>{fuelFieldText.amountLabel}</Label>
                 <div className="relative">
                   <NumberInput
@@ -218,7 +218,7 @@ const RecordForm = ({
               </div>
 
               {/* 総額 */}
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <Label>{t("records.total_amount")} <span className="text-red-500">{t("common.required")}</span></Label>
                 <div className="relative">
                   <NumberInput
