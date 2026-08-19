@@ -35,6 +35,8 @@
     "year_month": "{{month}}/{{year}}",
     "date_full": "{{m}}/{{d}}/{{y}}",
     "required": "*",
+    "validation_required": "Please fill out this field",
+    "validation_invalid": "Please check your input",
     "previous": "Previous",
     "next": "Next",
     "today": "Today",
