@@ -400,25 +400,6 @@ function PeriodFilter({
   )
 }
 
-// 走行距離タブ用の統計行コンポーネント
-function StatRow({
-  label, value, unit,
-}: {
-  label: string
-  value: string
-  unit: string
-}) {
-  return (
-    <div className="flex items-center justify-between py-2.5">
-      <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{label}</span>
-      <div className="flex items-baseline gap-1">
-        <span className="text-lg font-bold text-slate-800 dark:text-foreground tabular-nums tracking-wide">{value}</span>
-        {unit && <span className="text-sm font-bold text-slate-400 dark:text-muted-foreground">{unit}</span>}
-      </div>
-    </div>
-  )
-}
-
 // 統計タイルの共通コンポーネント
 function BentoTile({
   label, value, unit, note, className = "",
@@ -1140,23 +1121,23 @@ export default function StatsPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4 pt-0">
-                <div className="divide-y divide-slate-200 dark:divide-border">
-                  <StatRow
+                <div className="grid grid-cols-2 gap-3">
+                  <BentoTile
                     label={t("stats.total_charge")}
                     value={totalChargeAmount.toFixed(1)}
                     unit={t("stats.unit_kwh")}
                   />
-                  <StatRow
+                  <BentoTile
                     label={t("stats.charge_count")}
                     value={chargeCount.toLocaleString()}
                     unit={t("stats.unit_count_times")}
                   />
-                  <StatRow
+                  <BentoTile
                     label={t("stats.total_charge_cost")}
                     value={`¥${totalChargeCost.toLocaleString()}`}
                     unit=""
                   />
-                  <StatRow
+                  <BentoTile
                     label={t("stats.avg_charge_unit_price")}
                     value={Math.round(avgChargeUnitPrice).toLocaleString()}
                     unit={t("stats.unit_yen_per_kwh")}
@@ -1175,23 +1156,23 @@ export default function StatsPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4 pt-0">
-                <div className="divide-y divide-slate-200 dark:divide-border">
-                  <StatRow
+                <div className="grid grid-cols-2 gap-3">
+                  <BentoTile
                     label={t("stats.total_hydrogen")}
                     value={totalHydrogenAmount.toFixed(1)}
                     unit={t("stats.unit_kg")}
                   />
-                  <StatRow
+                  <BentoTile
                     label={t("stats.hydrogen_count")}
                     value={hydrogenCount.toLocaleString()}
                     unit={t("stats.unit_count_times")}
                   />
-                  <StatRow
+                  <BentoTile
                     label={t("stats.total_hydrogen_cost")}
                     value={`¥${totalHydrogenCost.toLocaleString()}`}
                     unit=""
                   />
-                  <StatRow
+                  <BentoTile
                     label={t("stats.avg_hydrogen_unit_price")}
                     value={Math.round(avgHydrogenUnitPrice).toLocaleString()}
                     unit={t("stats.unit_yen_per_kg")}
