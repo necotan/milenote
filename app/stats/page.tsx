@@ -1092,7 +1092,12 @@ export default function StatsPage() {
                   value={Math.round(co2Emission).toLocaleString()}
                   unit={t("stats.unit_kg")}
                 />
-                <p className="text-[10px] text-slate-400 dark:text-muted-foreground">{t("stats.co2_note")}</p>
+                <p className="text-[10px] text-slate-400 dark:text-muted-foreground flex items-center gap-1">
+                  <span title={t("stats.co2_note_tooltip")}>
+                    <Info size={11} className="text-slate-400 dark:text-muted-foreground cursor-help shrink-0" />
+                  </span>
+                  {t("stats.co2_note")}
+                </p>
               </div>
             </CardContent>
           </Card>
