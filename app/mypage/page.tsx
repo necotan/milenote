@@ -898,11 +898,8 @@ export default function MyPage() {
 
             {/* 右側：カラーモード選択UI */}
             <div className="md:w-2/3 p-6">
-              <Label className="text-slate-700 dark:text-foreground font-bold text-xs flex items-center gap-1">
+              <Label className="text-slate-700 dark:text-foreground font-bold text-xs">
                 {t("mypage.chart_color_mode")}
-                <span title={t("mypage.chart_color_mode_tooltip")}>
-                  <Info size={13} className="text-slate-400 dark:text-muted-foreground cursor-help" />
-                </span>
               </Label>
               <div className="inline-flex rounded-lg bg-slate-100 dark:bg-surface-2 p-1 mt-2">
                 <button
@@ -926,7 +923,10 @@ export default function MyPage() {
                   {t("mypage.chart_color_colorful")}
                 </button>
               </div>
-              <p className="text-xs text-slate-400 dark:text-muted-foreground mt-1.5">
+              <p className="text-xs text-slate-400 dark:text-muted-foreground mt-1.5 flex items-center gap-1">
+                <span title={t("mypage.chart_color_mode_tooltip")}>
+                  <Info size={13} className="text-slate-400 dark:text-muted-foreground cursor-help shrink-0" />
+                </span>
                 {isColorful ? t("mypage.chart_color_colorful_note") : t("mypage.chart_color_basic_note")}
               </p>
 
