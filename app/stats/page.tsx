@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { CSSProperties, ReactElement } from "react"
 import { createClient } from "@/utils/supabase"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -400,6 +400,109 @@ function PeriodFilter({
   )
 }
 
+type ChartChrome = {
+  gridStroke: string
+  axisTick: string
+  sliceStroke: string
+  dotStroke: string
+  tooltipBg: string
+  tooltipText: string
+  tooltipLabel: string
+  labelLineStroke: string
+  pieLabelFill: string
+  cursorFill: string
+}
+
+type CategoryDatum = { name: string; value: number; fill: string }
+
+// カテゴリ別内訳カード
+// Recharts の Pie は再レンダーのたびに内部レイヤーを作り直し pieRotateIn が再生されるため、無関係な state 更新の影響を受けないよう memo 化する
+const CategoryBreakdownCard = memo(function CategoryBreakdownCard({
+  categoryData, pieLabelDeltas, totalAmount, pieAnimKey, chartChrome,
+  catPreset, catDisplayStart, catDisplayEnd, onPresetChange, onStartChange, onEndChange,
+  renderGridLegend, renderRawLegendLabel,
+}: {
+  categoryData: CategoryDatum[]
+  pieLabelDeltas: Map<number, number>
+  totalAmount: number
+  pieAnimKey: number
+  chartChrome: ChartChrome
+  catPreset: PeriodPreset
+  catDisplayStart: string
+  catDisplayEnd: string
+  onPresetChange: (p: PeriodPreset) => void
+  onStartChange: (v: string) => void
+  onEndChange: (v: string) => void
+  renderGridLegend: (formatLabel: (value: string) => ReactElement) => (props: { payload?: readonly { value?: string | number; color?: string }[] }) => ReactElement
+  renderRawLegendLabel: (value: string) => ReactElement
+}) {
+  const { t, locale } = useTranslation()
+
+  return (
+    <Card className="border-none bg-white dark:bg-card">
+      <CardHeader className="p-4 pb-0">
+        <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
+          <PieIcon size={16} /> {t("stats.category_breakdown")}
+        </CardTitle>
+      </CardHeader>
+      <PeriodFilter
+        preset={catPreset}
+        onPresetChange={onPresetChange}
+        start={catDisplayStart} end={catDisplayEnd}
+        onStartChange={onStartChange} onEndChange={onEndChange}
+      />
+      <CardContent className="h-[21rem] p-0">
+        {categoryData.length === 0 ? (
+          <div className="h-full flex flex-col items-center justify-center text-slate-300 dark:text-muted-foreground gap-2">
+            <PieIcon size={40} strokeWidth={1.5} />
+            <p className="text-sm font-medium">{t("stats.no_data")}</p>
+          </div>
+        ) : (
+          <>
+            <style>{`
+              @keyframes pieRotateIn {
+                from { transform: rotate(-180deg); opacity: 0; }
+                to   { transform: rotate(0deg);   opacity: 1; }
+              }
+              @keyframes pieLabelFadeIn {
+                0%,  40% { opacity: 0; }
+                100%     { opacity: 1; }
+              }
+              .pie-anim .recharts-pie > .recharts-layer:not(.recharts-pie-labels) {
+                transform-box: fill-box;
+                transform-origin: center;
+                animation: pieRotateIn 0.75s cubic-bezier(0.33, 1, 0.68, 1) forwards;
+              }
+              .pie-anim .recharts-label-list text,
+              .pie-anim .recharts-layer.recharts-label text,
+              .pie-anim .recharts-label-list line,
+              .pie-anim .recharts-pie-label-line,
+              .pie-anim .recharts-pie-label-line path {
+                animation: pieLabelFadeIn 0.75s ease-out forwards;
+              }
+            `}</style>
+            <div key={pieAnimKey} className="pie-anim" style={{ width: "100%", height: "100%" }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={categoryData} cx="50%" cy="50%" innerRadius={60} outerRadius={PIE_OUTER_RADIUS} minAngle={PIE_MIN_ANGLE_DEG} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill, pieLabelDeltas)} labelLine={createCustomizedLabelLine(chartChrome.labelLineStroke, pieLabelDeltas)}>
+                    {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
+                    <Label value={`¥${totalAmount.toLocaleString()}`} position="center" dy={-8} className="text-base font-bold fill-slate-800 dark:fill-foreground" />
+                    <Label value={t("stats.total")} position="center" dy={8} className="text-[10px] font-bold fill-slate-400 dark:fill-muted-foreground" />
+                  </Pie>
+                  {/* Recharts のコールバック型が複雑なため any を許容 */}
+                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                  <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} formatter={(value: any, name: any) => [`¥${Number(value).toLocaleString()}`, String(name)]} />
+                  <Legend verticalAlign="bottom" content={renderGridLegend(renderRawLegendLabel)} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  )
+})
+
 // 統計タイルの共通コンポーネント
 function BentoTile({
   label, value, unit, note, className = "",
@@ -548,36 +651,38 @@ export default function StatsPage() {
   const catFilterEnd = catPreset === "all" ? "" : catDisplayEnd
 
   // プリセット切替
-  const selectCatPreset = (p: PeriodPreset) => {
+  // カテゴリ別内訳カードの props を安定させるため useCallback で参照を固定する
+  const selectCatPreset = useCallback((p: PeriodPreset) => {
     if (p === "custom" && catPreset !== "custom") {
       setCatStart(catDisplayStart)
       setCatEnd(catDisplayEnd)
     }
     setCatPreset(p)
-  }
+  }, [catPreset, catDisplayStart, catDisplayEnd])
 
   // 日付を直接変更したら期間を指定に切り替え
-  const changeCatStart = (v: string) => {
+  const changeCatStart = useCallback((v: string) => {
     if (catPreset !== "custom") {
       setCatEnd(catDisplayEnd)
       setCatPreset("custom")
     }
     setCatStart(v)
-  }
-  const changeCatEnd = (v: string) => {
+  }, [catPreset, catDisplayEnd])
+  const changeCatEnd = useCallback((v: string) => {
     if (catPreset !== "custom") {
       setCatStart(catDisplayStart)
       setCatPreset("custom")
     }
     setCatEnd(v)
-  }
+  }, [catPreset, catDisplayStart])
 
   // データフィルタリング処理
-  const catFilteredRecords = records.filter(r => {
+  // 月別/年別のグラフ種別トグルなど無関係な再レンダーで参照が変わらないよう useMemo で固定する
+  const catFilteredRecords = useMemo(() => records.filter(r => {
     if (catFilterStart && r.date < catFilterStart) return false
     if (catFilterEnd && r.date > catFilterEnd) return false
     return true
-  })
+  }), [records, catFilterStart, catFilterEnd])
 
   // グラフ切り替え処理
   const selectMonthlyChart = (type: "line" | "bar") => {
@@ -592,20 +697,26 @@ export default function StatsPage() {
 
   // データ集計処理
   const activeCategoryMap = isColorful ? CATEGORY_MAP_COLORFUL : CATEGORY_MAP_BLUE
-  const categoryData = catFilteredRecords.reduce((acc: { name: string; value: number; fill: string }[], curr) => {
+  const categoryData = useMemo(() => catFilteredRecords.reduce((acc: CategoryDatum[], curr) => {
     const config = activeCategoryMap[curr.category] || activeCategoryMap.other
     const label = t(`categories.${curr.category}`)
     const found = acc.find(a => a.name === label)
     if (found) found.value += curr.amount
     else acc.push({ name: label, value: curr.amount, fill: config.color })
     return acc
-  }, [])
+  }, []), [catFilteredRecords, activeCategoryMap, t])
 
   // 円グラフのラベル位置解決（重なり回避）
-  // labelとlabelLineで共有するため描画毎に生成
-  const pieLabelDeltas = computePieLabelYDeltas(categoryData, PIE_MIN_ANGLE_DEG, PIE_OUTER_RADIUS)
+  // labelとlabelLineで共有するため categoryData 変化時のみ再生成する
+  const pieLabelDeltas = useMemo(
+    () => computePieLabelYDeltas(categoryData, PIE_MIN_ANGLE_DEG, PIE_OUTER_RADIUS),
+    [categoryData],
+  )
 
-  const totalAmount = catFilteredRecords.reduce((sum, r) => sum + r.amount, 0)
+  const totalAmount = useMemo(
+    () => catFilteredRecords.reduce((sum, r) => sum + r.amount, 0),
+    [catFilteredRecords],
+  )
 
   // 初回データロード時にアニメーション
   useEffect(() => {
@@ -1219,67 +1330,21 @@ export default function StatsPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
             {/* カテゴリ別内訳 */}
-            <Card className="border-none bg-white dark:bg-card">
-              <CardHeader className="p-4 pb-0">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
-                  <PieIcon size={16} /> {t("stats.category_breakdown")}
-                </CardTitle>
-              </CardHeader>
-              <PeriodFilter
-                preset={catPreset}
-                onPresetChange={selectCatPreset}
-                start={catDisplayStart} end={catDisplayEnd}
-                onStartChange={changeCatStart} onEndChange={changeCatEnd}
-              />
-              <CardContent className="h-[21rem] p-0">
-                {categoryData.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-slate-300 dark:text-muted-foreground gap-2">
-                    <PieIcon size={40} strokeWidth={1.5} />
-                    <p className="text-sm font-medium">{t("stats.no_data")}</p>
-                  </div>
-                ) : (
-                  <>
-                    <style>{`
-                      @keyframes pieRotateIn {
-                        from { transform: rotate(-180deg); opacity: 0; }
-                        to   { transform: rotate(0deg);   opacity: 1; }
-                      }
-                      @keyframes pieLabelFadeIn {
-                        0%,  40% { opacity: 0; }
-                        100%     { opacity: 1; }
-                      }
-                      .pie-anim .recharts-pie > .recharts-layer:not(.recharts-pie-labels) {
-                        transform-box: fill-box;
-                        transform-origin: center;
-                        animation: pieRotateIn 0.75s cubic-bezier(0.33, 1, 0.68, 1) forwards;
-                      }
-                      .pie-anim .recharts-label-list text,
-                      .pie-anim .recharts-layer.recharts-label text,
-                      .pie-anim .recharts-label-list line,
-                      .pie-anim .recharts-pie-label-line,
-                      .pie-anim .recharts-pie-label-line path {
-                        animation: pieLabelFadeIn 0.75s ease-out forwards;
-                      }
-                    `}</style>
-                    <div key={pieAnimKey} className="pie-anim" style={{ width: "100%", height: "100%" }}>
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie data={categoryData} cx="50%" cy="50%" innerRadius={60} outerRadius={PIE_OUTER_RADIUS} minAngle={PIE_MIN_ANGLE_DEG} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill, pieLabelDeltas)} labelLine={createCustomizedLabelLine(chartChrome.labelLineStroke, pieLabelDeltas)}>
-                            {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
-                            <Label value={`¥${totalAmount.toLocaleString()}`} position="center" dy={-8} className="text-base font-bold fill-slate-800 dark:fill-foreground" />
-                            <Label value={t("stats.total")} position="center" dy={8} className="text-[10px] font-bold fill-slate-400 dark:fill-muted-foreground" />
-                          </Pie>
-                          {/* Recharts のコールバック型が複雑なため any を許容 */}
-                          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                          <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} formatter={(value: any, name: any) => [`¥${Number(value).toLocaleString()}`, String(name)]} />
-                          <Legend verticalAlign="bottom" content={renderGridLegend(renderRawLegendLabel)} />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
+            <CategoryBreakdownCard
+              categoryData={categoryData}
+              pieLabelDeltas={pieLabelDeltas}
+              totalAmount={totalAmount}
+              pieAnimKey={pieAnimKey}
+              chartChrome={chartChrome}
+              catPreset={catPreset}
+              catDisplayStart={catDisplayStart}
+              catDisplayEnd={catDisplayEnd}
+              onPresetChange={selectCatPreset}
+              onStartChange={changeCatStart}
+              onEndChange={changeCatEnd}
+              renderGridLegend={renderGridLegend}
+              renderRawLegendLabel={renderRawLegendLabel}
+            />
 
             {/* 月別出費推移 */}
             <Card className="border-none bg-white dark:bg-card">
@@ -1331,6 +1396,7 @@ export default function StatsPage() {
                               key={cat}
                               dataKey={cat}
                               fill={activeCategoryMap[cat].color}
+                              isAnimationActive
                               animationBegin={index * BAR_ANIM_STAGGER_MS}
                               animationDuration={BAR_ANIM_DURATION_MS}
                               animationEasing={BAR_ANIM_EASING}
@@ -1400,6 +1466,7 @@ export default function StatsPage() {
                             key={cat}
                             dataKey={cat}
                             fill={activeCategoryMap[cat].color}
+                            isAnimationActive
                             animationBegin={index * BAR_ANIM_STAGGER_MS}
                             animationDuration={BAR_ANIM_DURATION_MS}
                             animationEasing={BAR_ANIM_EASING}
