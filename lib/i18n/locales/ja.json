@@ -276,7 +276,7 @@
     "earth_rounds": "地球 {{rounds}} 周分",
     "earth_note": "※地球一周 = 約40,075km で計算",
     "moon_progress": "月への到達度",
-    "moon_remaining": "現在地から月まであと {{distance}} km",
+    "moon_remaining": "月まであと {{distance}} km",
     "period_3m": "直近3ヶ月",
     "period_1y": "直近1年",
     "period_this_year": "今年",
