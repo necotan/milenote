@@ -105,13 +105,13 @@ const RecurringForm = ({
   return (
     <Card className="border-none bg-white dark:bg-card mb-6">
       <CardContent className="p-6 relative">
-        <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetForm}>
+        <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-500 dark:text-muted-foreground" onClick={resetForm}>
           <X className="h-4 w-4" />
         </Button>
         <h2 className="text-xl font-bold text-slate-800 dark:text-foreground mb-1">
           {isEdit ? t("records.edit_recurring") : t("records.add_recurring")}
         </h2>
-        <p className="text-xs text-slate-400 dark:text-muted-foreground mb-6">
+        <p className="text-xs text-slate-500 dark:text-muted-foreground mb-6">
           {t("records.recurring_form_hint")}
         </p>
 
@@ -158,7 +158,7 @@ const RecurringForm = ({
 
           {/* 支払情報セクション */}
           <div className="rounded-xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4 sm:max-w-[50rem]">
-            <p className="text-[11px] font-bold text-slate-400 dark:text-muted-foreground uppercase tracking-wider">{t("records.payment_info")}</p>
+            <p className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground uppercase tracking-wider">{t("records.payment_info")}</p>
             <div className="grid grid-cols-2 gap-3 sm:gap-x-8">
               <div className="space-y-2">
                 <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
@@ -194,7 +194,7 @@ const RecurringForm = ({
                 className="max-w-40 bg-white dark:bg-card h-8 min-h-0"
               />
               {!isEdit && (
-                <p className="text-[11px] text-slate-400 dark:text-muted-foreground">
+                <p className="text-[11px] text-slate-500 dark:text-muted-foreground">
                   {t("records.past_billing_date_hint")}
                 </p>
               )}
@@ -276,7 +276,7 @@ const EmptyState = ({ onAdd }: { onAdd: () => void }) => {
         <RepeatIcon size={28} className="text-slate-300" />
       </div>
       <p className="text-slate-600 dark:text-muted-foreground font-bold mb-1">{t("records.no_recurring")}</p>
-      <p className="text-sm text-slate-400 dark:text-muted-foreground mb-6 w-[260px]">{t("records.no_recurring_desc")}</p>
+      <p className="text-sm text-slate-500 dark:text-muted-foreground mb-6 w-[260px]">{t("records.no_recurring_desc")}</p>
       <Button onClick={onAdd} size="sm" className="font-bold gap-1.5">
         <Plus size={14} />
         {t("records.add_recurring")}
@@ -534,8 +534,8 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                     onClick={() => toggleActive(cost.id, cost.is_active)}
                     className={`p-1.5 rounded-lg border transition-colors ${
                       cost.is_active
-                        ? 'border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-slate-700 hover:border-slate-400 hover:bg-slate-100 dark:hover:bg-muted'
-                        : 'border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-green-500 hover:border-green-300 hover:bg-green-50'
+                        ? 'border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-slate-700 hover:border-slate-400 hover:bg-slate-100 dark:hover:bg-muted'
+                        : 'border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-green-500 hover:border-green-300 hover:bg-green-50'
                     }`}
                     title={cost.is_active ? t("records.pause_recurring") : t("records.resume_recurring")}
                   >
@@ -543,13 +543,13 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                   </button>
                   <button
                     onClick={() => handleStartEdit(cost)}
-                    className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                    className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   >
                     <Pencil size={14} />
                   </button>
                   <button
                     onClick={() => setDeleteId(cost.id)}
-                    className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
+                    className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
                   >
                     <Trash2 size={14} />
                   </button>
@@ -563,14 +563,14 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                     {/* 金額 */}
                     <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1">
                       ¥{cost.amount.toLocaleString()}
-                      <span className="text-xs text-slate-400 dark:text-muted-foreground font-medium ml-1">
+                      <span className="text-xs text-slate-500 dark:text-muted-foreground font-medium ml-1">
                         / {getFrequencyLabel(cost.frequency, t)}
                       </span>
                     </h3>
 
                     {/* ジャンルタグ・ステータスバッジ */}
                     <div className="flex items-center gap-1.5 mb-2">
-                      <span className="text-[10px] font-bold bg-slate-100 dark:bg-surface-2 text-slate-500 dark:text-muted-foreground px-2 py-1 rounded-md whitespace-nowrap">
+                      <span className="text-[10px] font-bold bg-slate-100 dark:bg-surface-2 text-slate-600 dark:text-muted-foreground px-2 py-1 rounded-md whitespace-nowrap">
                         {t(`categories.${cost.category}`)}
                       </span>
                       {cost.sub_category && (
@@ -582,12 +582,12 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
                     </div>
 
                     {/* 車名 */}
-                    <div className="text-[11px] text-slate-500 dark:text-muted-foreground font-bold mb-2">
+                    <div className="text-[11px] text-slate-600 dark:text-muted-foreground font-bold mb-2">
                       {cost.cars.name}
                     </div>
 
                     {/* 次回支払日 */}
-                    <p className="text-[11px] font-medium text-slate-400 dark:text-muted-foreground mb-2">
+                    <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-2">
                       {t("records.next_billing_date")}: {cost.next_billing_date.replace(/-/g, '/')}
                     </p>
 

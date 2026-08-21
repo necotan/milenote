@@ -83,7 +83,7 @@ function ResetPasswordContent() {
               <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("reset.error_title")}</h3>
               <button
                 onClick={() => setErrorPopup(null)}
-                className="text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors -mt-1 -mr-1"
+                className="text-slate-500 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors -mt-1 -mr-1"
               >
                 <X size={18} />
               </button>
@@ -118,7 +118,7 @@ function ResetPasswordContent() {
       <div className="w-full max-w-sm">
         <div className="space-y-1 mb-6 text-center">
           <h1 className="text-2xl font-bold">Milenote</h1>
-          <p className="text-sm text-slate-500 dark:text-muted-foreground">{t("reset.new_password_title")}</p>
+          <p className="text-sm text-slate-600 dark:text-muted-foreground">{t("reset.new_password_title")}</p>
         </div>
 
         {!tokenHash || linkInvalid ? (
@@ -134,7 +134,7 @@ function ResetPasswordContent() {
               <Label htmlFor="new-password">{t("reset.new_password")}</Label>
               <div className="relative">
                 <Input id="new-password" type={showPassword ? "text" : "password"} placeholder={t("login.password_placeholder")} value={password} onChange={(e) => setPassword(e.target.value)} required className="border-slate-300 dark:border-border pr-10" />
-                <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors" tabIndex={-1}>
+                <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors" tabIndex={-1}>
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
@@ -143,7 +143,7 @@ function ResetPasswordContent() {
               <Label htmlFor="confirm-password">{t("reset.confirm_password")}</Label>
               <div className="relative">
                 <Input id="confirm-password" type={showConfirm ? "text" : "password"} placeholder={t("login.password_placeholder")} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required className="border-slate-300 dark:border-border pr-10" />
-                <button type="button" onClick={() => setShowConfirm(v => !v)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors" tabIndex={-1}>
+                <button type="button" onClick={() => setShowConfirm(v => !v)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors" tabIndex={-1}>
                   {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>

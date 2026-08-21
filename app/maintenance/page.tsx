@@ -208,7 +208,7 @@ export default function MaintenancePage() {
   if (loading) return (
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
-        <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
+        <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-500 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
           <span className="font-bold text-xs">{t("home.back_to_home")}</span>
         </Link>
       </header>
@@ -256,7 +256,7 @@ export default function MaintenancePage() {
   return (
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
-        <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
+        <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-500 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
           <span className="font-bold text-xs">{t("home.back_to_home")}</span>
         </Link>
       </header>
@@ -279,7 +279,7 @@ export default function MaintenancePage() {
               type="button"
               onClick={() => setIsFilterOpen(true)}
               title={t("records.filter_title")}
-              className="relative h-7 flex items-center px-2.5 rounded-lg border bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+              className="relative h-7 flex items-center px-2.5 rounded-lg border bg-white text-slate-600 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
             >
               <SlidersHorizontal size={15} />
               {activeFilterCount > 0 && (
@@ -292,7 +292,7 @@ export default function MaintenancePage() {
               type="button"
               onClick={() => setIsDisplaySettingsOpen(true)}
               title={t("home.display_settings_title")}
-              className="h-7 flex items-center gap-1.5 px-2.5 rounded-lg border text-[11px] font-bold bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+              className="h-7 flex items-center gap-1.5 px-2.5 rounded-lg border text-[11px] font-bold bg-white text-slate-600 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
             >
               <Settings2 size={15} />
               {t("home.display_settings_title")}
@@ -313,10 +313,10 @@ export default function MaintenancePage() {
 
               <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5">
                 <div className="min-w-0 flex items-start gap-2.5">
-                  <EyeOff size={18} className="shrink-0 mt-0.5 text-slate-400 dark:text-muted-foreground" />
+                  <EyeOff size={18} className="shrink-0 mt-0.5 text-slate-500 dark:text-muted-foreground" />
                   <div className="min-w-0">
                     <p className="text-sm font-bold text-slate-700 dark:text-foreground">{t("home.show_disabled_maint")}</p>
-                    <p className="text-xs text-slate-400 dark:text-muted-foreground mt-0.5">{t("home.show_disabled_maint_desc")}</p>
+                    <p className="text-xs text-slate-500 dark:text-muted-foreground mt-0.5">{t("home.show_disabled_maint_desc")}</p>
                   </div>
                 </div>
                 <Switch checked={showDisabled} onCheckedChange={handleShowDisabledChange} className="shrink-0" />
@@ -324,10 +324,10 @@ export default function MaintenancePage() {
 
               <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5">
                 <div className="min-w-0 flex items-start gap-2.5">
-                  <FileX size={18} className="shrink-0 mt-0.5 text-slate-400 dark:text-muted-foreground" />
+                  <FileX size={18} className="shrink-0 mt-0.5 text-slate-500 dark:text-muted-foreground" />
                   <div className="min-w-0">
                     <p className="text-sm font-bold text-slate-700 dark:text-foreground">{t("home.hide_unrecorded_maint")}</p>
-                    <p className="text-xs text-slate-400 dark:text-muted-foreground mt-0.5">{t("home.hide_unrecorded_maint_desc")}</p>
+                    <p className="text-xs text-slate-500 dark:text-muted-foreground mt-0.5">{t("home.hide_unrecorded_maint_desc")}</p>
                   </div>
                 </div>
                 <Switch checked={hideUnrecorded} onCheckedChange={handleHideUnrecordedChange} className="shrink-0" />
@@ -335,10 +335,10 @@ export default function MaintenancePage() {
 
               <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5">
                 <div className="min-w-0 flex items-start gap-2.5">
-                  <LayoutList size={18} className="shrink-0 mt-0.5 text-slate-400 dark:text-muted-foreground" />
+                  <LayoutList size={18} className="shrink-0 mt-0.5 text-slate-500 dark:text-muted-foreground" />
                   <div className="min-w-0">
                     <p className="text-sm font-bold text-slate-700 dark:text-foreground">{t("home.ungroup_maint")}</p>
-                    <p className="text-xs text-slate-400 dark:text-muted-foreground mt-0.5">{t("home.ungroup_maint_desc")}</p>
+                    <p className="text-xs text-slate-500 dark:text-muted-foreground mt-0.5">{t("home.ungroup_maint_desc")}</p>
                   </div>
                 </div>
                 <Switch checked={isUngrouped} onCheckedChange={handleUngroupedChange} className="shrink-0" />
@@ -370,7 +370,7 @@ export default function MaintenancePage() {
 
               {/* カテゴリ絞り込み */}
               <div className="space-y-2">
-                <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("records.category")}</p>
+                <p className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("records.category")}</p>
                 <div className="flex flex-wrap gap-2.5">
                   <button
                     type="button"
@@ -379,7 +379,7 @@ export default function MaintenancePage() {
                     className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                       categoryFilters.length === 0
                         ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
-                        : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                        : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                     }`}
                   >
                     {t("records.filter_all")}
@@ -398,7 +398,7 @@ export default function MaintenancePage() {
                         className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                           active
                             ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
-                            : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                            : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                         }`}
                       >
                         {t(`mypage.maint_category_${category.key}`)}
@@ -412,7 +412,7 @@ export default function MaintenancePage() {
               {/* 車絞り込み */}
               {cars.length > 1 && (
                 <div className="space-y-2">
-                  <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("records.filter_car")}</p>
+                  <p className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("records.filter_car")}</p>
                   <div className="flex flex-wrap gap-2.5">
                     <button
                       type="button"
@@ -421,7 +421,7 @@ export default function MaintenancePage() {
                       className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                         carFilters.length === 0
                           ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
-                          : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                          : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                       }`}
                     >
                       {t("records.filter_all")}
@@ -439,7 +439,7 @@ export default function MaintenancePage() {
                           className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                             active
                               ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
-                              : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                              : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                           }`}
                         >
                           {car.name}
@@ -468,16 +468,16 @@ export default function MaintenancePage() {
       {cars.length === 0 ? (
         <Card className="border-none bg-white dark:bg-card p-10 text-center">
           <CarFront className="mx-auto h-12 w-12 text-slate-200 dark:text-muted-foreground mb-3" />
-          <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground mb-4 tracking-tighter">{t("home.no_cars_registered")}</p>
+          <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground mb-4 tracking-tighter">{t("home.no_cars_registered")}</p>
           <Link href="/garage"><Button className="font-bold text-xs px-6 tracking-wide">{t("home.register")}</Button></Link>
         </Card>
       ) : alerts.length === 0 ? (
         <Card className="border-none bg-white dark:bg-card p-6 text-center">
-          <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wide">{t("home.no_alerts")}</p>
+          <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wide">{t("home.no_alerts")}</p>
         </Card>
       ) : filteredAlerts.length === 0 ? (
         <Card className="border-none bg-white dark:bg-card p-6 text-center">
-          <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wide">{t("home.no_filtered_alerts")}</p>
+          <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wide">{t("home.no_filtered_alerts")}</p>
         </Card>
       ) : isUngrouped ? (
         <div className="grid gap-3 md:gap-4 items-stretch mt-6" style={gridStyle}>
@@ -492,7 +492,7 @@ export default function MaintenancePage() {
             if (items.length === 0) return null
             return (
               <div key={category.key}>
-                <p className="text-sm font-bold text-slate-400 dark:text-muted-foreground tracking-wide mb-2 px-1">
+                <p className="text-sm font-bold text-slate-500 dark:text-muted-foreground tracking-wide mb-2 px-1">
                   {t(`mypage.maint_category_${category.key}`)}
                 </p>
                 <div className="grid gap-3 md:gap-4 items-stretch" style={gridStyle}>

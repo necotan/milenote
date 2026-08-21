@@ -92,7 +92,7 @@ export default function SignUpPage() {
               <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("signup.error_title")}</h3>
               <button
                 onClick={() => setErrorPopup(null)}
-                className="text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors -mt-1 -mr-1"
+                className="text-slate-500 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors -mt-1 -mr-1"
               >
                 <X size={18} />
               </button>
@@ -111,7 +111,7 @@ export default function SignUpPage() {
       <div className="w-full max-w-sm">
         <div className="space-y-1 mb-6 text-center">
           <h1 className="text-2xl font-bold">Milenote</h1>
-          <p className="text-sm text-slate-500 dark:text-muted-foreground">{t("signup.subtitle")}</p>
+          <p className="text-sm text-slate-600 dark:text-muted-foreground">{t("signup.subtitle")}</p>
         </div>
 
         <form onSubmit={handleSignUp} className="space-y-4">
@@ -144,7 +144,7 @@ export default function SignUpPage() {
               required
               className="border-slate-300 dark:border-border"
             />
-            <p className="text-[11px] text-slate-400 dark:text-muted-foreground">{t("signup.user_id_hint")}</p>
+            <p className="text-[11px] text-slate-500 dark:text-muted-foreground">{t("signup.user_id_hint")}</p>
           </div>
 
           {/* パスワード */}
@@ -165,7 +165,7 @@ export default function SignUpPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(v => !v)}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors"
                 tabIndex={-1}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -181,7 +181,7 @@ export default function SignUpPage() {
             <button
               type="button"
               onClick={() => router.push("/login")}
-              className="flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors"
+              className="flex items-center gap-1 text-sm text-slate-500 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors"
             >
               <span className="font-bold text-xs">{t("signup.back_to_login")}</span>
             </button>

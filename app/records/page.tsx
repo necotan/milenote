@@ -34,7 +34,7 @@ export const CATEGORIES: Record<string, any> = {
   highway: { icon: Ticket, color: "text-indigo-500", bg: "bg-indigo-50 dark:bg-surface-2" },
   tax: { icon: Receipt, color: "text-red-500", bg: "bg-red-50 dark:bg-surface-2" },
   insurance: { icon: Shield, color: "text-green-500", bg: "bg-green-50 dark:bg-surface-2" },
-  other: { icon: FileText, color: "text-slate-500 dark:text-muted-foreground", bg: "bg-slate-50 dark:bg-surface-2" },
+  other: { icon: FileText, color: "text-slate-600 dark:text-muted-foreground", bg: "bg-slate-50 dark:bg-surface-2" },
 }
 
 // 給油フォーム内の自動計算ハンドラー（コンポーネント外に定義）
@@ -160,7 +160,7 @@ const RecordForm = ({
   return (
   <Card className="border-none bg-white dark:bg-card">
     <CardContent className="p-6 relative">
-      <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-400 dark:text-muted-foreground" onClick={resetForm}>
+      <Button variant="ghost" size="icon" className="absolute top-2 right-2 text-slate-500 dark:text-muted-foreground" onClick={resetForm}>
         <X className="h-4 w-4" />
       </Button>
       <h2 className="text-xl font-bold text-slate-800 dark:text-foreground mb-6">
@@ -172,7 +172,7 @@ const RecordForm = ({
           <div className="sm:grid sm:grid-cols-2 sm:gap-x-8">
             <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
               <div className="flex items-center gap-2 mb-6">
-                <CarFront size={15} className="text-slate-400 dark:text-muted-foreground" />
+                <CarFront size={15} className="text-slate-500 dark:text-muted-foreground" />
                 <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.basic_info")}</span>
               </div>
 
@@ -183,7 +183,7 @@ const RecordForm = ({
 
             <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
               <div className="flex items-center gap-2 mb-6">
-                <Fuel size={15} className="text-slate-400 dark:text-muted-foreground" />
+                <Fuel size={15} className="text-slate-500 dark:text-muted-foreground" />
                 <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{fuelFieldText.info}</span>
               </div>
 
@@ -198,7 +198,7 @@ const RecordForm = ({
                     placeholder={fuelFieldText.pricePh}
                     className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 pr-12 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{fuelFieldText.priceUnit}</span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 dark:text-muted-foreground pointer-events-none">{fuelFieldText.priceUnit}</span>
                 </div>
               </div>
 
@@ -213,7 +213,7 @@ const RecordForm = ({
                     placeholder={fuelFieldText.amountPh}
                     className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 pr-8 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{fuelFieldText.amountUnit}</span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 dark:text-muted-foreground pointer-events-none">{fuelFieldText.amountUnit}</span>
                 </div>
               </div>
 
@@ -228,7 +228,7 @@ const RecordForm = ({
                     placeholder="6,800"
                     className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 font-bold text-slate-800 dark:text-foreground pr-8 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{t("records.unit_yen")}</span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 dark:text-muted-foreground pointer-events-none">{t("records.unit_yen")}</span>
                 </div>
               </div>
             </div>
@@ -238,7 +238,7 @@ const RecordForm = ({
             <div className="sm:grid sm:grid-cols-2 sm:gap-x-8">
               <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
                 <div className="flex items-center gap-2 mb-6">
-                  <CarFront size={15} className="text-slate-400 dark:text-muted-foreground" />
+                  <CarFront size={15} className="text-slate-500 dark:text-muted-foreground" />
                   <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.basic_info")}</span>
                 </div>
 
@@ -267,7 +267,7 @@ const RecordForm = ({
               {category === "highway" ? (
                 <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
                   <div className="flex items-center gap-2 mb-6">
-                    <Ticket size={15} className="text-slate-400 dark:text-muted-foreground" />
+                    <Ticket size={15} className="text-slate-500 dark:text-muted-foreground" />
                     <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.highway_details")}</span>
                   </div>
 
@@ -287,7 +287,7 @@ const RecordForm = ({
               ) : (
                 <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
                   <div className="flex items-center gap-2 mb-6">
-                    <Receipt size={15} className="text-slate-400 dark:text-muted-foreground" />
+                    <Receipt size={15} className="text-slate-500 dark:text-muted-foreground" />
                     <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.record_details")}</span>
                   </div>
 
@@ -313,10 +313,10 @@ const RecordForm = ({
                       placeholder="6"
                       className="pr-12"
                     />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 dark:text-muted-foreground pointer-events-none">{t("common.months_unit")}</span>
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 dark:text-muted-foreground pointer-events-none">{t("common.months_unit")}</span>
                   </div>
                 </div>
-                <p className="text-[11px] text-slate-400 dark:text-muted-foreground whitespace-nowrap">{t("records.periodic_inspection_interval_hint")}</p>
+                <p className="text-[11px] text-slate-500 dark:text-muted-foreground whitespace-nowrap">{t("records.periodic_inspection_interval_hint")}</p>
               </div>
             )}
           </>
@@ -711,7 +711,7 @@ function RecordsPageInner() {
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("records.title")}</h1>
-        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("records.subtitle")}</p>
+        <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wider mt-1">{t("records.subtitle")}</p>
       </header>
 
       {loading && <RecordSkeleton />}
@@ -719,7 +719,7 @@ function RecordsPageInner() {
       {!loading && cars.length === 0 && (
         <div className="text-center py-20">
           <CarFront className="mx-auto h-12 w-12 text-slate-300 dark:text-muted-foreground mb-3" />
-          <p className="text-slate-500 dark:text-muted-foreground font-medium mb-4">{t("records.register_car_first_line1")}<br/>{t("records.register_car_first_line2")}</p>
+          <p className="text-slate-600 dark:text-muted-foreground font-medium mb-4">{t("records.register_car_first_line1")}<br/>{t("records.register_car_first_line2")}</p>
           <Link href="/garage"><Button className="font-bold">{t("records.go_to_garage")}</Button></Link>
         </div>
       )}
@@ -750,7 +750,7 @@ function RecordsPageInner() {
                         type="button"
                         onClick={() => setIsFilterOpen(true)}
                         title={t("records.filter_title")}
-                        className="relative h-7 flex items-center px-2.5 rounded-lg border bg-white text-slate-500 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+                        className="relative h-7 flex items-center px-2.5 rounded-lg border bg-white text-slate-600 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
                       >
                         <SlidersHorizontal size={15} />
                         {activeFilterCount > 0 && (
@@ -797,7 +797,7 @@ function RecordsPageInner() {
 
                     {/* カテゴリ絞り込み */}
                     <div className="space-y-2">
-                      <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("records.category")}</p>
+                      <p className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("records.category")}</p>
                       <div className="flex flex-wrap gap-2.5">
                         {/* すべて */}
                         <button
@@ -807,7 +807,7 @@ function RecordsPageInner() {
                           className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                             categoryFilters.length === 0
                               ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
-                              : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                              : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                           }`}
                         >
                           {t("records.filter_all")}
@@ -826,7 +826,7 @@ function RecordsPageInner() {
                               className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                                 active
                                   ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
-                                  : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                                  : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                               }`}
                             >
                               {t(`categories.${key}`)}
@@ -839,7 +839,7 @@ function RecordsPageInner() {
 
                     {/* 車絞り込み */}
                     <div className="space-y-2">
-                      <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{t("records.filter_car")}</p>
+                      <p className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("records.filter_car")}</p>
                       <div className="flex flex-wrap gap-2.5">
                         {/* すべて */}
                         <button
@@ -849,7 +849,7 @@ function RecordsPageInner() {
                           className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                             carFilters.length === 0
                               ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
-                              : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                              : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                           }`}
                         >
                           {t("records.filter_all")}
@@ -868,7 +868,7 @@ function RecordsPageInner() {
                               className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                                 active
                                   ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
-                                  : "bg-white text-slate-500 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                                  : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                               }`}
                             >
                               {car.name}
@@ -936,17 +936,17 @@ function RecordsPageInner() {
       />}
 
       {!loading && !isAdding && !editRecordId && records.length === 0 && cars.length > 0 && (
-        <p className="text-center text-slate-500 dark:text-muted-foreground py-20">{t("records.no_records_line1")}<br/>{t("records.no_records_line2")}</p>
+        <p className="text-center text-slate-600 dark:text-muted-foreground py-20">{t("records.no_records_line1")}<br/>{t("records.no_records_line2")}</p>
       )}
 
       {!loading && !isAdding && !editRecordId && records.length > 0 && displayedRecords.length === 0 && (
-        <p className="text-center text-slate-400 dark:text-muted-foreground py-20 font-medium">
+        <p className="text-center text-slate-500 dark:text-muted-foreground py-20 font-medium">
           {t("records.no_records_in_month", { label: monthLabel })}
         </p>
       )}
 
       {!loading && !isAdding && !editRecordId && displayedRecords.length > 0 && filteredRecords.length === 0 && (
-        <p className="text-center text-slate-400 dark:text-muted-foreground py-20 font-medium">
+        <p className="text-center text-slate-500 dark:text-muted-foreground py-20 font-medium">
           {t("records.no_filtered_records")}
         </p>
       )}
@@ -968,14 +968,14 @@ function RecordsPageInner() {
                   <div className="absolute top-3 right-3 flex items-center gap-1">
                     <button
                       onClick={() => handleStartEdit(record)}
-                      className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                      className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                       title={t("common.edit")}
                     >
                       <Pencil size={14} />
                     </button>
                     <button
                       onClick={() => setDeleteRecordId(record.id)}
-                      className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-500 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
+                      className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
                       title={t("common.delete")}
                     >
                       <Trash2 size={14} />
@@ -991,7 +991,7 @@ function RecordsPageInner() {
                       <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1">¥{record.amount.toLocaleString()}</h3>
                       
                       {/* ジャンルタグ */}
-                      <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 dark:text-muted-foreground mb-2 flex-wrap">
+                      <div className="flex items-center gap-2 text-[10px] font-bold text-slate-600 dark:text-muted-foreground mb-2 flex-wrap">
                         <span className="bg-slate-100 dark:bg-surface-2 px-2 py-1 rounded-md">{categoryLabel}</span>
                         {record.sub_category && (
                           <span className="border border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground px-2 py-1 rounded-md">
@@ -1001,7 +1001,7 @@ function RecordsPageInner() {
                       </div>
 
                       {/* 車名・走行距離 */}
-                      <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-muted-foreground mb-1">
+                      <div className="flex items-center gap-3 text-[11px] text-slate-600 dark:text-muted-foreground mb-1">
                         <span className="font-bold">{record.cars.name}</span>
                         {record.odo_at_record != null && (
                           <span>{record.odo_at_record.toLocaleString()} {t("common.km_unit")}</span>
@@ -1009,20 +1009,20 @@ function RecordsPageInner() {
                       </div>
 
                       {/* 日付 */}
-                      <p className="text-[11px] font-medium text-slate-400 dark:text-muted-foreground mb-2">{record.date.replace(/-/g, '/')}</p>
+                      <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-2">{record.date.replace(/-/g, '/')}</p>
 
                       {record.category === "fuel" && record.fuel_amount && (() => {
                         const unit = getFuelUnit(record.cars?.fuel_type)
                         const amountLabel = { l: t("records.fuel_amount_label"), kwh: t("records.charge_amount_label"), kg: t("records.hydrogen_amount_label") }[unit]
                         const amountUnit = { l: t("records.unit_l"), kwh: t("records.unit_kwh"), kg: t("records.unit_kg") }[unit]
                         return (
-                          <p className="text-xs text-slate-500 dark:text-muted-foreground mb-2">
+                          <p className="text-xs text-slate-600 dark:text-muted-foreground mb-2">
                             {amountLabel} <span className="font-bold text-slate-700 dark:text-foreground">{record.fuel_amount} {amountUnit}</span>
                           </p>
                         )
                       })()}
                       {record.category === "highway" && (record.entry_ic || record.exit_ic) && (
-                        <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-muted-foreground mb-2">
+                        <div className="flex items-center gap-1 text-xs text-slate-600 dark:text-muted-foreground mb-2">
                           <span>{t("records.route_display_label")}</span>
                           <span className="inline-flex items-center gap-1 font-bold text-slate-700 dark:text-foreground">
                             {record.entry_ic || t("records.not_entered")}

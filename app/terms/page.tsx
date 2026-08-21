@@ -21,13 +21,13 @@ export default function TermsPage() {
         <button
           type="button"
           onClick={() => router.back()}
-          className="flex items-center gap-1 text-sm text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors mb-8"
+          className="flex items-center gap-1 text-sm text-slate-500 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors mb-8"
         >
           <span className="font-bold text-xs">{t("terms.back")}</span>
         </button>
 
         <h1 className="text-2xl font-bold text-slate-900 dark:text-foreground">{t("terms.title")}</h1>
-        <p className="text-xs text-slate-400 dark:text-muted-foreground mt-2">
+        <p className="text-xs text-slate-500 dark:text-muted-foreground mt-2">
           {t("terms.last_updated")}：{t("terms.updated_date")}
         </p>
 

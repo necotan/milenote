@@ -118,13 +118,13 @@ function ChipPresetRow({
             onFocus={() => setCustomOpen(true)}
             className="h-8 w-28 md:w-24 text-base md:text-xs font-bold text-center pr-8 rounded-full border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-card text-slate-700 dark:text-foreground outline-none focus-visible:ring-1 focus-visible:ring-slate-300"
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 dark:text-muted-foreground pointer-events-none">{suffix}</span>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-500 dark:text-muted-foreground pointer-events-none">{suffix}</span>
         </div>
       ) : (
         <button
           type="button"
           onClick={() => setCustomOpen(true)}
-          className="px-3 h-8 rounded-full text-xs font-bold border border-dashed border-neutral-300 dark:border-neutral-600 text-slate-500 dark:text-muted-foreground"
+          className="px-3 h-8 rounded-full text-xs font-bold border border-dashed border-neutral-300 dark:border-neutral-600 text-slate-600 dark:text-muted-foreground"
         >
           {customLabel}
         </button>
@@ -175,12 +175,12 @@ function MaintenanceItemRow({
 
   const content = (
     <>
-      <Icon size={18} className={isEnabled ? "text-slate-500 dark:text-muted-foreground" : "text-slate-300 dark:text-muted-foreground/70"} />
+      <Icon size={18} className={isEnabled ? "text-slate-600 dark:text-muted-foreground" : "text-slate-300 dark:text-muted-foreground/70"} />
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-bold truncate ${isEnabled ? "text-slate-800 dark:text-foreground" : "text-slate-400 dark:text-foreground/70"}`}>
+        <p className={`text-sm font-bold truncate ${isEnabled ? "text-slate-800 dark:text-foreground" : "text-slate-500 dark:text-foreground/70"}`}>
           {itemName}
         </p>
-        <p className="text-xs text-slate-400 dark:text-muted-foreground truncate">{summary}</p>
+        <p className="text-xs text-slate-500 dark:text-muted-foreground truncate">{summary}</p>
       </div>
     </>
   )
@@ -253,7 +253,7 @@ function MaintEditDialog({
         <div className="mt-6 space-y-6">
           {!isMonthsOnly && presets?.km && (
             <div className="space-y-2.5">
-              <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{t("mypage.maint_distance_label")}</p>
+              <p className="text-[10px] font-bold text-slate-500 dark:text-muted-foreground">{t("mypage.maint_distance_label")}</p>
               <ChipPresetRow
                 value={draftKm}
                 presets={presets.km}
@@ -265,7 +265,7 @@ function MaintEditDialog({
           )}
           {presets?.months && (
             <div className="space-y-2.5">
-              <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{t("mypage.maint_period_label")}</p>
+              <p className="text-[10px] font-bold text-slate-500 dark:text-muted-foreground">{t("mypage.maint_period_label")}</p>
               <ChipPresetRow
                 value={draftMonths}
                 presets={presets.months}
@@ -309,9 +309,9 @@ function ProfileFieldRow({
       onClick={onClick}
       className="w-full flex items-center gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-surface-2/40 transition-colors"
     >
-      <Icon size={16} className="shrink-0 text-slate-400 dark:text-muted-foreground" />
+      <Icon size={16} className="shrink-0 text-slate-500 dark:text-muted-foreground" />
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] font-bold text-slate-400 dark:text-muted-foreground">{label}</p>
+        <p className="text-[10px] font-bold text-slate-500 dark:text-muted-foreground">{label}</p>
         <p className={`text-sm font-bold truncate ${value ? "text-slate-800 dark:text-foreground" : "text-slate-300 dark:text-muted-foreground/70"}`}>
           {value || placeholder}
         </p>
@@ -366,7 +366,7 @@ function ProfileFieldDialog({
             className="bg-white dark:bg-card border-slate-200 dark:border-border text-base md:text-sm focus-visible:ring-1 focus-visible:ring-slate-300"
           />
           {field === "user_id" && (
-            <p className="text-xs text-slate-400 dark:text-muted-foreground">{t("signup.user_id_hint")}</p>
+            <p className="text-xs text-slate-500 dark:text-muted-foreground">{t("signup.user_id_hint")}</p>
           )}
         </div>
         <DialogFooter>
@@ -647,7 +647,7 @@ export default function MyPage() {
       <header className="pt-4 pb-2 flex justify-between items-start">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>
-          <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("mypage.subtitle")}</p>
+          <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wider mt-1">{t("mypage.subtitle")}</p>
         </div>
       </header>
       <div className="space-y-8">
@@ -764,7 +764,7 @@ export default function MyPage() {
       <header className="pt-4 pb-2 flex justify-between items-start">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>
-          <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("mypage.subtitle")}</p>
+          <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wider mt-1">{t("mypage.subtitle")}</p>
         </div>
       </header>
 
@@ -775,9 +775,9 @@ export default function MyPage() {
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
-                <User size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.profile")}
+                <User size={18} className="text-slate-600 dark:text-muted-foreground" /> {t("mypage.profile")}
               </h2>
-              <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed">
+              <p className="text-xs text-slate-600 dark:text-muted-foreground leading-relaxed">
                 {t("mypage.profile_desc")}
               </p>
             </div>
@@ -808,9 +808,9 @@ export default function MyPage() {
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
-                <Wrench size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.maintenance_settings")}
+                <Wrench size={18} className="text-slate-600 dark:text-muted-foreground" /> {t("mypage.maintenance_settings")}
               </h2>
-              <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
+              <p className="text-xs text-slate-600 dark:text-muted-foreground leading-relaxed mb-4">
                 {t("mypage.maintenance_desc")}
               </p>
             </div>
@@ -820,7 +820,7 @@ export default function MyPage() {
               <div className="space-y-5">
                 {MAINT_CATEGORIES.map((category) => (
                   <div key={category.key}>
-                    <p className="text-[11px] font-bold text-slate-400 dark:text-muted-foreground tracking-wide mb-2 px-1">
+                    <p className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground tracking-wide mb-2 px-1">
                       {t(`mypage.maint_category_${category.key}`)}
                     </p>
                     <div className="rounded-xl border border-slate-200 dark:border-border divide-y divide-slate-200 dark:divide-border overflow-hidden">
@@ -848,9 +848,9 @@ export default function MyPage() {
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
-                <Globe size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.language")}
+                <Globe size={18} className="text-slate-600 dark:text-muted-foreground" /> {t("mypage.language")}
               </h2>
-              <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
+              <p className="text-xs text-slate-600 dark:text-muted-foreground leading-relaxed mb-4">
                 {t("mypage.language_desc")}
               </p>
             </div>
@@ -863,7 +863,7 @@ export default function MyPage() {
                   className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                     locale === "ja"
                       ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
-                      : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
+                      : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
                   }`}
                 >
                   {t("mypage.language_ja")}
@@ -873,7 +873,7 @@ export default function MyPage() {
                   className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                     locale === "en"
                       ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
-                      : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
+                      : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
                   }`}
                 >
                   {t("mypage.language_en")}
@@ -889,9 +889,9 @@ export default function MyPage() {
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
-                <Accessibility size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.accessibility")}
+                <Accessibility size={18} className="text-slate-600 dark:text-muted-foreground" /> {t("mypage.accessibility")}
               </h2>
-              <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
+              <p className="text-xs text-slate-600 dark:text-muted-foreground leading-relaxed mb-4">
                 {t("mypage.accessibility_desc")}
               </p>
             </div>
@@ -907,7 +907,7 @@ export default function MyPage() {
                   className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                     !isColorful
                       ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
-                      : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
+                      : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
                   }`}
                 >
                   {t("mypage.chart_color_basic")}
@@ -917,15 +917,15 @@ export default function MyPage() {
                   className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                     isColorful
                       ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
-                      : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
+                      : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
                   }`}
                 >
                   {t("mypage.chart_color_colorful")}
                 </button>
               </div>
-              <p className="text-xs text-slate-400 dark:text-muted-foreground mt-1.5 flex items-center gap-1">
+              <p className="text-xs text-slate-500 dark:text-muted-foreground mt-1.5 flex items-center gap-1">
                 <span title={t("mypage.chart_color_mode_tooltip")}>
-                  <Info size={13} className="text-slate-400 dark:text-muted-foreground cursor-help shrink-0" />
+                  <Info size={13} className="text-slate-500 dark:text-muted-foreground cursor-help shrink-0" />
                 </span>
                 {isColorful ? t("mypage.chart_color_colorful_note") : t("mypage.chart_color_basic_note")}
               </p>
@@ -942,7 +942,7 @@ export default function MyPage() {
                         className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
                           active
                             ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
-                            : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
+                            : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
                         }`}
                       >
                         {t(labelKey)}
@@ -961,9 +961,9 @@ export default function MyPage() {
             {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
-                <LayoutTemplate size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.home_order")}
+                <LayoutTemplate size={18} className="text-slate-600 dark:text-muted-foreground" /> {t("mypage.home_order")}
               </h2>
-              <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed mb-4">
+              <p className="text-xs text-slate-600 dark:text-muted-foreground leading-relaxed mb-4">
                 {t("mypage.home_order_desc")}
               </p>
             </div>
@@ -1019,7 +1019,7 @@ export default function MyPage() {
                         onPointerCancel={handleDragEnd}
                         role="button"
                         aria-label={t("mypage.drag_handle")}
-                        className="flex items-center justify-center h-8 w-8 shrink-0 rounded-lg text-slate-400 dark:text-muted-foreground touch-none cursor-grab active:cursor-grabbing"
+                        className="flex items-center justify-center h-8 w-8 shrink-0 rounded-lg text-slate-500 dark:text-muted-foreground touch-none cursor-grab active:cursor-grabbing"
                       >
                         <GripVertical size={18} />
                       </span>
@@ -1028,7 +1028,7 @@ export default function MyPage() {
                 })}
               </div>
               {/* 上が一番上に表示される旨の補足 */}
-              <p className="mt-3 text-[11px] text-slate-400 dark:text-muted-foreground font-medium">{t("mypage.home_order_hint")}</p>
+              <p className="mt-3 text-[11px] text-slate-500 dark:text-muted-foreground font-medium">{t("mypage.home_order_hint")}</p>
               </div>
 
               {/* PC表示時 */}
@@ -1045,7 +1045,7 @@ export default function MyPage() {
                           className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${
                             active
                               ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
-                              : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
+                              : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
                           }`}
                         >
                           {t(`mypage.home_order_pc_car_${position}`)}
@@ -1067,7 +1067,7 @@ export default function MyPage() {
                           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
                             active
                               ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
-                              : "text-slate-500 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
+                              : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
                           }`}
                         >
                           {sectionIcons[content]}
@@ -1086,9 +1086,9 @@ export default function MyPage() {
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="p-6">
             <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
-              <Download size={18} className="text-slate-500 dark:text-muted-foreground" /> {t("mypage.export")}
+              <Download size={18} className="text-slate-600 dark:text-muted-foreground" /> {t("mypage.export")}
             </h2>
-            <p className="text-xs text-slate-500 dark:text-muted-foreground leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-muted-foreground leading-relaxed">
               {t("mypage.export_desc")}
             </p>
           </div>
@@ -1126,7 +1126,7 @@ export default function MyPage() {
 
       {/* ログアウトボタン (モバイル) */}
       <div className="md:hidden pt-8 flex justify-center mb-8">
-        <Button variant="outline" className="px-8 h-9 font-bold rounded-lg bg-white dark:bg-card border-slate-200 dark:border-border shadow-sm text-slate-400 dark:text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors text-xs" onClick={handleLogout}>
+        <Button variant="outline" className="px-8 h-9 font-bold rounded-lg bg-white dark:bg-card border-slate-200 dark:border-border shadow-sm text-slate-500 dark:text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors text-xs" onClick={handleLogout}>
           <LogOut className="w-4 h-4 mr-2" />
           {t("common.logout")}
         </Button>

@@ -29,7 +29,7 @@ export default function BottomNav() {
             <Link
               key={item.key}
               href={item.href}
-              className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${isActive ? "text-slate-900 dark:text-foreground" : "text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground"
+              className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${isActive ? "text-slate-900 dark:text-foreground" : "text-slate-500 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground"
                 }`}
             >
               <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
