@@ -1068,7 +1068,7 @@ export default function StatsPage() {
 
   // ローディング状態の表示（タイトルは即時表示し、コンテンツのみスケルトン）
   if (loading) return (
-    <main className="p-4 space-y-6 max-w-5xl mx-auto pb-20">
+    <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2">
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
         <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
@@ -1104,7 +1104,7 @@ export default function StatsPage() {
   )
 
   return (
-    <main className="p-4 space-y-6 max-w-5xl mx-auto pb-20">
+    <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2">
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
         <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
