@@ -58,7 +58,7 @@
     "greeting_evening": "こんばんは",
     "greeting_suffix": "、{{name}}さん",
     "this_month_cost": "今月の費用",
-    "vs_last_month": "※先月比",
+    "vs_last_month": "先月比",
     "no_cost_data": "今月の記録がありません",
     "record_fuel": "給油を記録",
     "update_odo": "ODOを更新",
