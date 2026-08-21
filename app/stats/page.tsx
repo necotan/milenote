@@ -574,15 +574,15 @@ export default function StatsPage() {
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === "dark"
   const chartChrome = useMemo(() => ({
-    gridStroke: isDark ? "#334155" : "#f1f5f9",
-    axisTick: "#64748b",
+    gridStroke: isDark ? "#404040" : "#f5f5f5",
+    axisTick: "#737373",
     sliceStroke: isDark ? "#18181b" : "#ffffff",
     dotStroke: isDark ? "#18181b" : "#ffffff",
-    tooltipBg: isDark ? "#404040" : "#f1f5f9",
-    tooltipText: isDark ? "#f5f5f5" : "#334155",
-    tooltipLabel: isDark ? "#a3a3a3" : "#475569",
-    labelLineStroke: isDark ? "#475569" : "#cbd5e1",
-    pieLabelFill: isDark ? "#94a3b8" : "#475569",
+    tooltipBg: isDark ? "#404040" : "#f5f5f5",
+    tooltipText: isDark ? "#f5f5f5" : "#404040",
+    tooltipLabel: isDark ? "#a3a3a3" : "#525252",
+    labelLineStroke: isDark ? "#525252" : "#d4d4d4",
+    pieLabelFill: isDark ? "#a3a3a3" : "#525252",
     cursorFill: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)",
   }), [isDark])
 
