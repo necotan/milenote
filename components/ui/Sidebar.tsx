@@ -33,7 +33,7 @@ export default function Sidebar() {
                             href={item.href}
                             className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all ${isActive
                                     ? "bg-white dark:bg-card shadow-[0_2px_10px_rgba(0,0,0,0.04)] dark:shadow-none text-slate-900 dark:text-foreground font-bold" // アクティブ時は白背景とドロップシャドウで強調表示
-                                    : "text-slate-500 hover:bg-white/50 hover:text-slate-900 dark:text-muted-foreground dark:hover:bg-card/50 dark:hover:text-foreground font-medium"
+                                    : "text-slate-600 hover:bg-white/50 hover:text-slate-900 dark:text-muted-foreground dark:hover:bg-card/50 dark:hover:text-foreground font-medium"
                                 }`}
                         >
                             <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
@@ -52,7 +52,7 @@ export default function Sidebar() {
                         await supabase.auth.signOut()
                         window.location.href = "/login"
                     }}
-                    className="flex w-full items-center gap-4 px-4 py-3.5 rounded-xl transition-all text-slate-500 hover:bg-red-50 hover:text-red-600 dark:text-muted-foreground dark:hover:bg-red-950/40 dark:hover:text-red-400 font-medium"
+                    className="flex w-full items-center gap-4 px-4 py-3.5 rounded-xl transition-all text-slate-600 hover:bg-red-50 hover:text-red-600 dark:text-muted-foreground dark:hover:bg-red-950/40 dark:hover:text-red-400 font-medium"
                 >
                     <LogOut size={20} />
                     <span className="text-sm tracking-widest">{t("common.logout")}</span>

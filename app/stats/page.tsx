@@ -266,7 +266,7 @@ function PeriodDateRow({
 }) {
   return (
     <div className="flex items-center justify-between py-2.5">
-      <span className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{label}</span>
+      <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{label}</span>
       <DatePicker
         variant="inline"
         value={value}
@@ -343,13 +343,13 @@ function PeriodFilter({
         aria-expanded={expanded}
         className="flex w-full items-center gap-2 rounded-lg bg-slate-100 dark:bg-muted px-3 py-2.5 text-left transition-colors hover:bg-slate-200/70 dark:hover:bg-muted/70"
       >
-        <CalendarDays size={14} className="shrink-0 text-slate-500 dark:text-muted-foreground" />
+        <CalendarDays size={14} className="shrink-0 text-slate-600 dark:text-muted-foreground" />
         <span className="text-sm font-bold text-slate-800 dark:text-foreground tabular-nums">
           {formatSummaryDate(start)} {locale === "en" ? "–" : "〜"} {formatSummaryDate(end)}
         </span>
         <ChevronDown
           size={16}
-          className="ml-auto shrink-0 text-slate-400 dark:text-muted-foreground"
+          className="ml-auto shrink-0 text-slate-500 dark:text-muted-foreground"
           style={{
             transform: expanded ? "rotate(180deg)" : "rotate(0deg)",
             transition: `transform 380ms ${EASE_APPLE}`,
@@ -387,7 +387,7 @@ function PeriodFilter({
               </div>
             </div>
             <p
-              className="mt-2.5 flex items-center justify-end gap-1 px-1 text-[10px] text-slate-400 dark:text-muted-foreground"
+              className="mt-2.5 flex items-center justify-end gap-1 px-1 text-[10px] text-slate-500 dark:text-muted-foreground"
               style={fadeItemStyle(2)}
             >
               <Info size={12} className="shrink-0" />
@@ -487,7 +487,7 @@ const CategoryBreakdownCard = memo(function CategoryBreakdownCard({
                   <Pie data={categoryData} cx="50%" cy="50%" innerRadius={60} outerRadius={PIE_OUTER_RADIUS} minAngle={PIE_MIN_ANGLE_DEG} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill, pieLabelDeltas)} labelLine={createCustomizedLabelLine(chartChrome.labelLineStroke, pieLabelDeltas)}>
                     {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                     <Label value={`¥${totalAmount.toLocaleString()}`} position="center" dy={-8} className="text-base font-bold fill-slate-800 dark:fill-foreground" />
-                    <Label value={t("stats.total")} position="center" dy={8} className="text-[10px] font-bold fill-slate-400 dark:fill-muted-foreground" />
+                    <Label value={t("stats.total")} position="center" dy={8} className="text-[10px] font-bold fill-slate-500 dark:fill-muted-foreground" />
                   </Pie>
                   {/* Recharts のコールバック型が複雑なため any を許容 */}
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
@@ -515,13 +515,13 @@ function BentoTile({
 }) {
   return (
     <div className={`rounded-xl p-4 bg-slate-50 dark:bg-surface-2 ${className}`}>
-      <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground">{label}</p>
+      <p className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{label}</p>
       <div className="flex items-baseline gap-1 mt-1.5">
         <span className="text-xl font-bold tabular-nums tracking-wide text-slate-800 dark:text-foreground">
           {value}
         </span>
         {unit && (
-          <span className="text-xs font-bold text-slate-400 dark:text-muted-foreground">
+          <span className="text-xs font-bold text-slate-500 dark:text-muted-foreground">
             {unit}
           </span>
         )}
@@ -575,14 +575,14 @@ export default function StatsPage() {
   const isDark = resolvedTheme === "dark"
   const chartChrome = useMemo(() => ({
     gridStroke: isDark ? "#334155" : "#f1f5f9",
-    axisTick: isDark ? "#64748b" : "#94a3b8",
+    axisTick: "#64748b",
     sliceStroke: isDark ? "#18181b" : "#ffffff",
     dotStroke: isDark ? "#18181b" : "#ffffff",
     tooltipBg: isDark ? "#404040" : "#f1f5f9",
     tooltipText: isDark ? "#f5f5f5" : "#334155",
-    tooltipLabel: isDark ? "#a3a3a3" : "#64748b",
+    tooltipLabel: isDark ? "#a3a3a3" : "#475569",
     labelLineStroke: isDark ? "#475569" : "#cbd5e1",
-    pieLabelFill: isDark ? "#94a3b8" : "#64748b",
+    pieLabelFill: isDark ? "#94a3b8" : "#475569",
     cursorFill: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)",
   }), [isDark])
 
@@ -981,9 +981,9 @@ export default function StatsPage() {
               padding: '10px 14px',
             }}
           >
-            <p className="mb-1.5 text-xs font-bold text-slate-500 dark:text-muted-foreground">{labelFormatter(String(label))}</p>
+            <p className="mb-1.5 text-xs font-bold text-slate-600 dark:text-muted-foreground">{labelFormatter(String(label))}</p>
             {items.length === 0 ? (
-              <p className="text-xs text-slate-400 dark:text-muted-foreground">{t("stats.no_data")}</p>
+              <p className="text-xs text-slate-500 dark:text-muted-foreground">{t("stats.no_data")}</p>
             ) : (
               <ul className="flex flex-col gap-1">
                 {items.map((entry, index) => (
@@ -992,7 +992,7 @@ export default function StatsPage() {
                       className="inline-block shrink-0 rounded-full"
                       style={{ width: 6, height: 6, backgroundColor: entry.color }}
                     />
-                    <span className="text-slate-500 dark:text-muted-foreground">{t(`categories.${String(entry.dataKey)}`)}</span>
+                    <span className="text-slate-600 dark:text-muted-foreground">{t(`categories.${String(entry.dataKey)}`)}</span>
                     <span className="ml-auto font-bold text-slate-700 dark:text-foreground">¥{Number(entry.value).toLocaleString()}</span>
                   </li>
                 ))}
@@ -1071,7 +1071,7 @@ export default function StatsPage() {
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2">
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
-        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
+        <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
       </header>
       <SkeletonTabs className="mb-4" />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1107,7 +1107,7 @@ export default function StatsPage() {
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2">
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
-        <p className="text-xs font-bold text-slate-400 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
+        <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
       </header>
 
       <Tabs defaultValue="cost" className="w-full">
@@ -1138,7 +1138,7 @@ export default function StatsPage() {
                     <h3 className="text-2xl font-bold text-slate-800 dark:text-foreground tracking-wide tabular-nums">
                       {t("stats.earth_rounds", { rounds: earthRounds })}
                     </h3>
-                    <p className="text-[10px] text-slate-500 dark:text-muted-foreground mt-1 font-medium tracking-wide">
+                    <p className="text-[10px] text-slate-600 dark:text-muted-foreground mt-1 font-medium tracking-wide">
                       {t("stats.total_odo")}: <span className="font-bold text-slate-700 dark:text-foreground tabular-nums">{totalOdo.toLocaleString()}</span> {t("stats.unit_km")}
                     </p>
                   </div>
@@ -1167,7 +1167,7 @@ export default function StatsPage() {
                       style={{ width: `${moonPercent}%` }}
                     ></div>
                   </div>
-                  <p className="text-[10px] text-center text-slate-500 dark:text-muted-foreground font-medium">
+                  <p className="text-[10px] text-center text-slate-600 dark:text-muted-foreground font-medium">
                     {t("stats.moon_remaining", { distance: remainingMoonDist.toLocaleString() })}
                   </p>
                 </div>
@@ -1211,9 +1211,9 @@ export default function StatsPage() {
                   unit={t("stats.unit_kg")}
                   className="col-span-2"
                   note={
-                    <p className="text-[10px] text-slate-400 dark:text-muted-foreground flex items-center gap-1">
+                    <p className="text-[10px] text-slate-500 dark:text-muted-foreground flex items-center gap-1">
                       <span title={t("stats.co2_note_tooltip")}>
-                        <Info size={11} className="text-slate-400 dark:text-muted-foreground cursor-help shrink-0" />
+                        <Info size={11} className="text-slate-500 dark:text-muted-foreground cursor-help shrink-0" />
                       </span>
                       {t("stats.co2_note")}
                     </p>
@@ -1481,7 +1481,7 @@ export default function StatsPage() {
               <div className="mt-4 px-2 lg:mt-0 lg:w-[40%] lg:shrink-0 lg:pl-0 lg:pr-6">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-slate-200 dark:border-border text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-muted-foreground">
+                    <tr className="border-b border-slate-200 dark:border-border text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-muted-foreground">
                       <th className="pb-2.5 pr-3 text-left font-bold">{t("stats.col_year")}</th>
                       <th className="pb-2.5 px-3 text-right font-bold">{t("stats.total")}</th>
                       <th className="pb-2.5 pl-3 text-right font-bold">{t("stats.col_yoy")}</th>
@@ -1506,12 +1506,12 @@ export default function StatsPage() {
                               ) : row.diff < 0 ? (
                                 <span className="font-medium text-emerald-500">-¥{Math.abs(row.diff).toLocaleString()}</span>
                               ) : (
-                                <span className="text-slate-400 dark:text-muted-foreground">±¥0</span>
+                                <span className="text-slate-500 dark:text-muted-foreground">±¥0</span>
                               )}
                             </td>
                           </>
                         ) : (
-                          <td colSpan={2} className="py-4 pl-3 text-right text-xs text-slate-400 dark:text-muted-foreground">
+                          <td colSpan={2} className="py-4 pl-3 text-right text-xs text-slate-500 dark:text-muted-foreground">
                             {t("stats.no_data")}
                           </td>
                         )}

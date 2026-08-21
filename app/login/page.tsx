@@ -65,7 +65,7 @@ export default function LoginPage() {
               <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("login.error_title")}</h3>
               <button
                 onClick={() => setErrorPopup(null)}
-                className="text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors -mt-1 -mr-1"
+                className="text-slate-500 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors -mt-1 -mr-1"
               >
                 <X size={18} />
               </button>
@@ -89,7 +89,7 @@ export default function LoginPage() {
               <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("reset.request_title")}</h3>
               <button
                 onClick={() => setResetOpen(false)}
-                className="text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors -mt-1 -mr-1"
+                className="text-slate-500 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors -mt-1 -mr-1"
               >
                 <X size={18} />
               </button>
@@ -123,7 +123,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="space-y-1 mb-6">
           <h1 className="text-2xl font-bold text-center">Milenote</h1>
-          <p className="text-sm text-slate-500 dark:text-muted-foreground text-center">{t("login.subtitle")}</p>
+          <p className="text-sm text-slate-600 dark:text-muted-foreground text-center">{t("login.subtitle")}</p>
         </div>
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-2">
@@ -134,7 +134,7 @@ export default function LoginPage() {
             <Label htmlFor="password">{t("login.password")}</Label>
             <div className="relative">
               <Input id="password" type={showPassword ? "text" : "password"} placeholder={t("login.password_placeholder")} value={password} onChange={(e) => setPassword(e.target.value)} required className="border-slate-300 dark:border-border pr-10" />
-              <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors" tabIndex={-1}>
+              <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors" tabIndex={-1}>
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
@@ -149,7 +149,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={openResetModal}
-              className="mt-2 text-xs text-slate-400 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors underline underline-offset-2"
+              className="mt-2 text-xs text-slate-500 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors underline underline-offset-2"
             >
               {t("login.forgot_password")}
             </button>
