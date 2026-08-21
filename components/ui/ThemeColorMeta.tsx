@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 
 // bodyの背景色と合わせる
-const LIGHT_COLOR = "#f8fafc";
+const LIGHT_COLOR = "#fafafa";
 const DARK_COLOR = "#000000";
 
 // theme-color未指定だとステータスバーの色が、ページ上端のコンテンツからサンプリングされてしまうため、アプリの背景色に固定するmetaタグを出力
