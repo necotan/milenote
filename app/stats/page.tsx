@@ -406,6 +406,7 @@ type ChartChrome = {
   sliceStroke: string
   dotStroke: string
   tooltipBg: string
+  tooltipBorder: string
   tooltipText: string
   tooltipLabel: string
   labelLineStroke: string
@@ -491,7 +492,7 @@ const CategoryBreakdownCard = memo(function CategoryBreakdownCard({
                   </Pie>
                   {/* Recharts のコールバック型が複雑なため any を許容 */}
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} formatter={(value: any, name: any) => [`¥${Number(value).toLocaleString()}`, String(name)]} />
+                  <Tooltip contentStyle={{ borderRadius: '8px', border: `1px solid ${chartChrome.tooltipBorder}`, boxShadow: 'none', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} formatter={(value: any, name: any) => [`¥${Number(value).toLocaleString()}`, String(name)]} />
                   <Legend verticalAlign="bottom" content={renderGridLegend(renderRawLegendLabel)} />
                 </PieChart>
               </ResponsiveContainer>
@@ -579,6 +580,7 @@ export default function StatsPage() {
     sliceStroke: isDark ? "#18181b" : "#ffffff",
     dotStroke: isDark ? "#18181b" : "#ffffff",
     tooltipBg: isDark ? "#404040" : "#f5f5f5",
+    tooltipBorder: isDark ? "#525252" : "#d4d4d4",
     tooltipText: isDark ? "#f5f5f5" : "#404040",
     tooltipLabel: isDark ? "#a3a3a3" : "#525252",
     labelLineStroke: isDark ? "#525252" : "#d4d4d4",
@@ -977,7 +979,7 @@ export default function StatsPage() {
             style={{
               background: chartChrome.tooltipBg,
               borderRadius: 8,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              border: `1px solid ${chartChrome.tooltipBorder}`,
               padding: '10px 14px',
             }}
           >
@@ -1003,7 +1005,7 @@ export default function StatsPage() {
       }
       return StackedBarTooltip
     },
-    [t, chartChrome.tooltipBg],
+    [t, chartChrome.tooltipBg, chartChrome.tooltipBorder],
   )
   // 折れ線グラフのドット描画（線の進行に合わせて各点をフェードイン）
   // dot prop の参照が毎レンダーで変わると Recharts が内部で要素を作り直しアニメーションが再生されるため、useMemo で安定化する
@@ -1380,7 +1382,7 @@ export default function StatsPage() {
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
                         <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: chartChrome.axisTick }} tickFormatter={monthFormatter} padding={{ left: 30, right: 30 }} />
                         <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
-                        <Tooltip cursor={{ stroke: chartChrome.gridStroke }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} labelStyle={{ color: chartChrome.tooltipLabel }} formatter={expenditureTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
+                        <Tooltip cursor={{ stroke: chartChrome.gridStroke }} contentStyle={{ borderRadius: '8px', border: `1px solid ${chartChrome.tooltipBorder}`, boxShadow: 'none', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} labelStyle={{ color: chartChrome.tooltipLabel }} formatter={expenditureTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
                         <Line type="linear" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={monthlyLineDot} isAnimationActive={false} />
                       </LineChart>
                     ) : (
@@ -1450,7 +1452,7 @@ export default function StatsPage() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
                       <XAxis dataKey="year" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: chartChrome.axisTick }} tickFormatter={yearFormatter} padding={{ left: 30, right: 30 }} />
                       <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
-                      <Tooltip cursor={{ stroke: chartChrome.gridStroke }} contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} labelStyle={{ color: chartChrome.tooltipLabel }} formatter={expenditureTooltipFormatter} labelFormatter={yearTooltipLabelFormatter} />
+                      <Tooltip cursor={{ stroke: chartChrome.gridStroke }} contentStyle={{ borderRadius: '8px', border: `1px solid ${chartChrome.tooltipBorder}`, boxShadow: 'none', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} labelStyle={{ color: chartChrome.tooltipLabel }} formatter={expenditureTooltipFormatter} labelFormatter={yearTooltipLabelFormatter} />
                       <Line type="linear" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={yearlyLineDot} isAnimationActive={false} />
                     </LineChart>
                   ) : (
