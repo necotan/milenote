@@ -492,7 +492,7 @@ const CategoryBreakdownCard = memo(function CategoryBreakdownCard({
                   </Pie>
                   {/* Recharts のコールバック型が複雑なため any を許容 */}
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  <Tooltip contentStyle={{ borderRadius: '8px', border: `1px solid ${chartChrome.tooltipBorder}`, boxShadow: 'none', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} formatter={(value: any, name: any) => [`¥${Number(value).toLocaleString()}`, String(name)]} />
+                  <Tooltip wrapperStyle={{ zIndex: 10 }} contentStyle={{ borderRadius: '8px', border: `1px solid ${chartChrome.tooltipBorder}`, boxShadow: 'none', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} formatter={(value: any, name: any) => [`¥${Number(value).toLocaleString()}`, String(name)]} />
                   <Legend verticalAlign="bottom" content={renderGridLegend(renderRawLegendLabel)} />
                 </PieChart>
               </ResponsiveContainer>
@@ -1400,7 +1400,7 @@ export default function StatsPage() {
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
                         <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: chartChrome.axisTick }} tickFormatter={monthFormatter} />
                         <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} tickFormatter={numberTickFormatter} />
-                        <Tooltip cursor={{ fill: chartChrome.cursorFill }} content={renderStackedBarTooltip(monthlyTooltipLabelFormatter)} />
+                        <Tooltip wrapperStyle={{ zIndex: 10 }} cursor={{ fill: chartChrome.cursorFill }} content={renderStackedBarTooltip(monthlyTooltipLabelFormatter)} />
                         <Legend verticalAlign="bottom" content={renderGridLegend(renderCategoryLegendLabel)} />
                         <BarStack radius={[4, 4, 0, 0]}>
                           {monthlyCategoriesPresent.map((cat, index) => (
@@ -1470,7 +1470,7 @@ export default function StatsPage() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
                       <XAxis dataKey="year" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: chartChrome.axisTick }} tickFormatter={yearFormatter} />
                       <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} tickFormatter={numberTickFormatter} />
-                      <Tooltip cursor={{ fill: chartChrome.cursorFill }} content={renderStackedBarTooltip(yearTooltipLabelFormatter)} />
+                      <Tooltip wrapperStyle={{ zIndex: 10 }} cursor={{ fill: chartChrome.cursorFill }} content={renderStackedBarTooltip(yearTooltipLabelFormatter)} />
                       <Legend verticalAlign="bottom" content={renderGridLegend(renderCategoryLegendLabel)} />
                       <BarStack radius={[4, 4, 0, 0]}>
                         {yearlyCategoriesPresent.map((cat, index) => (
