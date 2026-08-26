@@ -974,6 +974,7 @@ export default function StatsPage() {
       const StackedBarTooltip = ({ active, payload, label }: TooltipContentProps) => {
         if (!active || !payload) return null
         const items = payload.filter((entry) => Number(entry.value) > 0)
+        const total = items.reduce((sum, entry) => sum + Number(entry.value), 0)
         return (
           <div
             style={{
@@ -987,18 +988,27 @@ export default function StatsPage() {
             {items.length === 0 ? (
               <p className="text-xs text-slate-500 dark:text-muted-foreground">{t("stats.no_data")}</p>
             ) : (
-              <ul className="flex flex-col gap-1">
-                {items.map((entry, index) => (
-                  <li key={`tooltip-item-${index}`} className="flex items-center gap-1.5 text-xs">
-                    <span
-                      className="inline-block shrink-0 rounded-full"
-                      style={{ width: 6, height: 6, backgroundColor: entry.color }}
-                    />
-                    <span className="text-slate-600 dark:text-muted-foreground">{t(`categories.${String(entry.dataKey)}`)}</span>
-                    <span className="ml-auto font-bold text-slate-700 dark:text-foreground">¥{Number(entry.value).toLocaleString()}</span>
-                  </li>
-                ))}
-              </ul>
+              <>
+                <ul className="flex flex-col gap-1">
+                  {items.map((entry, index) => (
+                    <li key={`tooltip-item-${index}`} className="flex items-center gap-1.5 text-xs">
+                      <span
+                        className="inline-block shrink-0 rounded-full"
+                        style={{ width: 6, height: 6, backgroundColor: entry.color }}
+                      />
+                      <span className="text-slate-600 dark:text-muted-foreground">{t(`categories.${String(entry.dataKey)}`)}</span>
+                      <span className="ml-auto font-bold text-slate-700 dark:text-foreground">¥{Number(entry.value).toLocaleString()}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div
+                  className="mt-1.5 pt-1.5 flex items-center gap-1.5 text-xs"
+                  style={{ borderTop: `1px solid ${chartChrome.tooltipBorder}` }}
+                >
+                  <span className="text-slate-600 dark:text-muted-foreground">{t("stats.total")}</span>
+                  <span className="ml-auto font-bold text-slate-700 dark:text-foreground">¥{total.toLocaleString()}</span>
+                </div>
+              </>
             )}
           </div>
         )
