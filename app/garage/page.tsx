@@ -1295,7 +1295,7 @@ export default function GaragePage() {
                 // http(s) 以外のスキームは弾き、安全なURLのみリンク化
                 const safeUrl = getSafeExternalUrl(wish.url)
                 return (
-                  <Card key={wish.id} className="border border-slate-200 dark:border-border bg-white dark:bg-card overflow-hidden relative">
+                  <Card key={wish.id} className="border-none bg-white dark:bg-card overflow-hidden relative">
                     {/* 編集・削除ボタン（右上に常時表示） */}
                     <div className="absolute top-3 right-3 flex items-center gap-1 z-10">
                       <button
