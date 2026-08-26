@@ -449,16 +449,20 @@ export default function GaragePage() {
 
   // ステータス更新処理
   const updateWishStatus = async (id: string, newStatus: string) => {
+    // 切り替え時にタイムラグが出ないよう、通信を待たず先にローカルstateを更新
+    const prevStatus = wishlists.find(w => w.id === id)?.status
+    setWishlists(prev => prev.map(w => (w.id === id ? { ...w, status: newStatus } : w)))
+
     const { error } = await supabase.from("wishlists").update({ status: newStatus }).eq("id", id)
 
     if (error) {
+      // 失敗時は元のステータスに戻す
+      setWishlists(prev => prev.map(w => (w.id === id ? { ...w, status: prevStatus } : w)))
       toast.error(t("common.error_occurred") + ": " + error.message)
       return
     }
 
     toast.success(t("garage.status_updated"))
-    // statusのみなので、全件再取得（スケルトン再表示）はせずローカルstateだけ更新
-    setWishlists(prev => prev.map(w => (w.id === id ? { ...w, status: newStatus } : w)))
   }
 
   // 画像アップロード処理
@@ -1315,9 +1319,6 @@ export default function GaragePage() {
                           <span className="text-[10px] font-bold text-slate-600 dark:text-muted-foreground bg-slate-100 dark:bg-surface-2 px-2 py-0.5 rounded-sm">
                             {t(`wishlist_genres.${wish.genre}`)} / {wish.cars.name}
                           </span>
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${statusStyle}`}>
-                            {t(`wishlist_statuses.${wish.status}`)}
-                          </span>
                         </div>
                         <h3 className="font-bold text-slate-800 dark:text-foreground text-lg leading-tight mb-1">{wish.item_name}</h3>
 
@@ -1344,7 +1345,7 @@ export default function GaragePage() {
                         {/* ステータス変更ドロップダウン */}
                         <div className="w-36">
                           <Select defaultValue={wish.status} onValueChange={(val) => updateWishStatus(wish.id, val)}>
-                            <SelectTrigger className="w-full h-7 text-xs font-bold bg-slate-50 dark:bg-muted border-none">
+                            <SelectTrigger className={`w-full h-7 text-xs font-bold border ${statusStyle}`}>
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
