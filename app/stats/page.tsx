@@ -1483,13 +1483,13 @@ export default function StatsPage() {
               <div className="mt-4 px-2 lg:mt-0 lg:w-[40%] lg:shrink-0 lg:pl-0 lg:pr-6">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-slate-200 dark:border-border text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-muted-foreground">
+                    <tr className="border-b border-slate-100 dark:border-border/50 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-muted-foreground">
                       <th className="pb-2.5 pr-3 text-left font-bold">{t("stats.col_year")}</th>
                       <th className="pb-2.5 px-3 text-right font-bold">{t("stats.total")}</th>
                       <th className="pb-2.5 pl-3 text-right font-bold">{t("stats.col_yoy")}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-200 dark:divide-border">
+                  <tbody className="divide-y divide-slate-100 dark:divide-border/50">
                     {yearlyTableRows.map(row => (
                       <tr key={row.year}>
                         <td className="py-4 pr-3 text-xs font-medium text-slate-700 dark:text-foreground tabular-nums">
