@@ -481,8 +481,8 @@ export default function Home() {
               </div>
               <p className="text-xs text-slate-600 dark:text-muted-foreground leading-relaxed">{t("home.update_odo_desc")}</p>
 
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-slate-600 dark:text-muted-foreground">{t("home.target_car")}</label>
+              <div className="space-y-2">
+                <label className="block text-[11px] font-bold leading-none text-slate-600 dark:text-muted-foreground">{t("home.target_car")}</label>
                 <Select value={odoCarId} onValueChange={handleOdoCarChange}>
                   <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border">
                     <SelectValue />
@@ -495,8 +495,8 @@ export default function Home() {
                 </Select>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-slate-600 dark:text-muted-foreground">{t("common.odometer")}</label>
+              <div className="space-y-2">
+                <label className="block text-[11px] font-bold leading-none text-slate-600 dark:text-muted-foreground">{t("common.odometer")}</label>
                 <div className="relative max-w-40">
                   <NumberInput
                     value={odoValue}
