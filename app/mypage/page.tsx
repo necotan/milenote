@@ -100,7 +100,7 @@ function ChipPresetRow({
           key={p}
           type="button"
           onClick={() => { setCustomOpen(false); onChange(p) }}
-          className={`px-3 h-8 rounded-full text-xs font-bold border transition-colors ${
+          className={`px-3 h-8 rounded-full text-xs font-bold border transition-colors outline-none focus-visible:ring-1 focus-visible:ring-slate-300 ${
             !customOpen && value === p
               ? "bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground border-slate-900 dark:border-primary"
               : "bg-white dark:bg-card text-slate-600 dark:text-muted-foreground border-neutral-300 dark:border-neutral-600"
