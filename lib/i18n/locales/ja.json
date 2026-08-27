@@ -326,7 +326,7 @@
     "title": "マイページ",
     "subtitle": "プロフィールとアプリ設定を行います",
     "profile": "プロフィール",
-    "profile_desc": "表示名とユーザーIDを設定します。これはダッシュボードや他のユーザーに表示される情報です。",
+    "profile_desc": "表示名は自由に設定できる名前です。ユーザーIDはアプリ内で一意のIDです。",
     "display_name": "表示名",
     "user_id": "ユーザーID",
     "edit_field_title": "{{name}}を編集",

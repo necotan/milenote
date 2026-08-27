@@ -326,7 +326,7 @@
     "title": "My Page",
     "subtitle": "Configure your profile and app settings",
     "profile": "Profile",
-    "profile_desc": "Set your display name and user ID. This info is shown on the dashboard and to other users.",
+    "profile_desc": "Display name is a nickname you can set freely. User ID is a unique identifier within the app.",
     "display_name": "Display Name",
     "user_id": "User ID",
     "edit_field_title": "Edit {{name}}",
