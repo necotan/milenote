@@ -277,10 +277,10 @@ function MaintEditDialog({
           )}
         </div>
         <DialogFooter>
-          <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)} disabled={saving}>
+          <Button type="button" variant="outline" size="default" onClick={() => onOpenChange(false)} disabled={saving}>
             {t("common.cancel")}
           </Button>
-          <Button type="button" size="sm" onClick={handleSave} disabled={saving}>
+          <Button type="button" size="default" onClick={handleSave} disabled={saving}>
             {saving ? t("common.saving") : t("common.save")}
           </Button>
         </DialogFooter>
