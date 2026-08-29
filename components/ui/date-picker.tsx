@@ -138,7 +138,7 @@ function DatePicker({
                 <button
                   type="button"
                   onClick={handleToday}
-                  className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {t("common.today")}
                 </button>
@@ -147,7 +147,7 @@ function DatePicker({
                     <button
                       type="button"
                       onClick={handleClear}
-                      className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+                      className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {t("common.clear")}
                     </button>
@@ -155,7 +155,7 @@ function DatePicker({
                   <button
                     type="button"
                     onClick={handleReset}
-                    className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {t("common.reset")}
                   </button>

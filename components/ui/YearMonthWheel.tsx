@@ -120,7 +120,7 @@ function YearMonthWheel({ year, month, minYear, maxYear, onConfirm, onReset, cle
           <button
             type="button"
             onClick={onClear}
-            className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
             {t("common.clear")}
           </button>
@@ -131,14 +131,14 @@ function YearMonthWheel({ year, month, minYear, maxYear, onConfirm, onReset, cle
           <button
             type="button"
             onClick={handleReset}
-            className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
             {t("common.reset")}
           </button>
           <button
             type="button"
             onClick={handleConfirm}
-            className="rounded-md bg-primary px-3 py-1 text-xs font-bold text-primary-foreground transition-opacity hover:opacity-90"
+            className="rounded-md bg-primary px-3 py-1 text-sm font-bold text-primary-foreground transition-opacity hover:opacity-90"
           >
             {t("common.confirm")}
           </button>
