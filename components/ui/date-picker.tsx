@@ -46,6 +46,7 @@ function DatePicker({
   const [mode, setMode] = React.useState<"days" | "wheel">("days")
   const selectedDate = React.useMemo(() => parseISODate(value), [value])
   const [displayMonth, setDisplayMonth] = React.useState<Date>(() => selectedDate ?? new Date())
+  const openValueRef = React.useRef(value)
 
   const defaultRange = getDefaultWheelYearRange()
   const wheelMinYear = minYear ?? defaultRange.minYear
@@ -56,6 +57,7 @@ function DatePicker({
     if (next) {
       setMode("days")
       setDisplayMonth(selectedDate ?? new Date())
+      openValueRef.current = value
     }
   }
 
@@ -65,6 +67,11 @@ function DatePicker({
 
   const handleToday = () => {
     onChange(toISODate(new Date()))
+    setOpen(false)
+  }
+
+  const handleReset = () => {
+    onChange(openValueRef.current ?? "")
     setOpen(false)
   }
 
@@ -135,15 +142,24 @@ function DatePicker({
                 >
                   {t("common.today")}
                 </button>
-                {clearable && (
+                <div className="flex items-center gap-4">
+                  {clearable && (
+                    <button
+                      type="button"
+                      onClick={handleClear}
+                      className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      {t("common.clear")}
+                    </button>
+                  )}
                   <button
                     type="button"
-                    onClick={handleClear}
+                    onClick={handleReset}
                     className="text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    {t("common.clear")}
+                    {t("common.reset")}
                   </button>
-                )}
+                </div>
               </div>
             </>
           ) : (
