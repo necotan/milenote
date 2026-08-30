@@ -17,11 +17,9 @@ interface YearMonthWheelProps {
   maxYear: number
   onConfirm: (year: number, month: number) => void
   onReset: () => void
-  clearable?: boolean
-  onClear?: () => void
 }
 
-function YearMonthWheel({ year, month, minYear, maxYear, onConfirm, onReset, clearable, onClear }: YearMonthWheelProps) {
+function YearMonthWheel({ year, month, minYear, maxYear, onConfirm, onReset }: YearMonthWheelProps) {
   const { locale, t } = useTranslation()
   const rows = React.useMemo(() => {
     const list: { year: number; month: number }[] = []
@@ -116,17 +114,7 @@ function YearMonthWheel({ year, month, minYear, maxYear, onConfirm, onReset, cle
       </div>
 
       <div className="flex items-center justify-between pt-2 mt-1 border-t border-border">
-        {clearable ? (
-          <button
-            type="button"
-            onClick={onClear}
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            {t("common.clear")}
-          </button>
-        ) : (
-          <span />
-        )}
+        <span />
         <div className="flex items-center gap-4">
           <button
             type="button"

@@ -12,7 +12,6 @@ import { YearMonthWheel } from "@/components/ui/YearMonthWheel"
 interface MonthPickerProps {
   value: string | null
   onChange: (value: string) => void
-  clearable?: boolean
   placeholder?: string
   disabled?: boolean
   className?: string
@@ -36,7 +35,6 @@ function formatYearMonth(year: number, month: number): string {
 function MonthPicker({
   value,
   onChange,
-  clearable = false,
   placeholder,
   disabled,
   className,
@@ -95,11 +93,6 @@ function MonthPicker({
               setOpen(false)
             }}
             onReset={() => {}}
-            clearable={clearable}
-            onClear={() => {
-              onChange("")
-              setOpen(false)
-            }}
           />
         </PopoverPrimitive.Content>
       </PopoverPrimitive.Portal>
