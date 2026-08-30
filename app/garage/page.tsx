@@ -792,8 +792,8 @@ export default function GaragePage() {
                         <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("garage.registration_info")}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
-                        <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.first_registration")}</Label><MonthPicker value={firstRegistrationDate} onChange={setFirstRegistrationDate} clearable className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-9 min-h-0" /></div>
-                        <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("common.delivery_date")}</Label><DatePicker value={purchaseDate} onChange={setPurchaseDate} clearable className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-9 min-h-0" /></div>
+                        <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.first_registration")}</Label><MonthPicker value={firstRegistrationDate} onChange={setFirstRegistrationDate} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-9 min-h-0" /></div>
+                        <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("common.delivery_date")}</Label><DatePicker value={purchaseDate} onChange={setPurchaseDate} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-9 min-h-0" /></div>
                       </div>
                     </div>
 

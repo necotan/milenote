@@ -16,7 +16,6 @@ interface DatePickerProps {
   value: string | null
   onChange: (value: string) => void
   variant?: DatePickerVariant
-  clearable?: boolean
   placeholder?: string
   formatLabel?: (iso: string) => string
   disabled?: boolean
@@ -31,7 +30,6 @@ function DatePicker({
   value,
   onChange,
   variant = "input",
-  clearable = false,
   placeholder,
   formatLabel,
   disabled,
@@ -72,11 +70,6 @@ function DatePicker({
 
   const handleReset = () => {
     onChange(openValueRef.current ?? "")
-    setOpen(false)
-  }
-
-  const handleClear = () => {
-    onChange("")
     setOpen(false)
   }
 
@@ -143,15 +136,6 @@ function DatePicker({
                   {t("common.today")}
                 </button>
                 <div className="flex items-center gap-4">
-                  {clearable && (
-                    <button
-                      type="button"
-                      onClick={handleClear}
-                      className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      {t("common.clear")}
-                    </button>
-                  )}
                   <button
                     type="button"
                     onClick={handleReset}
