@@ -32,7 +32,7 @@ export default function Sidebar() {
                             key={item.key}
                             href={item.href}
                             className={`flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all ${isActive
-                                    ? "bg-white dark:bg-card shadow-[0_2px_10px_rgba(0,0,0,0.04)] dark:shadow-none text-slate-900 dark:text-foreground font-bold" // アクティブ時は白背景とドロップシャドウで強調表示
+                                    ? "bg-white dark:bg-muted text-slate-900 dark:text-foreground font-bold" // アクティブ時は白背景（ダークはグレー背景）で強調表示
                                     : "text-slate-600 hover:bg-white/50 hover:text-slate-900 dark:text-muted-foreground dark:hover:bg-card/50 dark:hover:text-foreground font-medium"
                                 }`}
                         >
