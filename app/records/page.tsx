@@ -190,46 +190,37 @@ const RecordForm = ({
               {/* 単価 */}
               <div className="space-y-2">
                 <Label>{fuelFieldText.priceLabel}</Label>
-                <div className="relative">
-                  <NumberInput
-                    decimal
-                    value={fuelUnitPrice}
-                    onValueChange={value => onFuelFieldChange("fuelUnitPrice", value)}
-                    placeholder={fuelFieldText.pricePh}
-                    className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 pr-12 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 dark:text-muted-foreground pointer-events-none">{fuelFieldText.priceUnit}</span>
-                </div>
+                <NumberInput
+                  decimal
+                  value={fuelUnitPrice}
+                  onValueChange={value => onFuelFieldChange("fuelUnitPrice", value)}
+                  placeholder={fuelFieldText.pricePh}
+                  className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
+                />
               </div>
 
               {/* リットル / kWh / kg */}
               <div className="space-y-2">
                 <Label>{fuelFieldText.amountLabel}</Label>
-                <div className="relative">
-                  <NumberInput
-                    decimal
-                    value={fuelAmount}
-                    onValueChange={value => onFuelFieldChange("fuelAmount", value)}
-                    placeholder={fuelFieldText.amountPh}
-                    className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 pr-8 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 dark:text-muted-foreground pointer-events-none">{fuelFieldText.amountUnit}</span>
-                </div>
+                <NumberInput
+                  decimal
+                  value={fuelAmount}
+                  onValueChange={value => onFuelFieldChange("fuelAmount", value)}
+                  placeholder={fuelFieldText.amountPh}
+                  className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
+                />
               </div>
 
               {/* 総額 */}
               <div className="space-y-2">
                 <Label>{t("records.total_amount")} <span className="text-red-500">{t("common.required")}</span></Label>
-                <div className="relative">
-                  <NumberInput
-                    value={amount}
-                    onValueChange={value => onFuelFieldChange("amount", value)}
-                    required
-                    placeholder="6,800"
-                    className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 font-bold text-slate-800 dark:text-foreground pr-8 placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 dark:text-muted-foreground pointer-events-none">{t("records.unit_yen")}</span>
-                </div>
+                <NumberInput
+                  value={amount}
+                  onValueChange={value => onFuelFieldChange("amount", value)}
+                  required
+                  placeholder="6,800"
+                  className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 font-bold text-slate-800 dark:text-foreground placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
+                />
               </div>
             </div>
           </div>
