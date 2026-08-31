@@ -61,7 +61,7 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
             </div>
             <div className="w-[80%] bg-slate-100 dark:bg-surface-3 h-1.5 rounded-full overflow-hidden">
               <div
-                className={`h-full transition-all duration-1000 ease-out ${alert.isUrgent ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : alert.progressPercent > 80 ? 'bg-orange-400' : 'bg-blue-400'}`}
+                className={`h-full rounded-full transition-all duration-1000 ease-out ${alert.isUrgent ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : alert.progressPercent > 80 ? 'bg-orange-400' : 'bg-blue-400'}`}
                 style={{ width: `${alert.progressPercent}%` }}
               ></div>
             </div>
