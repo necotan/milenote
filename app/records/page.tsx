@@ -979,7 +979,7 @@ function RecordsPageInner() {
                     </div>
                     <div className="flex-1 min-w-0 pr-14">
                       {/* 金額 */}
-                      <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1">¥{record.amount.toLocaleString()}</h3>
+                      <h3 className="font-bold text-slate-800 dark:text-foreground text-lg tracking-wider mb-1">¥{record.amount.toLocaleString()}</h3>
                       
                       {/* ジャンルタグ */}
                       <div className="flex items-center gap-2 text-[10px] font-bold text-slate-600 dark:text-muted-foreground mb-2 flex-wrap">
