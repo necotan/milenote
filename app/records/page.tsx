@@ -395,13 +395,13 @@ function RecordsPageInner() {
     const now = new Date()
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
   })()
-  const [viewMode, setViewMode] = useState<"month" | "all">("month")
+  // 保存済みの表示モードは初期値として読み込む
+  const [viewMode, setViewMode] = useState<"month" | "all">(() => {
+    if (typeof window === "undefined") return "month"
+    const saved = localStorage.getItem("records_view_mode")
+    return saved === "all" || saved === "month" ? saved : "month"
+  })
   const [selectedYearMonth, setSelectedYearMonth] = useState(currentYM)
-
-  useEffect(() => {
-    const saved = localStorage.getItem("records_view_mode") as "month" | "all"
-    if (saved === "month" || saved === "all") setViewMode(saved)
-  }, [])
 
   useEffect(() => {
     localStorage.setItem("records_view_mode", viewMode)
