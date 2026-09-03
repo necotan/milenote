@@ -2,7 +2,6 @@
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import type { CSSProperties, ReactElement } from "react"
-import { createClient } from "@/utils/supabase"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
@@ -18,6 +17,9 @@ import { useTheme } from "next-themes"
 import { DatePicker } from "@/components/ui/date-picker"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
+import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
+import { useCars } from "@/lib/hooks/useCars"
+import { useRecords } from "@/lib/hooks/useRecords"
 
 const CATEGORY_MAP_COLORFUL: Record<string, { color: string }> = {
   fuel: { color: "#3b82f6" },
@@ -533,10 +535,32 @@ function BentoTile({
 }
 
 export default function StatsPage() {
-  const [records, setRecords] = useState<Record_[]>([])
-  const [carFuelTypes, setCarFuelTypes] = useState<Map<string, string>>(new Map())
-  const [totalOdo, setTotalOdo] = useState(0)
-  const [loading, setLoading] = useState(true)
+  const { user, isLoading: userLoading } = useSupabaseUser()
+  const userId = user?.id ?? null
+  const { cars: allCars, isLoading: carsLoading } = useCars(userId)
+  const { records: allRecords, isLoading: recordsLoading } = useRecords(userId)
+
+  const loading = userLoading || (!!userId && (carsLoading || recordsLoading))
+
+  // 稼働中・元愛車（統計含む）の車のみ集計対象にする
+  const statsCars = useMemo(
+    () => allCars.filter(c => c.status === "active" || c.status === "archived"),
+    [allCars]
+  )
+  const statsCarIds = useMemo(() => new Set(statsCars.map(c => c.id)), [statsCars])
+  const records = useMemo(
+    () => allRecords.filter(r => statsCarIds.has(r.car_id)),
+    [allRecords, statsCarIds]
+  )
+  const totalOdo = useMemo(
+    () => Math.max(...statsCars.map(c => c.current_odo), 0),
+    [statsCars]
+  )
+  const carFuelTypes = useMemo(() => {
+    const fuelTypeMap = new Map<string, string>()
+    statsCars.forEach(c => { if (c.fuel_type) fuelTypeMap.set(c.id, c.fuel_type) })
+    return fuelTypeMap
+  }, [statsCars])
 
   // カテゴリ別グラフ用フィルター
   const [catPreset, setCatPreset] = useState<PeriodPreset>("all")
@@ -564,8 +588,6 @@ export default function StatsPage() {
   const [yearlyLineReady, setYearlyLineReady] = useState(false)
   const LINE_ANIM_DURATION_MS = 900
 
-  // createClient() は呼ぶたびに新しい BrowserClient を返すため、毎レンダーで supabase 参照が変わると、useEffect([supabase]) が毎回発火して records が再フェッチされ、メモ化したチャートデータも参照が変わってしまう
-  const supabase = useMemo(() => createClient(), [])
   const { t, locale } = useTranslation()
 
   // 初回ローディング画面とデータ取得を連動させる
@@ -589,38 +611,16 @@ export default function StatsPage() {
   }), [isDark])
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const { data: recordsData } = await supabase.from("records").select("*, cars!inner(status)").eq("user_id", user.id).in("cars.status", ["active", "archived"])
-        if (recordsData) setRecords(recordsData)
-        const { data: carsData } = await supabase.from("cars").select("id, current_odo, fuel_type").eq("user_id", user.id).in("status", ["active", "archived"])
-        if (carsData) {
-          const maxOdo = Math.max(...carsData.map(c => c.current_odo), 0)
-          setTotalOdo(maxOdo)
-          const fuelTypeMap = new Map<string, string>()
-          carsData.forEach((c: { id: string; fuel_type: string | null }) => {
-            if (c.fuel_type) fuelTypeMap.set(c.id, c.fuel_type)
-          })
-          setCarFuelTypes(fuelTypeMap)
-        }
-      }
+    // ローカルストレージからグラフの表示設定を復元
+    const savedMonthly = localStorage.getItem("milenote_monthly_chart") as "line" | "bar"
+    if (savedMonthly) setMonthlyChartType(savedMonthly)
 
-      // ローカルストレージからグラフの表示設定を復元
-      const savedMonthly = localStorage.getItem("milenote_monthly_chart") as "line" | "bar"
-      if (savedMonthly) setMonthlyChartType(savedMonthly)
+    const savedYearly = localStorage.getItem("milenote_yearly_chart") as "line" | "bar"
+    if (savedYearly) setYearlyChartType(savedYearly)
 
-      const savedYearly = localStorage.getItem("milenote_yearly_chart") as "line" | "bar"
-      if (savedYearly) setYearlyChartType(savedYearly)
-
-      const savedColorful = localStorage.getItem("milenote_colorful_pie") === "true"
-      setIsColorful(savedColorful)
-
-      setLoading(false)
-    }
-    fetchData()
-  }, [supabase])
+    const savedColorful = localStorage.getItem("milenote_colorful_pie") === "true"
+    setIsColorful(savedColorful)
+  }, [])
 
   // 期間プリセットから実際の開始・終了日を算出
   const toIsoDate = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
