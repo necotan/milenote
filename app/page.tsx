@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { createClient } from "@/utils/supabase"
 import { Card, CardContent } from "@/components/ui/card"
 import { Banknote, CarFront, TrendingUp, TrendingDown, Minus, List, ChevronLeft, ChevronRight, Fuel, Gauge, Image as ImageIcon } from "lucide-react"
@@ -14,9 +14,13 @@ import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { getCarImageStyle } from "@/utils/carImage"
-import { generateMaintAlerts, DEFAULT_MAINT_SETTINGS, type MaintSettings, type MaintAlertItem } from "@/lib/maintenanceAlerts"
+import { generateMaintAlerts, DEFAULT_MAINT_SETTINGS, type MaintSettings } from "@/lib/maintenanceAlerts"
 import { MaintAlertCard } from "@/components/MaintenanceAlertViews"
 import { getFuelUnit } from "@/lib/fuelTypes"
+import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
+import { useUserProfile } from "@/lib/hooks/useUserProfile"
+import { useCars } from "@/lib/hooks/useCars"
+import { useRecords } from "@/lib/hooks/useRecords"
 
 const getGreeting = (t: (key: string) => string) => {
   const hour = new Date().getHours()
@@ -26,11 +30,6 @@ const getGreeting = (t: (key: string) => string) => {
 }
 
 export default function Home() {
-  const [cars, setCars] = useState<any[]>([])
-  const [records, setRecords] = useState<any[]>([])
-  const [alerts, setAlerts] = useState<MaintAlertItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [displayName, setDisplayName] = useState("")
   const [homeOrder, setHomeOrder] = useState<string[]>(["cars", "summary", "alerts"])
   const [carIndex, setCarIndex] = useState(0)
   const [odoModalOpen, setOdoModalOpen] = useState(false)
@@ -40,35 +39,45 @@ export default function Home() {
   const supabase = createClient()
   const { t, locale } = useTranslation()
 
+  const { user, isLoading: userLoading } = useSupabaseUser()
+  const userId = user?.id ?? null
+  const { profile, isLoading: profileLoading } = useUserProfile(userId)
+  const { cars: allCars, isLoading: carsLoading, mutate: mutateCars } = useCars(userId)
+  const { records: allRecords, isLoading: recordsLoading } = useRecords(userId)
+
+  const loading = userLoading || (!!userId && (profileLoading || carsLoading || recordsLoading))
+
   // 初回ローディング画面とデータ取得を連動させる
   usePageLoadingGate(!loading)
 
-  const fetchData = useCallback(async (showLoading = true) => {
-      if (showLoading) setLoading(true)
-      const { data: { user } } = await supabase.auth.getUser()
+  const displayName = profile?.display_name ?? ""
 
-      if (user) {
-        const { data: userData } = await supabase.from("users").select("maint_settings, display_name").eq("id", user.id).single()
-        // 保存済み設定に無い項目も既定値で補って表示
-        const maintSettings: MaintSettings = { ...DEFAULT_MAINT_SETTINGS, ...(userData?.maint_settings || {}) }
-        if (userData?.display_name) setDisplayName(userData.display_name)
+  // 保存済み設定に無い項目も既定値で補って表示
+  const maintSettings: MaintSettings = useMemo(
+    () => ({ ...DEFAULT_MAINT_SETTINGS, ...(profile?.maint_settings || {}) }),
+    [profile]
+  )
 
-        const { data: carsData } = await supabase.from("cars").select("*").eq("user_id", user.id).eq("status", "active").eq("is_display_home", true)
-        const { data: recordsData } = await supabase.from("records").select("*, cars!inner(fuel_type, status)").eq("user_id", user.id).in("cars.status", ["active", "archived"])
+  const carsById = useMemo(() => new Map(allCars.map(c => [c.id, c])), [allCars])
 
-        if (carsData) setCars(carsData)
-        if (recordsData) setRecords(recordsData)
+  // ホーム表示対象の車
+  const cars = useMemo(
+    () => allCars.filter(c => c.status === "active" && c.is_display_home),
+    [allCars]
+  )
 
-        if (carsData && recordsData) {
-          setAlerts(generateMaintAlerts(carsData, recordsData, maintSettings))
-        }
-      }
-      if (showLoading) setLoading(false)
-  }, [supabase])
+  // 稼働中・元愛車（統計含む）の車に紐づく記録
+  const records = useMemo(
+    () => allRecords.filter(r => {
+      const car = carsById.get(r.car_id)
+      return car && (car.status === "active" || car.status === "archived")
+    }),
+    [allRecords, carsById]
+  )
+
+  const alerts = useMemo(() => generateMaintAlerts(cars, records, maintSettings), [cars, records, maintSettings])
 
   useEffect(() => {
-    fetchData()
-
     // localStorageから並び順を取得
     const savedOrder = localStorage.getItem("home_layout")
     if (savedOrder) {
@@ -76,7 +85,7 @@ export default function Home() {
         setHomeOrder(JSON.parse(savedOrder))
       } catch {}
     }
-  }, [fetchData])
+  }, [])
 
   // ODO更新モーダルを開く
   const openOdoModal = () => {
@@ -108,7 +117,7 @@ export default function Home() {
     } else {
       toast.success(t("home.update_odo_saved"))
       setOdoModalOpen(false)
-      await fetchData(false)
+      await mutateCars()
     }
     setOdoSaving(false)
   }
@@ -321,7 +330,7 @@ export default function Home() {
                         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime() || new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                         .slice(0, 3)
                         .map((r) => {
-                          const fuelUnit = getFuelUnit(r.cars?.fuel_type)
+                          const fuelUnit = getFuelUnit(carsById.get(r.car_id)?.fuel_type)
                           const categoryLabel = r.category === "fuel" && fuelUnit !== "l"
                             ? t(fuelUnit === "kwh" ? "home.record_charge_label" : "home.record_hydrogen_label")
                             : t(`categories.${r.category}`)

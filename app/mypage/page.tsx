@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import type { ReactNode, PointerEvent as ReactPointerEvent } from "react"
+import { mutate as globalMutate } from "swr"
 import { createClient } from "@/utils/supabase"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -22,6 +23,8 @@ import { recordsToCsv, downloadCsv, buildExportFilename } from "@/lib/csvExport"
 import type { ExportRecord } from "@/lib/csvExport"
 import Footer from "@/components/ui/Footer"
 import { MAINT_CATEGORIES } from "@/lib/subcategories"
+import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
+import { useUserProfile } from "@/lib/hooks/useUserProfile"
 
 type MaintSetting = { km: number; months: number; months_only?: boolean; enabled?: boolean }
 type MaintSettings = Record<string, MaintSetting>
@@ -383,7 +386,6 @@ function ProfileFieldDialog({
 }
 
 export default function MyPage() {
-  const [userId, setUserId] = useState<string | null>(null)
   const [username, setUsername] = useState("")
   const [displayName, setDisplayName] = useState("")
   const [maintSettings, setMaintSettings] = useState<MaintSettings>(DEFAULT_MAINT_SETTINGS)
@@ -393,11 +395,18 @@ export default function MyPage() {
   const [isColorful, setIsColorful] = useState(false)
   const { resolvedTheme, setTheme } = useTheme()
   const [themeMounted, setThemeMounted] = useState(false)
-  const [loading, setLoading] = useState(true)
   const [exporting, setExporting] = useState(false)
   const router = useRouter()
   const supabase = createClient()
   const { t, locale, setLocale } = useTranslation()
+
+  const { user, isLoading: userLoading } = useSupabaseUser()
+  const userId = user?.id ?? null
+  const { profile, isLoading: profileLoading, mutate: mutateProfile } = useUserProfile(userId)
+  const loading = userLoading || (!!userId && profileLoading)
+
+  // プロフィールの初回取得時だけローカル編集状態へ反映する
+  const profileSeededRef = useRef(false)
 
   // maint_settingsは1カラムのjsonbのため、トグル/ポップアップ保存の両方で最新値とロールバック先を参照する
   const maintSettingsRef = useRef<MaintSettings>(maintSettings)
@@ -416,28 +425,20 @@ export default function MyPage() {
   }, [])
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      setLoading(true)
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        setUserId(user.id)
-        const { data } = await supabase.from("users").select("*").eq("id", user.id).single()
-        if (data) {
-          setUsername(data.username || "")
-          setDisplayName(data.display_name || "")
-          // デフォルトをベースにDBの保存値を上書きマージ（未保存の新項目はデフォルト値で表示）
-          const mergedMaintSettings = data.maint_settings
-            ? { ...DEFAULT_MAINT_SETTINGS, ...data.maint_settings }
-            : DEFAULT_MAINT_SETTINGS
-          setMaintSettings(mergedMaintSettings)
-          maintSettingsRef.current = mergedMaintSettings
-          lastPersistedMaintRef.current = mergedMaintSettings
-        }
-      }
-      setLoading(false)
-    }
-    fetchProfile()
+    if (!profile || profileSeededRef.current) return
+    profileSeededRef.current = true
+    setUsername(profile.username || "")
+    setDisplayName(profile.display_name || "")
+    // デフォルトをベースにDBの保存値を上書きマージ
+    const mergedMaintSettings = profile.maint_settings
+      ? { ...DEFAULT_MAINT_SETTINGS, ...profile.maint_settings }
+      : DEFAULT_MAINT_SETTINGS
+    setMaintSettings(mergedMaintSettings)
+    maintSettingsRef.current = mergedMaintSettings
+    lastPersistedMaintRef.current = mergedMaintSettings
+  }, [profile])
 
+  useEffect(() => {
     // localStorageからホーム画面の並び順を取得
     const savedOrder = localStorage.getItem("home_layout")
     if (savedOrder) {
@@ -448,7 +449,7 @@ export default function MyPage() {
 
     // グラフのカラーモード設定を取得
     setIsColorful(localStorage.getItem("milenote_colorful_pie") === "true")
-  }, [supabase])
+  }, [])
 
   const handleColorfulChange = (val: boolean) => {
     setIsColorful(val)
@@ -462,6 +463,7 @@ export default function MyPage() {
       toast.error(t("common.error_occurred") + ": " + error.message)
       return false
     }
+    await mutateProfile()
     return true
   }
 
@@ -524,6 +526,7 @@ export default function MyPage() {
     }
     if (field === "display_name") setDisplayName(value)
     else setUsername(value)
+    await mutateProfile()
     toast.success(t("mypage.settings_saved"))
     return true
   }
@@ -609,6 +612,8 @@ export default function MyPage() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
+    // 認証ユーザーのキャッシュを破棄する
+    await globalMutate("auth-user", null, { revalidate: false })
     router.push("/login")
   }
 

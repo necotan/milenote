@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { SWRConfig } from "swr";
 import { Geist, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import BottomNav from "@/components/ui/BottomNav";
@@ -143,11 +144,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ThemeColorMeta />
           <StandaloneStatusBar />
           <LanguageProvider>
-            <LoadingGateProvider value={gateValue}>
-              <AppContent loading={!revealed}>
-                {children}
-              </AppContent>
-            </LoadingGateProvider>
+            <SWRConfig value={{ dedupingInterval: 5000 }}>
+              <LoadingGateProvider value={gateValue}>
+                <AppContent loading={!revealed}>
+                  {children}
+                </AppContent>
+              </LoadingGateProvider>
+            </SWRConfig>
             <Toaster position="top-center" richColors />
           </LanguageProvider>
         </ThemeProvider>

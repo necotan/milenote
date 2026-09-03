@@ -1,7 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback, useRef } from "react"
-import { createClient } from "@/utils/supabase"
+import { useEffect, useState, useMemo, useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
@@ -12,8 +11,12 @@ import Link from "next/link"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { MAINT_CATEGORIES } from "@/lib/subcategories"
-import { generateMaintAlerts, DEFAULT_MAINT_SETTINGS, type MaintSettings, type MaintAlertItem, type MaintAlertCar, type MaintAlertRecord } from "@/lib/maintenanceAlerts"
+import { generateMaintAlerts, DEFAULT_MAINT_SETTINGS, type MaintSettings } from "@/lib/maintenanceAlerts"
 import { MaintAlertCard } from "@/components/MaintenanceAlertViews"
+import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
+import { useUserProfile } from "@/lib/hooks/useUserProfile"
+import { useCars } from "@/lib/hooks/useCars"
+import { useRecords } from "@/lib/hooks/useRecords"
 
 // 表示設定モーダルの各項目はlocalStorageに個別キーで保存
 const SHOW_DISABLED_STORAGE_KEY = "milenote_maintenance_show_disabled"
@@ -32,11 +35,43 @@ const CARD_GAP = 16
 const MAX_GRID_COLUMNS = 4
 
 export default function MaintenancePage() {
-  const [cars, setCars] = useState<MaintAlertCar[]>([])
-  const [alerts, setAlerts] = useState<MaintAlertItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const supabase = createClient()
   const { t } = useTranslation()
+
+  const { user, isLoading: userLoading } = useSupabaseUser()
+  const userId = user?.id ?? null
+  const { profile, isLoading: profileLoading } = useUserProfile(userId)
+  const { cars: allCars, isLoading: carsLoading } = useCars(userId)
+  const { records: allRecords, isLoading: recordsLoading } = useRecords(userId)
+
+  const loading = userLoading || (!!userId && (profileLoading || carsLoading || recordsLoading))
+
+  const maintSettings: MaintSettings = useMemo(
+    () => ({ ...DEFAULT_MAINT_SETTINGS, ...(profile?.maint_settings || {}) }),
+    [profile]
+  )
+
+  const carsById = useMemo(() => new Map(allCars.map(c => [c.id, c])), [allCars])
+
+  // メンテナンス一覧の対象車
+  const cars = useMemo(
+    () => allCars.filter(c => c.status === "active" && c.is_display_home),
+    [allCars]
+  )
+
+  // 稼働中・元愛車（統計含む）の車に紐づく記録
+  const records = useMemo(
+    () => allRecords.filter(r => {
+      const car = carsById.get(r.car_id)
+      return car && (car.status === "active" || car.status === "archived")
+    }),
+    [allRecords, carsById]
+  )
+
+  // オフにした項目も一覧側の表示切り替えで出し分けられるよう、生成時点では除外しない
+  const alerts = useMemo(
+    () => generateMaintAlerts(cars, records, maintSettings, { includeDisabled: true }),
+    [cars, records, maintSettings]
+  )
 
   // カテゴリ、車の絞り込み用ステート
   const [categoryFilters, setCategoryFilters] = useState<string[]>([])
@@ -179,31 +214,6 @@ export default function MaintenancePage() {
 
   // 初回ローディング画面とデータ取得を連動させる
   usePageLoadingGate(!loading)
-
-  const fetchData = useCallback(async () => {
-    setLoading(true)
-    const { data: { user } } = await supabase.auth.getUser()
-
-    if (user) {
-      const { data: userData } = await supabase.from("users").select("maint_settings").eq("id", user.id).single()
-      // 保存済み設定に無い項目も既定値で補って表示
-      const maintSettings: MaintSettings = { ...DEFAULT_MAINT_SETTINGS, ...(userData?.maint_settings || {}) }
-
-      const { data: carsData } = await supabase.from("cars").select("id, name, current_odo").eq("user_id", user.id).eq("status", "active").eq("is_display_home", true)
-      const { data: recordsData } = await supabase.from("records").select("car_id, sub_category, date, odo_at_record, interval_months, cars!inner(status)").eq("user_id", user.id).in("cars.status", ["active", "archived"])
-
-      if (carsData) setCars(carsData)
-      if (carsData && recordsData) {
-        // オフにした項目も一覧側の表示切り替えで出し分けられるよう、生成時点では除外しない
-        setAlerts(generateMaintAlerts(carsData, recordsData as MaintAlertRecord[], maintSettings, { includeDisabled: true }))
-      }
-    }
-    setLoading(false)
-  }, [supabase])
-
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
 
   if (loading) return (
     <main className="p-4 space-y-6">

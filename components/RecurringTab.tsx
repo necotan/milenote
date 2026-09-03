@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { createClient } from "@/utils/supabase"
+import { useRecurringCosts } from "@/lib/hooks/useRecurringCosts"
+import type { Car } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { DatePicker } from "@/components/ui/date-picker"
 import { NumberInput } from "@/components/ui/NumberInput"
@@ -286,9 +288,21 @@ const EmptyState = ({ onAdd }: { onAdd: () => void }) => {
 }
 
 // メインコンポーネント (RecurringTab)
-export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], onRecordsChanged?: () => void }) {
-  const [costs, setCosts] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
+export default function RecurringTab({
+  userId, cars, carsById, onRecordsChanged,
+}: {
+  userId: string | null
+  cars: any[]
+  carsById: Map<string, Car>
+  onRecordsChanged?: () => void
+}) {
+  const { recurringCosts: allCosts, isLoading: loading, mutate: mutateCosts } = useRecurringCosts(userId)
+  const costs = allCosts
+    .filter(c => {
+      const car = carsById.get(c.car_id)
+      return car && (car.status === "active" || car.status === "archived")
+    })
+    .sort((a, b) => a.next_billing_date.localeCompare(b.next_billing_date))
   const [isAdding, setIsAdding] = useState(false)
   const [editId, setEditId] = useState<string | null>(null)
   const [deleteId, setDeleteId] = useState<string | null>(null)
@@ -314,24 +328,6 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
       setFrequency("yearly")
     }
   }, [category])
-
-  const fetchData = async () => {
-    setLoading(true)
-    const { data: { session } } = await supabase.auth.getSession()
-    const user = session?.user
-    if (user) {
-      const { data } = await supabase
-        .from("recurring_costs")
-        .select(`*, cars!inner(name, status)`)
-        .eq("user_id", user.id)
-        .in("cars.status", ["active", "archived"])
-        .order("next_billing_date", { ascending: true })
-      if (data) setCosts(data)
-    }
-    setLoading(false)
-  }
-
-  useEffect(() => { fetchData() }, [])
 
   const resetForm = () => {
     setIsAdding(false)
@@ -419,7 +415,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
     }
 
     resetForm()
-    fetchData()
+    await mutateCosts()
   }
 
   const handleStartEdit = (cost: any) => {
@@ -439,14 +435,13 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
     if (!deleteId) return
     setIsDeleting(true)
 
-    // 楽観的UI (先にローカル状態から削除)
-    const prevCosts = costs
-    setCosts(prev => prev.filter(c => c.id !== deleteId))
+    // 楽観的UI (先にキャッシュから削除)
+    await mutateCosts((prev) => prev?.filter(c => c.id !== deleteId), { revalidate: false })
 
     const { error } = await supabase.from("recurring_costs").delete().eq("id", deleteId)
     if (error) {
       // 失敗時はロールバック
-      setCosts(prevCosts)
+      await mutateCosts()
       toast.error(t("common.delete_failed"))
     } else {
       toast.success(t("records.recurring_deleted"))
@@ -456,14 +451,13 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
   }
 
   const toggleActive = async (id: string, currentStatus: boolean) => {
-    // 楽観的UI (先にローカル状態を反転)
-    const prevCosts = costs
-    setCosts(prev => prev.map(c => c.id === id ? { ...c, is_active: !currentStatus } : c))
+    // 楽観的UI (先にキャッシュを反転)
+    await mutateCosts((prev) => prev?.map(c => c.id === id ? { ...c, is_active: !currentStatus } : c), { revalidate: false })
 
     const { error } = await supabase.from("recurring_costs").update({ is_active: !currentStatus }).eq("id", id)
     if (error) {
       // 失敗時はロールバック
-      setCosts(prevCosts)
+      await mutateCosts()
       toast.error(t("common.error_occurred"))
     }
   }
@@ -583,7 +577,7 @@ export default function RecurringTab({ cars, onRecordsChanged }: { cars: any[], 
 
                     {/* 車名 */}
                     <div className="text-[11px] text-slate-600 dark:text-muted-foreground font-bold mb-2">
-                      {cost.cars.name}
+                      {carsById.get(cost.car_id)?.name}
                     </div>
 
                     {/* 次回支払日 */}

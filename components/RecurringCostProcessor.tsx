@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef } from "react"
+import { mutate as globalMutate } from "swr"
 import { createClient } from "@/utils/supabase"
 import { useTranslation } from "@/lib/i18n"
 import { toast } from "sonner"
@@ -91,6 +92,9 @@ export default function RecurringCostProcessor() {
 
       if (processedCount > 0) {
         toast.success(t("records.auto_recorded_toast", { count: processedCount }))
+        // 自動生成した記録・更新した次回請求日をキャッシュに反映する
+        await globalMutate(["records", user.id])
+        await globalMutate(["recurring_costs", user.id])
       }
     }
 

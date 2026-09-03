@@ -1,8 +1,11 @@
 "use client"
 
-import { useState, useEffect, useRef, Suspense } from "react"
+import { useState, useEffect, useMemo, useRef, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { createClient } from "@/utils/supabase"
+import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
+import { useCars } from "@/lib/hooks/useCars"
+import { useRecords } from "@/lib/hooks/useRecords"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DatePicker } from "@/components/ui/date-picker"
@@ -329,17 +332,38 @@ const RecordForm = ({
 )}
 
 function RecordsPageInner() {
-  const [cars, setCars] = useState<any[]>([])
-  const[records, setRecords] = useState<any[]>([])
   const [isAdding, setIsAdding] = useState(false)
-  const [loading, setLoading] = useState(true)
   // 編集モード用
   const [editRecordId, setEditRecordId] = useState<string | null>(null)
   const supabase = createClient()
   const { t, locale } = useTranslation()
 
+  const { user, isLoading: userLoading } = useSupabaseUser()
+  const userId = user?.id ?? null
+  const { cars: allCars, isLoading: carsLoading, mutate: mutateCars } = useCars(userId)
+  const { records: allRecords, isLoading: recordsLoading, mutate: mutateRecords } = useRecords(userId)
+
+  const loading = userLoading || (!!userId && (carsLoading || recordsLoading))
+
   // 初回ローディング画面とデータ取得を連動させる
   usePageLoadingGate(!loading)
+
+  const carsById = useMemo(() => new Map(allCars.map(c => [c.id, c])), [allCars])
+
+  // 記録追加フォームの対象車
+  const cars = useMemo(() => allCars.filter(c => c.status === "active"), [allCars])
+
+  // 稼働中・元愛車（統計含む）の車に紐づく記録を、日付・作成日時の新しい順にする
+  const records = useMemo(() => {
+    return allRecords
+      .filter(r => {
+        const car = carsById.get(r.car_id)
+        return car && (car.status === "active" || car.status === "archived")
+      })
+      .sort((a, b) =>
+        b.date.localeCompare(a.date) || b.created_at.localeCompare(a.created_at)
+      )
+  }, [allRecords, carsById])
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [deleteRecordId, setDeleteRecordId] = useState<string | null>(null)
@@ -360,6 +384,11 @@ function RecordsPageInner() {
 
   // 定期点検の車ごとの点検周期(月数)用ステート
   const [intervalMonths, setIntervalMonths] = useState("")
+
+  // 対象車が1台だけの場合はフォームの車選択にあらかじめセットしておく
+  useEffect(() => {
+    if (cars.length === 1) setCarId(cars[0].id)
+  }, [cars])
 
   // 月別・全期間 表示切り替え
   const currentYM = (() => {
@@ -446,7 +475,7 @@ function RecordsPageInner() {
   // 絞り込みチップに出す車の一覧（元愛車の記録も含めるため cars ではなく records から導出する）
   const filterCars: { id: string; name: string }[] = []
   records.forEach((r) => {
-    if (!filterCars.some((c) => c.id === r.car_id)) filterCars.push({ id: r.car_id, name: r.cars?.name ?? "" })
+    if (!filterCars.some((c) => c.id === r.car_id)) filterCars.push({ id: r.car_id, name: carsById.get(r.car_id)?.name ?? "" })
   })
 
   // カテゴリ、車の絞り込みを適用した記録（月別/全期間の表示範囲が母数）
@@ -464,31 +493,6 @@ function RecordsPageInner() {
     setCategory(newCategory)
     setSubCategory(SUB_CATEGORIES[newCategory] ? SUB_CATEGORIES[newCategory][0] : "")
   }
-
-  // showLoading=false でスケルトンを出さずにサイレント再取得
-  const fetchData = async (showLoading = true) => {
-    if (showLoading) setLoading(true)
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      const { data: carsData } = await supabase.from("cars").select("*").eq("user_id", user.id).eq("status", "active")
-      if (carsData) {
-        setCars(carsData)
-        if (carsData.length === 1) setCarId(carsData[0].id)
-      }
-
-      const { data: recordsData } = await supabase
-        .from("records")
-        .select(`*, cars!inner(name, fuel_type, status)`)
-        .eq("user_id", user.id)
-        .in("cars.status", ["active", "archived"])
-        .order("date", { ascending: false })
-        .order("created_at", { ascending: false })
-      if (recordsData) setRecords(recordsData)
-    }
-    setLoading(false)
-  }
-
-  useEffect(() => { fetchData() },[])
 
   // URLパラメータで給油フォームを自動展開
   const searchParams = useSearchParams()
@@ -571,6 +575,7 @@ function RecordsPageInner() {
       ? Math.max(...remaining.map((r: { odo_at_record: number | null }) => r.odo_at_record ?? 0))
       : 0
     await supabase.from("cars").update({ current_odo: Math.max(maxRecordOdo, baseOdo) }).eq("id", targetCarId)
+    await mutateCars()
   }
 
   // 記録データの保存処理
@@ -604,10 +609,10 @@ function RecordsPageInner() {
       if (recordError) return toast.error(t("common.error_occurred") + ": " + recordError.message)
 
       await recalcCarOdo(carId)
+      await mutateRecords()
 
       toast.success(t("records.saved"))
       resetForm()
-      fetchData(false)
     } finally {
       setIsSubmitting(false)
     }
@@ -669,9 +674,9 @@ function RecordsPageInner() {
         toast.error(t("common.error_occurred") + ": " + error.message)
       } else {
         await recalcCarOdo(carId)
+        await mutateRecords()
         toast.success(t("records.updated"))
         resetForm()
-        fetchData(false)
       }
     } finally {
       setIsSubmitting(false)
@@ -687,11 +692,10 @@ function RecordsPageInner() {
     if (error) {
       toast.error(t("common.delete_failed") + ": " + error.message)
     } else {
+      // 一覧からは即時に取り除き、ODO再計算後の車データはキャッシュ再検証で同期
+      await mutateRecords((prev) => prev?.filter(r => r.id !== deleteRecordId), { revalidate: false })
       if (targetRecord) await recalcCarOdo(targetRecord.car_id)
       toast.success(t("records.deleted"))
-      // 一覧からは即時に取り除き、ODO再計算後の車データはサイレント再取得で同期
-      setRecords(prev => prev.filter(r => r.id !== deleteRecordId))
-      fetchData(false)
     }
     setIsDeleting(false)
     setDeleteRecordId(null)
@@ -946,7 +950,7 @@ function RecordsPageInner() {
         <div className="space-y-4">
           {filteredRecords.map((record) => {
             const cat = CATEGORIES[record.category] || CATEGORIES.other
-            const recordFuelUnit = record.category === "fuel" ? getFuelUnit(record.cars?.fuel_type) : "l"
+            const recordFuelUnit = record.category === "fuel" ? getFuelUnit(carsById.get(record.car_id)?.fuel_type) : "l"
             const Icon = recordFuelUnit === "kwh" ? BatteryCharging : recordFuelUnit === "kg" ? Atom : cat.icon
             const categoryLabel = recordFuelUnit !== "l"
               ? t(recordFuelUnit === "kwh" ? "home.record_charge_label" : "home.record_hydrogen_label")
@@ -993,7 +997,7 @@ function RecordsPageInner() {
 
                       {/* 車名・走行距離 */}
                       <div className="flex items-center gap-3 text-[11px] text-slate-600 dark:text-muted-foreground mb-1">
-                        <span className="font-bold">{record.cars.name}</span>
+                        <span className="font-bold">{carsById.get(record.car_id)?.name}</span>
                         {record.odo_at_record != null && (
                           <span>{record.odo_at_record.toLocaleString()} {t("common.km_unit")}</span>
                         )}
@@ -1003,7 +1007,7 @@ function RecordsPageInner() {
                       <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-2">{record.date.replace(/-/g, '/')}</p>
 
                       {record.category === "fuel" && record.fuel_amount && (() => {
-                        const unit = getFuelUnit(record.cars?.fuel_type)
+                        const unit = getFuelUnit(carsById.get(record.car_id)?.fuel_type)
                         const amountLabel = { l: t("records.fuel_amount_label"), kwh: t("records.charge_amount_label"), kg: t("records.hydrogen_amount_label") }[unit]
                         const amountUnit = { l: t("records.unit_l"), kwh: t("records.unit_kwh"), kg: t("records.unit_kg") }[unit]
                         return (
@@ -1038,7 +1042,7 @@ function RecordsPageInner() {
           </TabsContent>
 
           <TabsContent value="recurring" className="outline-none">
-            <RecurringTab cars={cars} onRecordsChanged={fetchData} />
+            <RecurringTab userId={userId} cars={cars} carsById={carsById} onRecordsChanged={mutateRecords} />
           </TabsContent>
         </Tabs>
       )}

@@ -1,7 +1,12 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
+import { mutate as globalMutate } from "swr"
 import { createClient } from "@/utils/supabase"
+import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
+import { useCars } from "@/lib/hooks/useCars"
+import { useRecords } from "@/lib/hooks/useRecords"
+import { useWishlists } from "@/lib/hooks/useWishlists"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DatePicker } from "@/components/ui/date-picker"
@@ -50,16 +55,11 @@ const CAR_STATUS_ORDER: Record<string, number> = {
 }
 
 export default function GaragePage() {
-  const [cars, setCars] = useState<any[]>([])
-  const [wishlists, setWishlists] = useState<any[]>([])
-  const [records, setRecords] = useState<any[]>([])
-
   // 表示の切り替えステート
   const [isAddingCar, setIsAddingCar] = useState(false)
   const [editCarId, setEditCarId] = useState<string | null>(null)
   const [isAddingWish, setIsAddingWish] = useState(false)
   const [editWishId, setEditWishId] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
   const [savingCar, setSavingCar] = useState(false)
   const [savingWish, setSavingWish] = useState(false)
 
@@ -83,8 +83,33 @@ export default function GaragePage() {
   const supabase = createClient()
   const { t, locale } = useTranslation()
 
+  const { user, isLoading: userLoading } = useSupabaseUser()
+  const userId = user?.id ?? null
+  const { cars: allCars, isLoading: carsLoading, mutate: mutateCars } = useCars(userId)
+  const { records, isLoading: recordsLoading, mutate: mutateRecords } = useRecords(userId)
+  const { wishlists: rawWishlists, isLoading: wishlistsLoading, mutate: mutateWishlists } = useWishlists(userId)
+
+  const loading = userLoading || (!!userId && (carsLoading || recordsLoading || wishlistsLoading))
+
   // 初回ローディング画面とデータ取得を連動させる
   usePageLoadingGate(!loading)
+
+  // ステータス順、同ステータス内は登録日時が新しい順
+  const cars = useMemo(() => {
+    return [...allCars].sort((a, b) => {
+      const aOrder = CAR_STATUS_ORDER[a.status] ?? 99
+      const bOrder = CAR_STATUS_ORDER[b.status] ?? 99
+      if (aOrder !== bOrder) return aOrder - bOrder
+      return b.created_at.localeCompare(a.created_at)
+    })
+  }, [allCars])
+
+  const wishlists = useMemo(
+    () => [...rawWishlists].sort((a, b) => b.created_at.localeCompare(a.created_at)),
+    [rawWishlists]
+  )
+
+  const carsById = useMemo(() => new Map(allCars.map(c => [c.id, c])), [allCars])
 
   // 車両追加フォームの状態管理
   const [name, setName] = useState("")
@@ -133,50 +158,10 @@ export default function GaragePage() {
   const [wishUrl, setWishUrl] = useState("")
   const [wishMemo, setWishMemo] = useState("")
 
-  // showLoading=false でスケルトンを出さずにサイレント再取得
-  const fetchData = async (showLoading = true) => {
-    if (showLoading) setLoading(true)
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      // 車両データの取得
-      const { data: carsData } = await supabase
-        .from("cars")
-        .select("*")
-        .eq("user_id", user.id)
-        .in("status", ["pending", "active", "archived", "archived_excluded"])
-        .order("created_at", { ascending: false })
-
-      if (carsData) {
-        // ステータス順でソートしてから状態にセット
-        const sortedCars = [...carsData].sort((a, b) => {
-          const aOrder = CAR_STATUS_ORDER[a.status] ?? 99
-          const bOrder = CAR_STATUS_ORDER[b.status] ?? 99
-          return aOrder - bOrder
-        })
-        setCars(sortedCars)
-        if (sortedCars.length === 1) setWishCarId(sortedCars[0].id)
-      }
-
-      // ウィッシュリストの取得
-      const { data: wishesData } = await supabase
-        .from("wishlists")
-        .select(`*, cars(name)`)
-        .in("car_id", carsData ? carsData.map(c => c.id) : [])
-        .order("created_at", { ascending: false })
-
-      if (wishesData) setWishlists(wishesData)
-
-      // 維持費記録の取得（累計維持費の計算用）
-      const { data: recordsData } = await supabase
-        .from("records")
-        .select("*")
-        .in("car_id", carsData ? carsData.map(c => c.id) : [])
-      if (recordsData) setRecords(recordsData)
-    }
-    setLoading(false)
-  }
-
-  useEffect(() => { fetchData() }, [supabase])
+  // 対象車が1台だけの場合はウィッシュリスト追加フォームの車選択にあらかじめセットしておく
+  useEffect(() => {
+    if (cars.length === 1) setWishCarId(cars[0].id)
+  }, [cars])
 
   // 車両フォームの入力値をリセット
   const resetCarForm = () => {
@@ -216,7 +201,7 @@ export default function GaragePage() {
       } else {
         toast.success(t("garage.car_registered"))
         resetCarForm()
-        fetchData(false)
+        await mutateCars()
       }
     } finally {
       setSavingCar(false)
@@ -279,11 +264,12 @@ export default function GaragePage() {
             .select("id")
           if (paused && paused.length > 0) {
             toast.info(t("garage.recurring_paused", { count: paused.length }))
+            if (userId) await globalMutate(["recurring_costs", userId])
           }
         }
         toast.success(t("garage.car_updated"))
         resetCarForm()
-        fetchData(false)
+        await mutateCars()
       }
     } finally {
       setSavingCar(false)
@@ -336,11 +322,12 @@ export default function GaragePage() {
         toast.success(t("garage.car_deleted", { name: deleteCarTarget.name }))
         setDeleteCarTarget(null)
         setDeleteCarConfirmName("")
-        // CASCADE で消える関連データ含め、再取得せずローカルstateから取り除く
+        // CASCADE で消える関連データ含め、再取得せずキャッシュから取り除く
         const remainingCars = cars.filter((c) => c.id !== deleteCarTarget.id)
-        setCars(remainingCars)
-        setRecords(prev => prev.filter(r => r.car_id !== deleteCarTarget.id))
-        setWishlists(prev => prev.filter(w => w.car_id !== deleteCarTarget.id))
+        await mutateCars(remainingCars, { revalidate: false })
+        await mutateRecords((prev) => prev?.filter(r => r.car_id !== deleteCarTarget.id), { revalidate: false })
+        await mutateWishlists((prev) => prev?.filter(w => w.car_id !== deleteCarTarget.id), { revalidate: false })
+        if (userId) await globalMutate(["recurring_costs", userId])
         // 欲しいものフォームの車選択が削除した車を指したままにならないようにする
         if (remainingCars.length === 1) setWishCarId(remainingCars[0].id)
         else if (wishCarId === deleteCarTarget.id) setWishCarId("")
@@ -372,7 +359,7 @@ export default function GaragePage() {
       } else {
         toast.success(t("garage.wish_added"))
         resetWishForm()
-        fetchData(false)
+        await mutateWishlists()
       }
     } finally {
       setSavingWish(false)
@@ -414,7 +401,7 @@ export default function GaragePage() {
       } else {
         toast.success(t("garage.wish_updated"))
         resetWishForm()
-        fetchData(false)
+        await mutateWishlists()
       }
     } finally {
       setSavingWish(false)
@@ -430,8 +417,8 @@ export default function GaragePage() {
       toast.error(t("common.delete_failed") + ": " + error.message)
     } else {
       toast.success(t("garage.item_deleted"))
-      // 再取得せずローカルstateから取り除く
-      setWishlists(prev => prev.filter(w => w.id !== deleteWishId))
+      // 再取得せずキャッシュから取り除く
+      await mutateWishlists((prev) => prev?.filter(w => w.id !== deleteWishId), { revalidate: false })
     }
     setDeletingWish(false)
     setDeleteWishId(null)
@@ -449,15 +436,14 @@ export default function GaragePage() {
 
   // ステータス更新処理
   const updateWishStatus = async (id: string, newStatus: string) => {
-    // 切り替え時にタイムラグが出ないよう、通信を待たず先にローカルstateを更新
-    const prevStatus = wishlists.find(w => w.id === id)?.status
-    setWishlists(prev => prev.map(w => (w.id === id ? { ...w, status: newStatus } : w)))
+    // 切り替え時にタイムラグが出ないよう、通信を待たず先にキャッシュを更新
+    await mutateWishlists((prev) => prev?.map(w => (w.id === id ? { ...w, status: newStatus } : w)), { revalidate: false })
 
     const { error } = await supabase.from("wishlists").update({ status: newStatus }).eq("id", id)
 
     if (error) {
-      // 失敗時は元のステータスに戻す
-      setWishlists(prev => prev.map(w => (w.id === id ? { ...w, status: prevStatus } : w)))
+      // 失敗時は再検証してロールバック
+      await mutateWishlists()
       toast.error(t("common.error_occurred") + ": " + error.message)
       return
     }
@@ -539,7 +525,7 @@ export default function GaragePage() {
       }
 
       toast.success(t("garage.photo_set"))
-      fetchData(false) // 画面を更新して写真を表示
+      await mutateCars() // 画面を更新して写真を表示
       // アップロード直後に位置・ズーム調整モーダルを開き、新しい画像をすぐ調整できるようにする
       const baseCar = cars.find((c) => c.id === carId) || {}
       handleStartAdjustImage({
@@ -597,7 +583,7 @@ export default function GaragePage() {
     } else {
       toast.success(t("garage.position_saved"))
       setAdjustTarget(null)
-      fetchData(false)
+      await mutateCars()
     }
   }
 
@@ -627,8 +613,8 @@ export default function GaragePage() {
 
   // ステータス・ジャンル絞り込みを適用したウィッシュリスト
   const filteredWishlists = wishlists.filter((w) =>
-    (wishFilters.length === 0 || wishFilters.includes(w.status)) &&
-    (wishGenreFilters.length === 0 || wishGenreFilters.includes(w.genre))
+    (wishFilters.length === 0 || wishFilters.includes(w.status as WishStatus)) &&
+    (wishGenreFilters.length === 0 || wishGenreFilters.includes(w.genre as WishlistGenreSlug))
   )
 
   // 絞り込み中の選択数（バッジ表示用）
@@ -1317,12 +1303,12 @@ export default function GaragePage() {
                       <div>
                         <div className="flex flex-wrap items-center gap-2 mb-2 pr-16">
                           <span className="text-[10px] font-bold text-slate-600 dark:text-muted-foreground bg-slate-100 dark:bg-surface-2 px-2 py-0.5 rounded-sm">
-                            {t(`wishlist_genres.${wish.genre}`)} / {wish.cars.name}
+                            {t(`wishlist_genres.${wish.genre}`)} / {carsById.get(wish.car_id)?.name}
                           </span>
                         </div>
                         <h3 className="font-bold text-slate-800 dark:text-foreground text-lg leading-tight mb-1">{wish.item_name}</h3>
 
-                        {wish.price_estimate > 0 && (
+                        {!!wish.price_estimate && wish.price_estimate > 0 && (
                           <p className="text-sm font-bold text-slate-800 dark:text-white mb-2">¥{wish.price_estimate.toLocaleString()}</p>
                         )}
 
