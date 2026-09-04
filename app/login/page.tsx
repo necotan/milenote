@@ -30,9 +30,13 @@ export default function LoginPage() {
     setLoading(true)
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     // 生のエラー文言は出さず、汎用メッセージを表示
-    if (error) setErrorPopup(t("login.login_failed"))
-    else router.push("/")
-    setLoading(false)
+    if (error) {
+      setErrorPopup(t("login.login_failed"))
+      setLoading(false)
+      return
+    }
+    // 成功時はローディング表示のまま遷移させる
+    router.push("/")
   }
 
   // パスワードリセットモーダルを開く
