@@ -12,7 +12,7 @@ import {
   BarChart, Bar, BarStack
 } from "recharts"
 import type { TooltipContentProps } from "recharts"
-import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, ChevronDown, Info, LineChart as LineChartIcon, Fuel, BatteryCharging, Atom } from "lucide-react"
+import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, ChevronDown, Info, LineChart as LineChartIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { DatePicker } from "@/components/ui/date-picker"
 import { useTranslation } from "@/lib/i18n"
@@ -444,8 +444,8 @@ const CategoryBreakdownCard = memo(function CategoryBreakdownCard({
   return (
     <Card className="border-none bg-white dark:bg-card">
       <CardHeader className="p-4 pb-0">
-        <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
-          <PieIcon size={16} /> {t("stats.category_breakdown")}
+        <CardTitle className="text-sm font-bold pl-4 text-slate-600 dark:text-muted-foreground">
+          {t("stats.category_breakdown")}
         </CardTitle>
       </CardHeader>
       <PeriodFilter
@@ -1091,9 +1091,9 @@ export default function StatsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* カテゴリ別内訳カード（見出し、期間絞り込み、グラフ） */}
         <div className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-300 dark:ring-border py-4">
-          {/* CardTitle が leading-snug を内包しているため行間を明示する（アイコン分は幅に含めて1つの要素にする） */}
-          <div className="p-4 pb-0">
-            <SkeletonText size="sm" leading="snug" className="w-32" />
+          {/* CardTitle が leading-snug を内包しているため行間を明示する */}
+          <div className="p-4 pb-0 pl-8">
+            <SkeletonText size="sm" leading="snug" className="w-28" />
           </div>
           <div className="px-4 pb-3 pt-2 space-y-2.5">
             <Skeleton className="h-8 w-full rounded-full" />
@@ -1105,8 +1105,8 @@ export default function StatsPage() {
         </div>
         {/* 月別出費推移カード（見出し、表示切替トグル、グラフ） */}
         <div className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-300 dark:ring-border py-4">
-          <div className="p-4 pb-2 flex items-center justify-between">
-            <SkeletonText size="sm" leading="snug" className="w-32" />
+          <div className="p-4 pb-2 pl-8 flex items-center justify-between">
+            <SkeletonText size="sm" leading="snug" className="w-28" />
             <Skeleton className="h-8 w-24 rounded-full" />
           </div>
           <div className="px-4 pb-2">
@@ -1192,8 +1192,8 @@ export default function StatsPage() {
           {/* 給油サマリーカード */}
           <Card className="border-none bg-white dark:bg-card">
             <CardHeader className="p-4 pb-2">
-              <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
-                <Fuel size={16} /> {t("stats.fuel_summary")}
+              <CardTitle className="text-sm font-bold pl-4 text-slate-600 dark:text-muted-foreground">
+                {t("stats.fuel_summary")}
               </CardTitle>
             </CardHeader>
             <CardContent className="px-4 pb-4 pt-0">
@@ -1241,8 +1241,8 @@ export default function StatsPage() {
           {chargeCount > 0 && (
             <Card className="border-none bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
-                  <BatteryCharging size={16} /> {t("stats.charge_summary")}
+                <CardTitle className="text-sm font-bold pl-4 text-slate-600 dark:text-muted-foreground">
+                  {t("stats.charge_summary")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4 pt-0">
@@ -1276,8 +1276,8 @@ export default function StatsPage() {
           {hydrogenCount > 0 && (
             <Card className="border-none bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
-                  <Atom size={16} /> {t("stats.hydrogen_summary")}
+                <CardTitle className="text-sm font-bold pl-4 text-slate-600 dark:text-muted-foreground">
+                  {t("stats.hydrogen_summary")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-4 pt-0">
@@ -1373,8 +1373,8 @@ export default function StatsPage() {
             {/* 月別出費推移 */}
             <Card className="border-none bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
-                  <BarChart3 size={16} /> {t("stats.monthly_trend")}
+                <CardTitle className="text-sm font-bold pl-4 text-slate-600 dark:text-muted-foreground">
+                  {t("stats.monthly_trend")}
                 </CardTitle>
                 <SegmentedToggle
                   value={monthlyChartType}
@@ -1447,8 +1447,8 @@ export default function StatsPage() {
           <Card className="border-none bg-white dark:bg-card">
             <CardHeader className="p-4 pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-600 dark:text-muted-foreground">
-                  <CalendarDays size={16} /> {t("stats.yearly_trend")}
+                <CardTitle className="text-sm font-bold pl-4 text-slate-600 dark:text-muted-foreground">
+                  {t("stats.yearly_trend")}
                 </CardTitle>
                 {/* グラフ切り替えボタン */}
                 <SegmentedToggle
