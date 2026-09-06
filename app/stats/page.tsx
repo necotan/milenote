@@ -8,7 +8,7 @@ import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
 import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Label, Legend,
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   BarChart, Bar, BarStack
 } from "recharts"
 import type { TooltipContentProps } from "recharts"
@@ -608,6 +608,8 @@ export default function StatsPage() {
     labelLineStroke: isDark ? "#525252" : "#d4d4d4",
     pieLabelFill: isDark ? "#a3a3a3" : "#525252",
     cursorFill: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)",
+    areaFrom: isDark ? "rgba(96,165,250,0.5)" : "rgba(59,130,246,0.35)",
+    areaTo: isDark ? "rgba(96,165,250,0.12)" : "rgba(59,130,246,0.06)",
   }), [isDark])
 
   useEffect(() => {
@@ -1323,6 +1325,10 @@ export default function StatsPage() {
               from { opacity: 0; }
               to   { opacity: 1; }
             }
+            @keyframes areaFadeIn {
+              from { opacity: 0; }
+              to   { opacity: 1; }
+            }
             .line-anim .recharts-line-curve {
               stroke-dasharray: var(--line-length, 9999);
               stroke-dashoffset: var(--line-length, 9999);
@@ -1335,6 +1341,12 @@ export default function StatsPage() {
             }
             .line-anim.line-ready .line-dot-anim {
               animation: dotFadeIn 0.2s ease-out forwards;
+            }
+            .line-anim .recharts-area-area {
+              opacity: 0;
+            }
+            .line-anim.line-ready .recharts-area-area {
+              animation: areaFadeIn 0.6s ease-out 0.4s forwards;
             }
           `}</style>
 
@@ -1388,13 +1400,20 @@ export default function StatsPage() {
                 >
                   <ResponsiveContainer width="100%" height="100%">
                     {monthlyChartType === "line" ? (
-                      <LineChart data={monthlyData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }}>
+                      <ComposedChart data={monthlyData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }}>
+                        <defs>
+                          <linearGradient id="monthlyAmountGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor={chartChrome.areaFrom} />
+                            <stop offset="100%" stopColor={chartChrome.areaTo} />
+                          </linearGradient>
+                        </defs>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
                         <XAxis dataKey="month" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: chartChrome.axisTick }} tickFormatter={monthFormatter} padding={{ left: 30, right: 30 }} />
                         <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
                         <Tooltip cursor={{ stroke: chartChrome.gridStroke }} contentStyle={{ borderRadius: '8px', border: `1px solid ${chartChrome.tooltipBorder}`, boxShadow: 'none', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} labelStyle={{ color: chartChrome.tooltipLabel }} formatter={expenditureTooltipFormatter} labelFormatter={monthlyTooltipLabelFormatter} />
+                        <Area type="linear" dataKey="amount" stroke="none" fill="url(#monthlyAmountGradient)" isAnimationActive={false} activeDot={false} />
                         <Line type="linear" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={monthlyLineDot} isAnimationActive={false} />
-                      </LineChart>
+                      </ComposedChart>
                     ) : (
                       <BarChart data={monthlyData} margin={{ top: 20, right: 30, left: 10, bottom: 4 }} barCategoryGap="30%" maxBarSize={56}>
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
@@ -1458,13 +1477,20 @@ export default function StatsPage() {
               >
                 <ResponsiveContainer width="100%" height="100%">
                   {yearlyChartType === "line" ? (
-                    <LineChart data={yearlyData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }}>
+                    <ComposedChart data={yearlyData} margin={{ top: 40, right: 30, left: 10, bottom: 20 }}>
+                      <defs>
+                        <linearGradient id="yearlyAmountGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor={chartChrome.areaFrom} />
+                          <stop offset="100%" stopColor={chartChrome.areaTo} />
+                        </linearGradient>
+                      </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
                       <XAxis dataKey="year" fontSize={10} axisLine={false} tickLine={false} dy={10} tick={{ fill: chartChrome.axisTick }} tickFormatter={yearFormatter} padding={{ left: 30, right: 30 }} />
                       <YAxis fontSize={10} axisLine={false} tickLine={false} tick={{ fill: chartChrome.axisTick }} width={65} domain={[0, 'auto']} tickFormatter={numberTickFormatter} />
                       <Tooltip cursor={{ stroke: chartChrome.gridStroke }} contentStyle={{ borderRadius: '8px', border: `1px solid ${chartChrome.tooltipBorder}`, boxShadow: 'none', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} labelStyle={{ color: chartChrome.tooltipLabel }} formatter={expenditureTooltipFormatter} labelFormatter={yearTooltipLabelFormatter} />
+                      <Area type="linear" dataKey="amount" stroke="none" fill="url(#yearlyAmountGradient)" isAnimationActive={false} activeDot={false} />
                       <Line type="linear" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={yearlyLineDot} isAnimationActive={false} />
-                    </LineChart>
+                    </ComposedChart>
                   ) : (
                     <BarChart data={yearlyData} margin={{ top: 20, right: 30, left: 10, bottom: 4 }} barCategoryGap="30%" maxBarSize={56}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={chartChrome.gridStroke} />
