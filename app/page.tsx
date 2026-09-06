@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo } from "react"
 import { createClient } from "@/utils/supabase"
 import { Card, CardContent } from "@/components/ui/card"
-import { Banknote, CarFront, TrendingUp, TrendingDown, Minus, List, ChevronLeft, ChevronRight, Fuel, Gauge, Image as ImageIcon } from "lucide-react"
+import { CarFront, TrendingUp, TrendingDown, Minus, List, ChevronLeft, ChevronRight, Fuel, Gauge, Image as ImageIcon } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -203,7 +203,7 @@ export default function Home() {
               </div>
               <div className="p-3.5 pr-32">
                 <div className="-mt-1 space-y-1.5">
-                  <SkeletonText size="sm" className="w-24" />
+                  <SkeletonText size="sm" className="w-20" />
                   <SkeletonText size="2xl" className="w-32 rounded-lg" />
                   <SkeletonText size="9px" className="w-20" />
                 </div>
@@ -287,8 +287,8 @@ export default function Home() {
                 {/* 今月の費用 */}
                 <div className={`p-3.5 ${cars.length > 0 ? "pr-32" : ""}`}>
                   <div className="-mt-1">
-                    <p className="text-sm font-bold text-slate-600 dark:text-muted-foreground flex items-center gap-1 uppercase tracking-wide mb-1">
-                      <Banknote size={14} /> {t("home.this_month_cost")}
+                    <p className="text-sm font-bold text-slate-600 dark:text-muted-foreground uppercase tracking-wide mb-1">
+                      {t("home.this_month_cost")}
                     </p>
                     {thisMonthRecords.length === 0 ? (
                       <p className="text-xs text-slate-500 dark:text-muted-foreground tracking-wider py-1.5">{t("home.no_cost_data")}</p>
