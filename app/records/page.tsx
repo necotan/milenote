@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { Switch } from "@/components/ui/switch"
 import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, ArrowRight, Hammer, ClipboardList, Droplets, SlidersHorizontal, BatteryCharging, Atom } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
@@ -107,6 +108,8 @@ const RecordForm = ({
   entryIc, setEntryIc,
   exitIc, setExitIc,
   intervalMonths, setIntervalMonths,
+  includesCompulsoryInsurance, setIncludesCompulsoryInsurance,
+  inspectionExpiryDate, setInspectionExpiryDate,
 }: any) => {
   const { t } = useTranslation()
   // 選択中の車の燃料種別に応じて、給油フォームを給油(L)/充電(kWh)/充填(kg)表示に切り替える
@@ -313,6 +316,29 @@ const RecordForm = ({
                 <p className="text-[11px] text-slate-500 dark:text-muted-foreground whitespace-nowrap">{t("records.periodic_inspection_interval_hint")}</p>
               </div>
             )}
+
+            {category === "inspection" && subCategory === "vehicle_inspection" && (
+              <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
+                <div className="flex items-center gap-2 mb-6">
+                  <ClipboardList size={15} className="text-slate-500 dark:text-muted-foreground" />
+                  <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.vehicle_inspection_details")}</span>
+                </div>
+
+                <div className="space-y-2 sm:max-w-sm">
+                  <Label>{t("records.inspection_expiry_date")}</Label>
+                  <DatePicker value={inspectionExpiryDate} onChange={setInspectionExpiryDate} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-9 min-h-0" />
+                  <p className="text-[11px] text-slate-500 dark:text-muted-foreground">{t("records.inspection_expiry_date_hint")}</p>
+                </div>
+
+                <div className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-border bg-white/60 dark:bg-card px-4 py-3 sm:max-w-sm">
+                  <div className="space-y-0.5 pr-3">
+                    <Label htmlFor="includes-compulsory-insurance" className="cursor-pointer">{t("records.includes_compulsory_insurance")}</Label>
+                    <p className="text-[11px] text-slate-500 dark:text-muted-foreground">{t("records.includes_compulsory_insurance_hint")}</p>
+                  </div>
+                  <Switch id="includes-compulsory-insurance" checked={includesCompulsoryInsurance} onCheckedChange={setIncludesCompulsoryInsurance} />
+                </div>
+              </div>
+            )}
           </>
         )}
 
@@ -384,6 +410,10 @@ function RecordsPageInner() {
 
   // 定期点検の車ごとの点検周期(月数)用ステート
   const [intervalMonths, setIntervalMonths] = useState("")
+
+  // 車検用ステート
+  const [includesCompulsoryInsurance, setIncludesCompulsoryInsurance] = useState(false)
+  const [inspectionExpiryDate, setInspectionExpiryDate] = useState("")
 
   // 対象車が1台だけの場合はフォームの車選択にあらかじめセットしておく
   useEffect(() => {
@@ -555,6 +585,8 @@ function RecordsPageInner() {
     setAmount(""); setOdoAtRecord(""); setFuelAmount(""); setFuelUnitPrice(""); setMemo("")
     setEntryIc(""); setExitIc("")
     setIntervalMonths("")
+    setIncludesCompulsoryInsurance(false)
+    setInspectionExpiryDate("")
     setCategory("fuel")
     setSubCategory("")
     const firstCarId = cars.length === 1 ? cars[0].id : ""
@@ -590,6 +622,7 @@ function RecordsPageInner() {
 
       const targetCar = cars.find(c => c.id === carId)
       const fallbackOdo = targetCar ? targetCar.current_odo : 0
+      const isVehicleInspection = category === "inspection" && subCategory === "vehicle_inspection"
 
       const { error: recordError } = await supabase.from("records").insert({
         user_id: user.id,
@@ -604,6 +637,8 @@ function RecordsPageInner() {
         entry_ic: category === "highway" ? (entryIc || null) : null,
         exit_ic: category === "highway" ? (exitIc || null) : null,
         interval_months: (category === "inspection" && subCategory === "periodic_inspection" && intervalMonths) ? parseInt(intervalMonths) : null,
+        includes_compulsory_insurance: isVehicleInspection && includesCompulsoryInsurance,
+        inspection_expiry_date: (isVehicleInspection && inspectionExpiryDate) ? inspectionExpiryDate : null,
       })
 
       if (recordError) return toast.error(t("common.error_occurred") + ": " + recordError.message)
@@ -643,6 +678,8 @@ function RecordsPageInner() {
       setExitIc("")
     }
     setIntervalMonths(record.interval_months ? String(record.interval_months) : "")
+    setIncludesCompulsoryInsurance(!!record.includes_compulsory_insurance)
+    setInspectionExpiryDate(record.inspection_expiry_date || "")
     setMemo(record.memo || "")
   }
 
@@ -655,6 +692,7 @@ function RecordsPageInner() {
     try {
       const targetCar = cars.find(c => c.id === carId)
       const fallbackOdo = targetCar ? targetCar.current_odo : 0
+      const isVehicleInspection = category === "inspection" && subCategory === "vehicle_inspection"
 
       const { error } = await supabase.from("records").update({
         car_id: carId,
@@ -668,6 +706,8 @@ function RecordsPageInner() {
         entry_ic: category === "highway" ? (entryIc || null) : null,
         exit_ic: category === "highway" ? (exitIc || null) : null,
         interval_months: (category === "inspection" && subCategory === "periodic_inspection" && intervalMonths) ? parseInt(intervalMonths) : null,
+        includes_compulsory_insurance: isVehicleInspection && includesCompulsoryInsurance,
+        inspection_expiry_date: (isVehicleInspection && inspectionExpiryDate) ? inspectionExpiryDate : null,
       }).eq("id", editRecordId)
 
       if (error) {
@@ -891,6 +931,8 @@ function RecordsPageInner() {
           onSubmit={handleAddRecord} 
           submitLabel={t("records.save_record")}
           isSubmitting={isSubmitting}
+          includesCompulsoryInsurance={includesCompulsoryInsurance} setIncludesCompulsoryInsurance={setIncludesCompulsoryInsurance}
+          inspectionExpiryDate={inspectionExpiryDate} setInspectionExpiryDate={setInspectionExpiryDate}
           resetForm={resetForm}
           editRecordId={editRecordId}
           carId={carId} setCarId={setCarId}
@@ -912,6 +954,8 @@ function RecordsPageInner() {
           onSubmit={handleUpdateRecord} 
           submitLabel={t("common.update")}
           isSubmitting={isSubmitting}
+          includesCompulsoryInsurance={includesCompulsoryInsurance} setIncludesCompulsoryInsurance={setIncludesCompulsoryInsurance}
+          inspectionExpiryDate={inspectionExpiryDate} setInspectionExpiryDate={setInspectionExpiryDate}
           resetForm={resetForm}
           editRecordId={editRecordId}
           carId={carId} setCarId={setCarId}
@@ -1024,6 +1068,20 @@ function RecordsPageInner() {
                             <ArrowRight size={12} className="shrink-0" />
                             {record.exit_ic || t("records.not_entered")}
                           </span>
+                        </div>
+                      )}
+                      {record.sub_category === "vehicle_inspection" && (record.inspection_expiry_date || record.includes_compulsory_insurance) && (
+                        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-muted-foreground mb-2 flex-wrap">
+                          {record.inspection_expiry_date && (
+                            <span>
+                              {t("records.inspection_expiry_display_label")} <span className="font-bold text-slate-700 dark:text-foreground">{record.inspection_expiry_date.replace(/-/g, '/')}</span>
+                            </span>
+                          )}
+                          {record.includes_compulsory_insurance && (
+                            <span className="text-[10px] font-bold border border-slate-200 dark:border-border px-2 py-1 rounded-md">
+                              {t("records.includes_compulsory_insurance_badge")}
+                            </span>
+                          )}
                         </div>
                       )}
                       {record.memo && (

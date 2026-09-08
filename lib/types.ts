@@ -44,6 +44,8 @@ export type CarRecord = {
   entry_ic: string | null
   exit_ic: string | null
   interval_months: number | null
+  includes_compulsory_insurance: boolean
+  inspection_expiry_date: string | null
 }
 
 export type RecurringCost = {
