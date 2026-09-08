@@ -5,7 +5,13 @@ import { CalendarDays } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { useTranslation } from "@/lib/i18n"
 import { MAINT_TYPE_CATEGORY } from "@/lib/subcategories"
-import type { MaintAlertItem } from "@/lib/maintenanceAlerts"
+import type { MaintAlertItem, RecordedMaintAlert } from "@/lib/maintenanceAlerts"
+
+// 残り値の単位ラベル
+function unitLabel(alert: RecordedMaintAlert, t: (key: string) => string) {
+  if (alert.unit === "days") return t("common.days_unit")
+  return alert.unit === "months" ? t("common.months_unit") : t("common.km_unit")
+}
 
 export function MaintAlertCard({ alert, className = "", reserveButtonSpace = false }: { alert: MaintAlertItem; className?: string; reserveButtonSpace?: boolean }) {
   const { t } = useTranslation()
@@ -53,7 +59,7 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
           <p className={`text-[10px] font-bold text-slate-500 dark:text-muted-foreground uppercase tracking-wide truncate ${reserveButtonSpace ? 'pr-16' : ''}`}>{alert.carName}</p>
           <div className={`mt-0.5 leading-tight ${alert.isUrgent ? 'text-red-600' : 'text-slate-800 dark:text-foreground'}`}>
             <p className="text-[11px] font-bold tracking-wider">{t(`subcategories.${alert.maintName}`)}{alert.isDisabled ? ` (${t("mypage.maint_disabled_desc")})` : (alert.isOver ? t("home.alert_overdue") : t("home.alert_remaining"))}</p>
-            <p className="text-lg font-bold tracking-wider">{alert.displayValue}<span className="text-[10px] ml-0.5">{alert.isOver ? (alert.isMonthsOnly ? t("common.months_unit") : t("common.km_unit")) + t("home.exceeded") : (alert.isMonthsOnly ? t("common.months_unit") : t("common.km_unit"))}</span></p>
+            <p className="text-lg font-bold tracking-wider">{alert.displayValue}<span className="text-[10px] ml-0.5">{alert.isOver ? unitLabel(alert, t) + t("home.exceeded") : unitLabel(alert, t)}</span></p>
           </div>
           <div className="flex flex-col gap-1.5 mt-1">
             <div className="flex items-center gap-1 text-[10px] text-slate-600 dark:text-muted-foreground font-bold tracking-wide">

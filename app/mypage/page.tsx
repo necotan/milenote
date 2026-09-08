@@ -13,7 +13,7 @@ import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { Dialog, DialogContent, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical, ChevronRight, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck, AtSign, Info, Lock } from "lucide-react"
+import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical, ChevronRight, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck, CarFront, AtSign, Info, Lock } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { toast } from "sonner"
 import { useTheme } from "next-themes"
@@ -40,6 +40,7 @@ const DEFAULT_MAINT_SETTINGS: MaintSettings = {
   "inspection_12m": { km: 0, months: 12, months_only: true },
   "inspection_24m": { km: 0, months: 24, months_only: true },
   "periodic_inspection": { km: 0, months: 6, months_only: true },
+  "vehicle_inspection": { km: 0, months: 0, months_only: true },
 }
 
 // メンテナンス基準設定UIのアイコン、プリセット値
@@ -54,6 +55,7 @@ const MAINT_ITEM_ICON: Record<string, LucideIcon> = {
   inspection_12m: ClipboardCheck,
   inspection_24m: ClipboardCheck,
   periodic_inspection: ClipboardCheck,
+  vehicle_inspection: CarFront,
 }
 
 const MAINT_PRESETS: Record<string, { km?: number[]; months: number[] }> = {
@@ -70,7 +72,8 @@ const MAINT_PRESETS: Record<string, { km?: number[]; months: number[] }> = {
 }
 
 // 法定点検（12ヶ月/24ヶ月）は周期が法令で決まっているため、周期編集ダイアログを開けないようにする
-const LEGALLY_FIXED_MAINT_ITEMS = ["inspection_12m", "inspection_24m"]
+// 車検は周期ではなく記録に入力された満了日で判定するため、同様に周期編集を開けないようにする
+const LEGALLY_FIXED_MAINT_ITEMS = ["inspection_12m", "inspection_24m", "vehicle_inspection"]
 
 const THEME_OPTIONS: { value: "light" | "dark"; labelKey: string }[] = [
   { value: "light", labelKey: "mypage.theme_light" },
@@ -170,11 +173,14 @@ function MaintenanceItemRow({
   // 法定点検は周期を編集させないため、保存済みの値ではなく既定値（法令上の周期）を常に表示
   const displaySetting = isEditable ? setting : DEFAULT_MAINT_SETTINGS[itemKey]
 
-  const summary = isEnabled
-    ? isMonthsOnly
-      ? t("mypage.maint_summary_months_only", { months: displaySetting.months })
-      : t("mypage.maint_summary", { km: displaySetting.km.toLocaleString(), months: displaySetting.months })
-    : t("mypage.maint_disabled_desc")
+  const summary = !isEnabled
+    ? t("mypage.maint_disabled_desc")
+    // 車検は周期を持たず、記録に入力された車検満了日から残り日数を算出する
+    : itemKey === "vehicle_inspection"
+      ? t("mypage.maint_summary_expiry_date")
+      : isMonthsOnly
+        ? t("mypage.maint_summary_months_only", { months: displaySetting.months })
+        : t("mypage.maint_summary", { km: displaySetting.km.toLocaleString(), months: displaySetting.months })
 
   const content = (
     <>

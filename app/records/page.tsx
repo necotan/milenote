@@ -1070,19 +1070,10 @@ function RecordsPageInner() {
                           </span>
                         </div>
                       )}
-                      {record.sub_category === "vehicle_inspection" && (record.inspection_expiry_date || record.includes_compulsory_insurance) && (
-                        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-muted-foreground mb-2 flex-wrap">
-                          {record.inspection_expiry_date && (
-                            <span>
-                              {t("records.inspection_expiry_display_label")} <span className="font-bold text-slate-700 dark:text-foreground">{record.inspection_expiry_date.replace(/-/g, '/')}</span>
-                            </span>
-                          )}
-                          {record.includes_compulsory_insurance && (
-                            <span className="text-[10px] font-bold border border-slate-200 dark:border-border px-2 py-1 rounded-md">
-                              {t("records.includes_compulsory_insurance_badge")}
-                            </span>
-                          )}
-                        </div>
+                      {record.sub_category === "vehicle_inspection" && record.inspection_expiry_date && (
+                        <p className="text-xs text-slate-600 dark:text-muted-foreground mb-2">
+                          {t("records.inspection_expiry_display_label")} <span className="font-bold text-slate-700 dark:text-foreground">{record.inspection_expiry_date.replace(/-/g, '/')}</span>
+                        </p>
                       )}
                       {record.memo && (
                         <p className="text-sm text-slate-600 dark:text-muted-foreground bg-slate-50 dark:bg-muted p-2 rounded-md whitespace-pre-wrap inline-block">
