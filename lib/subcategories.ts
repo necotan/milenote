@@ -11,8 +11,8 @@ export type SubCategorySlug =
   | "coolant_change"
   | "key_battery_change"
   | "wiper_blade_change"
-  | "vehicle_inspection"
   | "wash_coating"
+  | "vehicle_inspection"
   | "inspection_12m"
   | "inspection_24m"
   | "periodic_inspection"
@@ -46,10 +46,10 @@ export const SUB_CATEGORIES: Record<string, SubCategorySlug[]> = {
   maintenance: [
     "oil_change", "oil_filter_change", "transmission_oil_change", "tire_change", "tire_rotation",
     "battery_change", "brake_pad_change", "coolant_change",
-    "key_battery_change", "wiper_blade_change", "vehicle_inspection", "wash_coating", "other"
+    "key_battery_change", "wiper_blade_change", "wash_coating", "other"
   ],
   inspection: [
-    "inspection_12m", "inspection_24m", "periodic_inspection"
+    "vehicle_inspection", "inspection_12m", "inspection_24m", "periodic_inspection"
   ],
   repair: [
     "breakdown_repair", "bodywork_paint", "accident_towing", "recall", "other"
