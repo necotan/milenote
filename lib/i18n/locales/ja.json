@@ -523,7 +523,7 @@
   "categories": {
     "fuel": "給油",
     "maintenance": "メンテ",
-    "inspection": "定期点検",
+    "inspection": "車検・点検",
     "repair": "修理",
     "custom": "カスタム",
     "carwash": "洗車",
@@ -543,7 +543,7 @@
     "coolant_change": "クーラント（冷却水）交換",
     "key_battery_change": "スマートキー電池交換",
     "wiper_blade_change": "ワイパーゴム交換",
-    "vehicle_inspection": "車検・法定点検",
+    "vehicle_inspection": "車検",
     "wash_coating": "洗車・コーティング",
     "inspection_12m": "法定12ヶ月点検",
     "inspection_24m": "法定24ヶ月点検",
