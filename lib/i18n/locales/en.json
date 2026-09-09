@@ -346,7 +346,7 @@
     "maint_summary_months_only": "Every {{months}} months",
     "maint_disabled_desc": "Notifications off",
     "maint_legally_fixed_hint": "This interval is set by law and can't be changed",
-    "maint_summary_expiry_date": "Notifies based on the recorded expiry date",
+    "maint_summary_expiry_date": "Notifies from expiry date",
     "maint_edit_title": "Edit criteria: {{name}}",
     "maint_distance_label": "Distance",
     "maint_period_label": "Period",
