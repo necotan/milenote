@@ -227,8 +227,8 @@ export default function MaintenancePage() {
         <div className="flex items-start justify-between gap-2" style={{ maxWidth: gridContentWidth }}>
           <Skeleton className="h-[30px] w-40 rounded-full" />
           <div className="flex flex-col items-end gap-2 shrink-0 mt-1">
-            <Skeleton className="h-7 w-9 rounded-lg" />
-            <Skeleton className="h-7 w-28 rounded-lg" />
+            <Skeleton className="size-8 rounded-full" />
+            <Skeleton className="h-8 w-28 rounded-full" />
           </div>
         </div>
         <div className="space-y-6">
@@ -289,11 +289,11 @@ export default function MaintenancePage() {
               type="button"
               onClick={() => setIsFilterOpen(true)}
               title={t("records.filter_title")}
-              className="relative h-7 flex items-center px-2.5 rounded-lg border bg-white text-slate-600 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+              className="relative size-8 flex items-center justify-center rounded-full bg-white text-slate-600 hover:text-slate-800 dark:bg-card dark:text-muted-foreground dark:hover:text-foreground transition-all active:scale-90"
             >
               <SlidersHorizontal size={15} />
               {activeFilterCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-slate-400 text-white dark:bg-surface-2 dark:text-foreground/80 text-[9px] font-bold tabular-nums">
+                <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-primary text-primary-foreground text-[9px] font-bold tabular-nums">
                   {activeFilterCount}
                 </span>
               )}
@@ -302,7 +302,7 @@ export default function MaintenancePage() {
               type="button"
               onClick={() => setIsDisplaySettingsOpen(true)}
               title={t("home.display_settings_title")}
-              className="h-7 flex items-center gap-1.5 px-2.5 rounded-lg border text-[11px] font-bold bg-white text-slate-600 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+              className="h-8 flex items-center gap-1.5 px-3 rounded-full text-[11px] font-bold bg-white text-slate-600 hover:text-slate-800 dark:bg-card dark:text-muted-foreground dark:hover:text-foreground transition-all active:scale-95"
             >
               <Settings2 size={15} />
               {t("home.display_settings_title")}

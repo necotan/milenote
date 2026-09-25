@@ -21,6 +21,7 @@ import { FormSection } from "@/components/ui/FormSection"
 import { SwitchRow } from "@/components/ui/ListGroup"
 import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
+import { IconButton } from "@/components/ui/IconButton"
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogActionButton } from "@/components/ui/dialog"
 import { CarFront, Plus, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, Move, SlidersHorizontal, Image as ImageIcon, IdCard, Gauge, CalendarDays, Wallet } from "lucide-react"
 import { toast } from "sonner"
@@ -625,10 +626,10 @@ export default function GaragePage() {
   // ステータスの色を定義
   const getStatusStyle = (status: string) => {
     switch (status) {
-      case 'considering': return "bg-slate-100 dark:bg-muted text-slate-600 dark:text-muted-foreground border-slate-200 dark:border-border"
-      case 'purchased': return "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-300 border-blue-200 dark:border-blue-900"
-      case 'installed': return "bg-green-50 dark:bg-green-950/40 text-green-600 dark:text-green-300 border-green-200 dark:border-green-900"
-      case 'given_up': return "bg-slate-50 dark:bg-muted text-slate-500 dark:text-muted-foreground border-slate-200 dark:border-border opacity-60"
+      case 'considering': return "bg-slate-100 dark:bg-muted text-slate-600 dark:text-muted-foreground"
+      case 'purchased': return "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-300"
+      case 'installed': return "bg-green-50 dark:bg-green-950/40 text-green-600 dark:text-green-300"
+      case 'given_up': return "bg-slate-50 dark:bg-muted text-slate-500 dark:text-muted-foreground opacity-60"
       default: return "bg-slate-100 dark:bg-muted"
     }
   }
@@ -658,7 +659,7 @@ export default function GaragePage() {
         {/* 「車を登録」ボタン行（!isAddingCar && !editCarId の間だけ表示される実ボタンのプレースホルダ） */}
         {loading && (
           <div className="flex justify-end mb-4">
-            <Skeleton className="h-7 w-28 rounded-lg" />
+            <Skeleton className="h-7 w-28 rounded-full" />
           </div>
         )}
 
@@ -698,9 +699,9 @@ export default function GaragePage() {
                   ))}
                   <div className="flex justify-between items-center">
                     <SkeletonText size="9px" className="w-16" />
-                    <div className="flex items-center gap-1">
-                      <Skeleton className="h-[26px] w-[26px] rounded-lg" />
-                      <Skeleton className="h-[26px] w-[26px] rounded-lg" />
+                    <div className="flex items-center gap-2">
+                      <Skeleton className="size-8 rounded-full" />
+                      <Skeleton className="size-8 rounded-full" />
                     </div>
                   </div>
                 </div>
@@ -904,21 +905,20 @@ export default function GaragePage() {
                           <span className="font-bold text-slate-700 dark:text-foreground text-[10px]">{t(`garage.car_status_${car.status}`)}</span>
                         </div>
                         {/* 編集・削除アクション */}
-                        <div className="flex items-center gap-1">
-                          <button
+                        <div className="flex items-center gap-2">
+                          <IconButton
                             onClick={() => handleStartEditCar(car)}
-                            className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                             title={t("common.edit")}
                           >
-                            <Pencil size={14} />
-                          </button>
-                          <button
+                            <Pencil size={15} />
+                          </IconButton>
+                          <IconButton
                             onClick={() => { openDeleteCarDialog(car) }}
-                            className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
+                            tone="destructive"
                             title={t("common.delete")}
                           >
-                            <Trash2 size={14} />
-                          </button>
+                            <Trash2 size={15} />
+                          </IconButton>
                         </div>
                       </div>
                     </div>
@@ -1046,11 +1046,11 @@ export default function GaragePage() {
                 type="button"
                 onClick={() => setIsFilterOpen(true)}
                 title={t("garage.wish_filter_title")}
-                className="relative h-7 flex items-center px-2.5 rounded-lg border bg-white text-slate-600 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+                className="relative size-8 flex items-center justify-center rounded-full bg-white text-slate-600 hover:text-slate-800 dark:bg-card dark:text-muted-foreground dark:hover:text-foreground transition-all active:scale-90"
               >
                 <SlidersHorizontal size={15} />
                 {activeFilterCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-slate-400 text-white dark:bg-surface-2 dark:text-foreground/80 text-[9px] font-bold tabular-nums">
+                  <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-primary text-primary-foreground text-[9px] font-bold tabular-nums">
                     {activeFilterCount}
                   </span>
                 )}
@@ -1263,26 +1263,25 @@ export default function GaragePage() {
                 return (
                   <Card key={wish.id} className="border-none bg-white dark:bg-card overflow-hidden relative">
                     {/* 編集・削除ボタン（右上に常時表示） */}
-                    <div className="absolute top-3 right-3 flex items-center gap-1 z-10">
-                      <button
+                    <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
+                      <IconButton
                         onClick={() => handleStartEditWish(wish)}
-                        className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                         title={t("common.edit")}
                       >
-                        <Pencil size={14} />
-                      </button>
-                      <button
+                        <Pencil size={15} />
+                      </IconButton>
+                      <IconButton
                         onClick={() => setDeleteWishId(wish.id)}
-                        className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
+                        tone="destructive"
                         title={t("common.delete")}
                       >
-                        <Trash2 size={14} />
-                      </button>
+                        <Trash2 size={15} />
+                      </IconButton>
                     </div>
                     <CardContent className="p-4 flex flex-col justify-between h-full">
                       <div>
-                        <div className="flex flex-wrap items-center gap-2 mb-2 pr-16">
-                          <span className="text-[10px] font-bold text-slate-600 dark:text-muted-foreground bg-slate-100 dark:bg-surface-2 px-2 py-0.5 rounded-sm">
+                        <div className="flex flex-wrap items-center gap-2 mb-2 pr-20">
+                          <span className="text-[10px] font-bold text-slate-600 dark:text-muted-foreground bg-slate-100 dark:bg-surface-2 px-2.5 py-0.5 rounded-full">
                             {t(`wishlist_genres.${wish.genre}`)} / {carsById.get(wish.car_id)?.name}
                           </span>
                         </div>
@@ -1311,7 +1310,7 @@ export default function GaragePage() {
                         {/* ステータス変更ドロップダウン */}
                         <div className="w-36">
                           <Select defaultValue={wish.status} onValueChange={(val) => updateWishStatus(wish.id, val)}>
-                            <SelectTrigger className={`w-full h-7 text-xs font-bold border ${statusStyle}`}>
+                            <SelectTrigger className={`w-full h-7 text-xs font-bold rounded-full border-transparent dark:border-transparent ${statusStyle}`}>
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>

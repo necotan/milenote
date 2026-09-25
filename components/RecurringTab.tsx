@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { FormSection } from "@/components/ui/FormSection"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
+import { IconButton } from "@/components/ui/IconButton"
 import { Plus, X, Pencil, Trash2, Pause, Play, ChevronDown, Info, RepeatIcon, Wallet } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
@@ -224,14 +225,14 @@ const StatusBadge = ({ isActive }: { isActive: boolean }) => {
   const { t } = useTranslation()
   if (isActive) {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 whitespace-nowrap shrink-0">
+      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 whitespace-nowrap shrink-0">
         <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shrink-0" />
         {t("records.status_active")}
       </span>
     )
   }
   return (
-    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-md bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 whitespace-nowrap shrink-0">
+    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 whitespace-nowrap shrink-0">
       <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
       {t("records.status_paused")}
     </span>
@@ -249,18 +250,18 @@ const RecurringCardSkeleton = () => (
   <div className="space-y-3">
     {[...Array(3)].map((_, i) => (
       <div key={i} className="bg-white dark:bg-card rounded-xl overflow-hidden relative py-4">
-        <div className="absolute top-3 right-3 flex items-center gap-1">
-          <Skeleton className="h-7 w-7 rounded-lg" />
-          <Skeleton className="h-7 w-7 rounded-lg" />
-          <Skeleton className="h-7 w-7 rounded-lg" />
+        <div className="absolute top-3 right-3 flex items-center gap-2">
+          <Skeleton className="size-8 rounded-full" />
+          <Skeleton className="size-8 rounded-full" />
+          <Skeleton className="size-8 rounded-full" />
         </div>
         <div className="p-4 flex gap-3 items-start">
           <Skeleton className="w-12 h-12 rounded-full shrink-0 mt-1" />
-          <div className="flex-1 min-w-0 pr-24 space-y-2">
+          <div className="flex-1 min-w-0 pr-28 space-y-2">
             <SkeletonText size="lg" className="w-32 rounded-lg" />
             <div className="flex gap-1.5">
-              <Skeleton className="h-5 w-14 rounded-md" />
-              <Skeleton className="h-5 w-20 rounded-md" />
+              <Skeleton className="h-5 w-14 rounded-full" />
+              <Skeleton className="h-5 w-20 rounded-full" />
             </div>
             <SkeletonText size="11px" className="w-24" />
             <SkeletonText size="11px" className="w-40" />
@@ -500,7 +501,7 @@ export default function RecurringTab({
         <>
           {/* 「定期費用を追加」ボタン行（costs.length > 0 の間だけ表示される実ボタンのプレースホルダ） */}
           <div className="flex justify-end mt-8 mb-8">
-            <Skeleton className="h-7 w-32 rounded-lg" />
+            <Skeleton className="h-7 w-32 rounded-full" />
           </div>
           <RecurringCardSkeleton />
         </>
@@ -525,37 +526,32 @@ export default function RecurringTab({
             >
               <CardContent className="p-0">
                 {/* アクションボタン（右上に常時表示） */}
-                <div className="absolute top-3 right-3 flex items-center gap-1 z-10">
-                  <button
+                <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
+                  <IconButton
                     onClick={() => toggleActive(cost.id, cost.is_active)}
-                    className={`p-1.5 rounded-lg border transition-colors ${
-                      cost.is_active
-                        ? 'border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-slate-700 hover:border-slate-400 hover:bg-slate-100 dark:hover:bg-muted'
-                        : 'border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-green-500 hover:border-green-300 hover:bg-green-50'
-                    }`}
+                    tone={cost.is_active ? "default" : "positive"}
                     title={cost.is_active ? t("records.pause_recurring") : t("records.resume_recurring")}
                   >
-                    {cost.is_active ? <Pause size={14} /> : <Play size={14} />}
-                  </button>
-                  <button
+                    {cost.is_active ? <Pause size={15} /> : <Play size={15} />}
+                  </IconButton>
+                  <IconButton
                     onClick={() => handleStartEdit(cost)}
-                    className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   >
-                    <Pencil size={14} />
-                  </button>
-                  <button
+                    <Pencil size={15} />
+                  </IconButton>
+                  <IconButton
                     onClick={() => setDeleteId(cost.id)}
-                    className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
+                    tone="destructive"
                   >
-                    <Trash2 size={14} />
-                  </button>
+                    <Trash2 size={15} />
+                  </IconButton>
                 </div>
 
                 <div className="p-4 flex gap-3 items-start">
                   <div className={`p-3 rounded-full shrink-0 mt-1 ${cat.bg} ${cat.color}`}>
                     <Icon size={24} />
                   </div>
-                  <div className="flex-1 min-w-0 pr-24">
+                  <div className="flex-1 min-w-0 pr-28">
                     {/* 金額 */}
                     <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1 tracking-tight tabular-nums">
                       ¥{cost.amount.toLocaleString()}
@@ -566,11 +562,11 @@ export default function RecurringTab({
 
                     {/* ジャンルタグ・ステータスバッジ */}
                     <div className="flex items-center gap-1.5 mb-2">
-                      <span className="text-[10px] font-bold bg-slate-100 dark:bg-surface-2 text-slate-600 dark:text-muted-foreground px-2 py-1 rounded-md whitespace-nowrap">
+                      <span className="text-[10px] font-medium bg-slate-100 dark:bg-surface-2 text-slate-600 dark:text-muted-foreground px-2.5 py-1 rounded-full whitespace-nowrap">
                         {t(`categories.${cost.category}`)}
                       </span>
                       {cost.sub_category && (
-                        <span className="text-[10px] font-bold border border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground px-2 py-1 rounded-md whitespace-nowrap">
+                        <span className="text-[10px] font-medium bg-slate-100 dark:bg-surface-2 text-slate-600 dark:text-muted-foreground px-2.5 py-1 rounded-full whitespace-nowrap">
                           {t(`subcategories.${cost.sub_category}`)}
                         </span>
                       )}
