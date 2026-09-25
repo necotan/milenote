@@ -22,12 +22,12 @@ import { SUB_CATEGORIES } from "@/lib/subcategories"
 
 // 頻度の選択肢
 const FREQUENCY_OPTIONS = [
-  { value: "weekly",       labelKey: "records.freq_weekly" },
-  { value: "monthly",      labelKey: "records.freq_monthly" },
-  { value: "bimonthly",    labelKey: "records.freq_bimonthly" },
-  { value: "quarterly",    labelKey: "records.freq_quarterly" },
+  { value: "weekly", labelKey: "records.freq_weekly" },
+  { value: "monthly", labelKey: "records.freq_monthly" },
+  { value: "bimonthly", labelKey: "records.freq_bimonthly" },
+  { value: "quarterly", labelKey: "records.freq_quarterly" },
   { value: "semiannually", labelKey: "records.freq_semiannually" },
-  { value: "yearly",       labelKey: "records.freq_yearly" },
+  { value: "yearly", labelKey: "records.freq_yearly" },
 ]
 
 // 折りたたみバナーコンポーネント
@@ -248,7 +248,7 @@ const getFrequencyLabel = (freq: string, t: (key: string) => string): string => 
 const RecurringCardSkeleton = () => (
   <div className="space-y-3">
     {[...Array(3)].map((_, i) => (
-      <div key={i} className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-300 dark:ring-border overflow-hidden relative py-4">
+      <div key={i} className="bg-white dark:bg-card rounded-xl overflow-hidden relative py-4">
         <div className="absolute top-3 right-3 flex items-center gap-1">
           <Skeleton className="h-7 w-7 rounded-lg" />
           <Skeleton className="h-7 w-7 rounded-lg" />
@@ -348,12 +348,12 @@ export default function RecurringTab({
     `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 
   const advanceByFrequency = (d: Date, freq: string) => {
-    if (freq === "weekly")        d.setDate(d.getDate() + 7)
-    else if (freq === "monthly")      d.setMonth(d.getMonth() + 1)
-    else if (freq === "bimonthly")    d.setMonth(d.getMonth() + 2)
-    else if (freq === "quarterly")    d.setMonth(d.getMonth() + 3)
+    if (freq === "weekly") d.setDate(d.getDate() + 7)
+    else if (freq === "monthly") d.setMonth(d.getMonth() + 1)
+    else if (freq === "bimonthly") d.setMonth(d.getMonth() + 2)
+    else if (freq === "quarterly") d.setMonth(d.getMonth() + 3)
     else if (freq === "semiannually") d.setMonth(d.getMonth() + 6)
-    else if (freq === "yearly")       d.setFullYear(d.getFullYear() + 1)
+    else if (freq === "yearly") d.setFullYear(d.getFullYear() + 1)
   }
 
   const handleSave = async (e: { preventDefault: () => void }) => {
@@ -557,7 +557,7 @@ export default function RecurringTab({
                   </div>
                   <div className="flex-1 min-w-0 pr-24">
                     {/* 金額 */}
-                    <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1">
+                    <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1 tracking-tight tabular-nums">
                       ¥{cost.amount.toLocaleString()}
                       <span className="text-xs text-slate-500 dark:text-muted-foreground font-medium ml-1">
                         / {getFrequencyLabel(cost.frequency, t)}
@@ -578,7 +578,7 @@ export default function RecurringTab({
                     </div>
 
                     {/* 車名 */}
-                    <div className="text-[11px] text-slate-600 dark:text-muted-foreground font-bold mb-2">
+                    <div className="text-[11px] text-slate-600 dark:text-muted-foreground font-medium mb-2">
                       {carsById.get(cost.car_id)?.name}
                     </div>
 

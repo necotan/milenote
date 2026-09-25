@@ -109,7 +109,7 @@ function ChipPresetRow({
           onClick={() => { setCustomOpen(false); onChange(p) }}
           className={`px-3 h-8 rounded-full text-xs font-bold border transition-colors outline-none focus-visible:ring-1 focus-visible:ring-slate-300 ${
             !customOpen && value === p
-              ? "bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground border-slate-900 dark:border-primary"
+              ? "bg-primary text-primary-foreground border-primary"
               : "bg-white dark:bg-card text-slate-600 dark:text-muted-foreground border-neutral-300 dark:border-neutral-600"
           }`}
         >
@@ -125,7 +125,7 @@ function ChipPresetRow({
             onFocus={() => setCustomOpen(true)}
             className="h-8 w-28 md:w-24 text-base md:text-xs font-bold text-center pr-8 rounded-full border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-card text-slate-700 dark:text-foreground outline-none focus-visible:ring-1 focus-visible:ring-slate-300"
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-500 dark:text-muted-foreground pointer-events-none">{suffix}</span>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-medium text-slate-500 dark:text-muted-foreground pointer-events-none">{suffix}</span>
         </div>
       ) : (
         <button
@@ -263,7 +263,7 @@ function MaintEditDialog({
         <div className="mt-6 space-y-6">
           {!isMonthsOnly && presets?.km && (
             <div className="space-y-2.5">
-              <p className="text-[10px] font-bold text-slate-500 dark:text-muted-foreground">{t("mypage.maint_distance_label")}</p>
+              <p className="text-[10px] font-medium text-slate-500 dark:text-muted-foreground">{t("mypage.maint_distance_label")}</p>
               <ChipPresetRow
                 value={draftKm}
                 presets={presets.km}
@@ -275,7 +275,7 @@ function MaintEditDialog({
           )}
           {presets?.months && (
             <div className="space-y-2.5">
-              <p className="text-[10px] font-bold text-slate-500 dark:text-muted-foreground">{t("mypage.maint_period_label")}</p>
+              <p className="text-[10px] font-medium text-slate-500 dark:text-muted-foreground">{t("mypage.maint_period_label")}</p>
               <ChipPresetRow
                 value={draftMonths}
                 presets={presets.months}
@@ -321,7 +321,7 @@ function ProfileFieldRow({
     >
       <Icon size={16} className="shrink-0 text-slate-500 dark:text-muted-foreground" />
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] font-bold text-slate-500 dark:text-muted-foreground">{label}</p>
+        <p className="text-[10px] font-medium text-slate-500 dark:text-muted-foreground">{label}</p>
         <p className={`text-sm font-bold truncate ${value ? "text-slate-800 dark:text-foreground" : "text-slate-300 dark:text-muted-foreground/70"}`}>
           {value || placeholder}
         </p>
@@ -658,14 +658,14 @@ export default function MyPage() {
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2 flex justify-between items-start">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>
-          <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wider mt-1">{t("mypage.subtitle")}</p>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>
+          <p className="text-sm text-slate-500 dark:text-muted-foreground mt-1">{t("mypage.subtitle")}</p>
         </div>
       </header>
       <div className="space-y-8">
         {/* プロフィールカードスケルトン */}
         {/* 実カードは Card 自体の py-4 により区切り線が上下の枠に接しないため、ただの div であるスケルトンにも同じ py-4 を付与する */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border overflow-hidden py-4">
+        <div className="bg-white dark:bg-card rounded-xl overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-24" />
             <div className="md:w-2/3 px-6 py-3">
@@ -684,7 +684,7 @@ export default function MyPage() {
           </div>
         </div>
         {/* メンテナンス設定カードスケルトン */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border overflow-hidden py-4">
+        <div className="bg-white dark:bg-card rounded-xl overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-32" />
             <div className="md:w-2/3 p-6">
@@ -711,7 +711,7 @@ export default function MyPage() {
           </div>
         </div>
         {/* 言語設定カードスケルトン */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border overflow-hidden py-4">
+        <div className="bg-white dark:bg-card rounded-xl overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-28" />
             <div className="md:w-2/3 p-6">
@@ -720,7 +720,7 @@ export default function MyPage() {
           </div>
         </div>
         {/* アクセシビリティカードスケルトン */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border overflow-hidden py-4">
+        <div className="bg-white dark:bg-card rounded-xl overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-32" />
             <div className="md:w-2/3 p-6 space-y-6">
@@ -737,7 +737,7 @@ export default function MyPage() {
           </div>
         </div>
         {/* ホーム画面カスタマイズカードスケルトン */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border overflow-hidden py-4">
+        <div className="bg-white dark:bg-card rounded-xl overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-32" />
             <div className="md:w-2/3 p-6">
@@ -758,7 +758,7 @@ export default function MyPage() {
         </div>
         {/* データエクスポートカードスケルトン */}
         {/* 実カードはフッター(border-t)を持つCardのため、Card自体のpbは0になり、pt-4のみ効いている */}
-        <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border overflow-hidden pt-4">
+        <div className="bg-white dark:bg-card rounded-xl overflow-hidden pt-4">
           <div className="p-6 space-y-2">
             <SkeletonText size="base" className="w-28" />
             <SkeletonText size="xs" leading="relaxed" className="w-2/3" />
@@ -780,8 +780,8 @@ export default function MyPage() {
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2 flex justify-between items-start">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>
-          <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wider mt-1">{t("mypage.subtitle")}</p>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>
+          <p className="text-sm text-slate-500 dark:text-muted-foreground mt-1">{t("mypage.subtitle")}</p>
         </div>
       </header>
 
@@ -839,7 +839,7 @@ export default function MyPage() {
               <div className="space-y-5">
                 {MAINT_CATEGORIES.map((category) => (
                   <div key={category.key}>
-                    <p className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground tracking-wide mb-2 px-1">
+                    <p className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground mb-2 px-1">
                       {t(`mypage.maint_category_${category.key}`)}
                     </p>
                     <ListGroup>
@@ -1051,7 +1051,7 @@ export default function MyPage() {
               {/* PC表示時 */}
               <div className="hidden lg:block max-w-md">
                 <div className="flex items-center justify-between gap-3 mb-3">
-                  <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("mypage.home_order_pc_car_position")}</span>
+                  <span className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("mypage.home_order_pc_car_position")}</span>
                   <div className="inline-flex bg-slate-100 dark:bg-surface-2 rounded-lg p-1 shrink-0">
                     {(["left", "right"] as const).map((position) => {
                       const active = carsFirst ? position === "left" : position === "right"
@@ -1073,7 +1073,7 @@ export default function MyPage() {
                 </div>
 
                 <div className="flex items-center justify-between gap-3">
-                  <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("mypage.home_order_pc_content_order")}</span>
+                  <span className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("mypage.home_order_pc_content_order")}</span>
                   <div className="inline-flex bg-slate-100 dark:bg-surface-2 rounded-lg p-1 shrink-0">
                     {(["summary", "alerts"] as const).map((content) => {
                       const active = summaryFirst ? content === "summary" : content === "alerts"
@@ -1115,7 +1115,7 @@ export default function MyPage() {
             <Button
               onClick={handleExportCsv}
               disabled={exporting}
-              className="shrink-0 px-4 h-8 text-[11px] font-bold bg-slate-900 dark:bg-primary text-white dark:text-primary-foreground hover:bg-slate-800 dark:hover:bg-primary/90 rounded-lg shadow-sm"
+              className="shrink-0 px-4 h-8 text-[11px] font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg shadow-sm"
             >
               <Download className="w-3.5 h-3.5 mr-1.5" />
               {exporting ? t("mypage.exporting") : t("mypage.export_button")}

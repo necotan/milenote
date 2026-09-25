@@ -237,7 +237,7 @@ export default function MaintenancePage() {
               <SkeletonText size="sm" className="w-24 px-1 mb-2" />
               <div className="grid gap-3 md:gap-4" style={gridStyle}>
                 {[...Array(gridColumns)].map((_, j) => (
-                  <div key={j} className="rounded-xl bg-white dark:bg-card ring-1 ring-slate-300 dark:ring-border overflow-hidden py-4">
+                  <div key={j} className="rounded-xl bg-white dark:bg-card overflow-hidden py-4">
                     <div className="p-3.5 flex items-start gap-3">
                       <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
                       <div className="min-w-0 flex-1">
@@ -347,8 +347,7 @@ export default function MaintenancePage() {
 
               <div className="flex justify-center pt-6">
                 <Button
-                  variant="outline"
-                  className="px-10 font-bold bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background dark:bg-foreground dark:text-background dark:border-foreground dark:hover:bg-foreground/90"
+                  className="px-10 font-bold hover:bg-primary/90"
                   onClick={() => setIsDisplaySettingsOpen(false)}
                 >
                   {t("common.save")}
@@ -371,7 +370,7 @@ export default function MaintenancePage() {
 
               {/* カテゴリ絞り込み */}
               <div className="space-y-2">
-                <p className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("records.category")}</p>
+                <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.category")}</p>
                 <div className="flex flex-wrap gap-2.5">
                   <button
                     type="button"
@@ -379,7 +378,7 @@ export default function MaintenancePage() {
                     aria-pressed={categoryFilters.length === 0}
                     className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                       categoryFilters.length === 0
-                        ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
+                        ? "bg-primary text-primary-foreground border-primary"
                         : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                     }`}
                   >
@@ -398,7 +397,7 @@ export default function MaintenancePage() {
                         aria-pressed={active}
                         className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                           active
-                            ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
+                            ? "bg-primary text-primary-foreground border-primary"
                             : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                         }`}
                       >
@@ -413,7 +412,7 @@ export default function MaintenancePage() {
               {/* 車絞り込み */}
               {cars.length > 1 && (
                 <div className="space-y-2">
-                  <p className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("records.filter_car")}</p>
+                  <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.filter_car")}</p>
                   <div className="flex flex-wrap gap-2.5">
                     <button
                       type="button"
@@ -421,7 +420,7 @@ export default function MaintenancePage() {
                       aria-pressed={carFilters.length === 0}
                       className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                         carFilters.length === 0
-                          ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
+                          ? "bg-primary text-primary-foreground border-primary"
                           : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                       }`}
                     >
@@ -439,7 +438,7 @@ export default function MaintenancePage() {
                           aria-pressed={active}
                           className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                             active
-                              ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
+                              ? "bg-primary text-primary-foreground border-primary"
                               : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                           }`}
                         >
@@ -454,8 +453,7 @@ export default function MaintenancePage() {
 
               <div className="flex justify-center pt-6">
                 <Button
-                  variant="outline"
-                  className="px-10 font-bold bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background dark:bg-foreground dark:text-background dark:border-foreground dark:hover:bg-foreground/90"
+                  className="px-10 font-bold hover:bg-primary/90"
                   onClick={() => setIsFilterOpen(false)}
                 >
                   {t("common.save")}
@@ -469,16 +467,16 @@ export default function MaintenancePage() {
       {cars.length === 0 ? (
         <Card className="border-none bg-white dark:bg-card p-10 text-center">
           <CarFront className="mx-auto h-12 w-12 text-slate-200 dark:text-muted-foreground mb-3" />
-          <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground mb-4 tracking-tighter">{t("home.no_cars_registered")}</p>
-          <Link href="/garage"><Button className="font-bold text-xs px-6 tracking-wide">{t("home.register")}</Button></Link>
+          <p className="text-xs font-medium text-slate-500 dark:text-muted-foreground mb-4 tracking-tighter">{t("home.no_cars_registered")}</p>
+          <Link href="/garage"><Button className="font-bold text-xs px-6">{t("home.register")}</Button></Link>
         </Card>
       ) : alerts.length === 0 ? (
         <Card className="border-none bg-white dark:bg-card p-6 text-center">
-          <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wide">{t("home.no_alerts")}</p>
+          <p className="text-xs font-medium text-slate-500 dark:text-muted-foreground">{t("home.no_alerts")}</p>
         </Card>
       ) : filteredAlerts.length === 0 ? (
         <Card className="border-none bg-white dark:bg-card p-6 text-center">
-          <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wide">{t("home.no_filtered_alerts")}</p>
+          <p className="text-xs font-medium text-slate-500 dark:text-muted-foreground">{t("home.no_filtered_alerts")}</p>
         </Card>
       ) : isUngrouped ? (
         <div className="grid gap-3 md:gap-4 items-stretch mt-6" style={gridStyle}>
@@ -493,7 +491,7 @@ export default function MaintenancePage() {
             if (items.length === 0) return null
             return (
               <div key={category.key}>
-                <p className="text-sm font-bold text-slate-500 dark:text-muted-foreground tracking-wide mb-2 px-1">
+                <p className="text-sm font-bold text-slate-500 dark:text-muted-foreground mb-2 px-1">
                   {t(`mypage.maint_category_${category.key}`)}
                 </p>
                 <div className="grid gap-3 md:gap-4 items-stretch" style={gridStyle}>

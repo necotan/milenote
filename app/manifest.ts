@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
         description: '愛車管理・維持費記録アプリ',
         start_url: '/',
         display: 'standalone',
-        background_color: '#fafafa',
-        theme_color: '#fafafa',
+        background_color: '#f2f2f2',
+        theme_color: '#f2f2f2',
         icons: [
             {
                 src: '/icon-192x192.png',

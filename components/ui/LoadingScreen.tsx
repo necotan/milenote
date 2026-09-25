@@ -26,7 +26,7 @@ export default function LoadingScreen() {
   }, [typingDone]);
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-6 bg-slate-50 dark:bg-background">
+    <div className="flex h-screen flex-col items-center justify-center gap-6 bg-page">
       {/* メーター */}
       <svg
         viewBox="0 0 100 100"
@@ -69,7 +69,7 @@ export default function LoadingScreen() {
       </svg>
 
       {/* 全文字分の幅を最初から確保し、中央位置を固定する */}
-      <div className="flex items-baseline justify-center font-bold tracking-wide text-black dark:text-white">
+      <div className="flex items-baseline justify-center font-bold text-black dark:text-white">
         {text.split("").map((ch, i) => (
           <span key={i} style={{ opacity: i < typedCount ? 1 : 0 }}>{ch}</span>
         ))}

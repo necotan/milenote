@@ -47,7 +47,7 @@ export function SegmentedToggle<T extends string>({
   return (
     <div
       ref={containerRef}
-      className={cn("relative inline-flex items-center rounded-full bg-slate-100 dark:bg-muted p-[3px]", className)}
+      className={cn("relative inline-flex items-center rounded-full bg-muted p-[3px]", className)}
     >
       <span
         ref={indicatorRef}
