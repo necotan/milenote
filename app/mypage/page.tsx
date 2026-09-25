@@ -11,6 +11,7 @@ import { NumberInput } from "@/components/ui/NumberInput"
 import { Label } from "@/components/ui/label"
 import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
+import { ListGroup } from "@/components/ui/ListGroup"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { Dialog, DialogContent, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical, ChevronRight, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck, CarFront, AtSign, Info, Lock } from "lucide-react"
@@ -195,7 +196,7 @@ function MaintenanceItemRow({
   )
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3">
+    <div className="flex items-center gap-3 px-1 py-3">
       {isEditable ? (
         <button
           type="button"
@@ -316,7 +317,7 @@ function ProfileFieldRow({
     <button
       type="button"
       onClick={onClick}
-      className="w-full flex items-center gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5 text-left hover:bg-slate-50 dark:hover:bg-surface-2/40 transition-colors"
+      className="w-full flex items-center gap-3 px-1 py-3 text-left transition-opacity hover:opacity-70 active:opacity-50"
     >
       <Icon size={16} className="shrink-0 text-slate-500 dark:text-muted-foreground" />
       <div className="flex-1 min-w-0">
@@ -553,8 +554,8 @@ export default function MyPage() {
 
   const handleDragStart = (e: ReactPointerEvent<HTMLSpanElement>, index: number) => {
     const el = rowRefs.current[index]
-    // カードの高さと行間（space-y-2 = 8px）を1段分の移動量とする
-    const step = el ? el.getBoundingClientRect().height + 8 : 56
+    // 行の高さ（区切り線を含む）を1段分の移動量とする
+    const step = el ? el.getBoundingClientRect().height : 53
     dragInfo.current = { startY: e.clientY, startIndex: index, step }
     setDragId(homeOrder[index])
     setDragOffset(0)
@@ -667,16 +668,18 @@ export default function MyPage() {
         <div className="bg-white dark:bg-card rounded-xl border border-slate-200 dark:border-border overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-24" />
-            <div className="md:w-2/3 p-6 space-y-3">
-              {[...Array(2)].map((_, i) => (
-                <div key={i} className="flex items-center gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5">
-                  <Skeleton className="h-4 w-4 rounded-full shrink-0" />
-                  <div className="flex-1 min-w-0 space-y-1">
-                    <SkeletonText size="10px" className="w-16" />
-                    <SkeletonText size="sm" className="w-32" />
+            <div className="md:w-2/3 px-6 py-3">
+              <ListGroup>
+                {[...Array(2)].map((_, i) => (
+                  <div key={i} className="flex items-center gap-3 px-1 py-3">
+                    <Skeleton className="h-4 w-4 rounded-full shrink-0" />
+                    <div className="flex-1 min-w-0 space-y-1">
+                      <SkeletonText size="10px" className="w-16" />
+                      <SkeletonText size="sm" className="w-32" />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </ListGroup>
             </div>
           </div>
         </div>
@@ -689,9 +692,9 @@ export default function MyPage() {
                 {[4, 3, 3].map((count, ci) => (
                   <div key={ci}>
                     <SkeletonText size="11px" className="w-20 mb-2" />
-                    <div className="rounded-xl border border-slate-200 dark:border-border divide-y divide-slate-200 dark:divide-border overflow-hidden">
+                    <ListGroup>
                       {[...Array(count)].map((_, i) => (
-                        <div key={i} className="flex items-center gap-3 px-4 py-3">
+                        <div key={i} className="flex items-center gap-3 px-1 py-3">
                           <Skeleton className="h-[18px] w-[18px] rounded-full shrink-0" />
                           <div className="flex-1 min-w-0 space-y-1">
                             <SkeletonText size="sm" className="w-28" />
@@ -700,7 +703,7 @@ export default function MyPage() {
                           <Skeleton className="h-5 w-9 rounded-full shrink-0" />
                         </div>
                       ))}
-                    </div>
+                    </ListGroup>
                   </div>
                 ))}
               </div>
@@ -738,11 +741,14 @@ export default function MyPage() {
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-32" />
             <div className="md:w-2/3 p-6">
-              <div className="lg:hidden space-y-2 max-w-md">
+              <ListGroup className="lg:hidden max-w-md">
                 {[...Array(5)].map((_, i) => (
-                  <Skeleton key={i} className="h-[52px] w-full rounded-lg" />
+                  <div key={i} className="flex items-center gap-3 px-1 py-2.5">
+                    <Skeleton className="h-8 w-8 rounded-lg shrink-0" />
+                    <SkeletonText size="sm" className="w-28" />
+                  </div>
                 ))}
-              </div>
+              </ListGroup>
               <div className="hidden lg:block max-w-md space-y-4">
                 <Skeleton className="h-8 w-full rounded-lg" />
                 <Skeleton className="h-8 w-full rounded-lg" />
@@ -794,21 +800,23 @@ export default function MyPage() {
             </div>
 
             {/* 右側：タップで編集ポップアップを開く項目行 */}
-            <div className="md:w-2/3 p-6 space-y-3">
-              <ProfileFieldRow
-                icon={User}
-                label={t("mypage.display_name")}
-                value={displayName}
-                placeholder="milenote_user"
-                onClick={() => setProfileDialogField("display_name")}
-              />
-              <ProfileFieldRow
-                icon={AtSign}
-                label={t("mypage.user_id")}
-                value={username}
-                placeholder="milenote_user"
-                onClick={() => setProfileDialogField("user_id")}
-              />
+            <div className="md:w-2/3 px-6 py-3">
+              <ListGroup>
+                <ProfileFieldRow
+                  icon={User}
+                  label={t("mypage.display_name")}
+                  value={displayName}
+                  placeholder="milenote_user"
+                  onClick={() => setProfileDialogField("display_name")}
+                />
+                <ProfileFieldRow
+                  icon={AtSign}
+                  label={t("mypage.user_id")}
+                  value={username}
+                  placeholder="milenote_user"
+                  onClick={() => setProfileDialogField("user_id")}
+                />
+              </ListGroup>
             </div>
           </div>
         </Card>
@@ -834,7 +842,7 @@ export default function MyPage() {
                     <p className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground tracking-wide mb-2 px-1">
                       {t(`mypage.maint_category_${category.key}`)}
                     </p>
-                    <div className="rounded-xl border border-slate-200 dark:border-border divide-y divide-slate-200 dark:divide-border overflow-hidden">
+                    <ListGroup>
                       {category.items.map((key) => (
                         <MaintenanceItemRow
                           key={key}
@@ -845,7 +853,7 @@ export default function MyPage() {
                           t={t}
                         />
                       ))}
-                    </div>
+                    </ListGroup>
                   </div>
                 ))}
               </div>
@@ -983,7 +991,7 @@ export default function MyPage() {
             <div className="md:w-2/3 p-6">
               {/* スマートフォン表示時 */}
               <div className="lg:hidden">
-              <div className="space-y-2 max-w-md">
+              <ListGroup className="max-w-md">
                 {homeOrder.map((sectionId, index) => {
                   const isDragging = dragId === sectionId
                   // ドラッグ中の見た目の移動量を算出
@@ -1010,10 +1018,8 @@ export default function MyPage() {
                         transition: isDragging || justDroppedId === sectionId ? "none" : "transform 200ms ease",
                         zIndex: isDragging ? 10 : 0,
                       }}
-                      className={`relative flex items-center gap-3 bg-white dark:bg-surface-2 border p-3 rounded-lg select-none ${
-                        isDragging
-                          ? "border-slate-400 dark:border-ring shadow-lg ring-2 ring-slate-300 dark:ring-surface-border"
-                          : "border-slate-200 dark:border-surface-3 shadow-sm"
+                      className={`relative flex items-center gap-3 bg-white dark:bg-card px-1 py-2.5 select-none ${
+                        isDragging ? "rounded-lg shadow-lg ring-1 ring-slate-300 dark:ring-surface-border" : ""
                       }`}
                     >
                       {/* セクションアイコン */}
@@ -1037,7 +1043,7 @@ export default function MyPage() {
                     </div>
                   )
                 })}
-              </div>
+              </ListGroup>
               {/* 上が一番上に表示される旨の補足 */}
               <p className="mt-3 text-[11px] text-slate-500 dark:text-muted-foreground font-medium">{t("mypage.home_order_hint")}</p>
               </div>
