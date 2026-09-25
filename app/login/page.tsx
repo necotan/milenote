@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useTranslation } from "@/lib/i18n"
-import { Eye, EyeOff, X } from "lucide-react"
+import { Eye, EyeOff } from "lucide-react"
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogActionButton } from "@/components/ui/dialog"
 import Footer from "@/components/ui/Footer"
 
 export default function LoginPage() {
@@ -62,67 +63,44 @@ export default function LoginPage() {
   return (
     <div className="relative flex min-h-screen items-center justify-center p-8 bg-white dark:bg-background">
       {/* エラーポップアップ */}
-      {errorPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-card rounded-2xl border border-slate-200 dark:border-border shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
-            <div className="flex items-start justify-between mb-3">
-              <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("login.error_title")}</h3>
-              <button
-                onClick={() => setErrorPopup(null)}
-                className="text-slate-500 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors -mt-1 -mr-1"
-              >
-                <X size={18} />
-              </button>
-            </div>
-            <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">{errorPopup}</p>
-            <Button
-              className="w-full mt-6 font-bold"
-              onClick={() => setErrorPopup(null)}
-            >
-              OK
-            </Button>
-          </div>
-        </div>
-      )}
+      <Dialog open={errorPopup !== null} onOpenChange={(open) => { if (!open) setErrorPopup(null) }}>
+        <DialogContent>
+          <DialogTitle>{t("login.error_title")}</DialogTitle>
+          <DialogDescription className="mt-2 leading-relaxed">{errorPopup}</DialogDescription>
+          <DialogFooter>
+            <DialogActionButton onClick={() => setErrorPopup(null)}>OK</DialogActionButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* パスワードリセットモーダル */}
-      {resetOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-card rounded-2xl border border-slate-200 dark:border-border shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
-            <div className="flex items-start justify-between mb-3">
-              <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("reset.request_title")}</h3>
-              <button
-                onClick={() => setResetOpen(false)}
-                className="text-slate-500 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors -mt-1 -mr-1"
-              >
-                <X size={18} />
-              </button>
-            </div>
-            {resetSent ? (
-              <>
-                <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed whitespace-pre-line">{t("reset.sent_message")}</p>
-                <Button
-                  className="w-full mt-6 font-bold"
-                  onClick={() => setResetOpen(false)}
-                >
-                  OK
-                </Button>
-              </>
-            ) : (
-              <form onSubmit={handleResetRequest} className="space-y-4">
-                <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">{t("reset.request_description")}</p>
-                <div className="space-y-2">
-                  <Label htmlFor="reset-email">{t("login.email")}</Label>
-                  <Input id="reset-email" type="email" placeholder="example@mail.com" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} required className="border-slate-300 dark:border-border" />
-                </div>
-                <Button className="w-full font-bold" type="submit" disabled={resetLoading}>
+      {/* 入力中の内容を失わないよう、画面外のタップでは閉じない */}
+      <Dialog open={resetOpen} onOpenChange={setResetOpen}>
+        <DialogContent onInteractOutside={(e) => e.preventDefault()}>
+          <DialogTitle>{t("reset.request_title")}</DialogTitle>
+          {resetSent ? (
+            <>
+              <DialogDescription className="mt-2 leading-relaxed whitespace-pre-line">{t("reset.sent_message")}</DialogDescription>
+              <DialogFooter>
+                <DialogActionButton onClick={() => setResetOpen(false)}>OK</DialogActionButton>
+              </DialogFooter>
+            </>
+          ) : (
+            <form onSubmit={handleResetRequest}>
+              <DialogDescription className="mt-2 leading-relaxed">{t("reset.request_description")}</DialogDescription>
+              <div className="mt-4 space-y-2">
+                <Label htmlFor="reset-email">{t("login.email")}</Label>
+                <Input id="reset-email" type="email" placeholder="example@mail.com" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} required className="border-slate-300 dark:border-border" />
+              </div>
+              <DialogFooter>
+                <DialogActionButton type="submit" disabled={resetLoading}>
                   {resetLoading ? t("login.processing") : t("reset.send")}
-                </Button>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
+                </DialogActionButton>
+              </DialogFooter>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <div className="w-full max-w-sm">
         <div className="space-y-1 mb-6">

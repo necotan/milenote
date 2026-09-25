@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useTranslation } from "@/lib/i18n"
-import { Eye, EyeOff, X } from "lucide-react"
+import { Eye, EyeOff } from "lucide-react"
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogActionButton } from "@/components/ui/dialog"
 import Footer from "@/components/ui/Footer"
 
 function ResetPasswordContent() {
@@ -76,44 +77,27 @@ function ResetPasswordContent() {
   return (
     <div className="relative flex min-h-screen items-center justify-center p-8 bg-white dark:bg-background">
       {/* エラーポップアップ */}
-      {errorPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-card rounded-2xl border border-slate-200 dark:border-border shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
-            <div className="flex items-start justify-between mb-3">
-              <h3 className="text-sm font-bold text-slate-800 dark:text-foreground">{t("reset.error_title")}</h3>
-              <button
-                onClick={() => setErrorPopup(null)}
-                className="text-slate-500 hover:text-slate-600 dark:text-muted-foreground dark:hover:text-foreground transition-colors -mt-1 -mr-1"
-              >
-                <X size={18} />
-              </button>
-            </div>
-            <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">{errorPopup}</p>
-            <Button
-              className="w-full mt-6 font-bold"
-              onClick={() => setErrorPopup(null)}
-            >
-              OK
-            </Button>
-          </div>
-        </div>
-      )}
+      <Dialog open={errorPopup !== null} onOpenChange={(open) => { if (!open) setErrorPopup(null) }}>
+        <DialogContent>
+          <DialogTitle>{t("reset.error_title")}</DialogTitle>
+          <DialogDescription className="mt-2 leading-relaxed">{errorPopup}</DialogDescription>
+          <DialogFooter>
+            <DialogActionButton onClick={() => setErrorPopup(null)}>OK</DialogActionButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* 更新完了ポップアップ */}
-      {succeeded && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-card rounded-2xl border border-slate-200 dark:border-border shadow-xl p-6 mx-6 max-w-sm w-full animate-in zoom-in-95 duration-200">
-            <h3 className="text-sm font-bold text-slate-800 dark:text-foreground mb-3">{t("reset.success_title")}</h3>
-            <p className="text-sm text-slate-600 dark:text-muted-foreground leading-relaxed">{t("reset.success_message")}</p>
-            <Button
-              className="w-full mt-6 font-bold"
-              onClick={() => router.push("/")}
-            >
-              OK
-            </Button>
-          </div>
-        </div>
-      )}
+      {/* OKでトップへ遷移するため、画面外のタップやEscでは閉じない */}
+      <Dialog open={succeeded}>
+        <DialogContent showCloseButton={false} onEscapeKeyDown={(e) => e.preventDefault()} onInteractOutside={(e) => e.preventDefault()}>
+          <DialogTitle className="pr-0">{t("reset.success_title")}</DialogTitle>
+          <DialogDescription className="mt-2 leading-relaxed">{t("reset.success_message")}</DialogDescription>
+          <DialogFooter>
+            <DialogActionButton onClick={() => router.push("/")}>OK</DialogActionButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <div className="w-full max-w-sm">
         <div className="space-y-1 mb-6 text-center">

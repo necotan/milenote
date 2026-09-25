@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { NumberInput } from "@/components/ui/NumberInput"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogActionButton } from "@/components/ui/dialog"
 import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
@@ -480,54 +481,50 @@ export default function Home() {
       </div>
 
       {/* ODO更新モーダル */}
-      {odoModalOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => setOdoModalOpen(false)}>
-          <Card className="border-none bg-white dark:bg-card max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
-            <CardContent className="p-6 space-y-4">
-              <div className="flex items-center gap-3">
-                <Gauge size={22} className="text-slate-600 dark:text-muted-foreground" />
-                <h2 className="text-lg font-bold text-slate-800 dark:text-foreground">{t("home.update_odo_title")}</h2>
-              </div>
-              <p className="text-xs text-slate-600 dark:text-muted-foreground leading-relaxed">{t("home.update_odo_desc")}</p>
+      <Dialog open={odoModalOpen} onOpenChange={(open) => { if (!odoSaving) setOdoModalOpen(open) }}>
+        <DialogContent showCloseButton={false} onOpenAutoFocus={(e) => e.preventDefault()}>
+          <div className="flex items-center gap-3">
+            <Gauge size={22} className="text-slate-600 dark:text-muted-foreground" />
+            <DialogTitle className="pr-0">{t("home.update_odo_title")}</DialogTitle>
+          </div>
+          <DialogDescription className="mt-2 text-xs text-slate-600 dark:text-muted-foreground leading-relaxed">{t("home.update_odo_desc")}</DialogDescription>
 
-              <div className="space-y-2">
-                <label className="block text-[11px] font-bold leading-none text-slate-600 dark:text-muted-foreground">{t("home.target_car")}</label>
-                <Select value={odoCarId} onValueChange={handleOdoCarChange}>
-                  <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="z-[70]">
-                    {cars.map((car) => (
-                      <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+          <div className="mt-4 space-y-2">
+            <label className="block text-[11px] font-bold leading-none text-slate-600 dark:text-muted-foreground">{t("home.target_car")}</label>
+            <Select value={odoCarId} onValueChange={handleOdoCarChange}>
+              <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {cars.map((car) => (
+                  <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-              <div className="space-y-2">
-                <label className="block text-[11px] font-bold leading-none text-slate-600 dark:text-muted-foreground">{t("common.odometer")}</label>
-                <div className="relative max-w-40">
-                  <NumberInput
-                    value={odoValue}
-                    onValueChange={setOdoValue}
-                    className="pr-10 bg-white dark:bg-card border-slate-200 dark:border-border"
-                  />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-500 dark:text-muted-foreground pointer-events-none">{t("common.km_unit")}</span>
-                </div>
-              </div>
+          <div className="mt-4 space-y-2">
+            <label className="block text-[11px] font-bold leading-none text-slate-600 dark:text-muted-foreground">{t("common.odometer")}</label>
+            <div className="relative max-w-40">
+              <NumberInput
+                value={odoValue}
+                onValueChange={setOdoValue}
+                className="pr-10 bg-white dark:bg-card border-slate-200 dark:border-border"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-500 dark:text-muted-foreground pointer-events-none">{t("common.km_unit")}</span>
+            </div>
+          </div>
 
-              <div className="flex gap-3 pt-1">
-                <Button variant="outline" className="flex-1 font-bold" onClick={() => setOdoModalOpen(false)}>
-                  {t("common.cancel")}
-                </Button>
-                <Button className="flex-1 font-bold" disabled={odoSaving} onClick={handleSaveOdo}>
-                  {odoSaving ? t("common.saving") : t("common.save")}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+          <DialogFooter>
+            <DialogActionButton variant="outline" disabled={odoSaving} onClick={() => setOdoModalOpen(false)}>
+              {t("common.cancel")}
+            </DialogActionButton>
+            <DialogActionButton disabled={odoSaving} onClick={handleSaveOdo}>
+              {odoSaving ? t("common.saving") : t("common.save")}
+            </DialogActionButton>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </main>
   )
 }
