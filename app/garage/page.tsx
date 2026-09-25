@@ -17,7 +17,8 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
+import { FormSection } from "@/components/ui/FormSection"
+import { SwitchRow } from "@/components/ui/ListGroup"
 import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { CarFront, Plus, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, Move, SlidersHorizontal, Image as ImageIcon, IdCard, Gauge, CalendarDays, Wallet } from "lucide-react"
@@ -727,82 +728,65 @@ export default function GaragePage() {
                   {editCarId ? t("garage.edit_car") : t("garage.add_car")}
                 </h2>
 
-                <form onSubmit={editCarId ? handleUpdateCar : handleAddCar} className="space-y-4 sm:space-y-5">
-                  <div className="space-y-4">
-                    {/* 基本情報 */}
-                    <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
-                      <div className="flex items-center gap-2 mb-6">
-                        <IdCard size={15} className="text-slate-500 dark:text-muted-foreground" />
-                        <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("garage.basic_info")}</span>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
-                        <div className="space-y-1">
-                          <Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.car_name")} <span className="text-red-500">{t("common.required")}</span></Label>
-                          <Input placeholder="86" value={name} onChange={(e) => setName(e.target.value)} required className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
-                        </div>
-                        <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.model_code")}</Label><Input placeholder="ZN6" value={modelCode} onChange={(e) => setModelCode(e.target.value)} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
-                        <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.maker")}</Label><Input placeholder="TOYOTA" value={maker} onChange={(e) => setMaker(e.target.value)} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
-                        <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("common.grade")}</Label><Input placeholder="GT Limited" value={grade} onChange={(e) => setGrade(e.target.value)} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
-                        <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.year")}</Label><Input type="number" placeholder="2018" value={year} onChange={(e) => setYear(e.target.value)} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
-                        <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.body_color")}</Label><Input placeholder={t("garage.body_color_placeholder")} value={color} onChange={(e) => setColor(e.target.value)} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
-                        <div className="space-y-1">
-                          <Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.fuel_type")}</Label>
-                          <Select value={fuelType} onValueChange={setFuelType}>
-                            <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400"><SelectValue placeholder={t("garage.select_fuel_type")} /></SelectTrigger>
-                            <SelectContent>
-                              {FUEL_TYPES.map(key => (
-                                <SelectItem key={key} value={key}>{t(`fuel_types.${key}`)}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 走行距離 */}
-                    <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
-                      <div className="flex items-center gap-2 mb-6">
-                        <Gauge size={15} className="text-slate-500 dark:text-muted-foreground" />
-                        <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("garage.odo_info")}</span>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
-                        <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.current_odo")} <span className="text-red-500">{t("common.required")}</span></Label><NumberInput placeholder="52,400" value={currentOdo} onValueChange={setCurrentOdo} required className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
-                        <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.purchase_odo")}</Label><NumberInput placeholder="48,000" value={purchaseOdo} onValueChange={setPurchaseOdo} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
-                      </div>
-                    </div>
-
-                    {/* 登録・納車情報 */}
-                    <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
-                      <div className="flex items-center gap-2 mb-6">
-                        <CalendarDays size={15} className="text-slate-500 dark:text-muted-foreground" />
-                        <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("garage.registration_info")}</span>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
-                        <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.first_registration")}</Label><MonthPicker value={firstRegistrationDate} onChange={setFirstRegistrationDate} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-9 min-h-0" /></div>
-                        <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("common.delivery_date")}</Label><DatePicker value={purchaseDate} onChange={setPurchaseDate} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-9 min-h-0" /></div>
-                      </div>
-                    </div>
-
-                    {/* 価格情報 */}
-                    <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
-                      <div className="flex items-center gap-2 mb-6">
-                        <Wallet size={15} className="text-slate-500 dark:text-muted-foreground" />
-                        <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("garage.price_info")}</span>
-                      </div>
+                <form onSubmit={editCarId ? handleUpdateCar : handleAddCar} className="space-y-6">
+                  {/* 基本情報 */}
+                  <FormSection icon={IdCard} title={t("garage.basic_info")}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
                       <div className="space-y-1">
-                        <Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.purchase_price")}</Label>
-                        <NumberInput placeholder="2,500,000" value={purchasePrice} onValueChange={setPurchasePrice} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                        <Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.car_name")} <span className="text-red-500">{t("common.required")}</span></Label>
+                        <Input placeholder="86" value={name} onChange={(e) => setName(e.target.value)} required className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
                       </div>
-                      <div className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-border bg-white/60 dark:bg-muted/50 px-4 py-3">
-                        <div className="space-y-0.5 pr-3">
-                          <Label htmlFor="include-price" className="cursor-pointer">{t("garage.include_price_in_cost")}</Label>
-                          <p className="text-[11px] text-slate-500 dark:text-muted-foreground">{t("garage.include_price_in_cost_hint")}</p>
-                        </div>
-                        <Switch id="include-price" checked={includePriceInCost} onCheckedChange={setIncludePriceInCost} />
+                      <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.model_code")}</Label><Input placeholder="ZN6" value={modelCode} onChange={(e) => setModelCode(e.target.value)} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                      <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.maker")}</Label><Input placeholder="TOYOTA" value={maker} onChange={(e) => setMaker(e.target.value)} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                      <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("common.grade")}</Label><Input placeholder="GT Limited" value={grade} onChange={(e) => setGrade(e.target.value)} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                      <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.year")}</Label><Input type="number" placeholder="2018" value={year} onChange={(e) => setYear(e.target.value)} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                      <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.body_color")}</Label><Input placeholder={t("garage.body_color_placeholder")} value={color} onChange={(e) => setColor(e.target.value)} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                      <div className="space-y-1">
+                        <Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.fuel_type")}</Label>
+                        <Select value={fuelType} onValueChange={setFuelType}>
+                          <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400"><SelectValue placeholder={t("garage.select_fuel_type")} /></SelectTrigger>
+                          <SelectContent>
+                            {FUEL_TYPES.map(key => (
+                              <SelectItem key={key} value={key}>{t(`fuel_types.${key}`)}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
-                  </div>
-                  <div className="space-y-2">
+                  </FormSection>
+
+                  {/* 走行距離 */}
+                  <FormSection icon={Gauge} title={t("garage.odo_info")} divided>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
+                      <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.current_odo")} <span className="text-red-500">{t("common.required")}</span></Label><NumberInput placeholder="52,400" value={currentOdo} onValueChange={setCurrentOdo} required className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                      <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.purchase_odo")}</Label><NumberInput placeholder="48,000" value={purchaseOdo} onValueChange={setPurchaseOdo} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
+                    </div>
+                  </FormSection>
+
+                  {/* 登録・納車情報 */}
+                  <FormSection icon={CalendarDays} title={t("garage.registration_info")} divided>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
+                      <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.first_registration")}</Label><MonthPicker value={firstRegistrationDate} onChange={setFirstRegistrationDate} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-9 min-h-0" /></div>
+                      <div className="space-y-1"><Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("common.delivery_date")}</Label><DatePicker value={purchaseDate} onChange={setPurchaseDate} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-9 min-h-0" /></div>
+                    </div>
+                  </FormSection>
+
+                  {/* 価格情報 */}
+                  <FormSection icon={Wallet} title={t("garage.price_info")} divided>
+                    <div className="space-y-1">
+                      <Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.purchase_price")}</Label>
+                      <NumberInput placeholder="2,500,000" value={purchasePrice} onValueChange={setPurchasePrice} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
+                    </div>
+                    <SwitchRow
+                      id="include-price"
+                      title={t("garage.include_price_in_cost")}
+                      description={t("garage.include_price_in_cost_hint")}
+                      checked={includePriceInCost}
+                      onCheckedChange={setIncludePriceInCost}
+                    />
+                  </FormSection>
+
+                  <FormSection divided className="space-y-2">
                     <Label>{t("garage.status")}</Label>
                     <Select value={carStatus} onValueChange={(v) => setCarStatus(v as CarStatus)}>
                       <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
@@ -815,8 +799,8 @@ export default function GaragePage() {
                     {editCarId && (carStatus === "archived" || carStatus === "archived_excluded") && (
                       <p className="text-[11px] text-slate-500 dark:text-muted-foreground">{t("garage.car_status_archive_hint")}</p>
                     )}
-                  </div>
-                  <div className="pt-4 flex justify-center">
+                  </FormSection>
+                  <div className="pt-2 flex justify-center">
                     <Button type="submit" className="px-12 font-bold" disabled={savingCar}>
                       {savingCar ? t("common.saving") : (editCarId ? t("common.update") : t("common.register"))}
                     </Button>

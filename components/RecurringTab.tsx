@@ -11,9 +11,10 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { FormSection } from "@/components/ui/FormSection"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
-import { Plus, X, Pencil, Trash2, Pause, Play, ChevronDown, Info, RepeatIcon } from "lucide-react"
+import { Plus, X, Pencil, Trash2, Pause, Play, ChevronDown, Info, RepeatIcon, Wallet } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
 import { CATEGORIES } from "@/app/records/page"
@@ -117,7 +118,7 @@ const RecurringForm = ({
           {t("records.recurring_form_hint")}
         </p>
 
-        <form onSubmit={onSubmit} className="space-y-5">
+        <form onSubmit={onSubmit} className="space-y-6">
           {/* 対象車・カテゴリ */}
           <div className="grid grid-cols-2 gap-3 sm:gap-x-8 sm:max-w-[50rem]">
             <div className="space-y-2">
@@ -159,9 +160,8 @@ const RecurringForm = ({
           )}
 
           {/* 支払情報セクション */}
-          <div className="rounded-xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4 sm:max-w-[50rem]">
-            <p className="text-[11px] font-bold text-slate-500 dark:text-muted-foreground uppercase tracking-wider">{t("records.payment_info")}</p>
-            <div className="grid grid-cols-2 gap-3 sm:gap-x-8">
+          <FormSection icon={Wallet} title={t("records.payment_info")} divided>
+            <div className="grid grid-cols-2 gap-3 sm:gap-x-8 sm:max-w-[50rem]">
               <div className="space-y-2">
                 <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
                 <NumberInput
@@ -201,12 +201,14 @@ const RecurringForm = ({
                 </p>
               )}
             </div>
-          </div>
+          </FormSection>
 
-          <div className="space-y-2 sm:max-w-[50rem]">
-            <Label>{t("common.memo")}</Label>
-            <Textarea value={memo} onChange={e => setMemo(e.target.value)} placeholder={t("records.memo_placeholder")} className="resize-none" />
-          </div>
+          <FormSection divided>
+            <div className="space-y-2 sm:max-w-[50rem]">
+              <Label>{t("common.memo")}</Label>
+              <Textarea value={memo} onChange={e => setMemo(e.target.value)} placeholder={t("records.memo_placeholder")} className="resize-none" />
+            </div>
+          </FormSection>
 
           <div className="pt-2 flex justify-center">
             <Button type="submit" className="px-12 font-bold">{submitLabel}</Button>
