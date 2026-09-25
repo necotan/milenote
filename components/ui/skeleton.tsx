@@ -20,8 +20,8 @@ function SkeletonTabs({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 // 実要素のフォントサイズ指定に対応するトークン
-// xs から 2xl はTailwindの名前付きトークン、9px から 12px は text-[11px] のような任意サイズに対応する
-type SkeletonTextSize = "9px" | "10px" | "11px" | "12px" | "xs" | "sm" | "base" | "lg" | "xl" | "2xl"
+// xs から 4xl はTailwindの名前付きトークン、9px から 12px は text-[11px] のような任意サイズに対応する
+type SkeletonTextSize = "9px" | "10px" | "11px" | "12px" | "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "3xl" | "4xl"
 type SkeletonTextLeading = "none" | "tight" | "snug" | "normal" | "relaxed" | "loose"
 
 // クラス名は文字列リテラルで指定
@@ -37,6 +37,8 @@ const TEXT_SIZE_CLASS: Record<SkeletonTextSize, string> = {
   lg: "text-lg",
   xl: "text-xl",
   "2xl": "text-2xl",
+  "3xl": "text-3xl",
+  "4xl": "text-4xl",
 }
 
 const LEADING_CLASS: Record<SkeletonTextLeading, string> = {

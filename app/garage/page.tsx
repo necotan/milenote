@@ -671,12 +671,12 @@ export default function GaragePage() {
                 {/* 画像とテキストの間の余白（実要素は mt-1 だが、隣接する要素同士が接すると余白が無く見えるため広めにとる） */}
                 <div className="px-4 pt-3 pb-4 space-y-2">
                   <SkeletonText size="2xl" className="w-36 rounded-lg" />
-                  <SkeletonText size="10px" className="w-48" />
+                  <SkeletonText size="11px" className="w-48" />
                 </div>
                 <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
                   {[...Array(2)].map((_, j) => (
                     <div key={j} className="p-4 space-y-2">
-                      <SkeletonText size="9px" className="w-16" />
+                      <SkeletonText size="11px" className="w-16" />
                       <SkeletonText size="lg" className="w-20" />
                     </div>
                   ))}
@@ -684,7 +684,7 @@ export default function GaragePage() {
                 <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border bg-slate-50/30 dark:bg-muted/30">
                   {[...Array(2)].map((_, j) => (
                     <div key={j} className="p-4 space-y-2">
-                      <SkeletonText size="9px" className="w-16" />
+                      <SkeletonText size="11px" className="w-16" />
                       <SkeletonText size="lg" className="w-20" />
                     </div>
                   ))}
@@ -693,12 +693,12 @@ export default function GaragePage() {
                 <div className="p-4 flex flex-col gap-2.5 text-xs bg-slate-50/50 dark:bg-muted/50">
                   {[...Array(3)].map((_, j) => (
                     <div key={j} className="flex justify-between items-center">
-                      <SkeletonText size="9px" className="w-16" />
-                      <SkeletonText size="10px" className="w-20" />
+                      <SkeletonText size="11px" className="w-16" />
+                      <SkeletonText size="11px" className="w-20" />
                     </div>
                   ))}
                   <div className="flex justify-between items-center">
-                    <SkeletonText size="9px" className="w-16" />
+                    <SkeletonText size="11px" className="w-16" />
                     <div className="flex items-center gap-2">
                       <Skeleton className="size-8 rounded-full" />
                       <Skeleton className="size-8 rounded-full" />
@@ -838,7 +838,8 @@ export default function GaragePage() {
                     {/* 画像アップロードボタン */}
                     <Label className="bg-black/40 hover:bg-black/70 text-white p-2 rounded-full cursor-pointer transition-all backdrop-blur-sm opacity-80 hover:opacity-100 shadow-lg">
                       <Camera size={16} />
-                      <Input
+                      {/* Input は外側に w-full の枠を持ち、非表示でも幅を取ってアイコンが潰れるため素の input を使う */}
+                      <input
                         type="file"
                         accept="image/jpeg, image/png, image/webp"
                         className="hidden"
@@ -861,15 +862,15 @@ export default function GaragePage() {
                   <CardContent className="p-0 m-0">
                     <div className="px-4 pb-4 bg-white dark:bg-card relative z-20">
                       <h3 className="text-2xl font-bold text-slate-800 dark:text-foreground mt-1">{car.name}</h3>
-                      <p className="text-[10px] font-medium text-slate-500 dark:text-muted-foreground">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
+                      <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
                     </div>
                     <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
                       <div className="p-4">
-                        <p className="text-[9px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.odometer")}</p>
-                        <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">{car.current_odo.toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
+                        <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.odometer")}</p>
+                        <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">{car.current_odo.toLocaleString()} <span className="text-[11px]">{t("common.km_unit")}</span></p>
                       </div>
                       <div className="p-4">
-                        <p className="text-[9px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.total_cost")}</p>
+                        <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.total_cost")}</p>
                         <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">¥{
                           (records.filter(r => r.car_id === car.id).reduce((sum, r) => sum + r.amount, 0)
                             + (car.include_price_in_cost ? (car.purchase_price || 0) : 0)).toLocaleString()
@@ -878,31 +879,31 @@ export default function GaragePage() {
                     </div>
                     <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border bg-slate-50/30 dark:bg-muted/30">
                       <div className="p-4">
-                        <p className="text-[9px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.distance_since_delivery")}</p>
-                        <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
+                        <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.distance_since_delivery")}</p>
+                        <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[11px]">{t("common.km_unit")}</span></p>
                       </div>
                       <div className="p-4">
-                        <p className="text-[9px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.ownership_period")}</p>
+                        <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.ownership_period")}</p>
                         <p className="text-lg font-bold text-slate-800 dark:text-foreground">{formatMonthsPassedLocale(car.purchase_date, locale)}</p>
                       </div>
                     </div>
                     <div className="p-4 flex flex-col gap-2.5 text-xs bg-slate-50/50 dark:bg-muted/50">
                       <div className="flex justify-between items-center">
-                        <span className="text-slate-500 dark:text-muted-foreground font-medium text-[9px]">{t("common.delivery_date")}</span>
-                        <span className="font-bold text-slate-700 dark:text-foreground text-[10px]">{formatDateLocale(car.purchase_date, locale)}</span>
+                        <span className="text-slate-500 dark:text-muted-foreground font-medium text-[11px]">{t("common.delivery_date")}</span>
+                        <span className="font-bold text-slate-700 dark:text-foreground text-[11px]">{formatDateLocale(car.purchase_date, locale)}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-slate-500 dark:text-muted-foreground font-medium text-[9px]">{t("common.car_age")}</span>
-                        <span className="font-bold text-slate-700 dark:text-foreground text-[10px]">{formatMonthsPassedLocale(car.first_registration_date, locale)}</span>
+                        <span className="text-slate-500 dark:text-muted-foreground font-medium text-[11px]">{t("common.car_age")}</span>
+                        <span className="font-bold text-slate-700 dark:text-foreground text-[11px]">{formatMonthsPassedLocale(car.first_registration_date, locale)}</span>
                       </div>
                       <div className="flex items-center gap-4">
-                        <span className="text-slate-500 dark:text-muted-foreground font-medium text-[9px]">{t("common.grade")}</span>
-                        <span className="font-bold text-slate-700 dark:text-foreground text-[10px]">{car.grade || "-"}</span>
+                        <span className="text-slate-500 dark:text-muted-foreground font-medium text-[11px]">{t("common.grade")}</span>
+                        <span className="font-bold text-slate-700 dark:text-foreground text-[11px]">{car.grade || "-"}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-4">
-                          <span className="text-slate-500 dark:text-muted-foreground font-medium text-[9px]">{t("garage.status")}</span>
-                          <span className="font-bold text-slate-700 dark:text-foreground text-[10px]">{t(`garage.car_status_${car.status}`)}</span>
+                          <span className="text-slate-500 dark:text-muted-foreground font-medium text-[11px]">{t("garage.status")}</span>
+                          <span className="font-bold text-slate-700 dark:text-foreground text-[11px]">{t(`garage.car_status_${car.status}`)}</span>
                         </div>
                         {/* 編集・削除アクション */}
                         <div className="flex items-center gap-2">
@@ -1281,7 +1282,7 @@ export default function GaragePage() {
                     <CardContent className="p-4 flex flex-col justify-between h-full">
                       <div>
                         <div className="flex flex-wrap items-center gap-2 mb-2 pr-20">
-                          <span className="text-[10px] font-bold text-slate-600 dark:text-muted-foreground bg-slate-100 dark:bg-surface-2 px-2.5 py-0.5 rounded-full">
+                          <span className="text-[11px] font-bold text-slate-600 dark:text-muted-foreground bg-slate-100 dark:bg-surface-2 px-2.5 py-0.5 rounded-full">
                             {t(`wishlist_genres.${wish.genre}`)} / {carsById.get(wish.car_id)?.name}
                           </span>
                         </div>

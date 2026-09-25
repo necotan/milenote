@@ -241,14 +241,14 @@ export default function MaintenancePage() {
                     <div className="p-3.5 flex items-start gap-3">
                       <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
                       <div className="min-w-0 flex-1">
-                        <SkeletonText size="10px" className="w-16" />
+                        <SkeletonText size="11px" className="w-16" />
                         {/* 実カードはこのブロックが leading-tight のため行間を明示する */}
                         <div className="mt-0.5">
                           <SkeletonText size="11px" leading="tight" className="w-32" />
                           <SkeletonText size="lg" leading="tight" className="mt-0.5 w-24" />
                         </div>
                         <div className="flex flex-col gap-1.5 mt-1">
-                          <SkeletonText size="10px" className="w-24" />
+                          <SkeletonText size="11px" className="w-24" />
                           <Skeleton className="h-1.5 w-[80%] rounded-full" />
                         </div>
                       </div>

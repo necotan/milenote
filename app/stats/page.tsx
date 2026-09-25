@@ -389,7 +389,7 @@ function PeriodFilter({
               </div>
             </div>
             <p
-              className="mt-2.5 flex items-center justify-end gap-1 px-1 text-[10px] text-slate-500 dark:text-muted-foreground"
+              className="mt-2.5 flex items-center justify-end gap-1 px-1 text-[11px] text-slate-500 dark:text-muted-foreground"
               style={fadeItemStyle(2)}
             >
               <Info size={12} className="shrink-0" />
@@ -490,7 +490,7 @@ const CategoryBreakdownCard = memo(function CategoryBreakdownCard({
                   <Pie data={categoryData} cx="50%" cy="50%" innerRadius={60} outerRadius={PIE_OUTER_RADIUS} minAngle={PIE_MIN_ANGLE_DEG} dataKey="value" stroke={chartChrome.sliceStroke} strokeWidth={2} strokeLinejoin="round" isAnimationActive={false} label={createCustomizedLabel(t, locale, chartChrome.pieLabelFill, pieLabelDeltas)} labelLine={createCustomizedLabelLine(chartChrome.labelLineStroke, pieLabelDeltas)}>
                     {categoryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.fill} />)}
                     <Label value={`¥${totalAmount.toLocaleString()}`} position="center" dy={-8} className="text-base font-bold fill-slate-800 dark:fill-foreground" />
-                    <Label value={t("stats.total")} position="center" dy={8} className="text-[10px] font-bold fill-slate-500 dark:fill-muted-foreground" />
+                    <Label value={t("stats.total")} position="center" dy={8} className="text-[11px] font-bold fill-slate-500 dark:fill-muted-foreground" />
                   </Pie>
                   {/* Recharts のコールバック型が複雑なため any を許容 */}
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
@@ -1152,7 +1152,7 @@ export default function StatsPage() {
                     <h3 className="text-2xl font-bold text-slate-800 dark:text-foreground tabular-nums tracking-tight">
                       {t("stats.earth_rounds", { rounds: earthRounds })}
                     </h3>
-                    <p className="text-[10px] text-slate-600 dark:text-muted-foreground mt-1 font-medium">
+                    <p className="text-[11px] text-slate-600 dark:text-muted-foreground mt-1 font-medium">
                       {t("stats.total_odo")}: <span className="font-bold text-slate-700 dark:text-foreground tabular-nums">{totalOdo.toLocaleString()}</span> {t("stats.unit_km")}
                     </p>
                   </div>
@@ -1181,7 +1181,7 @@ export default function StatsPage() {
                       style={{ width: `${moonPercent}%` }}
                     ></div>
                   </div>
-                  <p className="text-[10px] text-center text-slate-600 dark:text-muted-foreground font-medium">
+                  <p className="text-[11px] text-center text-slate-600 dark:text-muted-foreground font-medium">
                     {t("stats.moon_remaining", { distance: remainingMoonDist.toLocaleString() })}
                   </p>
                 </div>
@@ -1225,7 +1225,7 @@ export default function StatsPage() {
                   unit={t("stats.unit_kg")}
                   className="col-span-2"
                   note={
-                    <p className="text-[10px] text-slate-500 dark:text-muted-foreground flex items-center gap-1">
+                    <p className="text-[11px] text-slate-500 dark:text-muted-foreground flex items-center gap-1">
                       <span title={t("stats.co2_note_tooltip")}>
                         <Info size={11} className="text-slate-500 dark:text-muted-foreground cursor-help shrink-0" />
                       </span>
@@ -1519,7 +1519,7 @@ export default function StatsPage() {
               <div className="mt-4 px-2 lg:mt-0 lg:w-[40%] lg:shrink-0 lg:pl-0 lg:pr-6">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-slate-100 dark:border-border/50 text-[10px] font-bold text-slate-500 dark:text-muted-foreground">
+                    <tr className="border-b border-slate-100 dark:border-border/50 text-[11px] font-bold text-slate-500 dark:text-muted-foreground">
                       <th className="pb-2.5 pr-3 text-left font-bold">{t("stats.col_year")}</th>
                       <th className="pb-2.5 px-3 text-right font-bold">{t("stats.total")}</th>
                       <th className="pb-2.5 pl-3 text-right font-bold">{t("stats.col_yoy")}</th>
