@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
+import { ListGroup, SwitchRow } from "@/components/ui/ListGroup"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
 import { CarFront, SlidersHorizontal, Settings2, EyeOff, LayoutList, FileX } from "lucide-react"
@@ -321,38 +321,29 @@ export default function MaintenancePage() {
                 <h2 className="text-lg font-bold">{t("home.display_settings_title")}</h2>
               </div>
 
-              <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5">
-                <div className="min-w-0 flex items-start gap-2.5">
-                  <EyeOff size={18} className="shrink-0 mt-0.5 text-slate-500 dark:text-muted-foreground" />
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold text-slate-700 dark:text-foreground">{t("home.show_disabled_maint")}</p>
-                    <p className="text-xs text-slate-500 dark:text-muted-foreground mt-0.5">{t("home.show_disabled_maint_desc")}</p>
-                  </div>
-                </div>
-                <Switch checked={showDisabled} onCheckedChange={handleShowDisabledChange} className="shrink-0" />
-              </div>
-
-              <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5">
-                <div className="min-w-0 flex items-start gap-2.5">
-                  <FileX size={18} className="shrink-0 mt-0.5 text-slate-500 dark:text-muted-foreground" />
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold text-slate-700 dark:text-foreground">{t("home.hide_unrecorded_maint")}</p>
-                    <p className="text-xs text-slate-500 dark:text-muted-foreground mt-0.5">{t("home.hide_unrecorded_maint_desc")}</p>
-                  </div>
-                </div>
-                <Switch checked={hideUnrecorded} onCheckedChange={handleHideUnrecordedChange} className="shrink-0" />
-              </div>
-
-              <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 dark:border-border px-3 py-2.5">
-                <div className="min-w-0 flex items-start gap-2.5">
-                  <LayoutList size={18} className="shrink-0 mt-0.5 text-slate-500 dark:text-muted-foreground" />
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold text-slate-700 dark:text-foreground">{t("home.ungroup_maint")}</p>
-                    <p className="text-xs text-slate-500 dark:text-muted-foreground mt-0.5">{t("home.ungroup_maint_desc")}</p>
-                  </div>
-                </div>
-                <Switch checked={isUngrouped} onCheckedChange={handleUngroupedChange} className="shrink-0" />
-              </div>
+              <ListGroup>
+                <SwitchRow
+                  icon={EyeOff}
+                  title={t("home.show_disabled_maint")}
+                  description={t("home.show_disabled_maint_desc")}
+                  checked={showDisabled}
+                  onCheckedChange={handleShowDisabledChange}
+                />
+                <SwitchRow
+                  icon={FileX}
+                  title={t("home.hide_unrecorded_maint")}
+                  description={t("home.hide_unrecorded_maint_desc")}
+                  checked={hideUnrecorded}
+                  onCheckedChange={handleHideUnrecordedChange}
+                />
+                <SwitchRow
+                  icon={LayoutList}
+                  title={t("home.ungroup_maint")}
+                  description={t("home.ungroup_maint_desc")}
+                  checked={isUngrouped}
+                  onCheckedChange={handleUngroupedChange}
+                />
+              </ListGroup>
 
               <div className="flex justify-center pt-6">
                 <Button
