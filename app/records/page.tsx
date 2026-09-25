@@ -1003,7 +1003,7 @@ function RecordsPageInner() {
                       <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1 tracking-tight tabular-nums">¥{record.amount.toLocaleString()}</h3>
                       
                       {/* ジャンルタグ */}
-                      <div className="flex items-center gap-2 text-[10px] font-medium text-slate-600 dark:text-muted-foreground mb-2 flex-wrap">
+                      <div className="flex items-center gap-2 text-[11px] font-medium text-slate-600 dark:text-muted-foreground mb-2 flex-wrap">
                         <span className="bg-slate-100 dark:bg-surface-2 px-2.5 py-1 rounded-full">{categoryLabel}</span>
                         {record.sub_category && (
                           <span className="bg-slate-100 dark:bg-surface-2 text-slate-600 dark:text-muted-foreground px-2.5 py-1 rounded-full">

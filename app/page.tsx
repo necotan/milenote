@@ -158,12 +158,12 @@ export default function Home() {
             {/* 画像とテキストの間の余白（実要素は mt-1 だが、隣接する要素同士が接すると余白が無く見えるため広めにとる） */}
             <div className="px-4 pt-3 pb-4 space-y-2">
               <SkeletonText size="2xl" className="w-36 rounded-lg" />
-              <SkeletonText size="10px" className="w-48" />
+              <SkeletonText size="11px" className="w-48" />
             </div>
             <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
               {[...Array(2)].map((_, i) => (
                 <div key={i} className="p-4 space-y-2">
-                  <SkeletonText size="9px" className="w-16" />
+                  <SkeletonText size="11px" className="w-16" />
                   <SkeletonText size="lg" className="w-20" />
                 </div>
               ))}
@@ -171,7 +171,7 @@ export default function Home() {
             <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
               {[...Array(2)].map((_, i) => (
                 <div key={i} className="p-4 space-y-2">
-                  <SkeletonText size="9px" className="w-16" />
+                  <SkeletonText size="11px" className="w-16" />
                   <SkeletonText size="lg" className="w-20" />
                 </div>
               ))}
@@ -180,8 +180,8 @@ export default function Home() {
             <div className="p-4 flex flex-col gap-2.5 text-xs">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="flex justify-between items-center">
-                  <SkeletonText size="9px" className="w-20" />
-                  <SkeletonText size="10px" className="w-16" />
+                  <SkeletonText size="11px" className="w-20" />
+                  <SkeletonText size="11px" className="w-16" />
                 </div>
               ))}
             </div>
@@ -198,26 +198,29 @@ export default function Home() {
           <div className="space-y-6" style={{ order: homeOrder.indexOf("summary") }}>
             {/* 今月の費用カードスケルトン */}
             <div className="relative bg-white dark:bg-card rounded-xl overflow-hidden py-4">
-              <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
+              <div className="absolute top-4 right-4 z-10 flex flex-col gap-1.5">
                 <Skeleton className="h-8 w-24 rounded-full" />
                 <Skeleton className="h-8 w-24 rounded-full" />
               </div>
-              <div className="p-3.5 pr-32">
-                <div className="-mt-1 space-y-1.5">
-                  <SkeletonText size="sm" className="w-20" />
-                  <SkeletonText size="2xl" className="w-32 rounded-lg" />
-                  <SkeletonText size="9px" className="w-20" />
+              <div className="px-5 pt-1 pb-4 pr-36">
+                <SkeletonText size="sm" className="w-20" />
+                <SkeletonText size="3xl" className="mt-1 w-36 rounded-lg" />
+                <div className="flex items-center gap-2 mt-2">
+                  <SkeletonText size="xs" className="w-12" />
+                  <Skeleton className="h-5 w-20 rounded-full" />
                 </div>
               </div>
-              <div className="mx-4 border-t border-slate-200 dark:border-border" />
-              <div className="p-3.5 space-y-2.5">
-                <SkeletonText size="10px" className="w-20 mb-1" />
-                {[...Array(3)].map((_, i) => (
-                  <div key={i} className="flex items-center justify-between">
-                    <SkeletonText size="11px" className="w-24" />
-                    <SkeletonText size="12px" className="w-16" />
-                  </div>
-                ))}
+              <div className="mx-5 border-t border-slate-200 dark:border-border" />
+              <div className="px-5 pt-4 pb-1">
+                <SkeletonText size="xs" className="w-20 mb-3" />
+                <div className="space-y-3">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="flex items-center justify-between">
+                      <SkeletonText size="sm" className="w-32" />
+                      <SkeletonText size="sm" className="w-16" />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -230,14 +233,14 @@ export default function Home() {
                   <div className="p-3.5 flex items-start gap-3">
                     <Skeleton className="w-11 h-11 rounded-2xl shrink-0" />
                     <div className="min-w-0 flex-1">
-                      <SkeletonText size="10px" className="w-16" />
+                      <SkeletonText size="11px" className="w-16" />
                       {/* 実カードはこのブロックが leading-tight のため行間を明示する */}
                       <div className="mt-0.5">
                         <SkeletonText size="11px" leading="tight" className="w-32" />
                         <SkeletonText size="lg" leading="tight" className="mt-0.5 w-24" />
                       </div>
                       <div className="flex flex-col gap-1.5 mt-1">
-                        <SkeletonText size="10px" className="w-24" />
+                        <SkeletonText size="11px" className="w-24" />
                         <Skeleton className="h-1.5 w-[80%] rounded-full" />
                       </div>
                     </div>
@@ -271,7 +274,7 @@ export default function Home() {
 
                 {/* 給油を記録、ODO更新ボタン */}
                 {cars.length > 0 && (
-                  <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
+                  <div className="absolute top-4 right-4 z-10 flex flex-col gap-1.5">
                     <Link href="/records?action=add&category=fuel">
                       <button className="w-full h-8 flex items-center justify-center gap-1.5 px-3 rounded-full bg-slate-100 dark:bg-surface-2 hover:bg-slate-200 dark:hover:bg-surface-3 text-slate-700 dark:text-foreground transition-all active:scale-95">
                         <Fuel size={13} className="text-slate-600 dark:text-muted-foreground" />
@@ -286,47 +289,46 @@ export default function Home() {
                 )}
 
                 {/* 今月の費用 */}
-                <div className={`p-3.5 ${cars.length > 0 ? "pr-32" : ""}`}>
-                  <div className="-mt-1">
-                    <p className="text-sm font-bold text-slate-600 dark:text-muted-foreground mb-1">
-                      {t("home.this_month_cost")}
-                    </p>
-                    {thisMonthRecords.length === 0 ? (
-                      <p className="text-xs text-slate-500 dark:text-muted-foreground py-1.5">{t("home.no_cost_data")}</p>
-                    ) : (
-                      <>
-                        <p className="text-2xl font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">¥{thisMonthCost.toLocaleString()}</p>
-                        <div className="flex items-center gap-1.5 mt-1">
-                          <p className="text-[9px] text-slate-500 dark:text-muted-foreground font-medium">{t("home.vs_last_month")}</p>
-                          {diffCost > 0 ? (
-                            <span className="flex items-baseline text-red-500 font-bold text-[10px]">
-                              <TrendingUp size={10} className="mr-0.5 self-center" /> +¥{diffCost.toLocaleString()}
-                            </span>
-                          ) : diffCost < 0 ? (
-                            <span className="flex items-baseline text-blue-500 font-bold text-[10px]">
-                              <TrendingDown size={10} className="mr-0.5 self-center" /> -¥{Math.abs(diffCost).toLocaleString()}
-                            </span>
-                          ) : (
-                            <span className="flex items-baseline text-slate-500 dark:text-muted-foreground font-medium text-[10px]">
-                              <Minus size={10} className="mr-0.5 self-center" /> ±¥0
-                            </span>
-                          )}
-                        </div>
-                      </>
-                    )}
-                  </div>
+                {/* 金額を主役にし、ラベルと前月比は控えめにする */}
+                <div className={`px-5 pt-1 pb-4 ${cars.length > 0 ? "pr-36" : ""}`}>
+                  <p className="text-sm font-medium text-slate-500 dark:text-muted-foreground">
+                    {t("home.this_month_cost")}
+                  </p>
+                  {thisMonthRecords.length === 0 ? (
+                    <p className="text-sm text-slate-500 dark:text-muted-foreground py-2">{t("home.no_cost_data")}</p>
+                  ) : (
+                    <>
+                      <p className="mt-1 text-3xl font-bold text-slate-900 dark:text-foreground tracking-tight tabular-nums">¥{thisMonthCost.toLocaleString()}</p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <p className="text-xs text-slate-500 dark:text-muted-foreground">{t("home.vs_last_month")}</p>
+                        {diffCost > 0 ? (
+                          <span className="inline-flex items-center gap-0.5 rounded-full bg-red-50 dark:bg-red-950/40 px-2 py-0.5 text-xs font-semibold text-red-600 dark:text-red-400 tabular-nums">
+                            <TrendingUp size={12} /> +¥{diffCost.toLocaleString()}
+                          </span>
+                        ) : diffCost < 0 ? (
+                          <span className="inline-flex items-center gap-0.5 rounded-full bg-blue-50 dark:bg-blue-950/40 px-2 py-0.5 text-xs font-semibold text-blue-600 dark:text-blue-400 tabular-nums">
+                            <TrendingDown size={12} /> -¥{Math.abs(diffCost).toLocaleString()}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-0.5 rounded-full bg-slate-100 dark:bg-surface-2 px-2 py-0.5 text-xs font-medium text-slate-500 dark:text-muted-foreground tabular-nums">
+                            <Minus size={12} /> ±¥0
+                          </span>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* 区切り線 */}
-                <div className="mx-4 border-t border-slate-200 dark:border-border" />
+                <div className="mx-5 border-t border-slate-200 dark:border-border" />
 
                 {/* 直近の記録 */}
-                <div className="p-3.5">
-                  <p className="text-[10px] font-medium text-slate-500 dark:text-muted-foreground mb-2">{t("home.recent_records")}</p>
+                <div className="px-5 pt-4 pb-1">
+                  <p className="text-xs font-semibold text-slate-500 dark:text-muted-foreground mb-3">{t("home.recent_records")}</p>
                   {records.length === 0 ? (
-                    <p className="text-[11px] text-slate-500 dark:text-muted-foreground">{t("home.no_records")}</p>
+                    <p className="text-sm text-slate-500 dark:text-muted-foreground">{t("home.no_records")}</p>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       {[...records]
                         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime() || new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                         .slice(0, 3)
@@ -336,12 +338,12 @@ export default function Home() {
                             ? t(fuelUnit === "kwh" ? "home.record_charge_label" : "home.record_hydrogen_label")
                             : t(`categories.${r.category}`)
                           return (
-                            <div key={r.id} className="flex items-center justify-between">
-                              <div className="flex items-center gap-2">
-                                <span className="text-[11px] font-medium text-slate-600 dark:text-muted-foreground">{categoryLabel}</span>
-                                <span className="text-[10px] text-slate-500 dark:text-muted-foreground">{r.date.replace(/-/g, '/')}</span>
+                            <div key={r.id} className="flex items-baseline justify-between gap-3">
+                              <div className="flex items-baseline gap-2 min-w-0">
+                                <span className="text-sm font-medium text-slate-700 dark:text-foreground truncate">{categoryLabel}</span>
+                                <span className="text-xs text-slate-500 dark:text-muted-foreground tabular-nums">{r.date.replace(/-/g, '/')}</span>
                               </div>
-                              <span className="text-[12px] font-bold text-slate-700 dark:text-foreground">¥{r.amount.toLocaleString()}</span>
+                              <span className="text-sm font-semibold text-slate-800 dark:text-foreground tabular-nums">¥{r.amount.toLocaleString()}</span>
                             </div>
                           )
                         })
@@ -364,9 +366,9 @@ export default function Home() {
                   {alerts.length > 1 && (
                     <Link
                       href="/maintenance"
-                      className={`absolute top-3 right-3 z-10 flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border text-[10px] font-bold transition-colors group bg-slate-50 dark:bg-surface-2 text-slate-600 dark:text-foreground border-slate-300 dark:border-surface-border hover:bg-slate-100 dark:hover:bg-surface-3 ${alerts.length <= 4 ? 'lg:hidden' : ''}`}
+                      className={`absolute top-3 right-3 z-10 flex items-center justify-center gap-1 h-7 px-3 rounded-full bg-slate-100 dark:bg-surface-2 hover:bg-slate-200 dark:hover:bg-surface-3 text-slate-700 dark:text-foreground text-[11px] font-semibold transition-all active:scale-95 ${alerts.length <= 4 ? 'lg:hidden' : ''}`}
                     >
-                      <List size={11} className="text-slate-600 dark:text-muted-foreground group-hover:scale-110 transition-transform" />
+                      <List size={12} className="text-slate-600 dark:text-muted-foreground" />
                       {t("home.see_all")}
                     </Link>
                   )}
@@ -411,15 +413,15 @@ export default function Home() {
                     <CardContent className="p-0 m-0">
                       <div className="px-4 pb-4 bg-white dark:bg-card relative z-20">
                         <h3 className="text-2xl font-bold text-slate-800 dark:text-foreground mt-1">{car.name}</h3>
-                        <p className="text-[10px] font-medium text-slate-500 dark:text-muted-foreground">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
+                        <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
                       </div>
                       <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
                         <div className="p-4">
-                          <p className="text-[9px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.odometer")}</p>
-                          <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">{car.current_odo.toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
+                          <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.odometer")}</p>
+                          <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">{car.current_odo.toLocaleString()} <span className="text-[11px]">{t("common.km_unit")}</span></p>
                         </div>
                         <div className="p-4">
-                          <p className="text-[9px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.total_cost")}</p>
+                          <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.total_cost")}</p>
                           <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">¥{
                             (records.filter(r => r.car_id === car.id).reduce((sum, r) => sum + r.amount, 0)
                               + (car.include_price_in_cost ? (car.purchase_price || 0) : 0)).toLocaleString()
@@ -428,26 +430,26 @@ export default function Home() {
                       </div>
                       <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
                         <div className="p-4">
-                          <p className="text-[9px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.distance_since_delivery")}</p>
-                          <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[10px]">{t("common.km_unit")}</span></p>
+                          <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.distance_since_delivery")}</p>
+                          <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[11px]">{t("common.km_unit")}</span></p>
                         </div>
                         <div className="p-4">
-                          <p className="text-[9px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.ownership_period")}</p>
+                          <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.ownership_period")}</p>
                           <p className="text-lg font-bold text-slate-800 dark:text-foreground">{formatMonthsPassedLocale(car.purchase_date, locale)}</p>
                         </div>
                       </div>
                       <div className="p-4 flex flex-col gap-2.5 text-xs">
                         <div className="flex justify-between items-center">
-                          <span className="text-slate-500 dark:text-muted-foreground font-medium text-[9px]">{t("common.delivery_date")}</span>
-                          <span className="font-bold text-slate-700 dark:text-foreground text-[10px]">{formatDateLocale(car.purchase_date, locale)}</span>
+                          <span className="text-slate-500 dark:text-muted-foreground font-medium text-[11px]">{t("common.delivery_date")}</span>
+                          <span className="font-bold text-slate-700 dark:text-foreground text-[11px]">{formatDateLocale(car.purchase_date, locale)}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-slate-500 dark:text-muted-foreground font-medium text-[9px]">{t("common.car_age")}</span>
-                          <span className="font-bold text-slate-700 dark:text-foreground text-[10px]">{formatMonthsPassedLocale(car.first_registration_date, locale)}</span>
+                          <span className="text-slate-500 dark:text-muted-foreground font-medium text-[11px]">{t("common.car_age")}</span>
+                          <span className="font-bold text-slate-700 dark:text-foreground text-[11px]">{formatMonthsPassedLocale(car.first_registration_date, locale)}</span>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-slate-500 dark:text-muted-foreground font-medium text-[9px]">{t("common.grade")}</span>
-                          <span className="font-bold text-slate-700 dark:text-foreground text-[10px]">{car.grade || "-"}</span>
+                          <span className="text-slate-500 dark:text-muted-foreground font-medium text-[11px]">{t("common.grade")}</span>
+                          <span className="font-bold text-slate-700 dark:text-foreground text-[11px]">{car.grade || "-"}</span>
                         </div>
                       </div>
                       <div className="flex items-center justify-center gap-4 py-4 border-t border-slate-200 dark:border-border">
@@ -511,7 +513,7 @@ export default function Home() {
                 onValueChange={setOdoValue}
                 className="pr-10 bg-white dark:bg-card border-slate-200 dark:border-border"
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-medium text-slate-500 dark:text-muted-foreground pointer-events-none">{t("common.km_unit")}</span>
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-medium text-slate-500 dark:text-muted-foreground pointer-events-none">{t("common.km_unit")}</span>
             </div>
           </div>
 

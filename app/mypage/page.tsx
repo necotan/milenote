@@ -125,7 +125,7 @@ function ChipPresetRow({
             onFocus={() => setCustomOpen(true)}
             className="h-8 w-28 md:w-24 text-base md:text-xs font-bold text-center pr-8 rounded-full border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-card text-slate-700 dark:text-foreground outline-none focus-visible:ring-1 focus-visible:ring-slate-300"
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-medium text-slate-500 dark:text-muted-foreground pointer-events-none">{suffix}</span>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-medium text-slate-500 dark:text-muted-foreground pointer-events-none">{suffix}</span>
         </div>
       ) : (
         <button
@@ -263,7 +263,7 @@ function MaintEditDialog({
         <div className="mt-6 space-y-6">
           {!isMonthsOnly && presets?.km && (
             <div className="space-y-2.5">
-              <p className="text-[10px] font-medium text-slate-500 dark:text-muted-foreground">{t("mypage.maint_distance_label")}</p>
+              <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground">{t("mypage.maint_distance_label")}</p>
               <ChipPresetRow
                 value={draftKm}
                 presets={presets.km}
@@ -275,7 +275,7 @@ function MaintEditDialog({
           )}
           {presets?.months && (
             <div className="space-y-2.5">
-              <p className="text-[10px] font-medium text-slate-500 dark:text-muted-foreground">{t("mypage.maint_period_label")}</p>
+              <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground">{t("mypage.maint_period_label")}</p>
               <ChipPresetRow
                 value={draftMonths}
                 presets={presets.months}
@@ -321,7 +321,7 @@ function ProfileFieldRow({
     >
       <Icon size={16} className="shrink-0 text-slate-500 dark:text-muted-foreground" />
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] font-medium text-slate-500 dark:text-muted-foreground">{label}</p>
+        <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground">{label}</p>
         <p className={`text-sm font-bold truncate ${value ? "text-slate-800 dark:text-foreground" : "text-slate-300 dark:text-muted-foreground/70"}`}>
           {value || placeholder}
         </p>
@@ -674,7 +674,7 @@ export default function MyPage() {
                   <div key={i} className="flex items-center gap-3 px-1 py-3">
                     <Skeleton className="h-4 w-4 rounded-full shrink-0" />
                     <div className="flex-1 min-w-0 space-y-1">
-                      <SkeletonText size="10px" className="w-16" />
+                      <SkeletonText size="11px" className="w-16" />
                       <SkeletonText size="sm" className="w-32" />
                     </div>
                   </div>

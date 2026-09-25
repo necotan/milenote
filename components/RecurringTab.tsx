@@ -225,14 +225,14 @@ const StatusBadge = ({ isActive }: { isActive: boolean }) => {
   const { t } = useTranslation()
   if (isActive) {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 whitespace-nowrap shrink-0">
+      <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 whitespace-nowrap shrink-0">
         <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shrink-0" />
         {t("records.status_active")}
       </span>
     )
   }
   return (
-    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 whitespace-nowrap shrink-0">
+    <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 whitespace-nowrap shrink-0">
       <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
       {t("records.status_paused")}
     </span>
@@ -562,11 +562,11 @@ export default function RecurringTab({
 
                     {/* ジャンルタグ・ステータスバッジ */}
                     <div className="flex items-center gap-1.5 mb-2">
-                      <span className="text-[10px] font-medium bg-slate-100 dark:bg-surface-2 text-slate-600 dark:text-muted-foreground px-2.5 py-1 rounded-full whitespace-nowrap">
+                      <span className="text-[11px] font-medium bg-slate-100 dark:bg-surface-2 text-slate-600 dark:text-muted-foreground px-2.5 py-1 rounded-full whitespace-nowrap">
                         {t(`categories.${cost.category}`)}
                       </span>
                       {cost.sub_category && (
-                        <span className="text-[10px] font-medium bg-slate-100 dark:bg-surface-2 text-slate-600 dark:text-muted-foreground px-2.5 py-1 rounded-full whitespace-nowrap">
+                        <span className="text-[11px] font-medium bg-slate-100 dark:bg-surface-2 text-slate-600 dark:text-muted-foreground px-2.5 py-1 rounded-full whitespace-nowrap">
                           {t(`subcategories.${cost.sub_category}`)}
                         </span>
                       )}
