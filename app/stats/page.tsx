@@ -268,7 +268,7 @@ function PeriodDateRow({
 }) {
   return (
     <div className="flex items-center justify-between py-2.5">
-      <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{label}</span>
+      <span className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{label}</span>
       <DatePicker
         variant="inline"
         value={value}
@@ -465,11 +465,11 @@ const CategoryBreakdownCard = memo(function CategoryBreakdownCard({
             <style>{`
               @keyframes pieRotateIn {
                 from { transform: rotate(-180deg); opacity: 0; }
-                to   { transform: rotate(0deg);   opacity: 1; }
+                to { transform: rotate(0deg); opacity: 1; }
               }
               @keyframes pieLabelFadeIn {
-                0%,  40% { opacity: 0; }
-                100%     { opacity: 1; }
+                0%, 40% { opacity: 0; }
+                100% { opacity: 1; }
               }
               .pie-anim .recharts-pie > .recharts-layer:not(.recharts-pie-labels) {
                 transform-box: fill-box;
@@ -518,13 +518,13 @@ function BentoTile({
 }) {
   return (
     <div className={`rounded-xl p-4 bg-slate-50 dark:bg-surface-2 ${className}`}>
-      <p className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{label}</p>
+      <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{label}</p>
       <div className="flex items-baseline gap-1 mt-1.5">
-        <span className="text-xl font-bold tabular-nums tracking-wide text-slate-800 dark:text-foreground">
+        <span className="text-xl font-bold tabular-nums text-slate-800 dark:text-foreground tracking-tight">
           {value}
         </span>
         {unit && (
-          <span className="text-xs font-bold text-slate-500 dark:text-muted-foreground">
+          <span className="text-xs font-medium text-slate-500 dark:text-muted-foreground">
             {unit}
           </span>
         )}
@@ -932,11 +932,11 @@ export default function StatsPage() {
   }, [locale, t])
   // 凡例ラベルの整形（カテゴリキーを翻訳して表示）
   const renderCategoryLegendLabel = useCallback((value: string) => (
-    <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t(`categories.${value}`)}</span>
+    <span className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t(`categories.${value}`)}</span>
   ), [t])
   // 凡例ラベルの整形
   const renderRawLegendLabel = useCallback((value: string) => (
-    <span className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{value}</span>
+    <span className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{value}</span>
   ), [])
   // 凡例を列揃えのグリッドで描画し、ブロック全体を中央寄せする
   // formatLabel でラベルの整形方法を切り替える
@@ -986,7 +986,7 @@ export default function StatsPage() {
               padding: '10px 14px',
             }}
           >
-            <p className="mb-1.5 text-xs font-bold text-slate-600 dark:text-muted-foreground">{labelFormatter(String(label))}</p>
+            <p className="mb-1.5 text-xs font-medium text-slate-600 dark:text-muted-foreground">{labelFormatter(String(label))}</p>
             {items.length === 0 ? (
               <p className="text-xs text-slate-500 dark:text-muted-foreground">{t("stats.no_data")}</p>
             ) : (
@@ -1084,13 +1084,13 @@ export default function StatsPage() {
   if (loading) return (
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
-        <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
+        <p className="text-sm text-slate-500 dark:text-muted-foreground mt-1">{t("stats.subtitle")}</p>
       </header>
       <SkeletonTabs className="mb-4" />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* カテゴリ別内訳カード（見出し、期間絞り込み、グラフ） */}
-        <div className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-300 dark:ring-border py-4">
+        <div className="bg-white dark:bg-card rounded-xl py-4">
           {/* CardTitle が leading-snug を内包しているため行間を明示する */}
           <div className="p-4 pb-0 pl-8">
             <SkeletonText size="sm" leading="snug" className="w-28" />
@@ -1104,7 +1104,7 @@ export default function StatsPage() {
           </div>
         </div>
         {/* 月別出費推移カード（見出し、表示切替トグル、グラフ） */}
-        <div className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-300 dark:ring-border py-4">
+        <div className="bg-white dark:bg-card rounded-xl py-4">
           <div className="p-4 pb-2 pl-8 flex items-center justify-between">
             <SkeletonText size="sm" leading="snug" className="w-28" />
             <Skeleton className="h-8 w-24 rounded-full" />
@@ -1120,8 +1120,8 @@ export default function StatsPage() {
   return (
     <main className="p-4 space-y-6 max-w-5xl mx-auto">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
-        <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wider mt-1">{t("stats.subtitle")}</p>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("stats.title")}</h1>
+        <p className="text-sm text-slate-500 dark:text-muted-foreground mt-1">{t("stats.subtitle")}</p>
       </header>
 
       <Tabs defaultValue="cost" className="w-full">
@@ -1149,10 +1149,10 @@ export default function StatsPage() {
                     <Globe className="text-blue-500 w-10 h-10" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-2xl font-bold text-slate-800 dark:text-foreground tracking-wide tabular-nums">
+                    <h3 className="text-2xl font-bold text-slate-800 dark:text-foreground tabular-nums tracking-tight">
                       {t("stats.earth_rounds", { rounds: earthRounds })}
                     </h3>
-                    <p className="text-[10px] text-slate-600 dark:text-muted-foreground mt-1 font-medium tracking-wide">
+                    <p className="text-[10px] text-slate-600 dark:text-muted-foreground mt-1 font-medium">
                       {t("stats.total_odo")}: <span className="font-bold text-slate-700 dark:text-foreground tabular-nums">{totalOdo.toLocaleString()}</span> {t("stats.unit_km")}
                     </p>
                   </div>
@@ -1316,18 +1316,18 @@ export default function StatsPage() {
             }
             @keyframes chartFadeIn {
               from { opacity: 0; transform: translateY(4px); }
-              to   { opacity: 1; transform: translateY(0); }
+              to { opacity: 1; transform: translateY(0); }
             }
             @keyframes lineDraw {
               to { stroke-dashoffset: 0; }
             }
             @keyframes dotFadeIn {
               from { opacity: 0; }
-              to   { opacity: 1; }
+              to { opacity: 1; }
             }
             @keyframes areaFadeIn {
               from { opacity: 0; }
-              to   { opacity: 1; }
+              to { opacity: 1; }
             }
             .line-anim .recharts-line-curve {
               stroke-dasharray: var(--line-length, 9999);
@@ -1395,7 +1395,7 @@ export default function StatsPage() {
                 <div
                   key={monthlyAnimKey}
                   ref={monthlyChartType === "line" ? setMonthlyLineContainer : null}
-                  className={`${monthlyChartType === "bar" ? "bar-anim" : "line-anim"}${monthlyChartType === "line" && monthlyLineReady ? " line-ready" : ""}`}
+                  className={`${monthlyChartType === "bar" ? "bar-anim" : "line-anim"}${monthlyChartType === "line" && monthlyLineReady ? "line-ready" : ""}`}
                   style={{ width: "100%", height: "100%" }}
                 >
                   <ResponsiveContainer width="100%" height="100%">
@@ -1473,7 +1473,7 @@ export default function StatsPage() {
               <div
                 key={yearlyAnimKey}
                 ref={yearlyChartType === "line" ? setYearlyLineContainer : null}
-                className={`h-64 w-full lg:flex-1 lg:min-w-0 ${yearlyChartType === "bar" ? "bar-anim" : "line-anim"}${yearlyChartType === "line" && yearlyLineReady ? " line-ready" : ""}`}
+                className={`h-64 w-full lg:flex-1 lg:min-w-0 ${yearlyChartType === "bar" ? "bar-anim" : "line-anim"}${yearlyChartType === "line" && yearlyLineReady ? "line-ready" : ""}`}
               >
                 <ResponsiveContainer width="100%" height="100%">
                   {yearlyChartType === "line" ? (
@@ -1519,7 +1519,7 @@ export default function StatsPage() {
               <div className="mt-4 px-2 lg:mt-0 lg:w-[40%] lg:shrink-0 lg:pl-0 lg:pr-6">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-slate-100 dark:border-border/50 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-muted-foreground">
+                    <tr className="border-b border-slate-100 dark:border-border/50 text-[10px] font-bold text-slate-500 dark:text-muted-foreground">
                       <th className="pb-2.5 pr-3 text-left font-bold">{t("stats.col_year")}</th>
                       <th className="pb-2.5 px-3 text-right font-bold">{t("stats.total")}</th>
                       <th className="pb-2.5 pl-3 text-right font-bold">{t("stats.col_yoy")}</th>

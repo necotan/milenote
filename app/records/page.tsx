@@ -63,7 +63,7 @@ const RecordSkeleton = () => (
       </div>
     </div>
     {[...Array(5)].map((_, i) => (
-      <div key={i} className="bg-white dark:bg-card rounded-xl ring-1 ring-slate-300 dark:ring-border overflow-hidden py-4">
+      <div key={i} className="bg-white dark:bg-card rounded-xl overflow-hidden py-4">
         <div className="p-4 flex gap-4 items-start">
           {/* アイコン */}
           <Skeleton className="w-12 h-12 rounded-full shrink-0 mt-1" />
@@ -719,8 +719,8 @@ function RecordsPageInner() {
   return (
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("records.title")}</h1>
-        <p className="text-xs font-bold text-slate-500 dark:text-muted-foreground tracking-wider mt-1">{t("records.subtitle")}</p>
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("records.title")}</h1>
+        <p className="text-sm text-slate-500 dark:text-muted-foreground mt-1">{t("records.subtitle")}</p>
       </header>
 
       {loading && <RecordSkeleton />}
@@ -806,7 +806,7 @@ function RecordsPageInner() {
 
                     {/* カテゴリ絞り込み */}
                     <div className="space-y-2">
-                      <p className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("records.category")}</p>
+                      <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.category")}</p>
                       <div className="flex flex-wrap gap-2.5">
                         {/* すべて */}
                         <button
@@ -815,7 +815,7 @@ function RecordsPageInner() {
                           aria-pressed={categoryFilters.length === 0}
                           className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                             categoryFilters.length === 0
-                              ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
+                              ? "bg-primary text-primary-foreground border-primary"
                               : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                           }`}
                         >
@@ -834,7 +834,7 @@ function RecordsPageInner() {
                               aria-pressed={active}
                               className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                                 active
-                                  ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
+                                  ? "bg-primary text-primary-foreground border-primary"
                                   : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                               }`}
                             >
@@ -848,7 +848,7 @@ function RecordsPageInner() {
 
                     {/* 車絞り込み */}
                     <div className="space-y-2">
-                      <p className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("records.filter_car")}</p>
+                      <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.filter_car")}</p>
                       <div className="flex flex-wrap gap-2.5">
                         {/* すべて */}
                         <button
@@ -857,7 +857,7 @@ function RecordsPageInner() {
                           aria-pressed={carFilters.length === 0}
                           className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                             carFilters.length === 0
-                              ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
+                              ? "bg-primary text-primary-foreground border-primary"
                               : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                           }`}
                         >
@@ -876,7 +876,7 @@ function RecordsPageInner() {
                               aria-pressed={active}
                               className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
                                 active
-                                  ? "bg-black text-white border-black dark:bg-foreground dark:text-background dark:border-foreground"
+                                  ? "bg-primary text-primary-foreground border-primary"
                                   : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                               }`}
                             >
@@ -889,8 +889,7 @@ function RecordsPageInner() {
                     </div>
                     <div className="flex justify-center pt-6">
                       <Button
-                        variant="outline"
-                        className="px-10 font-bold bg-foreground text-background border-foreground hover:bg-foreground/90 hover:text-background dark:bg-foreground dark:text-background dark:border-foreground dark:hover:bg-foreground/90"
+                        className="px-10 font-bold hover:bg-primary/90"
                         onClick={() => setIsFilterOpen(false)}
                       >
                         {t("common.save")}
@@ -1001,10 +1000,10 @@ function RecordsPageInner() {
                     </div>
                     <div className="flex-1 min-w-0 pr-14">
                       {/* 金額 */}
-                      <h3 className="font-bold text-slate-800 dark:text-foreground text-lg tracking-wider mb-1">¥{record.amount.toLocaleString()}</h3>
+                      <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1 tracking-tight tabular-nums">¥{record.amount.toLocaleString()}</h3>
                       
                       {/* ジャンルタグ */}
-                      <div className="flex items-center gap-2 text-[10px] font-bold text-slate-600 dark:text-muted-foreground mb-2 flex-wrap">
+                      <div className="flex items-center gap-2 text-[10px] font-medium text-slate-600 dark:text-muted-foreground mb-2 flex-wrap">
                         <span className="bg-slate-100 dark:bg-surface-2 px-2 py-1 rounded-md">{categoryLabel}</span>
                         {record.sub_category && (
                           <span className="border border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground px-2 py-1 rounded-md">

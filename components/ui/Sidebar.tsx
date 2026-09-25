@@ -19,9 +19,9 @@ export default function Sidebar() {
 
     return (
         // サイドバーの背景をメインコンテンツと同じにし、区切り線をなくす
-        <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 bg-slate-50 dark:bg-background p-6 z-10">
+        <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 bg-page p-6 z-10">
             <div className="mb-12 px-2 pt-2">
-                <h1 className="text-3xl font-bold tracking-wide text-slate-900 dark:text-foreground">Milenote</h1>
+                <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">Milenote</h1>
             </div>
             <nav className="flex-1 space-y-2">
                 {navItems.map((item) => {
@@ -37,7 +37,7 @@ export default function Sidebar() {
                                 }`}
                         >
                             <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-                            <span className="text-sm tracking-widest">{t(`nav.${item.key}`)}</span>
+                            <span className="text-sm">{t(`nav.${item.key}`)}</span>
                         </Link>
                     )
                 })}
@@ -55,7 +55,7 @@ export default function Sidebar() {
                     className="flex w-full items-center gap-4 px-4 py-3.5 rounded-xl transition-all text-slate-600 hover:bg-red-50 hover:text-red-600 dark:text-muted-foreground dark:hover:bg-red-950/40 dark:hover:text-red-400 font-medium"
                 >
                     <LogOut size={20} />
-                    <span className="text-sm tracking-widest">{t("common.logout")}</span>
+                    <span className="text-sm">{t("common.logout")}</span>
                 </button>
             </div>
         </aside>

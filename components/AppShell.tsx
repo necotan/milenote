@@ -115,7 +115,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   if (isPublicRoute(pathname)) {
     return (
       <html lang="ja" suppressHydrationWarning>
-        <body className={`${geistSans.variable} ${notoSansJP.variable} font-sans antialiased bg-slate-50 dark:bg-background tracking-wide`}>
+        <body className={`${geistSans.variable} ${notoSansJP.variable} font-sans antialiased bg-page`}>
           <ThemeProvider attribute="class" themes={["light", "dark"]} defaultTheme="system" enableSystem>
             <ThemeColorMeta />
             <LanguageProvider>
@@ -130,7 +130,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <html lang="ja" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${notoSansJP.variable} font-sans antialiased bg-slate-50 dark:bg-background text-foreground tracking-wide`}>
+      <body className={`${geistSans.variable} ${notoSansJP.variable} font-sans antialiased bg-page text-foreground`}>
         <ThemeProvider attribute="class" themes={["light", "dark"]} defaultTheme="system" enableSystem>
           <ThemeColorMeta />
           <LanguageProvider>
