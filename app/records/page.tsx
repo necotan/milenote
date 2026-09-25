@@ -14,7 +14,8 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
+import { FormSection } from "@/components/ui/FormSection"
+import { SwitchRow } from "@/components/ui/ListGroup"
 import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, ArrowRight, Hammer, ClipboardList, Droplets, SlidersHorizontal, BatteryCharging, Atom } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
@@ -173,26 +174,16 @@ const RecordForm = ({
         {editRecordId ? t("records.edit_record") : t("records.new_record")}
       </h2>
       
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form onSubmit={onSubmit} className="space-y-6">
         {category === "fuel" ? (
           <div className="sm:grid sm:grid-cols-2 sm:gap-x-8">
-            <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
-              <div className="flex items-center gap-2 mb-6">
-                <CarFront size={15} className="text-slate-500 dark:text-muted-foreground" />
-                <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.basic_info")}</span>
-              </div>
-
+            <FormSection icon={CarFront} title={t("records.basic_info")}>
               {carCategoryFields}
               {dateField}
               {odoField}
-            </div>
+            </FormSection>
 
-            <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
-              <div className="flex items-center gap-2 mb-6">
-                <Fuel size={15} className="text-slate-500 dark:text-muted-foreground" />
-                <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{fuelFieldText.info}</span>
-              </div>
-
+            <FormSection icon={Fuel} title={fuelFieldText.info} divided="mobile">
               {/* 単価 */}
               <div className="space-y-2">
                 <Label>{fuelFieldText.priceLabel}</Label>
@@ -228,17 +219,12 @@ const RecordForm = ({
                   className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 font-bold text-slate-800 dark:text-foreground placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
                 />
               </div>
-            </div>
+            </FormSection>
           </div>
         ) : (
           <>
             <div className="sm:grid sm:grid-cols-2 sm:gap-x-8">
-              <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
-                <div className="flex items-center gap-2 mb-6">
-                  <CarFront size={15} className="text-slate-500 dark:text-muted-foreground" />
-                  <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.basic_info")}</span>
-                </div>
-
+              <FormSection icon={CarFront} title={t("records.basic_info")}>
                 {carCategoryFields}
 
                 {category === "highway" && dateField}
@@ -259,15 +245,10 @@ const RecordForm = ({
                     </Select>
                   </div>
                 )}
-              </div>
+              </FormSection>
 
               {category === "highway" ? (
-                <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
-                  <div className="flex items-center gap-2 mb-6">
-                    <Ticket size={15} className="text-slate-500 dark:text-muted-foreground" />
-                    <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.highway_details")}</span>
-                  </div>
-
+                <FormSection icon={Ticket} title={t("records.highway_details")} divided="mobile">
                   <div className="space-y-2">
                     <Label>{t("records.entry_ic")}</Label>
                     <Input type="text" value={entryIc} onChange={e => setEntryIc(e.target.value)} placeholder={t("records.entry_ic_placeholder")} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
@@ -280,14 +261,9 @@ const RecordForm = ({
                     <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
                     <NumberInput value={amount} onValueChange={setAmount} required placeholder="1,320" className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" />
                   </div>
-                </div>
+                </FormSection>
               ) : (
-                <div className="mt-4 sm:mt-0 rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
-                  <div className="flex items-center gap-2 mb-6">
-                    <Receipt size={15} className="text-slate-500 dark:text-muted-foreground" />
-                    <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.record_details")}</span>
-                  </div>
-
+                <FormSection icon={Receipt} title={t("records.record_details")} divided="mobile">
                   {dateField}
                   {odoField}
 
@@ -295,7 +271,7 @@ const RecordForm = ({
                     <Label>{t("records.amount_yen")} <span className="text-red-500">{t("common.required")}</span></Label>
                     <NumberInput value={amount} onValueChange={setAmount} required placeholder="5,000" className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
                   </div>
-                </div>
+                </FormSection>
               )}
             </div>
 
@@ -318,36 +294,34 @@ const RecordForm = ({
             )}
 
             {category === "inspection" && subCategory === "vehicle_inspection" && (
-              <div className="rounded-2xl bg-slate-50 dark:bg-muted border border-slate-200 dark:border-border p-4 space-y-4">
-                <div className="flex items-center gap-2 mb-6">
-                  <ClipboardList size={15} className="text-slate-500 dark:text-muted-foreground" />
-                  <span className="text-sm font-bold text-slate-600 dark:text-muted-foreground">{t("records.vehicle_inspection_details")}</span>
-                </div>
-
+              <FormSection icon={ClipboardList} title={t("records.vehicle_inspection_details")} divided>
                 <div className="space-y-2 sm:max-w-sm">
                   <Label>{t("records.inspection_expiry_date")}</Label>
                   <DatePicker value={inspectionExpiryDate} onChange={setInspectionExpiryDate} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-9 min-h-0" />
                   <p className="text-[11px] text-slate-500 dark:text-muted-foreground">{t("records.inspection_expiry_date_hint")}</p>
                 </div>
 
-                <div className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-border bg-white/60 dark:bg-card px-4 py-3 sm:max-w-sm">
-                  <div className="space-y-0.5 pr-3">
-                    <Label htmlFor="includes-compulsory-insurance" className="cursor-pointer">{t("records.includes_compulsory_insurance")}</Label>
-                    <p className="text-[11px] text-slate-500 dark:text-muted-foreground">{t("records.includes_compulsory_insurance_hint")}</p>
-                  </div>
-                  <Switch id="includes-compulsory-insurance" checked={includesCompulsoryInsurance} onCheckedChange={setIncludesCompulsoryInsurance} />
-                </div>
-              </div>
+                <SwitchRow
+                  id="includes-compulsory-insurance"
+                  title={t("records.includes_compulsory_insurance")}
+                  description={t("records.includes_compulsory_insurance_hint")}
+                  checked={includesCompulsoryInsurance}
+                  onCheckedChange={setIncludesCompulsoryInsurance}
+                  className="sm:max-w-sm"
+                />
+              </FormSection>
             )}
           </>
         )}
 
-        <div className="space-y-2">
-          <Label>{t("common.memo")}</Label>
-          <Textarea value={memo} onChange={e => setMemo(e.target.value)} placeholder={t("records.memo_placeholder")} className="resize-none" />
-        </div>
+        <FormSection divided>
+          <div className="space-y-2">
+            <Label>{t("common.memo")}</Label>
+            <Textarea value={memo} onChange={e => setMemo(e.target.value)} placeholder={t("records.memo_placeholder")} className="resize-none" />
+          </div>
+        </FormSection>
 
-        <div className="pt-4 flex justify-center">
+        <div className="pt-2 flex justify-center">
           <Button type="submit" className="px-12 font-bold" disabled={isSubmitting}>
             {isSubmitting ? t("common.saving") : submitLabel}
           </Button>
