@@ -1115,7 +1115,7 @@ export default function MyPage() {
             <Button
               onClick={handleExportCsv}
               disabled={exporting}
-              className="shrink-0 px-4 h-8 text-[11px] font-bold bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg shadow-sm"
+              className="shrink-0 px-4 h-8 text-[11px] font-bold bg-primary text-primary-foreground hover:bg-primary/90"
             >
               <Download className="w-3.5 h-3.5 mr-1.5" />
               {exporting ? t("mypage.exporting") : t("mypage.export_button")}
@@ -1143,7 +1143,7 @@ export default function MyPage() {
 
       {/* ログアウトボタン (モバイル) */}
       <div className="md:hidden pt-8 flex justify-center mb-8">
-        <Button variant="outline" className="px-8 h-9 font-bold rounded-lg bg-white dark:bg-card border-slate-200 dark:border-border shadow-sm text-slate-500 dark:text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors text-xs" onClick={handleLogout}>
+        <Button variant="outline" className="px-8 h-9 font-bold bg-white dark:bg-card border-transparent dark:border-transparent text-slate-500 dark:text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors text-xs" onClick={handleLogout}>
           <LogOut className="w-4 h-4 mr-2" />
           {t("common.logout")}
         </Button>

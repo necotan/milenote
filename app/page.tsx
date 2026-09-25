@@ -199,8 +199,8 @@ export default function Home() {
             {/* 今月の費用カードスケルトン */}
             <div className="relative bg-white dark:bg-card rounded-xl overflow-hidden py-4">
               <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
-                <Skeleton className="h-7 w-24 rounded-lg" />
-                <Skeleton className="h-7 w-24 rounded-lg" />
+                <Skeleton className="h-8 w-24 rounded-full" />
+                <Skeleton className="h-8 w-24 rounded-full" />
               </div>
               <div className="p-3.5 pr-32">
                 <div className="-mt-1 space-y-1.5">
@@ -273,14 +273,14 @@ export default function Home() {
                 {cars.length > 0 && (
                   <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5">
                     <Link href="/records?action=add&category=fuel">
-                      <button className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-slate-50 dark:bg-surface-2 hover:bg-slate-100 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground transition-colors group">
-                        <Fuel size={12} className="text-slate-600 dark:text-muted-foreground group-hover:scale-110 transition-transform" />
-                        <span className="text-[10px] font-bold">{t("home.record_fuel")}</span>
+                      <button className="w-full h-8 flex items-center justify-center gap-1.5 px-3 rounded-full bg-slate-100 dark:bg-surface-2 hover:bg-slate-200 dark:hover:bg-surface-3 text-slate-700 dark:text-foreground transition-all active:scale-95">
+                        <Fuel size={13} className="text-slate-600 dark:text-muted-foreground" />
+                        <span className="text-[11px] font-semibold">{t("home.record_fuel")}</span>
                       </button>
                     </Link>
-                    <button onClick={openOdoModal} className="w-full flex items-center justify-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-surface-border bg-slate-50 dark:bg-surface-2 hover:bg-slate-100 dark:hover:bg-surface-3 text-slate-600 dark:text-foreground transition-colors group">
-                      <Gauge size={12} className="text-slate-600 dark:text-muted-foreground group-hover:scale-110 transition-transform" />
-                      <span className="text-[10px] font-bold">{t("home.update_odo")}</span>
+                    <button onClick={openOdoModal} className="w-full h-8 flex items-center justify-center gap-1.5 px-3 rounded-full bg-slate-100 dark:bg-surface-2 hover:bg-slate-200 dark:hover:bg-surface-3 text-slate-700 dark:text-foreground transition-all active:scale-95">
+                      <Gauge size={13} className="text-slate-600 dark:text-muted-foreground" />
+                      <span className="text-[11px] font-semibold">{t("home.update_odo")}</span>
                     </button>
                   </div>
                 )}

@@ -25,6 +25,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
 import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
+import { IconButton } from "@/components/ui/IconButton"
 import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES, type SubCategorySlug } from "@/lib/subcategories"
 import { getFuelUnit } from "@/lib/fuelTypes"
@@ -54,8 +55,8 @@ const RecordSkeleton = () => (
       <div className="flex items-center justify-between">
         <Skeleton className="h-[30px] w-32 rounded-full" />
         <div className="flex items-center gap-4">
-          <Skeleton className="h-7 w-9 rounded-lg" />
-          <Skeleton className="h-7 w-24 rounded-lg" />
+          <Skeleton className="size-8 rounded-full" />
+          <Skeleton className="h-7 w-24 rounded-full" />
         </div>
       </div>
       <div className="flex items-center justify-center">
@@ -67,13 +68,13 @@ const RecordSkeleton = () => (
         <div className="p-4 flex gap-4 items-start">
           {/* アイコン */}
           <Skeleton className="w-12 h-12 rounded-full shrink-0 mt-1" />
-          <div className="flex-1 min-w-0 pr-14 space-y-2">
+          <div className="flex-1 min-w-0 pr-20 space-y-2">
             {/* 金額 */}
             <SkeletonText size="lg" className="w-28 rounded-lg" />
             {/* タグ */}
             <div className="flex gap-2">
-              <Skeleton className="h-5 w-16 rounded-md" />
-              <Skeleton className="h-5 w-20 rounded-md" />
+              <Skeleton className="h-5 w-16 rounded-full" />
+              <Skeleton className="h-5 w-20 rounded-full" />
             </div>
             {/* 車名・ODO */}
             <SkeletonText size="11px" className="w-36" />
@@ -759,11 +760,11 @@ function RecordsPageInner() {
                         type="button"
                         onClick={() => setIsFilterOpen(true)}
                         title={t("records.filter_title")}
-                        className="relative h-7 flex items-center px-2.5 rounded-lg border bg-white text-slate-600 border-slate-300 hover:text-slate-700 hover:border-slate-400 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground transition-colors"
+                        className="relative size-8 flex items-center justify-center rounded-full bg-white text-slate-600 hover:text-slate-800 dark:bg-card dark:text-muted-foreground dark:hover:text-foreground transition-all active:scale-90"
                       >
                         <SlidersHorizontal size={15} />
                         {activeFilterCount > 0 && (
-                          <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-slate-400 text-white dark:bg-surface-2 dark:text-foreground/80 text-[9px] font-bold tabular-nums">
+                          <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-primary text-primary-foreground text-[9px] font-bold tabular-nums">
                             {activeFilterCount}
                           </span>
                         )}
@@ -977,36 +978,35 @@ function RecordsPageInner() {
               <Card key={record.id} className="border-none bg-white dark:bg-card overflow-hidden relative">
                 <CardContent className="p-0">
                   {/* 編集・削除ボタン */}
-                  <div className="absolute top-3 right-3 flex items-center gap-1">
-                    <button
+                  <div className="absolute top-3 right-3 flex items-center gap-2">
+                    <IconButton
                       onClick={() => handleStartEdit(record)}
-                      className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-colors"
                       title={t("common.edit")}
                     >
-                      <Pencil size={14} />
-                    </button>
-                    <button
+                      <Pencil size={15} />
+                    </IconButton>
+                    <IconButton
                       onClick={() => setDeleteRecordId(record.id)}
-                      className="p-1.5 rounded-lg border border-slate-300 dark:border-border text-slate-600 dark:text-muted-foreground hover:text-red-500 hover:border-red-300 hover:bg-red-50 transition-colors"
+                      tone="destructive"
                       title={t("common.delete")}
                     >
-                      <Trash2 size={14} />
-                    </button>
+                      <Trash2 size={15} />
+                    </IconButton>
                   </div>
 
                   <div className="p-4 flex gap-4 items-start">
                     <div className={`p-3 rounded-full shrink-0 mt-1 ${cat.bg} ${cat.color}`}>
                       <Icon size={24} />
                     </div>
-                    <div className="flex-1 min-w-0 pr-14">
+                    <div className="flex-1 min-w-0 pr-20">
                       {/* 金額 */}
                       <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1 tracking-tight tabular-nums">¥{record.amount.toLocaleString()}</h3>
                       
                       {/* ジャンルタグ */}
                       <div className="flex items-center gap-2 text-[10px] font-medium text-slate-600 dark:text-muted-foreground mb-2 flex-wrap">
-                        <span className="bg-slate-100 dark:bg-surface-2 px-2 py-1 rounded-md">{categoryLabel}</span>
+                        <span className="bg-slate-100 dark:bg-surface-2 px-2.5 py-1 rounded-full">{categoryLabel}</span>
                         {record.sub_category && (
-                          <span className="border border-slate-200 dark:border-border text-slate-600 dark:text-muted-foreground px-2 py-1 rounded-md">
+                          <span className="bg-slate-100 dark:bg-surface-2 text-slate-600 dark:text-muted-foreground px-2.5 py-1 rounded-full">
                             {t(`subcategories.${record.sub_category}`)}
                           </span>
                         )}
