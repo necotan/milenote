@@ -21,6 +21,7 @@ import { FormSection } from "@/components/ui/FormSection"
 import { SwitchRow } from "@/components/ui/ListGroup"
 import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogActionButton } from "@/components/ui/dialog"
 import { CarFront, Plus, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, Move, SlidersHorizontal, Image as ImageIcon, IdCard, Gauge, CalendarDays, Wallet } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
@@ -930,114 +931,110 @@ export default function GaragePage() {
 
         {/* 車両削除確認モーダル */}
         {deleteCarTarget && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => { setDeleteCarTarget(null); setDeleteCarConfirmName(""); }}>
-            <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-              <CardContent className="p-6 space-y-4">
-                <h2 className="text-lg font-bold text-slate-800 dark:text-foreground">{t("garage.delete_car_title")}</h2>
-                <p className="text-sm text-slate-600 dark:text-muted-foreground">
-                  <span className="font-bold text-slate-800 dark:text-foreground">{t("garage.delete_car_message", { name: deleteCarTarget.name })}</span><br />
-                  {t("garage.delete_car_warning")}
+          <Dialog open onOpenChange={(open) => { if (!open && !deletingCar) { setDeleteCarTarget(null); setDeleteCarConfirmName(""); } }}>
+            {/* スマホでキーボードが勝手に開かないよう、確認入力欄への自動フォーカスは止める */}
+            <DialogContent showCloseButton={false} className="max-w-md" onOpenAutoFocus={(e) => e.preventDefault()}>
+              <DialogTitle className="pr-0">{t("garage.delete_car_title")}</DialogTitle>
+              <DialogDescription className="mt-2">
+                <span className="font-bold text-slate-800 dark:text-foreground">{t("garage.delete_car_message", { name: deleteCarTarget.name })}</span><br />
+                {t("garage.delete_car_warning")}
+              </DialogDescription>
+              <p className="mt-3 text-xs font-bold text-red-600 dark:text-red-300">
+                {t("garage.delete_car_data_count", {
+                  records: records.filter((r) => r.car_id === deleteCarTarget.id).length,
+                  wishlists: wishlists.filter((w) => w.car_id === deleteCarTarget.id).length,
+                  recurring: deleteCarRecurringCount ?? "…",
+                })}
+              </p>
+              <p className="mt-1 text-xs text-slate-600 dark:text-muted-foreground">
+                {t("garage.delete_car_archive_hint")}
+              </p>
+              <div className="mt-5 space-y-2">
+                <p className="text-xs font-bold text-slate-800 dark:text-foreground">
+                  {t("garage.delete_confirm_instruction")}
                 </p>
-                <p className="text-xs font-bold text-red-600 dark:text-red-300 bg-red-50 dark:bg-red-950/40 rounded-lg px-3 py-2">
-                  {t("garage.delete_car_data_count", {
-                    records: records.filter((r) => r.car_id === deleteCarTarget.id).length,
-                    wishlists: wishlists.filter((w) => w.car_id === deleteCarTarget.id).length,
-                    recurring: deleteCarRecurringCount ?? "…",
-                  })}
-                </p>
-                <p className="text-xs text-slate-600 dark:text-muted-foreground bg-slate-50 dark:bg-muted rounded-lg px-3 py-2">
-                  {t("garage.delete_car_archive_hint")}
-                </p>
-                <div className="space-y-2">
-                  <p className="text-xs font-bold text-slate-800 dark:text-foreground">
-                    {t("garage.delete_confirm_instruction")}
-                  </p>
-                  <Input
-                    placeholder={deleteCarTarget.name}
-                    value={deleteCarConfirmName}
-                    onChange={(e) => setDeleteCarConfirmName(e.target.value)}
-                    className="bg-white dark:bg-card placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
-                  />
-                </div>
-                <div className="flex gap-3 pt-2">
-                  <Button
-                    variant="outline"
-                    className="flex-1 font-bold"
-                    onClick={() => { setDeleteCarTarget(null); setDeleteCarConfirmName(""); }}
-                  >
-                    {t("common.cancel")}
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    className="flex-1 font-bold bg-red-600 dark:bg-red-600 border border-red-700 text-white hover:bg-red-700 dark:hover:bg-red-700"
-                    disabled={deleteCarConfirmName !== deleteCarTarget.name || deletingCar}
-                    onClick={handleDeleteCar}
-                  >
-                    {deletingCar ? t("common.deleting") : t("common.delete_action")}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                <Input
+                  placeholder={deleteCarTarget.name}
+                  value={deleteCarConfirmName}
+                  onChange={(e) => setDeleteCarConfirmName(e.target.value)}
+                  className="bg-white dark:bg-card placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
+                />
+              </div>
+              <DialogFooter>
+                <DialogActionButton
+                  variant="outline"
+                  disabled={deletingCar}
+                  onClick={() => { setDeleteCarTarget(null); setDeleteCarConfirmName(""); }}
+                >
+                  {t("common.cancel")}
+                </DialogActionButton>
+                <DialogActionButton
+                  destructive
+                  disabled={deleteCarConfirmName !== deleteCarTarget.name || deletingCar}
+                  onClick={handleDeleteCar}
+                >
+                  {deletingCar ? t("common.deleting") : t("common.delete_action")}
+                </DialogActionButton>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         )}
 
         {/* 画像の位置、ズーム調整モーダル */}
         {adjustTarget && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => setAdjustTarget(null)}>
-            <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-              <CardContent className="p-6 space-y-4">
-                <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
-                  <Move size={20} />
-                  <h2 className="text-lg font-bold">{t("garage.adjust_image_title")}</h2>
-                </div>
-                <p className="text-xs text-slate-600 dark:text-muted-foreground font-medium">{t("garage.adjust_image_hint")}</p>
+          <Dialog open onOpenChange={(open) => { if (!open && !savingPosition) setAdjustTarget(null) }}>
+            <DialogContent showCloseButton={false} className="max-w-md" onOpenAutoFocus={(e) => e.preventDefault()}>
+              <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
+                <Move size={20} />
+                <DialogTitle className="pr-0">{t("garage.adjust_image_title")}</DialogTitle>
+              </div>
+              <DialogDescription className="mt-2 text-xs text-slate-600 dark:text-muted-foreground font-medium">{t("garage.adjust_image_hint")}</DialogDescription>
 
-                {/* プレビュー */}
-                <div
-                  ref={previewRef}
-                  className="relative aspect-[11/6] w-full bg-neutral-800 rounded-lg overflow-hidden cursor-move select-none touch-none"
-                  onPointerDown={handleAdjustPointerDown}
-                  onPointerMove={handleAdjustPointerMove}
-                  onPointerUp={handleAdjustPointerUp}
-                  onPointerCancel={handleAdjustPointerUp}
-                >
-                  <img
-                    src={adjustTarget.image_url}
-                    alt={adjustTarget.name}
-                    draggable={false}
-                    className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-                    style={getCarImageStyle({ image_position_x: adjustPosX, image_position_y: adjustPosY, image_scale: adjustScale })}
-                  />
-                </div>
+              {/* プレビュー */}
+              <div
+                ref={previewRef}
+                className="mt-4 relative aspect-[11/6] w-full bg-neutral-800 rounded-lg overflow-hidden cursor-move select-none touch-none"
+                onPointerDown={handleAdjustPointerDown}
+                onPointerMove={handleAdjustPointerMove}
+                onPointerUp={handleAdjustPointerUp}
+                onPointerCancel={handleAdjustPointerUp}
+              >
+                <img
+                  src={adjustTarget.image_url}
+                  alt={adjustTarget.name}
+                  draggable={false}
+                  className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                  style={getCarImageStyle({ image_position_x: adjustPosX, image_position_y: adjustPosY, image_scale: adjustScale })}
+                />
+              </div>
 
-                {/* ズームスライダー */}
-                <div className="space-y-1">
-                  <div className="flex justify-between items-center">
-                    <Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.zoom")}</Label>
-                    <span className="text-xs font-bold text-slate-500 dark:text-muted-foreground tabular-nums">{adjustScale.toFixed(1)}x</span>
-                  </div>
-                  <input
-                    type="range"
-                    min={MIN_IMAGE_SCALE}
-                    max={MAX_IMAGE_SCALE}
-                    step={0.1}
-                    value={adjustScale}
-                    onChange={(e) => setAdjustScale(clampImageScale(parseFloat(e.target.value)))}
-                    className="w-full accent-slate-800 cursor-pointer"
-                  />
+              {/* ズームスライダー */}
+              <div className="mt-4 space-y-1">
+                <div className="flex justify-between items-center">
+                  <Label className="text-xs font-bold text-slate-600 dark:text-muted-foreground">{t("garage.zoom")}</Label>
+                  <span className="text-xs font-bold text-slate-500 dark:text-muted-foreground tabular-nums">{adjustScale.toFixed(1)}x</span>
                 </div>
+                <input
+                  type="range"
+                  min={MIN_IMAGE_SCALE}
+                  max={MAX_IMAGE_SCALE}
+                  step={0.1}
+                  value={adjustScale}
+                  onChange={(e) => setAdjustScale(clampImageScale(parseFloat(e.target.value)))}
+                  className="w-full accent-slate-800 cursor-pointer"
+                />
+              </div>
 
-                <div className="flex gap-3 pt-2">
-                  <Button variant="outline" className="flex-1 font-bold" onClick={() => setAdjustTarget(null)}>
-                    {t("common.cancel")}
-                  </Button>
-                  <Button className="flex-1 font-bold" disabled={savingPosition} onClick={handleSaveImagePosition}>
-                    {savingPosition ? t("common.saving") : t("common.save")}
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+              <DialogFooter>
+                <DialogActionButton variant="outline" disabled={savingPosition} onClick={() => setAdjustTarget(null)}>
+                  {t("common.cancel")}
+                </DialogActionButton>
+                <DialogActionButton disabled={savingPosition} onClick={handleSaveImagePosition}>
+                  {savingPosition ? t("common.saving") : t("common.save")}
+                </DialogActionButton>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         )}
 
         {/* ウィッシュリスト（欲しいもの） */}

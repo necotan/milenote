@@ -13,7 +13,7 @@ import { Card } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { ListGroup } from "@/components/ui/ListGroup"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
-import { Dialog, DialogContent, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle, DialogFooter, DialogActionButton } from "@/components/ui/dialog"
 import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, Car, Bell, BarChart3, GripVertical, ChevronRight, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck, CarFront, AtSign, Info, Lock } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { toast } from "sonner"
@@ -287,12 +287,12 @@ function MaintEditDialog({
           )}
         </div>
         <DialogFooter>
-          <Button type="button" variant="outline" size="default" onClick={() => onOpenChange(false)} disabled={saving}>
+          <DialogActionButton variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>
             {t("common.cancel")}
-          </Button>
-          <Button type="button" size="default" onClick={handleSave} disabled={saving}>
+          </DialogActionButton>
+          <DialogActionButton onClick={handleSave} disabled={saving}>
             {saving ? t("common.saving") : t("common.save")}
-          </Button>
+          </DialogActionButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -380,12 +380,12 @@ function ProfileFieldDialog({
           )}
         </div>
         <DialogFooter>
-          <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)} disabled={saving}>
+          <DialogActionButton variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>
             {t("common.cancel")}
-          </Button>
-          <Button type="button" size="sm" onClick={handleSave} disabled={saving}>
+          </DialogActionButton>
+          <DialogActionButton onClick={handleSave} disabled={saving}>
             {saving ? t("common.saving") : t("common.save")}
-          </Button>
+          </DialogActionButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>
