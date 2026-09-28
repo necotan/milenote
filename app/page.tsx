@@ -160,7 +160,7 @@ export default function Home() {
               <SkeletonText size="2xl" className="w-36 rounded-lg" />
               <SkeletonText size="11px" className="w-48" />
             </div>
-            <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
+            <div className="grid grid-cols-2 mx-4 [&>*:first-child]:pl-0 [&>*:last-child]:pr-0 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
               {[...Array(2)].map((_, i) => (
                 <div key={i} className="p-4 space-y-2">
                   <SkeletonText size="11px" className="w-16" />
@@ -168,7 +168,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
+            <div className="grid grid-cols-2 mx-4 [&>*:first-child]:pl-0 [&>*:last-child]:pr-0 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
               {[...Array(2)].map((_, i) => (
                 <div key={i} className="p-4 space-y-2">
                   <SkeletonText size="11px" className="w-16" />
@@ -185,7 +185,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <div className="flex items-center justify-center py-4 border-t border-slate-200 dark:border-border">
+            <div className="flex items-center justify-center mx-4 py-4 border-t border-slate-200 dark:border-border">
               <Skeleton className="h-[30px] w-[140px] rounded-lg" />
             </div>
           </div>
@@ -415,7 +415,7 @@ export default function Home() {
                         <h3 className="text-2xl font-bold text-slate-800 dark:text-foreground mt-1">{car.name}</h3>
                         <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
                       </div>
-                      <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
+                      <div className="grid grid-cols-2 mx-4 [&>*:first-child]:pl-0 [&>*:last-child]:pr-0 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
                         <div className="p-4">
                           <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.odometer")}</p>
                           <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">{car.current_odo.toLocaleString()} <span className="text-[11px]">{t("common.km_unit")}</span></p>
@@ -428,7 +428,7 @@ export default function Home() {
                           }</p>
                         </div>
                       </div>
-                      <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
+                      <div className="grid grid-cols-2 mx-4 [&>*:first-child]:pl-0 [&>*:last-child]:pr-0 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
                         <div className="p-4">
                           <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.distance_since_delivery")}</p>
                           <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[11px]">{t("common.km_unit")}</span></p>
@@ -452,7 +452,7 @@ export default function Home() {
                           <span className="font-bold text-slate-700 dark:text-foreground text-[11px]">{car.grade || "-"}</span>
                         </div>
                       </div>
-                      <div className="flex items-center justify-center gap-4 py-4 border-t border-slate-200 dark:border-border">
+                      <div className="flex items-center justify-center gap-4 mx-4 py-4 border-t border-slate-200 dark:border-border">
                         <button
                           onClick={() => setCarIndex(v => (v - 1 + cars.length) % cars.length)}
                           disabled={cars.length <= 1}
