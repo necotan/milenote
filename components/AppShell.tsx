@@ -41,6 +41,17 @@ function AppContent({ children, loading }: { children: React.ReactNode; loading:
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
+  // ロード後にスクロール済みの位置で表示されるのを防ぐ
+  useEffect(() => {
+    if (!showOverlay) return;
+    const root = document.documentElement;
+    const prevOverflow = root.style.overflow;
+    root.style.overflow = "hidden";
+    return () => {
+      root.style.overflow = prevOverflow;
+    };
+  }, [showOverlay]);
+
   return (
     <div className="flex min-h-screen w-full relative">
       <RecurringCostProcessor />
@@ -56,7 +67,7 @@ function AppContent({ children, loading }: { children: React.ReactNode; loading:
       {/* 初回ローディング画面 */}
       {showOverlay && (
         <div
-          className={`fixed inset-0 z-[100] transition-opacity ease-out ${fadingOut ? "opacity-0" : "opacity-100"}`}
+          className={`fixed inset-0 z-[100] touch-none overscroll-none transition-opacity ease-out ${fadingOut ? "opacity-0" : "opacity-100"}`}
           style={{ transitionDuration: `${LOADING_FADE_MS}ms` }}
         >
           <LoadingScreen />
