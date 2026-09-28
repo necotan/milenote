@@ -763,7 +763,7 @@ export default function MyPage() {
             <SkeletonText size="base" className="w-28" />
             <SkeletonText size="xs" leading="relaxed" className="w-2/3" />
           </div>
-          <div className="border-t border-slate-200 dark:border-border p-6 flex justify-end">
+          <div className="border-t border-slate-200 dark:border-border mx-6 py-6 flex justify-center md:justify-end">
             <Skeleton className="h-8 w-32 rounded-lg" />
           </div>
         </div>
@@ -1101,7 +1101,7 @@ export default function MyPage() {
 
         {/* データのエクスポート */}
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
-          <div className="p-6">
+          <div className="px-6 pt-6 pb-2">
             <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
               <Download size={18} className="text-slate-600 dark:text-muted-foreground" /> {t("mypage.export")}
             </h2>
@@ -1111,7 +1111,7 @@ export default function MyPage() {
           </div>
 
           {/* 下部：エクスポートボタンエリア */}
-          <div data-slot="card-footer" className="border-t border-slate-200 dark:border-border p-6 flex justify-end">
+          <div data-slot="card-footer" className="border-t border-slate-200 dark:border-border mx-6 py-6 flex justify-center md:justify-end">
             <Button
               onClick={handleExportCsv}
               disabled={exporting}
