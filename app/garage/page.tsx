@@ -23,7 +23,7 @@ import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { IconButton } from "@/components/ui/IconButton"
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogActionButton } from "@/components/ui/dialog"
-import { CarFront, Plus, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, Move, SlidersHorizontal, Image as ImageIcon, IdCard, Gauge, CalendarDays, Wallet } from "lucide-react"
+import { CarFront, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, Move, SlidersHorizontal, Image as ImageIcon, IdCard, Gauge, CalendarDays, Wallet } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
@@ -714,8 +714,8 @@ export default function GaragePage() {
         <TabsContent value="mycars" className="space-y-4">
           <div className="flex justify-end">
             {!loading && !isAddingCar && !editCarId && (
-              <Button onClick={() => setIsAddingCar(true)} size="sm" className="font-bold">
-                <Plus className="mr-1 h-4 w-4" /> {t("garage.register_car")}
+              <Button onClick={() => setIsAddingCar(true)} size="sm" className="px-6 font-bold">
+                {t("garage.register_car")}
               </Button>
             )}
           </div>
@@ -1058,8 +1058,8 @@ export default function GaragePage() {
               </button>
             )}
             {!loading && !isAddingWish && !editWishId && cars.length > 0 && (
-              <Button onClick={() => setIsAddingWish(true)} size="sm" className="font-bold shrink-0">
-                <Plus className="mr-1 h-4 w-4" /> {t("common.add")}
+              <Button onClick={() => setIsAddingWish(true)} size="sm" className="px-6 font-bold shrink-0">
+                {t("common.add")}
               </Button>
             )}
           </div>

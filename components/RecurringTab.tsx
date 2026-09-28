@@ -15,7 +15,7 @@ import { FormSection } from "@/components/ui/FormSection"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { IconButton } from "@/components/ui/IconButton"
-import { Plus, X, Pencil, Trash2, Pause, Play, ChevronDown, Info, RepeatIcon, Wallet } from "lucide-react"
+import { X, Pencil, Trash2, Pause, Play, ChevronDown, Info, RepeatIcon, Wallet } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
 import { CATEGORIES } from "@/app/records/page"
@@ -282,8 +282,7 @@ const EmptyState = ({ onAdd }: { onAdd: () => void }) => {
       </div>
       <p className="text-slate-600 dark:text-muted-foreground font-bold mb-1">{t("records.no_recurring")}</p>
       <p className="text-sm text-slate-500 dark:text-muted-foreground mb-6 w-[260px]">{t("records.no_recurring_desc")}</p>
-      <Button onClick={onAdd} size="sm" className="font-bold gap-1.5">
-        <Plus size={14} />
+      <Button onClick={onAdd} size="sm" className="px-6 font-bold">
         {t("records.add_recurring")}
       </Button>
     </div>
@@ -473,8 +472,8 @@ export default function RecurringTab({
       {/* 追加ボタン（コスト一覧がある場合のみ右上に表示） */}
       {!isAdding && !editId && cars.length > 0 && costs.length > 0 && (
         <div className="flex justify-end mt-8 mb-8">
-          <Button onClick={() => setIsAdding(true)} size="sm" className="font-bold gap-1">
-            <Plus className="h-4 w-4" /> {t("records.add_recurring")}
+          <Button onClick={() => setIsAdding(true)} size="sm" className="px-6 font-bold">
+            {t("records.add_recurring")}
           </Button>
         </div>
       )}
@@ -501,7 +500,7 @@ export default function RecurringTab({
         <>
           {/* 「定期費用を追加」ボタン行（costs.length > 0 の間だけ表示される実ボタンのプレースホルダ） */}
           <div className="flex justify-end mt-8 mb-8">
-            <Skeleton className="h-7 w-32 rounded-full" />
+            <Skeleton className="h-7 w-36 rounded-full" />
           </div>
           <RecurringCardSkeleton />
         </>
