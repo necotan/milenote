@@ -24,6 +24,9 @@ export function SegmentedToggle<T extends string>({
   const indicatorRef = useRef<HTMLSpanElement>(null)
   // 値が変わったときだけスライドさせ、初回配置や再計測は瞬時移動にする
   const prevValueRef = useRef<T | null>(null)
+  // options は呼び出し側で毎回作り直されることが多いため、中身が変わったときだけ再計測する
+  // 参照で判定すると切替直後の再レンダーで再計測が走り、スライド中のトランジションが打ち消される
+  const optionsKey = options.map((option) => `${option.value}:${option.label}`).join("|")
 
   // アクティブなボタンを実測してインジケータ位置を合わせる
   useLayoutEffect(() => {
@@ -42,7 +45,7 @@ export function SegmentedToggle<T extends string>({
       void indicator.offsetWidth
       indicator.style.transition = ""
     }
-  }, [value, options])
+  }, [value, optionsKey])
 
   return (
     <div

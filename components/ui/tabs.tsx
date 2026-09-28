@@ -48,15 +48,17 @@ function TabsList({
   VariantProps<typeof tabsListVariants>) {
   const listRef = React.useRef<HTMLDivElement>(null)
   const indicatorRef = React.useRef<HTMLSpanElement>(null)
+  // 初回配置は瞬時移動、以降の切替のみスライドさせる
+  // children は親の再レンダーのたびに変わりエフェクトが再実行されるため、初回かどうかは ref で保持する
+  const positionedRef = React.useRef(false)
 
   // アクティブなトリガーを実測してインジケータをスライドさせる
   React.useLayoutEffect(() => {
     const list = listRef.current
     const indicator = indicatorRef.current
     if (!list || !indicator || variant !== "default") return
-    // 初回配置は瞬時移動、以降の切替のみスライドさせる
-    let first = true
     const update = () => {
+      const first = !positionedRef.current
       const active = list.querySelector<HTMLElement>(
         '[data-slot="tabs-trigger"][data-state="active"]'
       )
@@ -68,7 +70,7 @@ function TabsList({
       if (first) {
         void indicator.offsetWidth
         indicator.style.transition = ""
-        first = false
+        positionedRef.current = true
       }
     }
     update()
