@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { FormSection } from "@/components/ui/FormSection"
 import { SwitchRow } from "@/components/ui/ListGroup"
-import { Plus, X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, ArrowRight, Hammer, ClipboardList, Droplets, SlidersHorizontal, BatteryCharging, Atom } from "lucide-react"
+import { X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, ArrowRight, Hammer, ClipboardList, Droplets, SlidersHorizontal, BatteryCharging, Atom } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
@@ -770,8 +770,8 @@ function RecordsPageInner() {
                         )}
                       </button>
                     )}
-                    <Button onClick={() => setIsAdding(true)} size="sm" className="font-bold">
-                      <Plus className="mr-1 h-4 w-4" /> {t("records.add_record")}
+                    <Button onClick={() => setIsAdding(true)} size="sm" className="px-6 font-bold">
+                      {t("records.add_record")}
                     </Button>
                   </div>
                 </div>
