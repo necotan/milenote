@@ -673,7 +673,7 @@ export default function GaragePage() {
                   <SkeletonText size="2xl" className="w-36 rounded-lg" />
                   <SkeletonText size="11px" className="w-48" />
                 </div>
-                <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
+                <div className="grid grid-cols-2 mx-4 [&>*:first-child]:pl-0 [&>*:last-child]:pr-0 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
                   {[...Array(2)].map((_, j) => (
                     <div key={j} className="p-4 space-y-2">
                       <SkeletonText size="11px" className="w-16" />
@@ -681,7 +681,7 @@ export default function GaragePage() {
                     </div>
                   ))}
                 </div>
-                <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
+                <div className="grid grid-cols-2 mx-4 [&>*:first-child]:pl-0 [&>*:last-child]:pr-0 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
                   {[...Array(2)].map((_, j) => (
                     <div key={j} className="p-4 space-y-2">
                       <SkeletonText size="11px" className="w-16" />
@@ -864,7 +864,7 @@ export default function GaragePage() {
                       <h3 className="text-2xl font-bold text-slate-800 dark:text-foreground mt-1">{car.name}</h3>
                       <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground">{car.maker} {car.model_code} {car.year ? `/ ${t("common.year_format", { year: car.year })}` : ""}</p>
                     </div>
-                    <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
+                    <div className="grid grid-cols-2 mx-4 [&>*:first-child]:pl-0 [&>*:last-child]:pr-0 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-t border-b border-slate-200 dark:border-border">
                       <div className="p-4">
                         <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.odometer")}</p>
                         <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">{car.current_odo.toLocaleString()} <span className="text-[11px]">{t("common.km_unit")}</span></p>
@@ -877,7 +877,7 @@ export default function GaragePage() {
                         }</p>
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
+                    <div className="grid grid-cols-2 mx-4 [&>*:first-child]:pl-0 [&>*:last-child]:pr-0 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
                       <div className="p-4">
                         <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.distance_since_delivery")}</p>
                         <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[11px]">{t("common.km_unit")}</span></p>
