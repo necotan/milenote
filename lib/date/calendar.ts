@@ -30,10 +30,6 @@ export function isToday(date: Date): boolean {
   return isSameDay(date, new Date())
 }
 
-export function addMonths(date: Date, delta: number): Date {
-  return new Date(date.getFullYear(), date.getMonth() + delta, 1)
-}
-
 /** 指定した年月を含む6行7列（日曜始まり）のカレンダーマトリクスを返す */
 export function getMonthMatrix(year: number, month: number): MonthCell[][] {
   const firstOfMonth = new Date(year, month, 1)
