@@ -366,9 +366,9 @@ export default function Home() {
                   {alerts.length > 1 && (
                     <Link
                       href="/maintenance"
-                      className={`absolute top-3 right-3 z-10 flex items-center justify-center gap-1 h-7 px-3 rounded-full bg-slate-100 dark:bg-surface-2 hover:bg-slate-200 dark:hover:bg-surface-3 text-slate-700 dark:text-foreground text-[11px] font-semibold transition-all active:scale-95 ${alerts.length <= 4 ? 'lg:hidden' : ''}`}
+                      className={`absolute top-3 right-3 z-10 flex items-center justify-center gap-1.5 h-8 px-3 rounded-full bg-slate-100 dark:bg-surface-2 hover:bg-slate-200 dark:hover:bg-surface-3 text-slate-700 dark:text-foreground text-[11px] font-semibold transition-all active:scale-95 ${alerts.length <= 4 ? 'lg:hidden' : ''}`}
                     >
-                      <List size={12} className="text-slate-600 dark:text-muted-foreground" />
+                      <List size={13} className="text-slate-600 dark:text-muted-foreground" />
                       {t("home.see_all")}
                     </Link>
                   )}
