@@ -681,7 +681,7 @@ export default function GaragePage() {
                     </div>
                   ))}
                 </div>
-                <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border bg-slate-50/30 dark:bg-muted/30">
+                <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
                   {[...Array(2)].map((_, j) => (
                     <div key={j} className="p-4 space-y-2">
                       <SkeletonText size="11px" className="w-16" />
@@ -690,7 +690,7 @@ export default function GaragePage() {
                   ))}
                 </div>
                 {/* 実カードと同じ text-xs を付け、内側の 9px/10px が継承する行間まで一致させる */}
-                <div className="p-4 flex flex-col gap-2.5 text-xs bg-slate-50/50 dark:bg-muted/50">
+                <div className="p-4 flex flex-col gap-2.5 text-xs">
                   {[...Array(3)].map((_, j) => (
                     <div key={j} className="flex justify-between items-center">
                       <SkeletonText size="11px" className="w-16" />
@@ -877,7 +877,7 @@ export default function GaragePage() {
                         }</p>
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border bg-slate-50/30 dark:bg-muted/30">
+                    <div className="grid grid-cols-2 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
                       <div className="p-4">
                         <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.distance_since_delivery")}</p>
                         <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[11px]">{t("common.km_unit")}</span></p>
@@ -887,7 +887,7 @@ export default function GaragePage() {
                         <p className="text-lg font-bold text-slate-800 dark:text-foreground">{formatMonthsPassedLocale(car.purchase_date, locale)}</p>
                       </div>
                     </div>
-                    <div className="p-4 flex flex-col gap-2.5 text-xs bg-slate-50/50 dark:bg-muted/50">
+                    <div className="p-4 flex flex-col gap-2.5 text-xs">
                       <div className="flex justify-between items-center">
                         <span className="text-slate-500 dark:text-muted-foreground font-medium text-[11px]">{t("common.delivery_date")}</span>
                         <span className="font-bold text-slate-700 dark:text-foreground text-[11px]">{formatDateLocale(car.purchase_date, locale)}</span>
