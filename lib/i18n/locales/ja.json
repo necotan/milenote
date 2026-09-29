@@ -409,7 +409,6 @@
     "forgot_password": "パスワードをお忘れですか？"
   },
   "signup": {
-    "subtitle": "新規アカウントを作成",
     "user_id": "ユーザーID",
     "user_id_hint": "英数字とアンダースコア（_）のみ使用できます",
     "password_placeholder": "6文字以上で入力",

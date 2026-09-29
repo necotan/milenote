@@ -99,7 +99,7 @@ export default function SignUpPage() {
       <div className="w-full max-w-sm">
         <div className="space-y-1 mb-6 text-center">
           <h1 className="text-2xl font-bold">Milenote</h1>
-          <p className="text-sm text-slate-600 dark:text-muted-foreground">{t("signup.subtitle")}</p>
+          <p className="text-sm text-slate-600 dark:text-muted-foreground">{t("login.subtitle")}</p>
         </div>
 
         <form onSubmit={handleSignUp} className="space-y-4">
