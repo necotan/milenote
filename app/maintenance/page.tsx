@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { ListGroup, SwitchRow } from "@/components/ui/ListGroup"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
-import { CarFront, SlidersHorizontal, Settings2, EyeOff, LayoutList, FileX } from "lucide-react"
+import { CarFront, ChevronLeft, SlidersHorizontal, Settings2, EyeOff, LayoutList, FileX } from "lucide-react"
 import Link from "next/link"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
@@ -218,8 +218,13 @@ export default function MaintenancePage() {
   if (loading) return (
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
-        <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-500 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
-          <span className="font-bold text-xs">{t("home.back_to_home")}</span>
+        <Link
+          href="/"
+          aria-label={t("home.back_to_home")}
+          title={t("home.back_to_home")}
+          className="relative size-10 flex items-center justify-center rounded-full after:absolute after:-inset-1.5 after:rounded-full after:content-[''] bg-white text-slate-600 hover:text-slate-800 dark:bg-card dark:text-muted-foreground dark:hover:text-foreground transition-all active:scale-90"
+        >
+          <ChevronLeft size={22} className="-translate-x-px" />
         </Link>
       </header>
       <div className="space-y-3" ref={gridWrapperRef}>
@@ -266,8 +271,13 @@ export default function MaintenancePage() {
   return (
     <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
-        <Link href="/" className="inline-flex items-center gap-1 text-sm text-slate-500 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors">
-          <span className="font-bold text-xs">{t("home.back_to_home")}</span>
+        <Link
+          href="/"
+          aria-label={t("home.back_to_home")}
+          title={t("home.back_to_home")}
+          className="relative size-10 flex items-center justify-center rounded-full after:absolute after:-inset-1.5 after:rounded-full after:content-[''] bg-white text-slate-600 hover:text-slate-800 dark:bg-card dark:text-muted-foreground dark:hover:text-foreground transition-all active:scale-90"
+        >
+          <ChevronLeft size={22} className="-translate-x-px" />
         </Link>
       </header>
 
