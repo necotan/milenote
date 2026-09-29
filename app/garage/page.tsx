@@ -1066,7 +1066,7 @@ export default function GaragePage() {
 
           {/* ステータス絞り込みモーダル */}
           {isFilterOpen && (
-            <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-[60] p-4" onClick={() => setIsFilterOpen(false)}>
+            <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] p-4" onClick={() => setIsFilterOpen(false)}>
               <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
                 <CardContent className="p-6 space-y-4">
                   <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
