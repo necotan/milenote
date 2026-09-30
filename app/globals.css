@@ -155,6 +155,10 @@
     /* iOSのセーフエリアに合わせてpadding-topを調整 */
     padding-top: env(safe-area-inset-top, 0px);
   }
+  /* Radix のスクロールロック(Dialog/Select)が body の padding-top を 0 に上書きし、画面がセーフエリア分ずれるのを防ぐ */
+  body[data-scroll-locked] {
+    padding-top: env(safe-area-inset-top, 0px) !important;
+  }
   html {
     @apply font-sans;
   }
