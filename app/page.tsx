@@ -203,7 +203,7 @@ export default function Home() {
               </div>
               <div className="px-5 pt-1 pb-4 pr-36">
                 <SkeletonText size="sm" className="w-20" />
-                <SkeletonText size="3xl" className="mt-1 w-36 rounded-lg" />
+                <SkeletonText size="2xl" className="mt-1 w-36 rounded-lg" />
                 <div className="flex items-center gap-2 mt-2">
                   <SkeletonText size="xs" className="w-12" />
                   <Skeleton className="h-5 w-20 rounded-full" />
@@ -297,7 +297,7 @@ export default function Home() {
                     <p className="text-sm text-slate-500 dark:text-muted-foreground py-2">{t("home.no_cost_data")}</p>
                   ) : (
                     <>
-                      <p className="mt-1 text-3xl font-bold text-slate-900 dark:text-foreground tracking-tight tabular-nums">¥{thisMonthCost.toLocaleString()}</p>
+                      <p className="mt-1 text-2xl font-bold text-slate-900 dark:text-foreground tracking-tight tabular-nums">¥{thisMonthCost.toLocaleString()}</p>
                       <div className="flex items-center gap-2 mt-2">
                         <p className="text-xs text-slate-500 dark:text-muted-foreground">{t("home.vs_last_month")}</p>
                         {diffCost > 0 ? (
