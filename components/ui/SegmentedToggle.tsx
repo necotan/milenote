@@ -22,8 +22,7 @@ export function SegmentedToggle<T extends string>({
   const containerRef = useRef<HTMLDivElement>(null)
   const buttonRefs = useRef<Record<string, HTMLButtonElement | null>>({})
   const indicatorRef = useRef<HTMLSpanElement>(null)
-  // 値が変わったときだけスライドさせ、初回配置や再計測は瞬時移動にする
-  const prevValueRef = useRef<T | null>(null)
+  const clickedValueRef = useRef<T | null>(null)
   // options は呼び出し側で毎回作り直されることが多いため、中身が変わったときだけ再計測する
   // 参照で判定すると切替直後の再レンダーで再計測が走り、スライド中のトランジションが打ち消される
   const optionsKey = options.map((option) => `${option.value}:${option.label}`).join("|")
@@ -33,8 +32,8 @@ export function SegmentedToggle<T extends string>({
     const activeButton = buttonRefs.current[value]
     const indicator = indicatorRef.current
     if (!activeButton || !indicator) return
-    const shouldAnimate = prevValueRef.current !== null && prevValueRef.current !== value
-    prevValueRef.current = value
+    const shouldAnimate = clickedValueRef.current === value
+    clickedValueRef.current = null
     // 初回や再計測ではトランジションを一時的に無効化して瞬間配置する
     if (!shouldAnimate) indicator.style.transition = "none"
     indicator.style.left = `${activeButton.offsetLeft}px`
@@ -64,7 +63,10 @@ export function SegmentedToggle<T extends string>({
             key={option.value}
             ref={(el) => { buttonRefs.current[option.value] = el }}
             type="button"
-            onClick={() => onChange(option.value)}
+            onClick={() => {
+              if (!active) clickedValueRef.current = option.value
+              onChange(option.value)
+            }}
             aria-pressed={active}
             title={option.label}
             className={cn(
