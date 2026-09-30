@@ -17,6 +17,7 @@ import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
 import { useUserProfile } from "@/lib/hooks/useUserProfile"
 import { useCars } from "@/lib/hooks/useCars"
 import { useRecords } from "@/lib/hooks/useRecords"
+import { useDimmedPageBackground } from "@/lib/hooks/useDimmedPageBackground"
 
 // 表示設定モーダルの各項目はlocalStorageに個別キーで保存
 const SHOW_DISABLED_STORAGE_KEY = "milenote_maintenance_show_disabled"
@@ -88,6 +89,8 @@ export default function MaintenancePage() {
   const [isUngrouped, setIsUngrouped] = useState(false)
   // 記録済み項目の並び順（残り距離が少ない順 / 期限が近い順）
   const [sortMode, setSortMode] = useState<SortMode>("distance")
+  // 絞り込み、表示設定モーダルの backdrop-brightness-40 と同じ値
+  useDimmedPageBackground(isFilterOpen || isDisplaySettingsOpen, 40)
 
   // 表示設定、絞り込みをlocalStorageから復元
   useEffect(() => {
@@ -323,7 +326,7 @@ export default function MaintenancePage() {
 
       {/* 表示設定モーダル */}
       {isDisplaySettingsOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] p-4" onClick={() => setIsDisplaySettingsOpen(false)}>
+        <div className="fixed inset-0 backdrop-brightness-40 flex items-center justify-center z-[60] p-4" onClick={() => setIsDisplaySettingsOpen(false)}>
           <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
@@ -370,7 +373,7 @@ export default function MaintenancePage() {
 
       {/* カテゴリ、車の絞り込みモーダル */}
       {isFilterOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] p-4" onClick={() => setIsFilterOpen(false)}>
+        <div className="fixed inset-0 backdrop-brightness-40 flex items-center justify-center z-[60] p-4" onClick={() => setIsFilterOpen(false)}>
           <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
