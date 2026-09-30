@@ -6,8 +6,13 @@ import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useDimmedPageBackground } from "@/lib/hooks/useDimmedPageBackground"
+
+// オーバーレイの backdrop-brightness-50 と同じ値
+const OVERLAY_BRIGHTNESS = 50
 
 function Dialog(props: React.ComponentProps<typeof DialogPrimitive.Root>) {
+  useDimmedPageBackground(props.open === true, OVERLAY_BRIGHTNESS)
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
 
@@ -21,9 +26,10 @@ function DialogContent({
 }) {
   return (
     <DialogPrimitive.Portal>
+      {/* iOSで上端の固定要素の背景色を上部バーに取り込み黒く見えるため、背景色ではなく backdrop の明るさで暗くする（上部バーの色は useDimmedPageBackground で合わせる） */}
       <DialogPrimitive.Overlay
         data-slot="dialog-overlay"
-        className="fixed inset-0 z-50 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+        className="fixed inset-0 z-50 backdrop-brightness-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
       />
       <DialogPrimitive.Content
         data-slot="dialog-content"
