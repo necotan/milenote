@@ -27,7 +27,7 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
             <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground truncate pr-16">{alert.carName}</p>
             <div className="mt-0.5 leading-tight text-slate-600 dark:text-muted-foreground">
               <p className="text-[11px] font-bold">{t(`subcategories.${alert.maintName}`)}{alert.isDisabled ? ` (${t("mypage.maint_disabled_desc")})` : ""}</p>
-              <p className="text-lg font-bold">{t("home.unrecorded")}</p>
+              <p className="text-base leading-[22.5px] font-bold">{t("home.unrecorded")}</p>
             </div>
             {/* 記録済みカードと縦サイズを揃えるための不可視スペーサー */}
             <div className="flex flex-col gap-1.5 mt-1 invisible" aria-hidden="true">
