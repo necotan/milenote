@@ -7,7 +7,8 @@ import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
 import { useCars } from "@/lib/hooks/useCars"
 import { useRecords } from "@/lib/hooks/useRecords"
 import { useWishlists } from "@/lib/hooks/useWishlists"
-import { useDimmedPageBackground } from "@/lib/hooks/useDimmedPageBackground"
+import { useChipTapHandlers } from "@/lib/hooks/useChipTapHandlers"
+import { scrollToPageTop } from "@/utils/pageScroll"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DatePicker } from "@/components/ui/date-picker"
@@ -23,6 +24,7 @@ import { SwitchRow } from "@/components/ui/ListGroup"
 import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { IconButton } from "@/components/ui/IconButton"
+import { ModalCard } from "@/components/ui/ModalCard"
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogActionButton } from "@/components/ui/dialog"
 import { CarFront, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, Move, SlidersHorizontal, Image as ImageIcon, IdCard, Gauge, CalendarDays, Wallet } from "lucide-react"
 import { toast } from "sonner"
@@ -95,7 +97,6 @@ export default function GaragePage() {
 
   const loading = userLoading || (!!userId && (carsLoading || recordsLoading || wishlistsLoading))
 
-  // 初回ローディング画面とデータ取得を連動させる
   usePageLoadingGate(!loading)
 
   // ステータス順、同ステータス内は登録日時が新しい順
@@ -135,9 +136,6 @@ export default function GaragePage() {
   const [wishFilters, setWishFilters] = useState<WishStatus[]>([])
   const [wishGenreFilters, setWishGenreFilters] = useState<WishlistGenreSlug[]>([])
   const [isFilterOpen, setIsFilterOpen] = useState(false)
-  // 絞り込みモーダルの backdrop-brightness-40 と同じ値
-  useDimmedPageBackground(isFilterOpen, 40)
-
   useEffect(() => {
     try {
       const savedStatus = localStorage.getItem("garage_wish_status_filters")
@@ -171,8 +169,7 @@ export default function GaragePage() {
   const resetCarForm = () => {
     setIsAddingCar(false)
     setEditCarId(null)
-    // フォームを閉じて一覧に戻るとき、フォーム下部までスクロールした位置が残らないようにページトップへ戻す
-    window.scrollTo({ top: 0 })
+    scrollToPageTop()
     setName(""); setMaker(""); setModelCode(""); setYear("");
     setGrade(""); setColor(""); setFuelType("regular"); setCurrentOdo("");
     setFirstRegistrationDate(""); setPurchaseDate(""); setPurchaseOdo("");
@@ -214,8 +211,7 @@ export default function GaragePage() {
   const handleStartEditCar = (car: any) => {
     setEditCarId(car.id)
     setIsAddingCar(false)
-    // 一覧の下のほうで編集を開始してもフォームが先頭から見えるようにページトップへ戻す
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    scrollToPageTop()
     setName(car.name || "")
     setMaker(car.maker || "")
     setModelCode(car.model_code || "")
@@ -368,8 +364,7 @@ export default function GaragePage() {
   const handleStartEditWish = (wish: any) => {
     setEditWishId(wish.id)
     setIsAddingWish(false)
-    // 一覧の下のほうで編集を開始してもフォームが先頭から見えるようにページトップへ戻す
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    scrollToPageTop()
     setWishCarId(wish.car_id)
     setWishItemName(wish.item_name)
     setWishGenre(wish.genre || "")
@@ -423,8 +418,7 @@ export default function GaragePage() {
   const resetWishForm = () => {
     setIsAddingWish(false)
     setEditWishId(null)
-    // フォームを閉じて一覧に戻るとき、フォーム下部までスクロールした位置が残らないようにページトップへ戻す
-    window.scrollTo({ top: 0 })
+    scrollToPageTop()
     setWishItemName(""); setWishGenre(""); setWishPrice(""); setWishUrl(""); setWishMemo("");
     if (cars.length === 1) setWishCarId(cars[0].id)
   }
@@ -588,19 +582,7 @@ export default function GaragePage() {
     setWishGenreFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
   }
 
-  // タッチ/ペンは pointerup（実際に触れた要素で発火する）で即時処理し、その直後に届くclickは無視する
-  const lastChipTouchAt = useRef(0)
-  const chipTapHandlers = (toggle: () => void) => ({
-    onPointerUp: (e: React.PointerEvent<HTMLButtonElement>) => {
-      if (e.pointerType === "mouse") return
-      lastChipTouchAt.current = Date.now()
-      toggle()
-    },
-    onClick: () => {
-      if (Date.now() - lastChipTouchAt.current < 700) return
-      toggle()
-    },
-  })
+  const chipTapHandlers = useChipTapHandlers()
 
   // ステータス・ジャンル絞り込みを適用したウィッシュリスト
   const filteredWishlists = wishlists.filter((w) =>
@@ -1045,104 +1027,90 @@ export default function GaragePage() {
           </div>
 
           {/* ステータス絞り込みモーダル */}
-          {isFilterOpen && (
-            <div className="fixed inset-0 backdrop-brightness-40 flex items-center justify-center z-[60] p-4" onClick={() => setIsFilterOpen(false)}>
-              <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-                <CardContent className="p-6 space-y-4">
-                  <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
-                    <SlidersHorizontal size={20} />
-                    <h2 className="text-lg font-bold">{t("garage.wish_filter_title")}</h2>
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("garage.status")}</p>
-                    <div className="flex flex-wrap gap-2.5">
-                      <button
-                        type="button"
-                        {...chipTapHandlers(() => setWishFilters([]))}
-                        aria-pressed={wishFilters.length === 0}
-                        className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
-                          wishFilters.length === 0
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
-                        }`}
-                      >
-                        {t("garage.wish_filter_all")}
-                        <span className="ml-1.5 tabular-nums opacity-60">{wishlists.length}</span>
-                      </button>
-                      {WISH_STATUS_KEYS.map((key) => {
-                        const active = wishFilters.includes(key)
-                        const count = wishlists.filter((w) => w.status === key).length
-                        return (
-                          <button
-                            key={key}
-                            type="button"
-                            {...chipTapHandlers(() => toggleWishFilter(key))}
-                            aria-pressed={active}
-                            className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
-                              active
-                                ? "bg-primary text-primary-foreground border-primary"
-                                : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
-                            }`}
-                          >
-                            {t(`wishlist_statuses.${key}`)}
-                            <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("garage.genre")}</p>
-                    <div className="flex flex-wrap gap-2.5">
-                      <button
-                        type="button"
-                        {...chipTapHandlers(() => setWishGenreFilters([]))}
-                        aria-pressed={wishGenreFilters.length === 0}
-                        className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
-                          wishGenreFilters.length === 0
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
-                        }`}
-                      >
-                        {t("garage.wish_filter_all")}
-                        <span className="ml-1.5 tabular-nums opacity-60">{wishlists.length}</span>
-                      </button>
-                      {WISHLIST_GENRES.map((key) => {
-                        const active = wishGenreFilters.includes(key)
-                        const count = wishlists.filter((w) => w.genre === key).length
-                        return (
-                          <button
-                            key={key}
-                            type="button"
-                            {...chipTapHandlers(() => toggleWishGenreFilter(key))}
-                            aria-pressed={active}
-                            className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
-                              active
-                                ? "bg-primary text-primary-foreground border-primary"
-                                : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
-                            }`}
-                          >
-                            {t(`wishlist_genres.${key}`)}
-                            <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </div>
-                  <div className="flex justify-center pt-6">
-                    <Button
-                      className="px-10 font-bold hover:bg-primary/90"
-                      onClick={() => setIsFilterOpen(false)}
+          <ModalCard
+            open={isFilterOpen}
+            onClose={() => setIsFilterOpen(false)}
+            icon={SlidersHorizontal}
+            title={t("garage.wish_filter_title")}
+          >
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("garage.status")}</p>
+              <div className="flex flex-wrap gap-2.5">
+                <button
+                  type="button"
+                  {...chipTapHandlers(() => setWishFilters([]))}
+                  aria-pressed={wishFilters.length === 0}
+                  className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                    wishFilters.length === 0
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                  }`}
+                >
+                  {t("garage.wish_filter_all")}
+                  <span className="ml-1.5 tabular-nums opacity-60">{wishlists.length}</span>
+                </button>
+                {WISH_STATUS_KEYS.map((key) => {
+                  const active = wishFilters.includes(key)
+                  const count = wishlists.filter((w) => w.status === key).length
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      {...chipTapHandlers(() => toggleWishFilter(key))}
+                      aria-pressed={active}
+                      className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                        active
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                      }`}
                     >
-                      {t("common.save")}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                      {t(`wishlist_statuses.${key}`)}
+                      <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
+                    </button>
+                  )
+                })}
+              </div>
             </div>
-          )}
+
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("garage.genre")}</p>
+              <div className="flex flex-wrap gap-2.5">
+                <button
+                  type="button"
+                  {...chipTapHandlers(() => setWishGenreFilters([]))}
+                  aria-pressed={wishGenreFilters.length === 0}
+                  className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                    wishGenreFilters.length === 0
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                  }`}
+                >
+                  {t("garage.wish_filter_all")}
+                  <span className="ml-1.5 tabular-nums opacity-60">{wishlists.length}</span>
+                </button>
+                {WISHLIST_GENRES.map((key) => {
+                  const active = wishGenreFilters.includes(key)
+                  const count = wishlists.filter((w) => w.genre === key).length
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      {...chipTapHandlers(() => toggleWishGenreFilter(key))}
+                      aria-pressed={active}
+                      className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                        active
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                      }`}
+                    >
+                      {t(`wishlist_genres.${key}`)}
+                      <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          </ModalCard>
 
           {!loading && cars.length === 0 && (
             <div className="text-center py-20">

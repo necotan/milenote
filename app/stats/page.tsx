@@ -588,7 +588,6 @@ export default function StatsPage() {
 
   const { t, locale } = useTranslation()
 
-  // 初回ローディング画面とデータ取得を連動させる
   usePageLoadingGate(!loading)
 
   // グリッド線、軸目盛り、円グラフの区切り線、ツールチップ背景などの構造部分だけをテーマに応じて出し分ける

@@ -47,7 +47,6 @@ export default function Home() {
 
   const loading = userLoading || (!!userId && (profileLoading || carsLoading || recordsLoading))
 
-  // 初回ローディング画面とデータ取得を連動させる
   usePageLoadingGate(!loading)
 
   const displayName = profile?.display_name ?? ""
