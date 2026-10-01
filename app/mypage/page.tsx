@@ -422,7 +422,6 @@ export default function MyPage() {
     maintSettingsRef.current = maintSettings
   }, [maintSettings])
 
-  // 初回ローディング画面とデータ取得を連動させる
   usePageLoadingGate(!loading)
 
   // next-themesのtheme値はSSR/初回マウント時にundefinedになるためハイドレーション後に表示を確定させる

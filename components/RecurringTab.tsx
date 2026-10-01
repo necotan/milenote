@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { createClient } from "@/utils/supabase"
 import { useRecurringCosts } from "@/lib/hooks/useRecurringCosts"
+import { scrollToPageTop } from "@/utils/pageScroll"
 import type { Car } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { DatePicker } from "@/components/ui/date-picker"
@@ -324,8 +325,7 @@ export default function RecurringTab({
   const resetForm = () => {
     setIsAdding(false)
     setEditId(null)
-    // フォームを閉じて一覧に戻るとき、フォーム下部までスクロールした位置が残らないようにページトップへ戻す
-    window.scrollTo({ top: 0 })
+    scrollToPageTop()
     setAmount("")
     setMemo("")
     setCategory("other")
@@ -420,7 +420,7 @@ export default function RecurringTab({
     setFrequency(cost.frequency)
     setNextBillingDate(cost.next_billing_date)
     setMemo(cost.memo || "")
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    scrollToPageTop()
   }
 
   const handleDelete = async () => {

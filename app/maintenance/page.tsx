@@ -1,11 +1,12 @@
 "use client"
 
 import { useEffect, useState, useMemo, useRef } from "react"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ListGroup, SwitchRow } from "@/components/ui/ListGroup"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
+import { ModalCard } from "@/components/ui/ModalCard"
 import { CarFront, ChevronLeft, SlidersHorizontal, Settings2, EyeOff, LayoutList, FileX } from "lucide-react"
 import Link from "next/link"
 import { useTranslation } from "@/lib/i18n"
@@ -17,7 +18,7 @@ import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
 import { useUserProfile } from "@/lib/hooks/useUserProfile"
 import { useCars } from "@/lib/hooks/useCars"
 import { useRecords } from "@/lib/hooks/useRecords"
-import { useDimmedPageBackground } from "@/lib/hooks/useDimmedPageBackground"
+import { useChipTapHandlers } from "@/lib/hooks/useChipTapHandlers"
 
 // 表示設定モーダルの各項目はlocalStorageに個別キーで保存
 const SHOW_DISABLED_STORAGE_KEY = "milenote_maintenance_show_disabled"
@@ -89,9 +90,6 @@ export default function MaintenancePage() {
   const [isUngrouped, setIsUngrouped] = useState(false)
   // 記録済み項目の並び順（残り距離が少ない順 / 期限が近い順）
   const [sortMode, setSortMode] = useState<SortMode>("distance")
-  // 絞り込み、表示設定モーダルの backdrop-brightness-40 と同じ値
-  useDimmedPageBackground(isFilterOpen || isDisplaySettingsOpen, 40)
-
   // 表示設定、絞り込みをlocalStorageから復元
   useEffect(() => {
     setShowDisabled(localStorage.getItem(SHOW_DISABLED_STORAGE_KEY) === "true")
@@ -172,19 +170,7 @@ export default function MaintenancePage() {
     setCarFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
   }
 
-  // タッチ/ペンは pointerup（実際に触れた要素で発火する）で即時処理し、その直後に届くclickは無視する
-  const lastChipTouchAt = useRef(0)
-  const chipTapHandlers = (toggle: () => void) => ({
-    onPointerUp: (e: React.PointerEvent<HTMLButtonElement>) => {
-      if (e.pointerType === "mouse") return
-      lastChipTouchAt.current = Date.now()
-      toggle()
-    },
-    onClick: () => {
-      if (Date.now() - lastChipTouchAt.current < 700) return
-      toggle()
-    },
-  })
+  const chipTapHandlers = useChipTapHandlers()
 
   // メンテナンス項目名からカテゴリキーを引くための対応表
   const maintNameToCategory: Record<string, string> = {}
@@ -213,7 +199,6 @@ export default function MaintenancePage() {
   // 絞り込み中の選択数（バッジ表示用）
   const activeFilterCount = categoryFilters.length + carFilters.length
 
-  // 初回ローディング画面とデータ取得を連動させる
   usePageLoadingGate(!loading)
 
   if (loading) return (
@@ -323,155 +308,125 @@ export default function MaintenancePage() {
       )}
 
       {/* 表示設定モーダル */}
-      {isDisplaySettingsOpen && (
-        <div className="fixed inset-0 backdrop-brightness-40 flex items-center justify-center z-[60] p-4" onClick={() => setIsDisplaySettingsOpen(false)}>
-          <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-            <CardContent className="p-6 space-y-4">
-              <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
-                <Settings2 size={20} />
-                <h2 className="text-lg font-bold">{t("home.display_settings_title")}</h2>
-              </div>
-
-              <ListGroup>
-                <SwitchRow
-                  icon={EyeOff}
-                  title={t("home.show_disabled_maint")}
-                  description={t("home.show_disabled_maint_desc")}
-                  checked={showDisabled}
-                  onCheckedChange={handleShowDisabledChange}
-                />
-                <SwitchRow
-                  icon={FileX}
-                  title={t("home.hide_unrecorded_maint")}
-                  description={t("home.hide_unrecorded_maint_desc")}
-                  checked={hideUnrecorded}
-                  onCheckedChange={handleHideUnrecordedChange}
-                />
-                <SwitchRow
-                  icon={LayoutList}
-                  title={t("home.ungroup_maint")}
-                  description={t("home.ungroup_maint_desc")}
-                  checked={isUngrouped}
-                  onCheckedChange={handleUngroupedChange}
-                />
-              </ListGroup>
-
-              <div className="flex justify-center pt-6">
-                <Button
-                  className="px-10 font-bold hover:bg-primary/90"
-                  onClick={() => setIsDisplaySettingsOpen(false)}
-                >
-                  {t("common.save")}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+      <ModalCard
+        open={isDisplaySettingsOpen}
+        onClose={() => setIsDisplaySettingsOpen(false)}
+        icon={Settings2}
+        title={t("home.display_settings_title")}
+      >
+        <ListGroup>
+          <SwitchRow
+            icon={EyeOff}
+            title={t("home.show_disabled_maint")}
+            description={t("home.show_disabled_maint_desc")}
+            checked={showDisabled}
+            onCheckedChange={handleShowDisabledChange}
+          />
+          <SwitchRow
+            icon={FileX}
+            title={t("home.hide_unrecorded_maint")}
+            description={t("home.hide_unrecorded_maint_desc")}
+            checked={hideUnrecorded}
+            onCheckedChange={handleHideUnrecordedChange}
+          />
+          <SwitchRow
+            icon={LayoutList}
+            title={t("home.ungroup_maint")}
+            description={t("home.ungroup_maint_desc")}
+            checked={isUngrouped}
+            onCheckedChange={handleUngroupedChange}
+          />
+        </ListGroup>
+      </ModalCard>
 
       {/* カテゴリ、車の絞り込みモーダル */}
-      {isFilterOpen && (
-        <div className="fixed inset-0 backdrop-brightness-40 flex items-center justify-center z-[60] p-4" onClick={() => setIsFilterOpen(false)}>
-          <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-            <CardContent className="p-6 space-y-4">
-              <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
-                <SlidersHorizontal size={20} />
-                <h2 className="text-lg font-bold">{t("records.filter_title")}</h2>
-              </div>
+      <ModalCard
+        open={isFilterOpen}
+        onClose={() => setIsFilterOpen(false)}
+        icon={SlidersHorizontal}
+        title={t("records.filter_title")}
+      >
+        <div className="space-y-2">
+          <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.category")}</p>
+          <div className="flex flex-wrap gap-2.5">
+            <button
+              type="button"
+              {...chipTapHandlers(() => setCategoryFilters([]))}
+              aria-pressed={categoryFilters.length === 0}
+              className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                categoryFilters.length === 0
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+              }`}
+            >
+              {t("records.filter_all")}
+              <span className="ml-1.5 tabular-nums opacity-60">{visibleAlerts.length}</span>
+            </button>
+            {MAINT_CATEGORIES.map((category) => {
+              const active = categoryFilters.includes(category.key)
+              const count = visibleAlerts.filter((a) => maintNameToCategory[a.maintName] === category.key).length
+              if (count === 0) return null
+              return (
+                <button
+                  key={category.key}
+                  type="button"
+                  {...chipTapHandlers(() => toggleCategoryFilter(category.key))}
+                  aria-pressed={active}
+                  className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                    active
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                  }`}
+                >
+                  {t(`mypage.maint_category_${category.key}`)}
+                  <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
 
-              <div className="space-y-2">
-                <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.category")}</p>
-                <div className="flex flex-wrap gap-2.5">
+        {cars.length > 1 && (
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.filter_car")}</p>
+            <div className="flex flex-wrap gap-2.5">
+              <button
+                type="button"
+                {...chipTapHandlers(() => setCarFilters([]))}
+                aria-pressed={carFilters.length === 0}
+                className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                  carFilters.length === 0
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                }`}
+              >
+                {t("records.filter_all")}
+                <span className="ml-1.5 tabular-nums opacity-60">{visibleAlerts.length}</span>
+              </button>
+              {cars.map((car) => {
+                const active = carFilters.includes(car.id)
+                const count = visibleAlerts.filter((a) => a.carId === car.id).length
+                return (
                   <button
+                    key={car.id}
                     type="button"
-                    {...chipTapHandlers(() => setCategoryFilters([]))}
-                    aria-pressed={categoryFilters.length === 0}
+                    {...chipTapHandlers(() => toggleCarFilter(car.id))}
+                    aria-pressed={active}
                     className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
-                      categoryFilters.length === 0
+                      active
                         ? "bg-primary text-primary-foreground border-primary"
                         : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
                     }`}
                   >
-                    {t("records.filter_all")}
-                    <span className="ml-1.5 tabular-nums opacity-60">{visibleAlerts.length}</span>
+                    {car.name}
+                    <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
                   </button>
-                  {MAINT_CATEGORIES.map((category) => {
-                    const active = categoryFilters.includes(category.key)
-                    const count = visibleAlerts.filter((a) => maintNameToCategory[a.maintName] === category.key).length
-                    if (count === 0) return null
-                    return (
-                      <button
-                        key={category.key}
-                        type="button"
-                        {...chipTapHandlers(() => toggleCategoryFilter(category.key))}
-                        aria-pressed={active}
-                        className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
-                          active
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
-                        }`}
-                      >
-                        {t(`mypage.maint_category_${category.key}`)}
-                        <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-
-              {cars.length > 1 && (
-                <div className="space-y-2">
-                  <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.filter_car")}</p>
-                  <div className="flex flex-wrap gap-2.5">
-                    <button
-                      type="button"
-                      {...chipTapHandlers(() => setCarFilters([]))}
-                      aria-pressed={carFilters.length === 0}
-                      className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
-                        carFilters.length === 0
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
-                      }`}
-                    >
-                      {t("records.filter_all")}
-                      <span className="ml-1.5 tabular-nums opacity-60">{visibleAlerts.length}</span>
-                    </button>
-                    {cars.map((car) => {
-                      const active = carFilters.includes(car.id)
-                      const count = visibleAlerts.filter((a) => a.carId === car.id).length
-                      return (
-                        <button
-                          key={car.id}
-                          type="button"
-                          {...chipTapHandlers(() => toggleCarFilter(car.id))}
-                          aria-pressed={active}
-                          className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
-                            active
-                              ? "bg-primary text-primary-foreground border-primary"
-                              : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
-                          }`}
-                        >
-                          {car.name}
-                          <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
-                        </button>
-                      )
-                    })}
-                  </div>
-                </div>
-              )}
-
-              <div className="flex justify-center pt-6">
-                <Button
-                  className="px-10 font-bold hover:bg-primary/90"
-                  onClick={() => setIsFilterOpen(false)}
-                >
-                  {t("common.save")}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+                )
+              })}
+            </div>
+          </div>
+        )}
+      </ModalCard>
 
       {cars.length === 0 ? (
         <Card className="border-none bg-white dark:bg-card p-10 text-center">

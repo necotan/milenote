@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useEffect, useMemo, useRef, Suspense } from "react"
+import { useState, useEffect, useMemo, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { createClient } from "@/utils/supabase"
 import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
 import { useCars } from "@/lib/hooks/useCars"
 import { useRecords } from "@/lib/hooks/useRecords"
-import { useDimmedPageBackground } from "@/lib/hooks/useDimmedPageBackground"
+import { useChipTapHandlers } from "@/lib/hooks/useChipTapHandlers"
+import { scrollToPageTop } from "@/utils/pageScroll"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DatePicker } from "@/components/ui/date-picker"
@@ -27,6 +28,7 @@ import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
 import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { IconButton } from "@/components/ui/IconButton"
+import { ModalCard } from "@/components/ui/ModalCard"
 import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES, type SubCategorySlug } from "@/lib/subcategories"
 import { getFuelUnit } from "@/lib/fuelTypes"
@@ -340,7 +342,6 @@ function RecordsPageInner() {
 
   const loading = userLoading || (!!userId && (carsLoading || recordsLoading))
 
-  // 初回ローディング画面とデータ取得を連動させる
   usePageLoadingGate(!loading)
 
   const carsById = useMemo(() => new Map(allCars.map(c => [c.id, c])), [allCars])
@@ -429,9 +430,6 @@ function RecordsPageInner() {
   const [categoryFilters, setCategoryFilters] = useState<string[]>([])
   const [carFilters, setCarFilters] = useState<string[]>([])
   const [isFilterOpen, setIsFilterOpen] = useState(false)
-  // 絞り込みモーダルの backdrop-brightness-40 と同じ値
-  useDimmedPageBackground(isFilterOpen, 40)
-
   useEffect(() => {
     try {
       const savedCategory = localStorage.getItem("records_category_filters")
@@ -457,19 +455,7 @@ function RecordsPageInner() {
     setCarFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
   }
 
-  // タッチ/ペンは pointerup（実際に触れた要素で発火する）で即時処理し、その直後に届くclickは無視する
-  const lastChipTouchAt = useRef(0)
-  const chipTapHandlers = (toggle: () => void) => ({
-    onPointerUp: (e: React.PointerEvent<HTMLButtonElement>) => {
-      if (e.pointerType === "mouse") return
-      lastChipTouchAt.current = Date.now()
-      toggle()
-    },
-    onClick: () => {
-      if (Date.now() - lastChipTouchAt.current < 700) return
-      toggle()
-    },
-  })
+  const chipTapHandlers = useChipTapHandlers()
 
   // 絞り込みチップに出す車の一覧（元愛車の記録も含めるため cars ではなく records から導出する）
   const filterCars: { id: string; name: string }[] = []
@@ -504,7 +490,7 @@ function RecordsPageInner() {
         setSubCategory(sub)
       }
       setIsAdding(true)
-      window.scrollTo({ top: 0, behavior: "smooth" })
+      scrollToPageTop()
     }
   }, [loading])
 
@@ -547,8 +533,7 @@ function RecordsPageInner() {
   const resetForm = () => {
     setIsAdding(false)
     setEditRecordId(null)
-    // フォームを閉じて一覧に戻るとき、フォーム下部までスクロールした位置が残らないようにページトップへ戻す
-    window.scrollTo({ top: 0 })
+    scrollToPageTop()
     setAmount(""); setOdoAtRecord(""); setFuelAmount(""); setFuelUnitPrice(""); setMemo("")
     setEntryIc(""); setExitIc("")
     setIntervalMonths("")
@@ -621,8 +606,7 @@ function RecordsPageInner() {
   const handleStartEdit = (record: any) => {
     setEditRecordId(record.id)
     setIsAdding(false)
-    // 一覧の下のほうで編集を開始してもフォームが先頭から見えるようにページトップへ戻す
-    window.scrollTo({ top: 0, behavior: "smooth" })
+    scrollToPageTop()
     setCarId(record.car_id)
     setCategory(record.category)
     setSubCategory(record.sub_category || "")
@@ -783,104 +767,90 @@ function RecordsPageInner() {
             )}
 
             {/* カテゴリ・車の絞り込みモーダル */}
-            {isFilterOpen && (
-              <div className="fixed inset-0 backdrop-brightness-40 flex items-center justify-center z-[60] p-4" onClick={() => setIsFilterOpen(false)}>
-                <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-                  <CardContent className="p-6 space-y-4">
-                    <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
-                      <SlidersHorizontal size={20} />
-                      <h2 className="text-lg font-bold">{t("records.filter_title")}</h2>
-                    </div>
-
-                    <div className="space-y-2">
-                      <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.category")}</p>
-                      <div className="flex flex-wrap gap-2.5">
-                        <button
-                          type="button"
-                          {...chipTapHandlers(() => setCategoryFilters([]))}
-                          aria-pressed={categoryFilters.length === 0}
-                          className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
-                            categoryFilters.length === 0
-                              ? "bg-primary text-primary-foreground border-primary"
-                              : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
-                          }`}
-                        >
-                          {t("records.filter_all")}
-                          <span className="ml-1.5 tabular-nums opacity-60">{displayedRecords.length}</span>
-                        </button>
-                        {Object.keys(CATEGORIES).map((key) => {
-                          const active = categoryFilters.includes(key)
-                          const count = displayedRecords.filter((r) => r.category === key).length
-                          return (
-                            <button
-                              key={key}
-                              type="button"
-                              {...chipTapHandlers(() => toggleCategoryFilter(key))}
-                              aria-pressed={active}
-                              className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
-                                active
-                                  ? "bg-primary text-primary-foreground border-primary"
-                                  : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
-                              }`}
-                            >
-                              {t(`categories.${key}`)}
-                              <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
-                            </button>
-                          )
-                        })}
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.filter_car")}</p>
-                      <div className="flex flex-wrap gap-2.5">
-                        <button
-                          type="button"
-                          {...chipTapHandlers(() => setCarFilters([]))}
-                          aria-pressed={carFilters.length === 0}
-                          className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
-                            carFilters.length === 0
-                              ? "bg-primary text-primary-foreground border-primary"
-                              : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
-                          }`}
-                        >
-                          {t("records.filter_all")}
-                          <span className="ml-1.5 tabular-nums opacity-60">{displayedRecords.length}</span>
-                        </button>
-                        {filterCars.map((car) => {
-                          const active = carFilters.includes(car.id)
-                          const count = displayedRecords.filter((r) => r.car_id === car.id).length
-                          return (
-                            <button
-                              key={car.id}
-                              type="button"
-                              {...chipTapHandlers(() => toggleCarFilter(car.id))}
-                              aria-pressed={active}
-                              className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
-                                active
-                                  ? "bg-primary text-primary-foreground border-primary"
-                                  : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
-                              }`}
-                            >
-                              {car.name}
-                              <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
-                            </button>
-                          )
-                        })}
-                      </div>
-                    </div>
-                    <div className="flex justify-center pt-6">
-                      <Button
-                        className="px-10 font-bold hover:bg-primary/90"
-                        onClick={() => setIsFilterOpen(false)}
+            <ModalCard
+              open={isFilterOpen}
+              onClose={() => setIsFilterOpen(false)}
+              icon={SlidersHorizontal}
+              title={t("records.filter_title")}
+            >
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.category")}</p>
+                <div className="flex flex-wrap gap-2.5">
+                  <button
+                    type="button"
+                    {...chipTapHandlers(() => setCategoryFilters([]))}
+                    aria-pressed={categoryFilters.length === 0}
+                    className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                      categoryFilters.length === 0
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                    }`}
+                  >
+                    {t("records.filter_all")}
+                    <span className="ml-1.5 tabular-nums opacity-60">{displayedRecords.length}</span>
+                  </button>
+                  {Object.keys(CATEGORIES).map((key) => {
+                    const active = categoryFilters.includes(key)
+                    const count = displayedRecords.filter((r) => r.category === key).length
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        {...chipTapHandlers(() => toggleCategoryFilter(key))}
+                        aria-pressed={active}
+                        className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                          active
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                        }`}
                       >
-                        {t("common.save")}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                        {t(`categories.${key}`)}
+                        <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
-            )}
+
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.filter_car")}</p>
+                <div className="flex flex-wrap gap-2.5">
+                  <button
+                    type="button"
+                    {...chipTapHandlers(() => setCarFilters([]))}
+                    aria-pressed={carFilters.length === 0}
+                    className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                      carFilters.length === 0
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                    }`}
+                  >
+                    {t("records.filter_all")}
+                    <span className="ml-1.5 tabular-nums opacity-60">{displayedRecords.length}</span>
+                  </button>
+                  {filterCars.map((car) => {
+                    const active = carFilters.includes(car.id)
+                    const count = displayedRecords.filter((r) => r.car_id === car.id).length
+                    return (
+                      <button
+                        key={car.id}
+                        type="button"
+                        {...chipTapHandlers(() => toggleCarFilter(car.id))}
+                        aria-pressed={active}
+                        className={`text-xs font-bold px-3.5 py-2 rounded-full border transition-colors touch-manipulation ${
+                          active
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-white text-slate-600 border-slate-200 hover:text-slate-700 hover:border-slate-300 dark:bg-card dark:text-muted-foreground dark:border-border dark:hover:text-foreground"
+                        }`}
+                      >
+                        {car.name}
+                        <span className="ml-1.5 tabular-nums opacity-60">{count}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            </ModalCard>
 
       {isAdding && <RecordForm
           onSubmit={handleAddRecord} 
