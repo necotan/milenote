@@ -59,7 +59,6 @@ export default function LoginPage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center p-8 bg-white dark:bg-background">
-      {/* エラーポップアップ */}
       <Dialog open={errorPopup !== null} onOpenChange={(open) => { if (!open) setErrorPopup(null) }}>
         <DialogContent>
           <DialogTitle>{t("login.error_title")}</DialogTitle>
@@ -70,7 +69,6 @@ export default function LoginPage() {
         </DialogContent>
       </Dialog>
 
-      {/* パスワードリセットモーダル */}
       {/* 入力中の内容を失わないよう、画面外のタップでは閉じない */}
       <Dialog open={resetOpen} onOpenChange={setResetOpen}>
         <DialogContent onInteractOutside={(e) => e.preventDefault()}>

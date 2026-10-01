@@ -75,7 +75,6 @@ function ResetPasswordContent() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center p-8 bg-white dark:bg-background">
-      {/* エラーポップアップ */}
       <Dialog open={errorPopup !== null} onOpenChange={(open) => { if (!open) setErrorPopup(null) }}>
         <DialogContent>
           <DialogTitle>{t("reset.error_title")}</DialogTitle>

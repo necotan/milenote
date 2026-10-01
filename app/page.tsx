@@ -477,7 +477,6 @@ export default function Home() {
         </section>
       </div>
 
-      {/* ODO更新モーダル */}
       <Dialog open={odoModalOpen} onOpenChange={(open) => { if (!odoSaving) setOdoModalOpen(open) }}>
         <DialogContent showCloseButton={false} onOpenAutoFocus={(e) => e.preventDefault()}>
           <div className="flex items-center gap-3">

@@ -766,7 +766,6 @@ function RecordsPageInner() {
               </div>
             )}
 
-            {/* カテゴリ・車の絞り込みモーダル */}
             <ModalCard
               open={isFilterOpen}
               onClose={() => setIsFilterOpen(false)}

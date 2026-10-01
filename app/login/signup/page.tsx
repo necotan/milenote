@@ -85,7 +85,6 @@ export default function SignUpPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center p-8 bg-white dark:bg-background relative">
-      {/* エラーポップアップ */}
       <Dialog open={errorPopup !== null} onOpenChange={(open) => { if (!open) setErrorPopup(null) }}>
         <DialogContent>
           <DialogTitle>{t("signup.error_title")}</DialogTitle>

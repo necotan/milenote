@@ -1026,7 +1026,6 @@ export default function GaragePage() {
             )}
           </div>
 
-          {/* ステータス絞り込みモーダル */}
           <ModalCard
             open={isFilterOpen}
             onClose={() => setIsFilterOpen(false)}

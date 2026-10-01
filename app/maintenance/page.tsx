@@ -307,7 +307,6 @@ export default function MaintenancePage() {
         </div>
       )}
 
-      {/* 表示設定モーダル */}
       <ModalCard
         open={isDisplaySettingsOpen}
         onClose={() => setIsDisplaySettingsOpen(false)}
@@ -339,7 +338,6 @@ export default function MaintenancePage() {
         </ListGroup>
       </ModalCard>
 
-      {/* カテゴリ、車の絞り込みモーダル */}
       <ModalCard
         open={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
