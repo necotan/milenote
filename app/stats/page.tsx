@@ -233,6 +233,7 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
 // 引き出し線はラベル文字と必ず同じ条件で描画する（どちらか一方だけが描かれると、どのラベルにも繋がらない線が残る）
 // 終点のY座標はラベル側と同じ delta を適用し、重なり回避で動いたラベルに追従させる
 const createCustomizedLabelLine = (strokeColor: string, pieLabelDeltas: Map<number, number>) => {
+  // Recharts の PieLabelLine 型自体が関数の引数を any で定義しているため、ここでも any を許容
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const PieCustomLabelLine = (props: any) => {
     const { points, index } = props;

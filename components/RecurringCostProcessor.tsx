@@ -39,11 +39,10 @@ export default function RecurringCostProcessor() {
       let processedCount = 0
 
       for (const cost of costs) {
-        // 複数サイクル分の未処理があればループでまとめて追いつかせる（無限ループ防止に上限120回）
-
         let currentNextDate = new Date(cost.next_billing_date)
         let cyclesProcessed = 0
 
+        // 複数サイクル分の未処理があればループでまとめて追いつかせる（無限ループ防止に上限120回）
         while (currentNextDate <= today && cyclesProcessed < 120) {
           const currentNextDateStr = `${currentNextDate.getFullYear()}-${String(currentNextDate.getMonth() + 1).padStart(2, '0')}-${String(currentNextDate.getDate()).padStart(2, '0')}`
           

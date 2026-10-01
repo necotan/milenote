@@ -46,7 +46,7 @@ export const CATEGORIES: Record<string, any> = {
   other: { icon: FileText, color: "text-slate-600 dark:text-muted-foreground", bg: "bg-slate-50 dark:bg-surface-2" },
 }
 
-// 給油フォーム内の自動計算ハンドラー（コンポーネント外に定義）
+// 給油フォームの相互自動計算で、入力元になったフィールド
 type FuelCalcField = "amount" | "fuelUnitPrice" | "fuelAmount"
 
 const RecordSkeleton = () => (

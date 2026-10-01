@@ -1003,7 +1003,7 @@ export default function GaragePage() {
         {/* ウィッシュリスト（欲しいもの） */}
         <TabsContent value="wishlist" className="space-y-4">
           <div className="flex items-center justify-end gap-4">
-            {/* ステータス絞り込みボタン（アイテムがあるときのみ表示、絞り込み中は選択数をバッジ表示） */}
+            {/* 絞り込みボタン（アイテムがあるときのみ表示、絞り込み中は選択数をバッジ表示） */}
             {!loading && !isAddingWish && !editWishId && wishlists.length > 0 && (
               <button
                 type="button"

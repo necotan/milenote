@@ -38,6 +38,7 @@ function AppContent({ children, loading }: { children: React.ReactNode; loading:
     setFadingOut(true);
     const id = setTimeout(() => setShowOverlay(false), LOADING_FADE_MS);
     return () => clearTimeout(id);
+    // loading が変化したときだけ実行し、showOverlay はその時点でフェードアウトが必要かの判定にのみ使う
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
