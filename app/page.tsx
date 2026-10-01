@@ -81,6 +81,8 @@ export default function Home() {
     const savedOrder = localStorage.getItem("home_layout")
     if (savedOrder) {
       try {
+        // SSR の初期HTMLと一致させるため、保存済みの並び順はマウント後に反映する
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setHomeOrder(JSON.parse(savedOrder))
       } catch {}
     }
@@ -398,6 +400,8 @@ export default function Home() {
                   <Card key={car.id} className="border-none overflow-hidden bg-white dark:bg-card p-0">
                     <div className="relative aspect-[11/6] bg-neutral-300 dark:bg-neutral-800 w-full m-0 border-b border-slate-200 dark:border-border overflow-hidden">
                       {car.image_url ? (
+                        // Storage の公開URLを直接表示し、getCarImageStyle の位置・ズームを img に当てるため next/image は使わない
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img src={car.image_url} alt={car.name} className="absolute inset-0 w-full h-full object-cover" style={getCarImageStyle(car)} />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">

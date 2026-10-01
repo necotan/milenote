@@ -32,8 +32,10 @@ import { ModalCard } from "@/components/ui/ModalCard"
 import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES, type SubCategorySlug } from "@/lib/subcategories"
 import { getFuelUnit } from "@/lib/fuelTypes"
+import type { LucideIcon } from "lucide-react"
+import type { Car, CarRecord } from "@/lib/types"
 
-export const CATEGORIES: Record<string, any> = {
+export const CATEGORIES: Record<string, { icon: LucideIcon; color: string; bg: string }> = {
   fuel: { icon: Fuel, color: "text-blue-500", bg: "bg-blue-50 dark:bg-surface-2" },
   maintenance: { icon: Wrench, color: "text-orange-500", bg: "bg-orange-50 dark:bg-surface-2" },
   inspection: { icon: ClipboardList, color: "text-teal-500", bg: "bg-teal-50 dark:bg-surface-2" },
@@ -91,6 +93,42 @@ const RecordSkeleton = () => (
   </div>
 )
 
+type RecordFormProps = {
+  onSubmit: (e: React.FormEvent) => void
+  submitLabel: string
+  isSubmitting: boolean
+  resetForm: () => void
+  editRecordId: string | null
+  carId: string
+  setCarId: (value: string) => void
+  cars: Car[]
+  category: string
+  setCategory: (value: string) => void
+  subCategory: string
+  setSubCategory: (value: string) => void
+  amount: string
+  setAmount: (value: string) => void
+  date: string
+  setDate: (value: string) => void
+  odoAtRecord: string
+  setOdoAtRecord: (value: string) => void
+  fuelAmount: string
+  fuelUnitPrice: string
+  memo: string
+  setMemo: (value: string) => void
+  onFuelFieldChange: (field: FuelCalcField, value: string) => void
+  entryIc: string
+  setEntryIc: (value: string) => void
+  exitIc: string
+  setExitIc: (value: string) => void
+  intervalMonths: string
+  setIntervalMonths: (value: string) => void
+  includesCompulsoryInsurance: boolean
+  setIncludesCompulsoryInsurance: (checked: boolean) => void
+  inspectionExpiryDate: string
+  setInspectionExpiryDate: (value: string) => void
+}
+
 // 新規追加・編集に使うフォームのJSX
 const RecordForm = ({
   onSubmit,
@@ -114,10 +152,10 @@ const RecordForm = ({
   intervalMonths, setIntervalMonths,
   includesCompulsoryInsurance, setIncludesCompulsoryInsurance,
   inspectionExpiryDate, setInspectionExpiryDate,
-}: any) => {
+}: RecordFormProps) => {
   const { t } = useTranslation()
   // 選択中の車の燃料種別に応じて、給油フォームを給油(L)/充電(kWh)/充填(kg)表示に切り替える
-  const selectedCar = cars.find((c: { id: string; fuel_type?: string }) => c.id === carId)
+  const selectedCar = cars.find((c) => c.id === carId)
   const fuelUnit = getFuelUnit(selectedCar?.fuel_type)
   const fuelFieldText = {
     l: { info: t("records.fuel_info"), priceLabel: t("records.unit_price"), pricePh: "170", priceUnit: t("records.unit_yen_per_l"), amountLabel: t("records.fuel_amount"), amountPh: "40.0", amountUnit: t("records.unit_l") },
@@ -133,7 +171,7 @@ const RecordForm = ({
         <Select value={carId} onValueChange={setCarId} required>
           <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400"><SelectValue placeholder={t("common.select_car")} /></SelectTrigger>
           <SelectContent>
-            {cars.map((car: any) => <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>)}
+            {cars.map((car) => <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
@@ -492,7 +530,7 @@ function RecordsPageInner() {
       setIsAdding(true)
       scrollToPageTop()
     }
-  }, [loading])
+  }, [loading, searchParams])
 
   // 給油フィールドの相互自動計算ハンドラー
   const handleFuelFieldChange = (field: FuelCalcField, value: string) => {
@@ -603,7 +641,7 @@ function RecordsPageInner() {
     }
   }
 
-  const handleStartEdit = (record: any) => {
+  const handleStartEdit = (record: CarRecord) => {
     setEditRecordId(record.id)
     setIsAdding(false)
     scrollToPageTop()
@@ -612,7 +650,7 @@ function RecordsPageInner() {
     setSubCategory(record.sub_category || "")
     setAmount(String(record.amount))
     setOdoAtRecord(record.odo_at_record ? String(record.odo_at_record) : "")
-    const liters = record.fuel_amount ? parseFloat(record.fuel_amount) : null
+    const liters = record.fuel_amount ? parseFloat(String(record.fuel_amount)) : null
     const total = record.amount ? record.amount : null
     setFuelAmount(liters ? String(liters) : "")
     setFuelUnitPrice(liters && total ? (total / liters).toFixed(2) : "")
@@ -866,8 +904,8 @@ function RecordsPageInner() {
           amount={amount} setAmount={setAmount}
           date={date} setDate={setDate}
           odoAtRecord={odoAtRecord} setOdoAtRecord={setOdoAtRecord}
-          fuelAmount={fuelAmount} setFuelAmount={setFuelAmount}
-          fuelUnitPrice={fuelUnitPrice} setFuelUnitPrice={setFuelUnitPrice}
+          fuelAmount={fuelAmount}
+          fuelUnitPrice={fuelUnitPrice}
           memo={memo} setMemo={setMemo}
           onFuelFieldChange={handleFuelFieldChange}
           entryIc={entryIc} setEntryIc={setEntryIc}
@@ -889,8 +927,8 @@ function RecordsPageInner() {
           amount={amount} setAmount={setAmount}
           date={date} setDate={setDate}
           odoAtRecord={odoAtRecord} setOdoAtRecord={setOdoAtRecord}
-          fuelAmount={fuelAmount} setFuelAmount={setFuelAmount}
-          fuelUnitPrice={fuelUnitPrice} setFuelUnitPrice={setFuelUnitPrice}
+          fuelAmount={fuelAmount}
+          fuelUnitPrice={fuelUnitPrice}
           memo={memo} setMemo={setMemo}
           onFuelFieldChange={handleFuelFieldChange}
           entryIc={entryIc} setEntryIc={setEntryIc}

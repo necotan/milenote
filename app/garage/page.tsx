@@ -39,7 +39,9 @@ import {
   DEFAULT_IMAGE_SCALE,
   MIN_IMAGE_SCALE,
   MAX_IMAGE_SCALE,
+  type CarImageTransform,
 } from "@/utils/carImage"
+import type { Car, Wishlist } from "@/lib/types"
 import { stripImageMetadata } from "@/utils/stripImageMetadata"
 import { getSafeExternalUrl } from "@/utils/safeUrl"
 import { WISHLIST_GENRES, WishlistGenreSlug } from "@/lib/wishlistGenres"
@@ -60,6 +62,9 @@ const CAR_STATUS_ORDER: Record<string, number> = {
   archived_excluded: 3,
 }
 
+// 写真の差し替え直後は車データの再取得を待たずに開くため、Car の一部だけを持つ
+type AdjustImageTarget = Pick<Car, "id" | "image_url"> & Partial<Pick<Car, "name">> & CarImageTransform
+
 export default function GaragePage() {
   // 表示の切り替えステート
   const [isAddingCar, setIsAddingCar] = useState(false)
@@ -70,7 +75,7 @@ export default function GaragePage() {
   const [savingWish, setSavingWish] = useState(false)
 
   // 削除確認モーダル用
-  const [deleteCarTarget, setDeleteCarTarget] = useState<any | null>(null)
+  const [deleteCarTarget, setDeleteCarTarget] = useState<Car | null>(null)
   const [deleteCarConfirmName, setDeleteCarConfirmName] = useState("")
   const [deletingCar, setDeletingCar] = useState(false)
   const [deleteCarRecurringCount, setDeleteCarRecurringCount] = useState<number | null>(null)
@@ -78,7 +83,7 @@ export default function GaragePage() {
   const [deletingWish, setDeletingWish] = useState(false)
 
   // 画像の位置、ズーム調整モーダル用
-  const [adjustTarget, setAdjustTarget] = useState<any | null>(null)
+  const [adjustTarget, setAdjustTarget] = useState<AdjustImageTarget | null>(null)
   const [adjustPosX, setAdjustPosX] = useState(DEFAULT_IMAGE_POSITION_X)
   const [adjustPosY, setAdjustPosY] = useState(DEFAULT_IMAGE_POSITION_Y)
   const [adjustScale, setAdjustScale] = useState(DEFAULT_IMAGE_SCALE)
@@ -208,7 +213,7 @@ export default function GaragePage() {
     }
   }
 
-  const handleStartEditCar = (car: any) => {
+  const handleStartEditCar = (car: Car) => {
     setEditCarId(car.id)
     setIsAddingCar(false)
     scrollToPageTop()
@@ -274,7 +279,7 @@ export default function GaragePage() {
   }
 
   // 定期費用はガレージで取得していないため、削除される件数をここで取得
-  const openDeleteCarDialog = async (car: any) => {
+  const openDeleteCarDialog = async (car: Car) => {
     setDeleteCarTarget(car)
     setDeleteCarConfirmName("")
     setDeleteCarRecurringCount(null)
@@ -361,7 +366,7 @@ export default function GaragePage() {
     }
   }
 
-  const handleStartEditWish = (wish: any) => {
+  const handleStartEditWish = (wish: Wishlist) => {
     setEditWishId(wish.id)
     setIsAddingWish(false)
     scrollToPageTop()
@@ -527,7 +532,7 @@ export default function GaragePage() {
   }
 
   // 既存ユーザーは NULL の可能性があるためデフォルトにフォールバック
-  const handleStartAdjustImage = (car: any) => {
+  const handleStartAdjustImage = (car: AdjustImageTarget) => {
     setAdjustTarget(car)
     setAdjustPosX(car.image_position_x ?? DEFAULT_IMAGE_POSITION_X)
     setAdjustPosY(car.image_position_y ?? DEFAULT_IMAGE_POSITION_Y)
@@ -816,6 +821,8 @@ export default function GaragePage() {
                   <div className="relative aspect-[11/6] bg-neutral-300 dark:bg-neutral-800 w-full m-0 border-b border-slate-200 dark:border-border overflow-hidden">
                     {/* 登録済みの画像がある場合は表示、なければプレースホルダーアイコンを表示 */}
                     {car.image_url ? (
+                      // Storage の公開URLを直接表示し、getCarImageStyle の位置・ズームを img に当てるため next/image は使わない
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img src={car.image_url} alt={car.name} className="absolute inset-0 w-full h-full object-cover" style={getCarImageStyle(car)} />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center">
@@ -963,8 +970,10 @@ export default function GaragePage() {
                 onPointerUp={handleAdjustPointerUp}
                 onPointerCancel={handleAdjustPointerUp}
               >
+                {/* Storage の公開URLを直接表示し、getCarImageStyle の位置・ズームを img に当てるため next/image は使わない */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={adjustTarget.image_url}
+                  src={adjustTarget.image_url ?? undefined}
                   alt={adjustTarget.name}
                   draggable={false}
                   className="absolute inset-0 w-full h-full object-cover pointer-events-none"

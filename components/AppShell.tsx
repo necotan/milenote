@@ -113,12 +113,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   // 表示条件がそろったら実画面を出す (expectingPage なページはデータ取得完了(pageReady)を待つ)
-  useEffect(() => {
-    if (revealed) return;
-    if (authChecked && minElapsed && (pageReady || !expectingPage || maxElapsed)) {
-      setRevealed(true);
-    }
-  }, [revealed, authChecked, minElapsed, pageReady, expectingPage, maxElapsed]);
+  // 一度出したら条件が崩れても戻さないため、state として保持する
+  if (!revealed && authChecked && minElapsed && (pageReady || !expectingPage || maxElapsed)) {
+    setRevealed(true);
+  }
 
   const setExpecting = useCallback(() => setExpectingPage(true), []);
   const setReady = useCallback(() => setPageReady(true), []);

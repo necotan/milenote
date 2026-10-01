@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { createClient } from "@/utils/supabase"
 import { useRecurringCosts } from "@/lib/hooks/useRecurringCosts"
 import { scrollToPageTop } from "@/utils/pageScroll"
-import type { Car } from "@/lib/types"
+import type { Car, RecurringCost } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { DatePicker } from "@/components/ui/date-picker"
 import { NumberInput } from "@/components/ui/NumberInput"
@@ -94,6 +94,28 @@ const AutoRecordBanner = () => {
   )
 }
 
+type RecurringFormProps = {
+  onSubmit: (e: React.FormEvent) => void
+  submitLabel: string
+  resetForm: () => void
+  carId: string
+  setCarId: (value: string) => void
+  cars: Car[]
+  category: string
+  setCategory: (value: string) => void
+  subCategory: string
+  setSubCategory: (value: string) => void
+  amount: string
+  setAmount: (value: string) => void
+  frequency: string
+  setFrequency: (value: string) => void
+  nextBillingDate: string
+  setNextBillingDate: (value: string) => void
+  memo: string
+  setMemo: (value: string) => void
+  isEdit: boolean
+}
+
 const RecurringForm = ({
   onSubmit, submitLabel, resetForm,
   carId, setCarId, cars,
@@ -101,7 +123,7 @@ const RecurringForm = ({
   amount, setAmount, frequency, setFrequency,
   nextBillingDate, setNextBillingDate, memo, setMemo,
   isEdit,
-}: any) => {
+}: RecurringFormProps) => {
   const { t } = useTranslation()
 
   return (
@@ -124,7 +146,7 @@ const RecurringForm = ({
               <Select value={carId} onValueChange={setCarId} required>
                 <SelectTrigger className="w-full"><SelectValue placeholder={t("common.select_car")} /></SelectTrigger>
                 <SelectContent>
-                  {cars.map((car: any) => <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>)}
+                  {cars.map((car) => <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
@@ -234,6 +256,9 @@ const StatusBadge = ({ isActive }: { isActive: boolean }) => {
   )
 }
 
+const getDefaultSubCategory = (category: string): string =>
+  SUB_CATEGORIES[category] ? SUB_CATEGORIES[category][0] : ""
+
 const getFrequencyLabel = (freq: string, t: (key: string) => string): string => {
   const opt = FREQUENCY_OPTIONS.find(o => o.value === freq)
   return opt ? t(opt.labelKey) : freq
@@ -285,7 +310,7 @@ export default function RecurringTab({
   userId, cars, carsById, onRecordsChanged,
 }: {
   userId: string | null
-  cars: any[]
+  cars: Car[]
   carsById: Map<string, Car>
   onRecordsChanged?: () => void
 }) {
@@ -305,22 +330,21 @@ export default function RecurringTab({
 
   const [carId, setCarId] = useState(cars.length > 0 ? cars[0].id : "")
   const [category, setCategory] = useState("other")
-  const [subCategory, setSubCategory] = useState("")
+  const [subCategory, setSubCategory] = useState(getDefaultSubCategory("other"))
   const [amount, setAmount] = useState("")
   const [frequency, setFrequency] = useState("monthly")
   const [nextBillingDate, setNextBillingDate] = useState(new Date().toISOString().split('T')[0])
   const [memo, setMemo] = useState("")
 
-  useEffect(() => {
-    if (SUB_CATEGORIES[category]) {
-      setSubCategory(SUB_CATEGORIES[category][0])
-    } else {
-      setSubCategory("")
-    }
-    if (!editId && ["tax", "insurance"].includes(category)) {
+  // カテゴリをユーザーが手動で切り替えたときだけサブカテゴリと頻度を既定値にする
+  // （編集開始時の setCategory に反応すると、保存済みのサブカテゴリが上書きされてしまうため）
+  const handleCategoryChange = (newCategory: string) => {
+    setCategory(newCategory)
+    setSubCategory(getDefaultSubCategory(newCategory))
+    if (!editId && ["tax", "insurance"].includes(newCategory)) {
       setFrequency("yearly")
     }
-  }, [category])
+  }
 
   const resetForm = () => {
     setIsAdding(false)
@@ -329,6 +353,7 @@ export default function RecurringTab({
     setAmount("")
     setMemo("")
     setCategory("other")
+    setSubCategory(getDefaultSubCategory("other"))
     setFrequency("monthly")
     setNextBillingDate(new Date().toISOString().split('T')[0])
     if (cars.length > 0) setCarId(cars[0].id)
@@ -385,7 +410,7 @@ export default function RecurringTab({
       // 過去分を自動記録
       if (pastDates.length > 0) {
         const autoPrefix = t("records.auto_recorded")
-        const targetCar = cars.find((c: any) => c.id === carId)
+        const targetCar = cars.find((c) => c.id === carId)
         const fallbackOdo = targetCar?.current_odo ?? 0
         let insertedCount = 0
         for (const dateStr of pastDates) {
@@ -410,7 +435,7 @@ export default function RecurringTab({
     await mutateCosts()
   }
 
-  const handleStartEdit = (cost: any) => {
+  const handleStartEdit = (cost: RecurringCost) => {
     setEditId(cost.id)
     setIsAdding(false)
     setCarId(cost.car_id)
@@ -475,7 +500,7 @@ export default function RecurringTab({
           resetForm={resetForm}
           isEdit={!!editId}
           carId={carId} setCarId={setCarId} cars={cars}
-          category={category} setCategory={setCategory}
+          category={category} setCategory={handleCategoryChange}
           subCategory={subCategory} setSubCategory={setSubCategory}
           amount={amount} setAmount={setAmount}
           frequency={frequency} setFrequency={setFrequency}
