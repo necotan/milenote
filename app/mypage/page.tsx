@@ -299,7 +299,6 @@ function MaintEditDialog({
   )
 }
 
-// プロフィールの項目行
 function ProfileFieldRow({
   icon: Icon,
   label,
@@ -789,7 +788,6 @@ export default function MyPage() {
         {/* プロフィール設定 */}
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
-            {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <User size={18} className="text-slate-600 dark:text-muted-foreground" /> {t("mypage.profile")}
@@ -799,7 +797,6 @@ export default function MyPage() {
               </p>
             </div>
 
-            {/* 右側：タップで編集ポップアップを開く項目行 */}
             <div className="md:w-2/3 px-6 py-3">
               <ListGroup>
                 <ProfileFieldRow
@@ -824,7 +821,6 @@ export default function MyPage() {
         {/* メンテナンス基準設定 */}
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
-            {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <Wrench size={18} className="text-slate-600 dark:text-muted-foreground" /> {t("mypage.maintenance_settings")}
@@ -834,7 +830,6 @@ export default function MyPage() {
               </p>
             </div>
 
-            {/* 右側：カテゴリ別の折りたたみリスト */}
             <div className="md:w-2/3 p-6">
               <div className="space-y-5">
                 {MAINT_CATEGORIES.map((category) => (
@@ -864,7 +859,6 @@ export default function MyPage() {
         {/* 言語設定 */}
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
-            {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <Globe size={18} className="text-slate-600 dark:text-muted-foreground" /> {t("mypage.language")}
@@ -874,7 +868,6 @@ export default function MyPage() {
               </p>
             </div>
 
-            {/* 右側：言語選択UI */}
             <div className="md:w-2/3 p-6">
               <div className="inline-flex rounded-lg bg-slate-100 dark:bg-surface-2 p-1">
                 <button
@@ -905,7 +898,6 @@ export default function MyPage() {
         {/* アクセシビリティ */}
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
-            {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <Accessibility size={18} className="text-slate-600 dark:text-muted-foreground" /> {t("mypage.accessibility")}
@@ -915,7 +907,6 @@ export default function MyPage() {
               </p>
             </div>
 
-            {/* 右側：カラーモード選択UI */}
             <div className="md:w-2/3 p-6">
               <Label className="text-slate-700 dark:text-foreground font-bold text-xs">
                 {t("mypage.chart_color_mode")}
@@ -977,7 +968,6 @@ export default function MyPage() {
         {/* ホーム画面のカスタマイズ */}
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
-            {/* 左側：説明 */}
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
               <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
                 <LayoutTemplate size={18} className="text-slate-600 dark:text-muted-foreground" /> {t("mypage.home_order")}
@@ -987,7 +977,6 @@ export default function MyPage() {
               </p>
             </div>
 
-            {/* 右側：並び替えUI */}
             <div className="md:w-2/3 p-6">
               {/* スマートフォン表示時 */}
               <div className="lg:hidden">
@@ -1022,13 +1011,10 @@ export default function MyPage() {
                         isDragging ? "rounded-lg shadow-lg ring-1 ring-slate-300 dark:ring-surface-border" : ""
                       }`}
                     >
-                      {/* セクションアイコン */}
                       <span className="flex items-center justify-center h-8 w-8 shrink-0 rounded-lg bg-slate-100 dark:bg-surface-3 text-slate-600 dark:text-foreground">
                         {sectionIcons[sectionId]}
                       </span>
-                      {/* ラベル */}
                       <span className="flex-1 min-w-0 text-sm font-bold text-slate-700 dark:text-foreground truncate">{t(`mypage.home_sections.${sectionId}`)}</span>
-                      {/* ドラッグハンドル */}
                       <span
                         onPointerDown={(e) => handleDragStart(e, index)}
                         onPointerMove={handleDragMove}
@@ -1044,7 +1030,6 @@ export default function MyPage() {
                   )
                 })}
               </ListGroup>
-              {/* 上が一番上に表示される旨の補足 */}
               <p className="mt-3 text-[11px] text-slate-500 dark:text-muted-foreground font-medium">{t("mypage.home_order_hint")}</p>
               </div>
 
@@ -1110,7 +1095,6 @@ export default function MyPage() {
             </p>
           </div>
 
-          {/* 下部：エクスポートボタンエリア */}
           <div data-slot="card-footer" className="border-t border-slate-200 dark:border-border mx-6 py-6 flex justify-center md:justify-end">
             <Button
               onClick={handleExportCsv}

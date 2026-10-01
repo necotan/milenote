@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation"
 import { useTranslation } from "@/lib/i18n"
 import Footer from "@/components/ui/Footer"
 
-// 利用規約ページ
 export default function TermsPage() {
   const router = useRouter()
   const { t } = useTranslation()

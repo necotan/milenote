@@ -25,7 +25,6 @@ export default function LoginPage() {
   const supabase = createClient()
   const { t } = useTranslation()
 
-  // ログイン処理
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -40,14 +39,12 @@ export default function LoginPage() {
     router.push("/")
   }
 
-  // パスワードリセットモーダルを開く
   const openResetModal = () => {
     setResetEmail(email)
     setResetSent(false)
     setResetOpen(true)
   }
 
-  // パスワードリセットメール送信
   const handleResetRequest = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!resetEmail) return

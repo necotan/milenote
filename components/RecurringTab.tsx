@@ -21,7 +21,6 @@ import { useTranslation } from "@/lib/i18n"
 import { CATEGORIES } from "@/app/records/page"
 import { SUB_CATEGORIES } from "@/lib/subcategories"
 
-// 頻度の選択肢
 const FREQUENCY_OPTIONS = [
   { value: "weekly", labelKey: "records.freq_weekly" },
   { value: "monthly", labelKey: "records.freq_monthly" },
@@ -31,7 +30,6 @@ const FREQUENCY_OPTIONS = [
   { value: "yearly", labelKey: "records.freq_yearly" },
 ]
 
-// 折りたたみバナーコンポーネント
 const AutoRecordBanner = () => {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
@@ -95,7 +93,6 @@ const AutoRecordBanner = () => {
   )
 }
 
-// 定期費用入力フォームコンポーネント
 const RecurringForm = ({
   onSubmit, submitLabel, resetForm,
   carId, setCarId, cars,
@@ -120,7 +117,6 @@ const RecurringForm = ({
         </p>
 
         <form onSubmit={onSubmit} className="space-y-6">
-          {/* 対象車・カテゴリ */}
           <div className="grid grid-cols-2 gap-3 sm:gap-x-8 sm:max-w-[50rem]">
             <div className="space-y-2">
               <Label>{t("common.target_car")} <span className="text-red-500">{t("common.required")}</span></Label>
@@ -160,7 +156,6 @@ const RecurringForm = ({
             </div>
           )}
 
-          {/* 支払情報セクション */}
           <FormSection icon={Wallet} title={t("records.payment_info")} divided>
             <div className="grid grid-cols-2 gap-3 sm:gap-x-8 sm:max-w-[50rem]">
               <div className="space-y-2">
@@ -220,7 +215,6 @@ const RecurringForm = ({
   )
 }
 
-// ステータスバッジコンポーネント
 const StatusBadge = ({ isActive }: { isActive: boolean }) => {
   const { t } = useTranslation()
   if (isActive) {
@@ -239,13 +233,11 @@ const StatusBadge = ({ isActive }: { isActive: boolean }) => {
   )
 }
 
-// 頻度ラベル取得ヘルパー関数
 const getFrequencyLabel = (freq: string, t: (key: string) => string): string => {
   const opt = FREQUENCY_OPTIONS.find(o => o.value === freq)
   return opt ? t(opt.labelKey) : freq
 }
 
-// ローディング中のスケルトンカード
 const RecurringCardSkeleton = () => (
   <div className="space-y-3">
     {[...Array(3)].map((_, i) => (
@@ -272,7 +264,6 @@ const RecurringCardSkeleton = () => (
   </div>
 )
 
-// データが存在しない場合の空状態コンポーネント
 const EmptyState = ({ onAdd }: { onAdd: () => void }) => {
   const { t } = useTranslation()
   return (
@@ -289,7 +280,6 @@ const EmptyState = ({ onAdd }: { onAdd: () => void }) => {
   )
 }
 
-// メインコンポーネント (RecurringTab)
 export default function RecurringTab({
   userId, cars, carsById, onRecordsChanged,
 }: {
@@ -466,7 +456,6 @@ export default function RecurringTab({
 
   return (
     <div className="space-y-2">
-      {/* 自動記録バナー */}
       <AutoRecordBanner />
 
       {/* 追加ボタン（コスト一覧がある場合のみ右上に表示） */}
@@ -551,7 +540,6 @@ export default function RecurringTab({
                     <Icon size={24} />
                   </div>
                   <div className="flex-1 min-w-0 pr-28">
-                    {/* 金額 */}
                     <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1 tracking-tight tabular-nums">
                       ¥{cost.amount.toLocaleString()}
                       <span className="text-xs text-slate-500 dark:text-muted-foreground font-medium ml-1">
@@ -559,7 +547,6 @@ export default function RecurringTab({
                       </span>
                     </h3>
 
-                    {/* ジャンルタグ・ステータスバッジ */}
                     <div className="flex items-center gap-1.5 mb-2">
                       <span className="text-[11px] font-medium bg-slate-100 dark:bg-surface-2 text-slate-600 dark:text-muted-foreground px-2.5 py-1 rounded-full whitespace-nowrap">
                         {t(`categories.${cost.category}`)}
@@ -572,12 +559,10 @@ export default function RecurringTab({
                       <StatusBadge isActive={cost.is_active} />
                     </div>
 
-                    {/* 車名 */}
                     <div className="text-[11px] text-slate-600 dark:text-muted-foreground font-medium mb-2">
                       {carsById.get(cost.car_id)?.name}
                     </div>
 
-                    {/* 次回支払日 */}
                     <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-2">
                       {t("records.next_billing_date")}: {cost.next_billing_date.replace(/-/g, '/')}
                     </p>

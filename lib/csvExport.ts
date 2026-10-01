@@ -22,7 +22,6 @@ function neutralizeFormula(str: string): string {
   return str
 }
 
-// CSVの1セルをエスケープする
 // 文字列セルは先に数式インジェクションを無害化する (数値セルは集計に使うため無害化しない)
 // カンマ・ダブルクォート・改行を含む場合はダブルクォートで囲み、内部の " は "" にする
 function escapeCell(value: string | number | null | undefined): string {
@@ -73,7 +72,6 @@ export function recordsToCsv(records: ExportRecord[], t: TFunc): string {
   return "﻿" + body
 }
 
-// CSV文字列をファイルとしてダウンロードさせる
 export function downloadCsv(filename: string, csv: string): void {
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
   const url = URL.createObjectURL(blob)

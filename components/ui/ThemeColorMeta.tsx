@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 const LIGHT_COLOR = "#f2f2f2";
 const DARK_COLOR = "#000000";
 
-// theme-color未指定だとステータスバーの色が、ページ上端のコンテンツからサンプリングされてしまうため、アプリの背景色に固定するmetaタグを出力
+// theme-color未指定だとステータスバーの色がページ上端のコンテンツからサンプリングされてしまうため、アプリの背景色に固定するmetaタグを出力
 export default function ThemeColorMeta() {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);

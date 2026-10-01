@@ -52,7 +52,6 @@ export default function LoadingScreen() {
           strokeWidth="3"
           strokeLinecap="round"
         />
-        {/* 針 */}
         <g className="meter-needle text-neutral-800 dark:text-neutral-200">
           <line
             x1="50"

@@ -103,7 +103,6 @@ export default function SignUpPage() {
         </div>
 
         <form onSubmit={handleSignUp} className="space-y-4">
-          {/* メールアドレス */}
           <div className="space-y-2">
             <Label htmlFor="signup-email">
               {t("login.email")} <span className="text-red-500">{t("common.required")}</span>
@@ -119,7 +118,6 @@ export default function SignUpPage() {
             />
           </div>
 
-          {/* ユーザーID */}
           <div className="space-y-2">
             <Label htmlFor="signup-userid">
               {t("signup.user_id")} <span className="text-red-500">{t("common.required")}</span>
@@ -135,7 +133,6 @@ export default function SignUpPage() {
             <p className="text-[11px] text-slate-500 dark:text-muted-foreground">{t("signup.user_id_hint")}</p>
           </div>
 
-          {/* パスワード */}
           <div className="space-y-2">
             <Label htmlFor="signup-password">
               {t("login.password")} <span className="text-red-500">{t("common.required")}</span>
@@ -161,7 +158,6 @@ export default function SignUpPage() {
             </div>
           </div>
 
-          {/* 登録ボタンと戻るボタン */}
           <div className="flex flex-col items-center gap-4 pt-4">
             <Button className="font-bold min-w-[200px]" type="submit" disabled={loading}>
               {loading ? t("login.processing") : t("signup.create_account")}

@@ -164,12 +164,10 @@ export default function MaintenancePage() {
   // カード列の右端にボタンをそろえるため、グリッドの実際の表示幅と同じ幅に制限
   const gridContentWidth = gridColumns > 1 ? gridColumns * CARD_WIDTH + (gridColumns - 1) * CARD_GAP : undefined
 
-  // カテゴリ絞り込みの選択切り替え
   const toggleCategoryFilter = (key: string) => {
     setCategoryFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
   }
 
-  // 車絞り込みの選択切り替え
   const toggleCarFilter = (key: string) => {
     setCarFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
   }
@@ -381,7 +379,6 @@ export default function MaintenancePage() {
                 <h2 className="text-lg font-bold">{t("records.filter_title")}</h2>
               </div>
 
-              {/* カテゴリ絞り込み */}
               <div className="space-y-2">
                 <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.category")}</p>
                 <div className="flex flex-wrap gap-2.5">
@@ -422,7 +419,6 @@ export default function MaintenancePage() {
                 </div>
               </div>
 
-              {/* 車絞り込み */}
               {cars.length > 1 && (
                 <div className="space-y-2">
                   <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.filter_car")}</p>

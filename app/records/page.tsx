@@ -47,7 +47,6 @@ export const CATEGORIES: Record<string, any> = {
 // 給油フォーム内の自動計算ハンドラー（コンポーネント外に定義）
 type FuelCalcField = "amount" | "fuelUnitPrice" | "fuelAmount"
 
-// スケルトンUIコンポーネント
 const RecordSkeleton = () => (
   <div className="space-y-4">
     <SkeletonTabs className="mb-4" />
@@ -150,7 +149,6 @@ const RecordForm = ({
     </>
   )
 
-  // 日付
   const dateField = (
     <div className="space-y-2">
       <Label>{t("records.date")} <span className="text-red-500">{t("common.required")}</span></Label>
@@ -158,7 +156,6 @@ const RecordForm = ({
     </div>
   )
 
-  // ODOメーター
   const odoField = (
     <div className="space-y-2">
       <Label>{t("records.odometer_km")}</Label>
@@ -186,7 +183,6 @@ const RecordForm = ({
             </FormSection>
 
             <FormSection icon={Fuel} title={fuelFieldText.info} divided="mobile">
-              {/* 単価 */}
               <div className="space-y-2">
                 <Label>{fuelFieldText.priceLabel}</Label>
                 <NumberInput
@@ -198,7 +194,6 @@ const RecordForm = ({
                 />
               </div>
 
-              {/* リットル / kWh / kg */}
               <div className="space-y-2">
                 <Label>{fuelFieldText.amountLabel}</Label>
                 <NumberInput
@@ -210,7 +205,6 @@ const RecordForm = ({
                 />
               </div>
 
-              {/* 総額 */}
               <div className="space-y-2">
                 <Label>{t("records.total_amount")} <span className="text-red-500">{t("common.required")}</span></Label>
                 <NumberInput
@@ -335,7 +329,6 @@ const RecordForm = ({
 
 function RecordsPageInner() {
   const [isAdding, setIsAdding] = useState(false)
-  // 編集モード用
   const [editRecordId, setEditRecordId] = useState<string | null>(null)
   const supabase = createClient()
   const { t, locale } = useTranslation()
@@ -456,12 +449,10 @@ function RecordsPageInner() {
     localStorage.setItem("records_car_filters", JSON.stringify(carFilters))
   }, [carFilters])
 
-  // カテゴリ絞り込みの選択切り替え
   const toggleCategoryFilter = (key: string) => {
     setCategoryFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
   }
 
-  // 車絞り込みの選択切り替え
   const toggleCarFilter = (key: string) => {
     setCarFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
   }
@@ -513,7 +504,6 @@ function RecordsPageInner() {
         setSubCategory(sub)
       }
       setIsAdding(true)
-      // スクロールをページ上部へ
       window.scrollTo({ top: 0, behavior: "smooth" })
     }
   }, [loading])
@@ -554,7 +544,6 @@ function RecordsPageInner() {
     }
   }
 
-  // フォームのリセット
   const resetForm = () => {
     setIsAdding(false)
     setEditRecordId(null)
@@ -571,8 +560,7 @@ function RecordsPageInner() {
     setCarId(firstCarId)
   }
 
-  // 車の総走行距離(current_odo)を残っている記録の最大ODOに合わせて再計算する
-  // 記録の削除・編集で過大なODO値（桁間違いなど）が残らないようにするための処理
+  // 記録の削除・編集で過大なODO値（桁間違いなど）が残らないよう、残っている記録の最大ODOに合わせる
   // 記録が無くなった場合や記録より大きい場合は購入時ODO(purchase_odo)を下限とする
   const recalcCarOdo = async (targetCarId: string) => {
     const targetCar = cars.find(c => c.id === targetCarId)
@@ -588,7 +576,6 @@ function RecordsPageInner() {
     await mutateCars()
   }
 
-  // 記録データの保存処理
   const handleAddRecord = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!carId) return alert(t("records.select_car_alert"))
@@ -631,7 +618,6 @@ function RecordsPageInner() {
     }
   }
 
-  // 記録編集モードの開始
   const handleStartEdit = (record: any) => {
     setEditRecordId(record.id)
     setIsAdding(false)
@@ -661,7 +647,6 @@ function RecordsPageInner() {
     setMemo(record.memo || "")
   }
 
-  // 記録データの更新処理
   const handleUpdateRecord = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!editRecordId) return
@@ -701,7 +686,6 @@ function RecordsPageInner() {
     }
   }
 
-  // 記録データの削除処理
   const handleDeleteRecord = async () => {
     if (!deleteRecordId) return
     setIsDeleting(true)
@@ -808,11 +792,9 @@ function RecordsPageInner() {
                       <h2 className="text-lg font-bold">{t("records.filter_title")}</h2>
                     </div>
 
-                    {/* カテゴリ絞り込み */}
                     <div className="space-y-2">
                       <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.category")}</p>
                       <div className="flex flex-wrap gap-2.5">
-                        {/* すべて */}
                         <button
                           type="button"
                           {...chipTapHandlers(() => setCategoryFilters([]))}
@@ -826,7 +808,6 @@ function RecordsPageInner() {
                           {t("records.filter_all")}
                           <span className="ml-1.5 tabular-nums opacity-60">{displayedRecords.length}</span>
                         </button>
-                        {/* 各カテゴリチップ */}
                         {Object.keys(CATEGORIES).map((key) => {
                           const active = categoryFilters.includes(key)
                           const count = displayedRecords.filter((r) => r.category === key).length
@@ -850,11 +831,9 @@ function RecordsPageInner() {
                       </div>
                     </div>
 
-                    {/* 車絞り込み */}
                     <div className="space-y-2">
                       <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("records.filter_car")}</p>
                       <div className="flex flex-wrap gap-2.5">
-                        {/* すべて */}
                         <button
                           type="button"
                           {...chipTapHandlers(() => setCarFilters([]))}
@@ -868,7 +847,6 @@ function RecordsPageInner() {
                           {t("records.filter_all")}
                           <span className="ml-1.5 tabular-nums opacity-60">{displayedRecords.length}</span>
                         </button>
-                        {/* 各車チップ */}
                         {filterCars.map((car) => {
                           const active = carFilters.includes(car.id)
                           const count = displayedRecords.filter((r) => r.car_id === car.id).length
@@ -980,7 +958,6 @@ function RecordsPageInner() {
             return (
               <Card key={record.id} className="border-none bg-white dark:bg-card overflow-hidden relative">
                 <CardContent className="p-0">
-                  {/* 編集・削除ボタン */}
                   <div className="absolute top-3 right-3 flex items-center gap-2">
                     <IconButton
                       onClick={() => handleStartEdit(record)}
@@ -1002,10 +979,8 @@ function RecordsPageInner() {
                       <Icon size={24} />
                     </div>
                     <div className="flex-1 min-w-0 pr-20">
-                      {/* 金額 */}
                       <h3 className="font-bold text-slate-800 dark:text-foreground text-lg mb-1 tracking-tight tabular-nums">¥{record.amount.toLocaleString()}</h3>
                       
-                      {/* ジャンルタグ */}
                       <div className="flex items-center gap-2 text-[11px] font-medium text-slate-600 dark:text-muted-foreground mb-2 flex-wrap">
                         <span className="bg-slate-100 dark:bg-surface-2 px-2.5 py-1 rounded-full">{categoryLabel}</span>
                         {record.sub_category && (
@@ -1015,7 +990,6 @@ function RecordsPageInner() {
                         )}
                       </div>
 
-                      {/* 車名・走行距離 */}
                       <div className="flex items-center gap-3 text-[11px] text-slate-600 dark:text-muted-foreground mb-1">
                         <span className="font-bold">{carsById.get(record.car_id)?.name}</span>
                         {record.odo_at_record != null && (
@@ -1023,7 +997,6 @@ function RecordsPageInner() {
                         )}
                       </div>
 
-                      {/* 日付 */}
                       <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-2">{record.date.replace(/-/g, '/')}</p>
 
                       {record.category === "fuel" && record.fuel_amount && (() => {

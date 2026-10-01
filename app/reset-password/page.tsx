@@ -28,7 +28,6 @@ function ResetPasswordContent() {
 
   const tokenHash = searchParams.get("token_hash")
 
-  // パスワード更新処理
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!tokenHash) return

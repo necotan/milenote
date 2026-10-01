@@ -59,7 +59,8 @@ const buildEmptyCategoryBuckets = (): Record<CategoryKey, number> => ({
 
 // 円グラフのスライスに保証する最小角度
 // 区切り線（strokeWidth 2）はパスの内側にも1pxずつ食い込むため、これより細いスライスは、塗りが完全に覆われて色が見えなくなる
-// ラベルのパーセントは値と合計から算出するので最小角度を設けても表示される数値は正確なままになるが、最小角度を設けると、スライスの面積が本来より大きくなるため、パーセント表示は実際より小さく見える
+// ラベルのパーセントは値と合計から算出するため、最小角度を設けても表示される数値は正確なまま
+// ただしスライスの面積は本来より大きくなるため、見た目の面積に対してパーセント表示が小さく見える
 const PIE_MIN_ANGLE_DEG = 3
 
 // 円グラフの外径（ラベル位置の事前計算にも使うため定数化）
@@ -91,7 +92,6 @@ const CO2_COEFFICIENT: Record<string, number> = {
 }
 const CO2_COEFFICIENT_DEFAULT = 2.32
 
-// ラベルテキストの幅を概算
 const estimateLabelWidth = (text: string): number => {
   let width = 0
   for (const ch of text) width += ch.charCodeAt(0) > 0xff ? 10 : 5.8
@@ -107,8 +107,9 @@ const PIE_LABEL_OFFSET_RADIUS = 20
 
 type PieLabelSide = "start" | "end" | "middle"
 
-// Recharts が内部で使う角度計算（Pie.js の computePieSectors と同じ式）を再現してラベルの本来のY位置を先に求め、近い位置にあるものを「クラスタ」として、まとめて、そのクラスタの中心を軸に均等な間隔へ配置し直す
-// cx/cy はコンテナサイズ次第で変わるが、ラベル同士のY差分は半径と角度だけで、決まるため、実際のコンテナサイズを知らなくても差分（delta）だけ事前計算できる
+// Recharts が内部で使う角度計算（Pie.js の computePieSectors と同じ式）を再現してラベルの本来のY位置を先に求める
+// 近い位置にあるものを「クラスタ」としてまとめ、そのクラスタの中心を軸に均等な間隔へ配置し直す
+// cx/cy はコンテナサイズ次第で変わるが、ラベル同士のY差分は半径と角度だけで決まるため、実際のコンテナサイズを知らなくても差分（delta）だけ事前計算できる
 // labelとlabelLineは同じ index の delta を共有することで線のズレを防ぐ
 const computePieLabelYDeltas = (
   categoryData: { value: number }[],
@@ -281,7 +282,6 @@ function PeriodDateRow({
   )
 }
 
-// 期間フィルターUIコンポーネント
 // 上段のタブでプリセットを選択し、下段のボタンに現在の期間を常に表示
 // ボタンをタップすると開始日/終了日の編集行が開閉する
 function PeriodFilter({
@@ -418,7 +418,6 @@ type ChartChrome = {
 
 type CategoryDatum = { name: string; value: number; fill: string }
 
-// カテゴリ別内訳カード
 // Recharts の Pie は再レンダーのたびに内部レイヤーを作り直し pieRotateIn が再生されるため、無関係な state 更新の影響を受けないよう memo 化する
 const CategoryBreakdownCard = memo(function CategoryBreakdownCard({
   categoryData, pieLabelDeltas, totalAmount, pieAnimKey, chartChrome,
@@ -506,7 +505,6 @@ const CategoryBreakdownCard = memo(function CategoryBreakdownCard({
   )
 })
 
-// 統計タイルの共通コンポーネント
 function BentoTile({
   label, value, unit, note, className = "",
 }: {
@@ -654,7 +652,6 @@ export default function StatsPage() {
   const catFilterStart = catPreset === "all" ? "" : catDisplayStart
   const catFilterEnd = catPreset === "all" ? "" : catDisplayEnd
 
-  // プリセット切替
   // カテゴリ別内訳カードの props を安定させるため useCallback で参照を固定する
   const selectCatPreset = useCallback((p: PeriodPreset) => {
     if (p === "custom" && catPreset !== "custom") {
@@ -680,7 +677,6 @@ export default function StatsPage() {
     setCatEnd(v)
   }, [catPreset, catDisplayStart])
 
-  // データフィルタリング処理
   // 月別/年別のグラフ種別トグルなど無関係な再レンダーで参照が変わらないよう useMemo で固定する
   const catFilteredRecords = useMemo(() => records.filter(r => {
     if (catFilterStart && r.date < catFilterStart) return false
@@ -688,7 +684,6 @@ export default function StatsPage() {
     return true
   }), [records, catFilterStart, catFilterEnd])
 
-  // グラフ切り替え処理
   const selectMonthlyChart = (type: "line" | "bar") => {
     setMonthlyChartType(type)
     localStorage.setItem("milenote_monthly_chart", type)
@@ -699,7 +694,6 @@ export default function StatsPage() {
     localStorage.setItem("milenote_yearly_chart", type)
   }
 
-  // データ集計処理
   const activeCategoryMap = isColorful ? CATEGORY_MAP_COLORFUL : CATEGORY_MAP_BLUE
   const categoryData = useMemo(() => catFilteredRecords.reduce((acc: CategoryDatum[], curr) => {
     const config = activeCategoryMap[curr.category] || activeCategoryMap.other
@@ -849,7 +843,6 @@ export default function StatsPage() {
   const monthlyAnimKey = `${monthlyChartType}|${monthlyData.length}`
   const yearlyAnimKey = `${yearlyChartType}|${yearlyCategoriesPresent.length}`
 
-  // 走行距離スケール計算処理
   const earthCircumference = 40075
   const distanceToMoon = 384400
   const earthRounds = (totalOdo / earthCircumference).toFixed(2)
@@ -910,7 +903,7 @@ export default function StatsPage() {
   // 年別推移の年フォーマッター（軸は数値のみ、Tooltipはロケールに応じて年表記）
   const yearFormatter = useCallback((y: number) => String(y), [])
 
-  // Recharts のコールバック型（PieLabelRenderProps / Formatter / LabelFormatter 等）は、省略可能フィールドを含む複雑な union のため、本ファイル内では any を許容する
+  // Recharts のコールバック型（PieLabelRenderProps, Formatter, LabelFormatter 等）は省略可能フィールドを含む複雑な union のため本ファイル内では any を許容する
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const numberTickFormatter = useCallback((v: any) => Number(v).toLocaleString(), [])
   const expenditureTooltipFormatter = useCallback((value: any): [string, string] => [
@@ -934,7 +927,6 @@ export default function StatsPage() {
   const renderCategoryLegendLabel = useCallback((value: string) => (
     <span className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t(`categories.${value}`)}</span>
   ), [t])
-  // 凡例ラベルの整形
   const renderRawLegendLabel = useCallback((value: string) => (
     <span className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{value}</span>
   ), [])
@@ -1353,7 +1345,6 @@ export default function StatsPage() {
           {/* グラフセクション */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            {/* カテゴリ別内訳 */}
             <CategoryBreakdownCard
               categoryData={categoryData}
               pieLabelDeltas={pieLabelDeltas}
@@ -1450,7 +1441,6 @@ export default function StatsPage() {
                 <CardTitle className="text-sm font-bold pl-4 text-slate-600 dark:text-muted-foreground">
                   {t("stats.yearly_trend")}
                 </CardTitle>
-                {/* グラフ切り替えボタン */}
                 <SegmentedToggle
                   value={yearlyChartType}
                   onChange={selectYearlyChart}
@@ -1469,7 +1459,6 @@ export default function StatsPage() {
                 </div>
               ) : (
               <>
-              {/* グラフ */}
               <div
                 key={yearlyAnimKey}
                 ref={yearlyChartType === "line" ? setYearlyLineContainer : null}
@@ -1515,7 +1504,6 @@ export default function StatsPage() {
                   )}
                 </ResponsiveContainer>
               </div>
-              {/* テーブル */}
               <div className="mt-4 px-2 lg:mt-0 lg:w-[40%] lg:shrink-0 lg:pl-0 lg:pr-6">
                 <table className="w-full">
                   <thead>

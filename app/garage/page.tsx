@@ -131,8 +131,7 @@ export default function GaragePage() {
   const [includePriceInCost, setIncludePriceInCost] = useState(false)
   const [carStatus, setCarStatus] = useState<CarStatus>("active")
 
-  // ウィッシュリストのステータス・ジャンル絞り込み
-  // 欲しいものリストの絞り込み用ステート（localStorageに保存）
+  // ウィッシュリストのステータス・ジャンル絞り込み用ステート
   const [wishFilters, setWishFilters] = useState<WishStatus[]>([])
   const [wishGenreFilters, setWishGenreFilters] = useState<WishlistGenreSlug[]>([])
   const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -169,7 +168,6 @@ export default function GaragePage() {
     if (cars.length === 1) setWishCarId(cars[0].id)
   }, [cars])
 
-  // 車両フォームの入力値をリセット
   const resetCarForm = () => {
     setIsAddingCar(false)
     setEditCarId(null)
@@ -182,7 +180,6 @@ export default function GaragePage() {
     setCarStatus("active")
   }
 
-  // 新規車両の登録処理
   const handleAddCar = async (e: React.FormEvent) => {
     e.preventDefault()
     setSavingCar(true)
@@ -214,7 +211,6 @@ export default function GaragePage() {
     }
   }
 
-  // 車両情報の編集モードを開始
   const handleStartEditCar = (car: any) => {
     setEditCarId(car.id)
     setIsAddingCar(false)
@@ -236,7 +232,6 @@ export default function GaragePage() {
     setCarStatus((CAR_STATUS_KEYS as readonly string[]).includes(car.status) ? (car.status as CarStatus) : "active")
   }
 
-  // 車両情報の更新処理
   const handleUpdateCar = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!editCarId) return
@@ -282,7 +277,7 @@ export default function GaragePage() {
     }
   }
 
-  // 削除確認モーダルを開く（定期費用はガレージで取得していないため、削除される件数をここで取得）
+  // 定期費用はガレージで取得していないため、削除される件数をここで取得
   const openDeleteCarDialog = async (car: any) => {
     setDeleteCarTarget(car)
     setDeleteCarConfirmName("")
@@ -294,7 +289,6 @@ export default function GaragePage() {
     setDeleteCarRecurringCount(count ?? 0)
   }
 
-  // 車両の物理削除処理
   // records、wishlists、recurring_costs は FK の ON DELETE CASCADE で車本体と一緒に削除される
   // Storage の車画像は FK では消えないため、削除前に明示的に削除する
   const handleDeleteCar = async () => {
@@ -343,7 +337,6 @@ export default function GaragePage() {
     }
   }
 
-  // ウィッシュリストアイテムの追加処理
   const handleAddWish = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!wishCarId) return alert(t("records.select_car_alert"))
@@ -372,7 +365,6 @@ export default function GaragePage() {
     }
   }
 
-  // ウィッシュリスト情報の編集モードを開始
   const handleStartEditWish = (wish: any) => {
     setEditWishId(wish.id)
     setIsAddingWish(false)
@@ -386,7 +378,6 @@ export default function GaragePage() {
     setWishMemo(wish.memo || "")
   }
 
-  // ウィッシュリスト情報の更新処理
   const handleUpdateWish = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!editWishId) return
@@ -414,7 +405,6 @@ export default function GaragePage() {
     }
   }
 
-  // ウィッシュリストアイテムの削除処理
   const handleDeleteWish = async () => {
     if (!deleteWishId) return
     setDeletingWish(true)
@@ -430,7 +420,6 @@ export default function GaragePage() {
     setDeleteWishId(null)
   }
 
-  // ウィッシュリストフォームの入力値をリセット
   const resetWishForm = () => {
     setIsAddingWish(false)
     setEditWishId(null)
@@ -440,7 +429,6 @@ export default function GaragePage() {
     if (cars.length === 1) setWishCarId(cars[0].id)
   }
 
-  // ステータス更新処理
   const updateWishStatus = async (id: string, newStatus: string) => {
     // 切り替え時にタイムラグが出ないよう、通信を待たず先にキャッシュを更新
     await mutateWishlists((prev) => prev?.map(w => (w.id === id ? { ...w, status: newStatus } : w)), { revalidate: false })
@@ -457,7 +445,6 @@ export default function GaragePage() {
     toast.success(t("garage.status_updated"))
   }
 
-  // 画像アップロード処理
   const handleImageUpload = async (carId: string, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
@@ -545,7 +532,7 @@ export default function GaragePage() {
     }
   }
 
-  // 画像の位置、ズーム調整モーダルを開く（既存ユーザーは NULL の可能性があるためデフォルトにフォールバック）
+  // 既存ユーザーは NULL の可能性があるためデフォルトにフォールバック
   const handleStartAdjustImage = (car: any) => {
     setAdjustTarget(car)
     setAdjustPosX(car.image_position_x ?? DEFAULT_IMAGE_POSITION_X)
@@ -593,12 +580,10 @@ export default function GaragePage() {
     }
   }
 
-  // ステータス絞り込みの選択切り替え
   const toggleWishFilter = (key: WishStatus) => {
     setWishFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
   }
 
-  // ジャンル絞り込みの選択切り替え
   const toggleWishGenreFilter = (key: WishlistGenreSlug) => {
     setWishGenreFilters((prev) => prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key])
   }
@@ -626,7 +611,6 @@ export default function GaragePage() {
   // 絞り込み中の選択数（バッジ表示用）
   const activeFilterCount = wishFilters.length + wishGenreFilters.length
 
-  // ステータスの色を定義
   const getStatusStyle = (status: string) => {
     switch (status) {
       case 'considering': return "bg-slate-100 dark:bg-muted text-slate-600 dark:text-muted-foreground"
@@ -734,7 +718,6 @@ export default function GaragePage() {
                 </h2>
 
                 <form onSubmit={editCarId ? handleUpdateCar : handleAddCar} className="space-y-6">
-                  {/* 基本情報 */}
                   <FormSection icon={IdCard} title={t("garage.basic_info")}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
                       <div className="space-y-1">
@@ -760,7 +743,6 @@ export default function GaragePage() {
                     </div>
                   </FormSection>
 
-                  {/* 走行距離 */}
                   <FormSection icon={Gauge} title={t("garage.odo_info")} divided>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
                       <div className="space-y-1"><Label className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("garage.current_odo")} <span className="text-red-500">{t("common.required")}</span></Label><NumberInput placeholder="52,400" value={currentOdo} onValueChange={setCurrentOdo} required className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 placeholder:text-slate-300 dark:placeholder:text-muted-foreground" /></div>
@@ -768,7 +750,6 @@ export default function GaragePage() {
                     </div>
                   </FormSection>
 
-                  {/* 登録・納車情報 */}
                   <FormSection icon={CalendarDays} title={t("garage.registration_info")} divided>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-x-8">
                       <div className="space-y-1"><Label className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("garage.first_registration")}</Label><MonthPicker value={firstRegistrationDate} onChange={setFirstRegistrationDate} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-9 min-h-0" /></div>
@@ -776,7 +757,6 @@ export default function GaragePage() {
                     </div>
                   </FormSection>
 
-                  {/* 価格情報 */}
                   <FormSection icon={Wallet} title={t("garage.price_info")} divided>
                     <div className="space-y-1">
                       <Label className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("garage.purchase_price")}</Label>
@@ -908,7 +888,6 @@ export default function GaragePage() {
                           <span className="text-slate-500 dark:text-muted-foreground font-medium text-[11px]">{t("garage.status")}</span>
                           <span className="font-bold text-slate-700 dark:text-foreground text-[11px]">{t(`garage.car_status_${car.status}`)}</span>
                         </div>
-                        {/* 編集・削除アクション */}
                         <div className="flex items-center gap-2">
                           <IconButton
                             onClick={() => handleStartEditCar(car)}
@@ -994,7 +973,6 @@ export default function GaragePage() {
               </div>
               <DialogDescription className="mt-2 text-xs text-slate-600 dark:text-muted-foreground font-medium">{t("garage.adjust_image_hint")}</DialogDescription>
 
-              {/* プレビュー */}
               <div
                 ref={previewRef}
                 className="mt-4 relative aspect-[11/6] w-full bg-neutral-800 rounded-lg overflow-hidden cursor-move select-none touch-none"
@@ -1012,7 +990,6 @@ export default function GaragePage() {
                 />
               </div>
 
-              {/* ズームスライダー */}
               <div className="mt-4 space-y-1">
                 <div className="flex justify-between items-center">
                   <Label className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("garage.zoom")}</Label>
@@ -1077,11 +1054,9 @@ export default function GaragePage() {
                     <h2 className="text-lg font-bold">{t("garage.wish_filter_title")}</h2>
                   </div>
 
-                  {/* ステータス絞り込み */}
                   <div className="space-y-2">
                     <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("garage.status")}</p>
                     <div className="flex flex-wrap gap-2.5">
-                      {/* すべて */}
                       <button
                         type="button"
                         {...chipTapHandlers(() => setWishFilters([]))}
@@ -1095,7 +1070,6 @@ export default function GaragePage() {
                         {t("garage.wish_filter_all")}
                         <span className="ml-1.5 tabular-nums opacity-60">{wishlists.length}</span>
                       </button>
-                      {/* 各ステータスチップ */}
                       {WISH_STATUS_KEYS.map((key) => {
                         const active = wishFilters.includes(key)
                         const count = wishlists.filter((w) => w.status === key).length
@@ -1119,11 +1093,9 @@ export default function GaragePage() {
                     </div>
                   </div>
 
-                  {/* ジャンル絞り込み */}
                   <div className="space-y-2">
                     <p className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("garage.genre")}</p>
                     <div className="flex flex-wrap gap-2.5">
-                      {/* すべて */}
                       <button
                         type="button"
                         {...chipTapHandlers(() => setWishGenreFilters([]))}
@@ -1137,7 +1109,6 @@ export default function GaragePage() {
                         {t("garage.wish_filter_all")}
                         <span className="ml-1.5 tabular-nums opacity-60">{wishlists.length}</span>
                       </button>
-                      {/* 各ジャンルチップ */}
                       {WISHLIST_GENRES.map((key) => {
                         const active = wishGenreFilters.includes(key)
                         const count = wishlists.filter((w) => w.genre === key).length
@@ -1311,7 +1282,6 @@ export default function GaragePage() {
                           <span className="text-xs text-slate-300 dark:text-muted-foreground">{t("garage.no_link")}</span>
                         )}
 
-                        {/* ステータス変更ドロップダウン */}
                         <div className="w-36">
                           <Select defaultValue={wish.status} onValueChange={(val) => updateWishStatus(wish.id, val)}>
                             <SelectTrigger className={`w-full h-7 text-xs font-bold rounded-full border-transparent dark:border-transparent ${statusStyle}`}>

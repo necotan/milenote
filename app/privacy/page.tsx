@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation"
 import { useTranslation } from "@/lib/i18n"
 import Footer from "@/components/ui/Footer"
 
-// プライバシーポリシーページ
 export default function PrivacyPage() {
   const router = useRouter()
   const { t } = useTranslation()

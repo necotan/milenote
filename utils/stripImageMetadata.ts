@@ -5,10 +5,8 @@
 const OUTPUT_MIME = "image/jpeg"
 const OUTPUT_EXT = "jpg"
 const OUTPUT_QUALITY = 0.92
-// 品質の下限
 const MIN_QUALITY = 0.72
 const QUALITY_STEP = 0.05
-// 解像度縮小の再試行上限
 const MAX_DOWNSCALE_ATTEMPTS = 3
 
 export type StrippedImage = {

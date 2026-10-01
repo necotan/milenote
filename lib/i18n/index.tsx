@@ -63,7 +63,6 @@ export function useTranslation() {
   return context
 }
 
-/** ロケールに応じた日付フォーマット */
 export function formatDateLocale(dateStr: string | null, locale: Locale): string {
   if (!dateStr) return "-"
   const d = new Date(dateStr)
@@ -81,7 +80,6 @@ export function formatYearMonthLocale(year: number, month: number, locale: Local
   return `${year}年${month}月`
 }
 
-/** ロケールに応じた経過月数のフォーマット */
 export function formatMonthsPassedLocale(dateStr: string | null, locale: Locale): string {
   if (!dateStr) return "-"
   const d = new Date(dateStr)

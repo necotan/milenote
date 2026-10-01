@@ -87,7 +87,6 @@ export default function Home() {
     }
   }, [])
 
-  // ODO更新モーダルを開く
   const openOdoModal = () => {
     const first = cars[0]
     if (!first) return
@@ -140,7 +139,6 @@ export default function Home() {
   })
   const lastMonthCost = lastMonthRecords.reduce((sum, r) => sum + r.amount, 0)
   
-  // 差額の計算
   const diffCost = thisMonthCost - lastMonthCost
 
   if (loading) return (
@@ -318,7 +316,6 @@ export default function Home() {
                   )}
                 </div>
 
-                {/* 区切り線 */}
                 <div className="mx-5 border-t border-slate-200 dark:border-border" />
 
                 {/* 直近の記録 */}

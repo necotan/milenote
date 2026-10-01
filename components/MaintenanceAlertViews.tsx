@@ -7,7 +7,6 @@ import { useTranslation } from "@/lib/i18n"
 import { MAINT_TYPE_CATEGORY } from "@/lib/subcategories"
 import type { MaintAlertItem, RecordedMaintAlert } from "@/lib/maintenanceAlerts"
 
-// 残り値の単位ラベル
 function unitLabel(alert: RecordedMaintAlert, t: (key: string) => string) {
   if (alert.unit === "days") return t("common.days_unit")
   return alert.unit === "months" ? t("common.months_unit") : t("common.km_unit")
