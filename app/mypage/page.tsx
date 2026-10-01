@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import type { ReactNode, PointerEvent as ReactPointerEvent } from "react"
+import { useHydrated } from "@/lib/hooks/useHydrated"
 import { mutate as globalMutate } from "swr"
 import { createClient } from "@/utils/supabase"
 import { useRouter } from "next/navigation"
@@ -237,12 +238,18 @@ function MaintEditDialog({
   const [draftMonths, setDraftMonths] = useState(0)
   const [saving, setSaving] = useState(false)
 
-  useEffect(() => {
+  // 開いた時点と設定値が変わった時点で下書きを設定値に戻す
+  // effect で戻すと古い下書きのまま1回描画されるため、前回の props と比べてレンダー中に更新する
+  const [prevOpen, setPrevOpen] = useState(false)
+  const [prevSetting, setPrevSetting] = useState<MaintSetting | null>(null)
+  if (open !== prevOpen || setting !== prevSetting) {
+    setPrevOpen(open)
+    setPrevSetting(setting)
     if (open && setting) {
       setDraftKm(setting.km)
       setDraftMonths(setting.months)
     }
-  }, [open, setting])
+  }
 
   if (!itemKey || !setting) return null
   const isMonthsOnly = !!setting.months_only
@@ -349,9 +356,14 @@ function ProfileFieldDialog({
   const [draft, setDraft] = useState("")
   const [saving, setSaving] = useState(false)
 
-  useEffect(() => {
+  // 開いた時点と初期値が変わった時点で下書きを初期値に戻す（MaintEditDialog と同じ理由でレンダー中に更新する）
+  const [prevOpen, setPrevOpen] = useState(false)
+  const [prevInitialValue, setPrevInitialValue] = useState("")
+  if (open !== prevOpen || initialValue !== prevInitialValue) {
+    setPrevOpen(open)
+    setPrevInitialValue(initialValue)
     if (open) setDraft(initialValue)
-  }, [open, initialValue])
+  }
 
   if (!field) return null
   const label = field === "display_name" ? t("mypage.display_name") : t("mypage.user_id")
@@ -400,7 +412,7 @@ export default function MyPage() {
   const [homeOrder, setHomeOrder] = useState<string[]>(["cars", "summary", "alerts"])
   const [isColorful, setIsColorful] = useState(false)
   const { resolvedTheme, setTheme } = useTheme()
-  const [themeMounted, setThemeMounted] = useState(false)
+  const themeMounted = useHydrated()
   const [exporting, setExporting] = useState(false)
   const router = useRouter()
   const supabase = createClient()
@@ -423,11 +435,6 @@ export default function MyPage() {
   }, [maintSettings])
 
   usePageLoadingGate(!loading)
-
-  // next-themesのtheme値はSSR/初回マウント時にundefinedになるためハイドレーション後に表示を確定させる
-  useEffect(() => {
-    setThemeMounted(true)
-  }, [])
 
   useEffect(() => {
     if (!profile || profileSeededRef.current) return

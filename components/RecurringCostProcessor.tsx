@@ -39,7 +39,7 @@ export default function RecurringCostProcessor() {
       let processedCount = 0
 
       for (const cost of costs) {
-        let currentNextDate = new Date(cost.next_billing_date)
+        const currentNextDate = new Date(cost.next_billing_date)
         let cyclesProcessed = 0
 
         // 複数サイクル分の未処理があればループでまとめて追いつかせる（無限ループ防止に上限120回）

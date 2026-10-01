@@ -5,7 +5,8 @@ import ja from "./locales/ja.json"
 import en from "./locales/en.json"
 
 export type Locale = "ja" | "en"
-const locales: Record<Locale, any> = { ja, en }
+type Messages = { [key: string]: string | Messages }
+const locales: Record<Locale, Messages> = { ja, en }
 
 type I18nContextType = {
   locale: Locale
@@ -21,6 +22,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const saved = localStorage.getItem("milenote_locale") as Locale | null
     if (saved && locales[saved]) {
+      // SSR の初期HTMLと一致させるため、保存済みの言語はマウント後に反映する
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocaleState(saved)
     }
   }, [])
@@ -36,9 +39,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const t = useCallback((key: string, params?: Record<string, string | number>): string => {
     const keys = key.split(".")
-    let value: any = locales[locale]
+    let value: string | Messages | undefined = locales[locale]
     for (const k of keys) {
-      value = value?.[k]
+      value = typeof value === "object" ? value[k] : undefined
     }
     if (typeof value !== "string") return key
     if (params) {

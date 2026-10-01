@@ -91,7 +91,9 @@ export default function MaintenancePage() {
   // 記録済み項目の並び順（残り距離が少ない順 / 期限が近い順）
   const [sortMode, setSortMode] = useState<SortMode>("distance")
   // 表示設定、絞り込みをlocalStorageから復元
+  // SSR の初期HTMLと一致させるため、保存済みの設定はマウント後に反映する
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowDisabled(localStorage.getItem(SHOW_DISABLED_STORAGE_KEY) === "true")
     setHideUnrecorded(localStorage.getItem(HIDE_UNRECORDED_STORAGE_KEY) === "true")
     setIsUngrouped(localStorage.getItem(UNGROUP_STORAGE_KEY) === "true")
