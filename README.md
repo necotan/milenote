@@ -1,6 +1,22 @@
-# Milenote
+<h1 align="center">Milenote</h1>
 
-自身の車の維持費や出費を管理するために開発した、個人利用メインの出費管理アプリケーションです。
+<p align="center">
+  <img src="public/icon-512x512.png" width="120" alt="Milenote">
+</p>
+
+<p align="center">
+  自身の車の維持費や出費を管理するために開発した、個人利用メインの出費管理アプリケーションです。
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-App%20Router-000000?logo=nextdotjs&logoColor=white">
+  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white">
+  <img src="https://img.shields.io/badge/Supabase-Auth%20%26%20DB-3FCF8E?logo=supabase&logoColor=white">
+  <img src="https://img.shields.io/badge/Tailwind%20CSS-v4-06B6D4?logo=tailwindcss&logoColor=white">
+  <br>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green"></a>
+  <a href="https://milenote.vercel.app"><img src="https://img.shields.io/badge/Demo-Vercel-000000?logo=vercel&logoColor=white"></a>
+</p>
 
 ## 機能
 - **車両維持費の管理**: ガソリン代、保険料、車検、メンテナンス費用などを一元管理
