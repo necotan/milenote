@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  自身の車の維持費や出費を管理するために開発した、個人利用メインの出費管理アプリケーションです。
+  An expense tracking app built mainly for personal use, to manage the maintenance costs and expenses of my own car.
 </p>
 
 <p align="center">
