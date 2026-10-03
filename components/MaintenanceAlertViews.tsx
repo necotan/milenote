@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { CalendarDays } from "lucide-react"
+import { CalendarDays, TrendingUp } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { useTranslation } from "@/lib/i18n"
 import { MAINT_TYPE_CATEGORY } from "@/lib/subcategories"
@@ -61,7 +61,10 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
           <p className={`text-[11px] font-bold text-slate-500 dark:text-muted-foreground truncate ${reserveButtonSpace ? 'pr-16' : ''}`}>{alert.carName}</p>
           <div className="mt-0.5 leading-tight text-slate-800 dark:text-foreground">
             <p className="text-[11px] font-bold">{t(`subcategories.${alert.maintName}`)}{alert.isDisabled ? ` (${t("mypage.maint_disabled_desc")})` : (alert.isOver ? t("home.alert_overdue") : t("home.alert_remaining"))}</p>
-            <p className="text-lg font-bold">{alert.displayValue}<span className="text-[11px] ml-0.5">{unitLabel(alert, t)}</span></p>
+            <p className="text-lg font-bold flex items-baseline">
+              {alert.displayValue}<span className="text-[11px] ml-0.5">{unitLabel(alert, t)}</span>
+              {alert.isOver && <TrendingUp size={16} className={`ml-1 shrink-0 self-center ${iconColor}`} aria-hidden="true" />}
+            </p>
           </div>
           <div className="flex flex-col gap-1.5 mt-1">
             <div className="flex items-center gap-1 text-[11px] text-slate-600 dark:text-muted-foreground font-medium">
