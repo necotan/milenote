@@ -430,7 +430,7 @@ export default function Home() {
                       <div className="grid grid-cols-2 mx-4 [&>*:first-child]:pl-0 [&>*:last-child]:pr-0 divide-x [&>*:nth-child(even)]:border-e-0 divide-slate-200 dark:divide-border border-b border-slate-200 dark:border-border">
                         <div className="p-4">
                           <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.distance_since_delivery")}</p>
-                          <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">+{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[11px]">{t("common.km_unit")}</span></p>
+                          <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">{Math.max(0, car.current_odo - (car.purchase_odo || 0)).toLocaleString()} <span className="text-[11px]">{t("common.km_unit")}</span></p>
                         </div>
                         <div className="p-4">
                           <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.ownership_period")}</p>
