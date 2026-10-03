@@ -76,7 +76,6 @@
     "no_cars_registered": "No cars registered",
     "alert_remaining": " due in",
     "alert_overdue": " overdue by",
-    "exceeded": "over!",
     "months_since_last": "{{months}} months since last",
     "more_items": "+{{count}} more",
     "register": "Register",

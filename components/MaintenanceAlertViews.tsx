@@ -59,9 +59,9 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
         </div>
         <div className="min-w-0 flex-1">
           <p className={`text-[11px] font-bold text-slate-500 dark:text-muted-foreground truncate ${reserveButtonSpace ? 'pr-16' : ''}`}>{alert.carName}</p>
-          <div className={`mt-0.5 leading-tight ${alert.isUrgent ? 'text-red-600' : 'text-slate-800 dark:text-foreground'}`}>
+          <div className="mt-0.5 leading-tight text-slate-800 dark:text-foreground">
             <p className="text-[11px] font-bold">{t(`subcategories.${alert.maintName}`)}{alert.isDisabled ? ` (${t("mypage.maint_disabled_desc")})` : (alert.isOver ? t("home.alert_overdue") : t("home.alert_remaining"))}</p>
-            <p className="text-lg font-bold">{alert.displayValue}<span className="text-[11px] ml-0.5">{alert.isOver ? unitLabel(alert, t) + t("home.exceeded") : unitLabel(alert, t)}</span></p>
+            <p className="text-lg font-bold">{alert.displayValue}<span className="text-[11px] ml-0.5">{unitLabel(alert, t)}</span></p>
           </div>
           <div className="flex flex-col gap-1.5 mt-1">
             <div className="flex items-center gap-1 text-[11px] text-slate-600 dark:text-muted-foreground font-medium">
