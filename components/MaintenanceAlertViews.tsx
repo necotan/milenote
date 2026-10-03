@@ -48,10 +48,13 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
     )
   }
 
+  const iconColor = alert.isUrgent ? 'text-red-500' : alert.progressPercent > 80 ? 'text-orange-400' : 'text-blue-400'
+  const barColor = alert.isUrgent ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : alert.progressPercent > 80 ? 'bg-orange-400' : 'bg-blue-400'
+
   return (
     <Card className={`border-none bg-white dark:bg-card ${alert.isDisabled ? "opacity-50" : ""} ${className}`}>
       <CardContent className="p-3.5 flex items-start gap-3">
-        <div className={`p-2.5 rounded-2xl shrink-0 ${alert.isUrgent ? 'bg-red-50 dark:bg-red-950/40' : 'bg-slate-50 dark:bg-surface-2'} ${alert.color}`}>
+        <div className={`p-2.5 rounded-2xl shrink-0 ${alert.isUrgent ? 'bg-red-50 dark:bg-red-950/40' : 'bg-slate-50 dark:bg-surface-2'} ${iconColor}`}>
           <alert.icon size={24} />
         </div>
         <div className="min-w-0 flex-1">
@@ -66,7 +69,7 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
             </div>
             <div className="w-[80%] bg-slate-100 dark:bg-surface-3 h-1.5 rounded-full overflow-hidden">
               <div
-                className={`h-full rounded-full transition-all duration-1000 ease-out ${alert.isUrgent ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' : alert.progressPercent > 80 ? 'bg-orange-400' : 'bg-blue-400'}`}
+                className={`h-full rounded-full transition-all duration-1000 ease-out ${barColor}`}
                 style={{ width: `${alert.progressPercent}%` }}
               ></div>
             </div>
