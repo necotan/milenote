@@ -29,6 +29,7 @@ import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { IconButton } from "@/components/ui/IconButton"
 import { ModalCard } from "@/components/ui/ModalCard"
+import { ExpandableNote } from "@/components/ui/ExpandableNote"
 import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES, type SubCategorySlug } from "@/lib/subcategories"
 import { getFuelUnit } from "@/lib/fuelTypes"
@@ -1032,9 +1033,9 @@ function RecordsPageInner() {
                         </p>
                       )}
                       {record.memo && (
-                        <p className="text-sm text-slate-600 dark:text-muted-foreground bg-slate-50 dark:bg-muted p-2 rounded-md whitespace-pre-wrap inline-block">
-                          {record.memo}
-                        </p>
+                        <div className="-mr-3">
+                          <ExpandableNote note={record.memo} />
+                        </div>
                       )}
                     </div>
                   </div>
