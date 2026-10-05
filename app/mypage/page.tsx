@@ -100,6 +100,10 @@ function ChipPresetRow({
 }) {
   const [customOpen, setCustomOpen] = useState(false)
   const isPreset = presets.includes(value)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const display = value ? value.toLocaleString() : ""
+  const digitCount = display.replace(/,/g, "").length
+  const inputWidthCh = Math.max(digitCount, 1) + (display.length - digitCount) * 0.4 + 0.2
 
   return (
     <div className="flex flex-wrap items-center gap-2.5">
@@ -118,15 +122,22 @@ function ChipPresetRow({
         </button>
       ))}
       {customOpen || !isPreset ? (
-        <div className="relative">
-          <NumberInput
-            autoFocus={customOpen}
-            value={value ? String(value) : ""}
-            onValueChange={(raw) => onChange(parseInt(raw) || 0)}
-            onFocus={() => setCustomOpen(true)}
-            className="h-8 w-28 md:w-24 text-base md:text-xs font-bold text-center pr-8 rounded-full border-2 border-neutral-300 dark:border-neutral-600 bg-white dark:bg-card text-slate-700 dark:text-foreground outline-none focus-visible:ring-1 focus-visible:ring-slate-300"
-          />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-medium text-slate-500 dark:text-muted-foreground pointer-events-none">{suffix}</span>
+        <div
+          onClick={() => inputRef.current?.focus()}
+          className="flex h-8 min-w-24 px-4 items-center justify-center rounded-full border border-primary bg-primary text-primary-foreground cursor-text focus-within:ring-1 focus-within:ring-slate-300"
+        >
+          {/* transformはレイアウト幅を縮めないので、外枠の幅を桁数から0.75倍で算出し、数値と単位を隣接させる */}
+          <div className="h-full overflow-hidden text-base font-bold" style={{ width: `calc(${inputWidthCh}ch * 0.75)` }}>
+            <NumberInput
+              ref={inputRef}
+              autoFocus={customOpen}
+              value={value ? String(value) : ""}
+              onValueChange={(raw) => onChange(parseInt(raw) || 0)}
+              onFocus={() => setCustomOpen(true)}
+              className="h-[calc((2rem-2px)*4/3)] w-[calc(100%*4/3)] origin-top-left scale-75 rounded-none border-0 bg-transparent dark:bg-transparent px-0 text-base md:text-base font-bold text-left text-primary-foreground outline-none focus-visible:ring-0"
+            />
+          </div>
+          <span className="text-xs font-bold pointer-events-none">{suffix}</span>
         </div>
       ) : (
         <button
