@@ -160,6 +160,12 @@
   body[data-scroll-locked] {
     padding-top: env(safe-area-inset-top, 0px) !important;
   }
+  /* スクロールは AuthScreen の枠内だけで行う */
+  html:has([data-auth-screen]),
+  html:has([data-auth-screen]) body {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
   html {
     @apply font-sans;
   }
