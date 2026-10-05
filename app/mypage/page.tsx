@@ -671,7 +671,7 @@ export default function MyPage() {
   }
 
   if (loading) return (
-    <main className="p-4 space-y-6 max-w-5xl mx-auto">
+    <main className="p-4 space-y-6">
       <header className="pt-4 pb-2 flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>
@@ -793,7 +793,7 @@ export default function MyPage() {
   )
 
   return (
-    <main className="p-4 space-y-6 max-w-5xl mx-auto">
+    <main className="p-4 space-y-6">
       <header className="pt-4 pb-2 flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("mypage.title")}</h1>

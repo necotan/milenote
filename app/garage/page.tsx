@@ -610,7 +610,7 @@ export default function GaragePage() {
   }
 
   return (
-    <main className="p-4 space-y-6 max-w-5xl mx-auto">
+    <main className="p-4 space-y-6">
       <header className="pt-4 pb-2">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">{t("garage.title")}</h1>
         <p className="text-sm text-slate-500 dark:text-muted-foreground mt-1">{t("garage.subtitle")}</p>
