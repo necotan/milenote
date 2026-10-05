@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { FormSection } from "@/components/ui/FormSection"
 import { SwitchRow } from "@/components/ui/ListGroup"
-import { X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, ArrowRight, Hammer, ClipboardList, Droplets, SlidersHorizontal, BatteryCharging, Atom } from "lucide-react"
+import { X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, Hammer, ClipboardList, Droplets, SlidersHorizontal, BatteryCharging, Atom } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
@@ -1022,7 +1022,7 @@ function RecordsPageInner() {
                           <span>{t("records.route_display_label")}</span>
                           <span className="inline-flex items-center gap-1 font-bold text-slate-700 dark:text-foreground">
                             {record.entry_ic || t("records.not_entered")}
-                            <ArrowRight size={12} className="shrink-0" />
+                            <ChevronRight size={12} className="shrink-0" />
                             {record.exit_ic || t("records.not_entered")}
                           </span>
                         </div>
