@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant standalone (@media (display-mode: standalone));
 
 @theme {
   --color-slate-50: oklch(98.5% 0 0);

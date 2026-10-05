@@ -10,6 +10,7 @@ import { useTranslation } from "@/lib/i18n"
 import { Eye, EyeOff } from "lucide-react"
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogActionButton } from "@/components/ui/dialog"
 import Footer from "@/components/ui/Footer"
+import AuthScreen from "@/components/ui/AuthScreen"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -58,7 +59,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center p-8 bg-white dark:bg-background">
+    <AuthScreen>
       <Dialog open={errorPopup !== null} onOpenChange={(open) => { if (!open) setErrorPopup(null) }}>
         <DialogContent>
           <DialogTitle>{t("login.error_title")}</DialogTitle>
@@ -134,6 +135,6 @@ export default function LoginPage() {
         </form>
       </div>
       <Footer className="absolute bottom-0 left-0 right-0 pb-6" />
-    </div>
+    </AuthScreen>
   )
 }
