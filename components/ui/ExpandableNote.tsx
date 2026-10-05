@@ -52,7 +52,7 @@ function ExpandableNote({ note, lines = DEFAULT_NOTE_LINES }: ExpandableNoteProp
 
   if (!truncated) {
     return (
-      <p className={cn(BOX_CLASS, "inline-block max-w-full")}>
+      <p className={BOX_CLASS}>
         <span ref={textRef} className={cn("block", clampClass)}>
           {note}
         </span>
