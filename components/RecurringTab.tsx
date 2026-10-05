@@ -16,6 +16,7 @@ import { FormSection } from "@/components/ui/FormSection"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { IconButton } from "@/components/ui/IconButton"
+import { ExpandableNote } from "@/components/ui/ExpandableNote"
 import { X, Pencil, Trash2, Pause, Play, ChevronDown, Info, RepeatIcon, Wallet } from "lucide-react"
 import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
@@ -593,9 +594,9 @@ export default function RecurringTab({
                     </p>
 
                     {cost.memo && (
-                      <p className="text-sm text-slate-600 dark:text-muted-foreground bg-slate-50 dark:bg-muted p-2 rounded-md whitespace-pre-wrap inline-block mt-1 w-full">
-                        {cost.memo}
-                      </p>
+                      <div className="mt-1 -mr-11">
+                        <ExpandableNote note={cost.memo} />
+                      </div>
                     )}
                   </div>
                 </div>
