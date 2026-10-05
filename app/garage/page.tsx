@@ -25,6 +25,7 @@ import { Skeleton, SkeletonTabs, SkeletonText } from "@/components/ui/skeleton"
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog"
 import { IconButton } from "@/components/ui/IconButton"
 import { ModalCard } from "@/components/ui/ModalCard"
+import { ExpandableNote } from "@/components/ui/ExpandableNote"
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogActionButton } from "@/components/ui/dialog"
 import { CarFront, X, ListTodo, ExternalLink, Camera, Pencil, Trash2, Move, SlidersHorizontal, Image as ImageIcon, IdCard, Gauge, CalendarDays, Wallet } from "lucide-react"
 import { toast } from "sonner"
@@ -1243,9 +1244,9 @@ export default function GaragePage() {
                         )}
 
                         {wish.memo && (
-                          <p className="inline-block max-w-full text-xs text-slate-600 dark:text-muted-foreground bg-slate-50 dark:bg-muted p-2 rounded-md mb-3 line-clamp-2">
-                            {wish.memo}
-                          </p>
+                          <div className="mb-3 mr-17">
+                            <ExpandableNote note={wish.memo} />
+                          </div>
                         )}
                       </div>
 
