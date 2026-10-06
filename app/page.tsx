@@ -287,34 +287,27 @@ export default function Home() {
                 )}
 
                 {/* 今月の費用 */}
-                {/* 金額を主役にし、ラベルと前月比は控えめにする */}
                 <div className={`px-5 pt-1 pb-4 ${cars.length > 0 ? "pr-36" : ""}`}>
                   <p className="text-sm font-medium text-slate-500 dark:text-muted-foreground">
                     {t("home.this_month_cost")}
                   </p>
-                  {thisMonthRecords.length === 0 ? (
-                    <p className="text-sm text-slate-500 dark:text-muted-foreground py-2">{t("home.no_cost_data")}</p>
-                  ) : (
-                    <>
-                      <p className="mt-1 text-2xl font-bold text-slate-900 dark:text-foreground tracking-tight tabular-nums">¥{thisMonthCost.toLocaleString()}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <p className="text-xs text-slate-500 dark:text-muted-foreground">{t("home.vs_last_month")}</p>
-                        {diffCost > 0 ? (
-                          <span className="inline-flex items-center gap-0.5 rounded-full bg-red-50 dark:bg-red-950/40 px-2 py-0.5 text-xs font-semibold text-red-600 dark:text-red-400 tabular-nums">
-                            <TrendingUp size={12} /> +¥{diffCost.toLocaleString()}
-                          </span>
-                        ) : diffCost < 0 ? (
-                          <span className="inline-flex items-center gap-0.5 rounded-full bg-blue-50 dark:bg-blue-950/40 px-2 py-0.5 text-xs font-semibold text-blue-600 dark:text-blue-400 tabular-nums">
-                            <TrendingDown size={12} /> -¥{Math.abs(diffCost).toLocaleString()}
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-0.5 rounded-full bg-slate-100 dark:bg-surface-2 px-2 py-0.5 text-xs font-medium text-slate-500 dark:text-muted-foreground tabular-nums">
-                            <Minus size={12} /> ±¥0
-                          </span>
-                        )}
-                      </div>
-                    </>
-                  )}
+                  <p className="mt-1 text-2xl font-bold text-slate-900 dark:text-foreground tracking-tight tabular-nums">¥{thisMonthCost.toLocaleString()}</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <p className="text-xs text-slate-500 dark:text-muted-foreground">{t("home.vs_last_month")}</p>
+                    {diffCost > 0 ? (
+                      <span className="inline-flex items-center gap-0.5 rounded-full bg-red-50 dark:bg-red-950/40 px-2 py-0.5 text-xs font-semibold text-red-600 dark:text-red-400 tabular-nums">
+                        <TrendingUp size={12} /> +¥{diffCost.toLocaleString()}
+                      </span>
+                    ) : diffCost < 0 ? (
+                      <span className="inline-flex items-center gap-0.5 rounded-full bg-blue-50 dark:bg-blue-950/40 px-2 py-0.5 text-xs font-semibold text-blue-600 dark:text-blue-400 tabular-nums">
+                        <TrendingDown size={12} /> -¥{Math.abs(diffCost).toLocaleString()}
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-0.5 rounded-full bg-slate-100 dark:bg-surface-2 px-2 py-0.5 text-xs font-medium text-slate-500 dark:text-muted-foreground tabular-nums">
+                        <Minus size={12} /> ±¥0
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="mx-5 border-t border-slate-200 dark:border-border" />

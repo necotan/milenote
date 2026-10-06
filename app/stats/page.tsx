@@ -20,6 +20,7 @@ import { usePageLoadingGate } from "@/lib/loadingGate"
 import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
 import { useCars } from "@/lib/hooks/useCars"
 import { useRecords } from "@/lib/hooks/useRecords"
+import { getOwnershipStartYear, getYearRowState } from "@/lib/yearlyStats"
 
 const CATEGORY_MAP_COLORFUL: Record<string, { color: string }> = {
   fuel: { color: "#3b82f6" },
@@ -801,12 +802,11 @@ export default function StatsPage() {
   )
 
   // 直近3年（今年を含む過去3年）の枠を生成してから集計
-  type YearlyBucket = { year: number; amount: number; hasData: boolean } & Record<CategoryKey, number>
+  type YearlyBucket = { year: number; amount: number } & Record<CategoryKey, number>
   const yearlyData = useMemo<YearlyBucket[]>(() => {
     const years: YearlyBucket[] = Array.from({ length: 3 }, (_, i) => ({
       year: currentYear - (2 - i),
       amount: 0,
-      hasData: false,
       ...buildEmptyCategoryBuckets(),
     }))
     records.forEach(r => {
@@ -816,7 +816,6 @@ export default function StatsPage() {
       const cat = normalizeCategoryKey(r.category)
       found[cat] += r.amount
       found.amount += r.amount
-      found.hasData = true
     })
     return years
   }, [records, currentYear])
@@ -826,17 +825,26 @@ export default function StatsPage() {
     [yearlyData],
   )
 
-  // 新しい年が上、前年比（増減額）を付与
+  // 表示中の最も古い年の前年比も出せるよう、表示範囲に限らず全記録から年合計を作る
+  const yearlyTotals = useMemo(() => {
+    const totals = new Map<number, number>()
+    records.forEach(r => {
+      const year = parseInt(r.date.substring(0, 4), 10)
+      totals.set(year, (totals.get(year) ?? 0) + r.amount)
+    })
+    return totals
+  }, [records])
+  const ownershipStartYear = useMemo(
+    () => getOwnershipStartYear(statsCars, records),
+    [statsCars, records],
+  )
+
+  // 新しい年が上
   const yearlyTableRows = useMemo(
     () => yearlyData
-      .map((d, i) => ({
-        year: d.year,
-        amount: d.amount,
-        hasData: d.hasData,
-        diff: i > 0 ? d.amount - yearlyData[i - 1].amount : null,
-      }))
+      .map(d => ({ year: d.year, ...getYearRowState(d.year, ownershipStartYear, yearlyTotals) }))
       .reverse(),
-    [yearlyData],
+    [yearlyData, ownershipStartYear, yearlyTotals],
   )
 
   // グラフ再アニメーション用のキー（グラフ種別、データ量が変わるたびに再マウントしてCSSアニメを発火させる）
@@ -1519,28 +1527,17 @@ export default function StatsPage() {
                         <td className="py-4 pr-3 text-xs font-medium text-slate-700 dark:text-foreground tabular-nums">
                           {t("common.year_suffix", { year: row.year })}
                         </td>
-                        {row.hasData ? (
-                          <>
-                            <td className="py-4 px-3 text-right text-sm font-medium text-slate-800 dark:text-foreground tabular-nums">
-                              ¥{row.amount.toLocaleString()}
-                            </td>
-                            <td className="py-4 pl-3 text-right text-xs tabular-nums">
-                              {row.diff === null ? (
-                                <span className="text-slate-300 dark:text-muted-foreground">—</span>
-                              ) : row.diff > 0 ? (
-                                <span className="font-medium text-rose-500">+¥{row.diff.toLocaleString()}</span>
-                              ) : row.diff < 0 ? (
-                                <span className="font-medium text-emerald-500">-¥{Math.abs(row.diff).toLocaleString()}</span>
-                              ) : (
-                                <span className="text-slate-500 dark:text-muted-foreground">±¥0</span>
-                              )}
-                            </td>
-                          </>
-                        ) : (
-                          <td colSpan={2} className="py-4 pl-3 text-right text-xs text-slate-500 dark:text-muted-foreground">
-                            {t("stats.no_data")}
-                          </td>
-                        )}
+                        <td className={`py-4 px-3 text-right text-sm font-medium tabular-nums ${row.amountMuted ? "text-muted-foreground" : "text-slate-800 dark:text-foreground"}`}>
+                          ¥{row.amount.toLocaleString()}
+                        </td>
+                        <td className={`py-4 pl-3 text-right text-xs tabular-nums ${
+                          row.diffMuted ? "text-muted-foreground"
+                          : row.diff === 0 ? "text-slate-500 dark:text-muted-foreground"
+                          : row.diff > 0 ? "font-medium text-rose-500"
+                          : "font-medium text-emerald-500"
+                        }`}>
+                          {row.diff > 0 ? "+" : row.diff < 0 ? "-" : "±"}¥{Math.abs(row.diff).toLocaleString()}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
