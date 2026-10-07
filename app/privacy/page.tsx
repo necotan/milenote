@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+import { ChevronLeft } from "lucide-react"
 import { useTranslation } from "@/lib/i18n"
 import Footer from "@/components/ui/Footer"
 
@@ -20,9 +21,11 @@ export default function PrivacyPage() {
         <button
           type="button"
           onClick={() => router.back()}
-          className="flex items-center gap-1 text-sm text-slate-500 dark:text-muted-foreground hover:text-slate-600 dark:hover:text-foreground transition-colors mb-8"
+          aria-label={t("privacy.back")}
+          title={t("privacy.back")}
+          className="relative size-10 flex items-center justify-center rounded-full after:absolute after:-inset-1.5 after:rounded-full after:content-[''] bg-slate-100 text-slate-600 hover:text-slate-800 dark:bg-card dark:text-muted-foreground dark:hover:text-foreground transition-all active:scale-90 mb-8"
         >
-          <span className="font-bold text-xs">{t("privacy.back")}</span>
+          <ChevronLeft size={22} className="-translate-x-px" />
         </button>
 
         <h1 className="text-2xl font-bold text-slate-900 dark:text-foreground">{t("privacy.title")}</h1>
