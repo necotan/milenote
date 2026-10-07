@@ -40,22 +40,22 @@ const AutoRecordBanner = () => {
   const EASE_APPLE = "cubic-bezier(0.32, 0.72, 0, 1)"
 
   return (
-    <div className="rounded-xl border border-blue-200 dark:border-blue-900 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 overflow-hidden mb-5">
+    <div className="rounded-xl border border-slate-200 dark:border-border bg-slate-50 dark:bg-card overflow-hidden mb-5">
       <button
         type="button"
         onClick={() => setOpen(v => !v)}
         aria-expanded={open}
-        className="w-full flex items-center gap-2.5 px-4 py-3 text-left hover:bg-white/30 dark:hover:bg-card/30 transition-colors"
+        className="w-full flex items-center gap-2.5 px-4 py-3 text-left hover:bg-slate-100 dark:hover:bg-muted/50 transition-colors"
       >
-        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/60">
-          <Info size={13} className="text-blue-600 dark:text-blue-300 shrink-0" />
+        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 dark:bg-muted">
+          <Info size={13} className="text-slate-600 dark:text-muted-foreground shrink-0" />
         </div>
-        <span className="flex-1 text-sm font-bold text-blue-800 dark:text-blue-200">
+        <span className="flex-1 text-sm font-bold text-slate-800 dark:text-foreground">
           {t("records.recurring_banner_title")}
         </span>
         <ChevronDown
           size={15}
-          className="text-blue-400 dark:text-blue-300 shrink-0"
+          className="text-slate-400 dark:text-muted-foreground shrink-0"
           style={{
             transform: open ? "rotate(180deg)" : "rotate(0deg)",
             transition: `transform 380ms ${EASE_APPLE}`,
@@ -83,8 +83,8 @@ const AutoRecordBanner = () => {
               transitionDelay: open ? "60ms" : "30ms",
             }}
           >
-            <div className="border-t border-blue-100 dark:border-blue-900 pt-3">
-              <p className="text-xs text-blue-700 dark:text-blue-300 leading-relaxed">
+            <div className="border-t border-slate-200 dark:border-border pt-3">
+              <p className="text-xs text-slate-600 dark:text-muted-foreground leading-relaxed">
                 {t("records.recurring_banner_body")}
               </p>
             </div>
