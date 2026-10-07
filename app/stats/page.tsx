@@ -109,7 +109,7 @@ const PIE_LABEL_OFFSET_RADIUS = 20
 type PieLabelSide = "start" | "end" | "middle"
 
 // Recharts が内部で使う角度計算（Pie.js の computePieSectors と同じ式）を再現してラベルの本来のY位置を先に求める
-// 近い位置にあるものを「クラスタ」としてまとめ、そのクラスタの中心を軸に均等な間隔へ配置し直す
+// 近い位置にあるものを「クラスタ」としてまとめ、そのクラスタの元のY位置の平均を軸に均等な間隔へ配置し直す
 // cx/cy はコンテナサイズ次第で変わるが、ラベル同士のY差分は半径と角度だけで決まるため、実際のコンテナサイズを知らなくても差分（delta）だけ事前計算できる
 // labelとlabelLineは同じ index の delta を共有することで線のズレを防ぐ
 const computePieLabelYDeltas = (
@@ -147,23 +147,32 @@ const computePieLabelYDeltas = (
   const sides: PieLabelSide[] = ["start", "end", "middle"]
   for (const side of sides) {
     const group = entries.filter(e => e.side === side).sort((a, b) => a.y - b.y)
-    let cluster: Entry[] = []
-    const flushCluster = () => {
-      if (cluster.length > 1) {
-        const avg = cluster.reduce((s, e) => s + e.y, 0) / cluster.length
-        cluster.forEach((e, k) => {
-          const newY = avg - ((cluster.length - 1) / 2) * PIE_LABEL_MIN_GAP + k * PIE_LABEL_MIN_GAP
-          deltas.set(e.index, newY - e.y)
-        })
+    type Cluster = { members: Entry[]; center: number }
+    const clusters: Cluster[] = group.map(e => ({ members: [e], center: e.y }))
+    const halfSpan = (c: Cluster) => ((c.members.length - 1) / 2) * PIE_LABEL_MIN_GAP
+
+    // 広げたクラスタが隣のクラスタに食い込むことがあるため、重なりがなくなるまでマージと中心の再計算を繰り返す
+    let merged = true
+    while (merged) {
+      merged = false
+      for (let i = 0; i < clusters.length - 1; i++) {
+        const upper = clusters[i]
+        const lower = clusters[i + 1]
+        if ((lower.center - halfSpan(lower)) - (upper.center + halfSpan(upper)) >= PIE_LABEL_MIN_GAP) continue
+        const members = [...upper.members, ...lower.members]
+        clusters.splice(i, 2, { members, center: members.reduce((s, e) => s + e.y, 0) / members.length })
+        merged = true
+        break
       }
-      cluster = []
     }
-    group.forEach(e => {
-      const last = cluster[cluster.length - 1]
-      if (last && e.y - last.y >= PIE_LABEL_MIN_GAP) flushCluster()
-      cluster.push(e)
+
+    clusters.forEach(c => {
+      if (c.members.length < 2) return
+      const top = c.center - halfSpan(c)
+      c.members.forEach((e, k) => {
+        deltas.set(e.index, top + k * PIE_LABEL_MIN_GAP - e.y)
+      })
     })
-    flushCluster()
   }
 
   return deltas
