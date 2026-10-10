@@ -22,7 +22,7 @@ function ModalCard({
 }: {
   open: boolean
   onClose: () => void
-  icon: LucideIcon
+  icon?: LucideIcon
   title: ReactNode
   children: ReactNode
 }) {
@@ -36,7 +36,7 @@ function ModalCard({
       <Card className="border-none bg-white dark:bg-card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
         <CardContent className="p-6 space-y-4">
           <div className="flex items-center gap-3 text-slate-800 dark:text-foreground">
-            <Icon size={20} />
+            {Icon && <Icon size={20} />}
             <h2 className="text-lg font-bold">{title}</h2>
           </div>
 

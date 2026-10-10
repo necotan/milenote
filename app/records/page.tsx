@@ -808,7 +808,6 @@ function RecordsPageInner() {
             <ModalCard
               open={isFilterOpen}
               onClose={() => setIsFilterOpen(false)}
-              icon={SlidersHorizontal}
               title={t("records.filter_title")}
             >
               <div className="space-y-2">
