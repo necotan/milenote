@@ -476,10 +476,7 @@ export default function Home() {
 
       <Dialog open={odoModalOpen} onOpenChange={(open) => { if (!odoSaving) setOdoModalOpen(open) }}>
         <DialogContent showCloseButton={false} onOpenAutoFocus={(e) => e.preventDefault()}>
-          <div className="flex items-center gap-3">
-            <Gauge size={22} className="text-slate-600 dark:text-muted-foreground" />
-            <DialogTitle className="pr-0">{t("home.update_odo_title")}</DialogTitle>
-          </div>
+          <DialogTitle className="pr-0">{t("home.update_odo_title")}</DialogTitle>
           <DialogDescription className="mt-2 text-xs text-slate-600 dark:text-muted-foreground leading-relaxed">{t("home.update_odo_desc")}</DialogDescription>
 
           <div className="mt-4 space-y-2">
