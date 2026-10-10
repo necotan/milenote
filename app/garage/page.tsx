@@ -1039,7 +1039,6 @@ export default function GaragePage() {
           <ModalCard
             open={isFilterOpen}
             onClose={() => setIsFilterOpen(false)}
-            icon={SlidersHorizontal}
             title={t("garage.wish_filter_title")}
           >
             <div className="space-y-2">
