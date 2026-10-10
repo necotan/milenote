@@ -312,7 +312,6 @@ export default function MaintenancePage() {
       <ModalCard
         open={isDisplaySettingsOpen}
         onClose={() => setIsDisplaySettingsOpen(false)}
-        icon={Settings2}
         title={t("home.display_settings_title")}
       >
         <ListGroup>
