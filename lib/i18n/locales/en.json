@@ -345,7 +345,7 @@
     "maint_disabled_desc": "Notifications off",
     "maint_legally_fixed_hint": "This interval is set by law and can't be changed",
     "maint_summary_expiry_date": "Notifies from expiry date",
-    "maint_edit_title": "Edit criteria: {{name}}",
+    "maint_edit_title": "{{name}}",
     "maint_distance_label": "Distance",
     "maint_period_label": "Period",
     "maint_custom": "Custom",

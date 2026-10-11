@@ -345,7 +345,7 @@
     "maint_disabled_desc": "通知オフ",
     "maint_legally_fixed_hint": "法令で定められた周期のため変更できません",
     "maint_summary_expiry_date": "車検満了日から通知",
-    "maint_edit_title": "{{name}} ー基準を編集",
+    "maint_edit_title": "{{name}}",
     "maint_distance_label": "距離の基準",
     "maint_period_label": "期間の基準",
     "maint_custom": "その他",
