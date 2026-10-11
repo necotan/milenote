@@ -330,8 +330,8 @@ export default function Home() {
                           return (
                             <div key={r.id} className="flex items-baseline justify-between gap-3">
                               <div className="flex items-baseline gap-2 min-w-0">
+                                <span className="shrink-0 text-xs text-slate-500 dark:text-muted-foreground tabular-nums">{r.date.replace(/-/g, '/')}</span>
                                 <span className="text-sm font-medium text-slate-700 dark:text-foreground truncate">{categoryLabel}</span>
-                                <span className="text-xs text-slate-500 dark:text-muted-foreground tabular-nums">{r.date.replace(/-/g, '/')}</span>
                               </div>
                               <span className="text-sm font-semibold text-slate-800 dark:text-foreground tabular-nums">¥{r.amount.toLocaleString()}</span>
                             </div>
