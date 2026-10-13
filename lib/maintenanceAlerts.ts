@@ -26,7 +26,8 @@ export type RecordedMaintAlert = MaintAlertBase & {
   isOver: boolean
   monthsPassed: number
   isUrgent: boolean
-  remaining: number
+  // 周期の消化率（単位の異なる項目同士を並べるために使用）
+  dueRatio: number
   // 距離順、期限順の並び替え用（距離の概念がない項目はkmRemainingがInfinityになる）
   kmRemaining: number
   monthsRemaining: number
@@ -121,9 +122,8 @@ export function generateMaintAlerts(
 
         // 車検を受けた日から満了日までを100%として進捗を出す
         const totalMs = expiryMs - lastDateMs
-        const progressPercent = totalMs > 0
-          ? Math.min(100, Math.max(0, ((todayMs - lastDateMs) / totalMs) * 100))
-          : 100
+        const dueRatio = totalMs > 0 ? Math.max(0, (todayMs - lastDateMs) / totalMs) : Infinity
+        const progressPercent = Math.min(100, dueRatio * 100)
 
         generatedAlerts.push({
           id: `${car.id}-${maintName}`,
@@ -138,7 +138,7 @@ export function generateMaintAlerts(
           isOver,
           monthsPassed,
           isUrgent,
-          remaining: -monthsRemaining,
+          dueRatio,
           kmRemaining: Infinity,
           monthsRemaining,
           progressPercent,
@@ -172,14 +172,15 @@ export function generateMaintAlerts(
         : setting.months
 
       let kmRemaining = Infinity
-      let kmProgress = 0
+      let kmRatio = 0
       if (!isMonthsOnly && setting.km > 0) {
         kmRemaining = (lastRecord.odo_at_record + setting.km) - car.current_odo
-        kmProgress = Math.min(100, Math.max(0, ((setting.km - kmRemaining) / setting.km) * 100))
+        kmRatio = Math.max(0, (setting.km - kmRemaining) / setting.km)
       }
       const monthsRemaining = effectiveMonths - monthsPassed
-      const timeProgress = Math.min(100, Math.max(0, (monthsPassed / effectiveMonths) * 100))
-      const progressPercent = isMonthsOnly ? timeProgress : Math.max(kmProgress, timeProgress)
+      const timeRatio = Math.max(0, monthsPassed / effectiveMonths)
+      const dueRatio = isMonthsOnly ? timeRatio : Math.max(kmRatio, timeRatio)
+      const progressPercent = Math.min(100, dueRatio * 100)
       const isOver = isMonthsOnly ? monthsPassed >= effectiveMonths : kmRemaining <= 0
       const isUrgent = isOver || (!isMonthsOnly && kmRemaining <= 0) || monthsPassed >= effectiveMonths
       const displayValue = isMonthsOnly
@@ -199,7 +200,7 @@ export function generateMaintAlerts(
         isOver,
         monthsPassed: monthsPassed,
         isUrgent: isUrgent,
-        remaining: isMonthsOnly ? -monthsRemaining : kmRemaining,
+        dueRatio,
         kmRemaining,
         monthsRemaining,
         progressPercent: progressPercent,
@@ -209,12 +210,16 @@ export function generateMaintAlerts(
     })
   })
 
-  // 通知オフの項目は末尾に、それ以外は記録済み（期限が近い順）を優先し未記録は末尾にまとめる
+  // 通知オフの項目は末尾に、それ以外は記録済みを優先し未記録は末尾にまとめる
+  // 記録済み同士は警告中を先にし、その中で周期の消化率が高い順に並べる
   generatedAlerts.sort((a, b) => {
     if (a.isDisabled !== b.isDisabled) return a.isDisabled ? 1 : -1
     if (a.hasRecord && !b.hasRecord) return -1
     if (!a.hasRecord && b.hasRecord) return 1
-    if (a.hasRecord && b.hasRecord) return a.remaining - b.remaining
+    if (a.hasRecord && b.hasRecord) {
+      if (a.isUrgent !== b.isUrgent) return a.isUrgent ? -1 : 1
+      if (a.dueRatio !== b.dueRatio) return b.dueRatio - a.dueRatio
+    }
     return 0
   })
 
