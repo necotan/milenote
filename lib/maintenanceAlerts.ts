@@ -28,9 +28,6 @@ export type RecordedMaintAlert = MaintAlertBase & {
   isUrgent: boolean
   // 周期の消化率（単位の異なる項目同士を並べるために使用）
   dueRatio: number
-  // 距離順、期限順の並び替え用（距離の概念がない項目はkmRemainingがInfinityになる）
-  kmRemaining: number
-  monthsRemaining: number
   progressPercent: number
 }
 export type UnrecordedMaintAlert = MaintAlertBase & { hasRecord: false }
@@ -115,10 +112,8 @@ export function generateMaintAlerts(
         const isOver = daysRemaining < 0
         const isUrgent = daysRemaining <= VEHICLE_INSPECTION_URGENT_DAYS
 
-        const expiryDate = new Date(expiryMs)
         const lastDate = new Date(lastDateMs)
         const monthsPassed = (now.getFullYear() - lastDate.getFullYear()) * 12 + (now.getMonth() - lastDate.getMonth())
-        const monthsRemaining = (expiryDate.getFullYear() - now.getFullYear()) * 12 + (expiryDate.getMonth() - now.getMonth())
 
         // 車検を受けた日から満了日までを100%として進捗を出す
         const totalMs = expiryMs - lastDateMs
@@ -139,8 +134,6 @@ export function generateMaintAlerts(
           monthsPassed,
           isUrgent,
           dueRatio,
-          kmRemaining: Infinity,
-          monthsRemaining,
           progressPercent,
           icon: style.icon,
           color: isUrgent ? "text-red-600" : style.color,
@@ -201,8 +194,6 @@ export function generateMaintAlerts(
         monthsPassed: monthsPassed,
         isUrgent: isUrgent,
         dueRatio,
-        kmRemaining,
-        monthsRemaining,
         progressPercent: progressPercent,
         icon: style.icon,
         color: isUrgent ? "text-red-600" : style.color,

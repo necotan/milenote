@@ -89,9 +89,7 @@
     "hide_unrecorded_maint": "Hide unrecorded items",
     "hide_unrecorded_maint_desc": "Hide maintenance items that don't have a record yet",
     "ungroup_maint": "Ungroup list",
-    "ungroup_maint_desc": "Show all items together as a single list, without category grouping",
-    "sort_distance": "By Distance",
-    "sort_deadline": "By Deadline"
+    "ungroup_maint_desc": "Show all items together as a single list, without category grouping"
   },
   "garage": {
     "title": "Garage",
