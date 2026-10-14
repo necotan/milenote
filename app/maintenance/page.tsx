@@ -5,7 +5,6 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ListGroup, SwitchRow } from "@/components/ui/ListGroup"
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton"
-import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
 import { ModalCard } from "@/components/ui/ModalCard"
 import { CarFront, ChevronLeft, SlidersHorizontal, Settings2, EyeOff, LayoutList, FileX } from "lucide-react"
 import Link from "next/link"
@@ -24,12 +23,9 @@ import { useChipTapHandlers } from "@/lib/hooks/useChipTapHandlers"
 const SHOW_DISABLED_STORAGE_KEY = "milenote_maintenance_show_disabled"
 const HIDE_UNRECORDED_STORAGE_KEY = "milenote_maintenance_hide_unrecorded"
 const UNGROUP_STORAGE_KEY = "milenote_maintenance_ungroup"
-const SORT_MODE_STORAGE_KEY = "milenote_maintenance_sort_mode"
 // 絞り込みモーダルの選択状態もlocalStorageに保存
 const CATEGORY_FILTERS_STORAGE_KEY = "milenote_maintenance_category_filters"
 const CAR_FILTERS_STORAGE_KEY = "milenote_maintenance_car_filters"
-
-type SortMode = "distance" | "deadline"
 
 // カードグリッドの列数計算とボタン位置合わせで使用
 const CARD_WIDTH = 300
@@ -88,8 +84,6 @@ export default function MaintenancePage() {
   const [hideUnrecorded, setHideUnrecorded] = useState(false)
   // カテゴリごとのグループ化を解除し、1つの一覧としてまとめて表示するかの切り替え
   const [isUngrouped, setIsUngrouped] = useState(false)
-  // 記録済み項目の並び順（残り距離が少ない順 / 期限が近い順）
-  const [sortMode, setSortMode] = useState<SortMode>("distance")
   // 表示設定、絞り込みをlocalStorageから復元
   // SSR の初期HTMLと一致させるため、保存済みの設定はマウント後に反映する
   useEffect(() => {
@@ -97,8 +91,6 @@ export default function MaintenancePage() {
     setShowDisabled(localStorage.getItem(SHOW_DISABLED_STORAGE_KEY) === "true")
     setHideUnrecorded(localStorage.getItem(HIDE_UNRECORDED_STORAGE_KEY) === "true")
     setIsUngrouped(localStorage.getItem(UNGROUP_STORAGE_KEY) === "true")
-    const savedSortMode = localStorage.getItem(SORT_MODE_STORAGE_KEY)
-    if (savedSortMode === "distance" || savedSortMode === "deadline") setSortMode(savedSortMode)
     try {
       const savedCategory = localStorage.getItem(CATEGORY_FILTERS_STORAGE_KEY)
       if (savedCategory) setCategoryFilters(JSON.parse(savedCategory))
@@ -123,11 +115,6 @@ export default function MaintenancePage() {
   const handleHideUnrecordedChange = (checked: boolean) => {
     setHideUnrecorded(checked)
     localStorage.setItem(HIDE_UNRECORDED_STORAGE_KEY, String(checked))
-  }
-
-  const handleSortModeChange = (mode: SortMode) => {
-    setSortMode(mode)
-    localStorage.setItem(SORT_MODE_STORAGE_KEY, mode)
   }
 
   const handleUngroupedChange = (checked: boolean) => {
@@ -189,15 +176,6 @@ export default function MaintenancePage() {
     (carFilters.length === 0 || carFilters.includes(a.carId))
   )
 
-  // 選択中の並び順を適用したアラート
-  const sortedAlerts = [...filteredAlerts].sort((a, b) => {
-    if (a.isDisabled !== b.isDisabled) return a.isDisabled ? 1 : -1
-    if (a.hasRecord && !b.hasRecord) return -1
-    if (!a.hasRecord && b.hasRecord) return 1
-    if (!a.hasRecord || !b.hasRecord) return 0
-    return sortMode === "distance" ? a.kmRemaining - b.kmRemaining : a.monthsRemaining - b.monthsRemaining
-  })
-
   // 絞り込み中の選択数（バッジ表示用）
   const activeFilterCount = categoryFilters.length + carFilters.length
 
@@ -205,7 +183,7 @@ export default function MaintenancePage() {
 
   if (loading) return (
     <main className="p-4 space-y-6">
-      <header className="pt-4 pb-2">
+      <header className="pt-4 pb-2 flex items-center justify-between gap-2" style={{ maxWidth: gridContentWidth }}>
         <Link
           href="/"
           aria-label={t("home.back_to_home")}
@@ -214,16 +192,12 @@ export default function MaintenancePage() {
         >
           <ChevronLeft size={22} className="-translate-x-px" />
         </Link>
-      </header>
-      <div className="space-y-3" ref={gridWrapperRef}>
-        {/* 並び替えトグル、絞り込み、表示設定ボタン（実データ表示時と同じくカード列の右端にそろえる） */}
-        <div className="flex items-start justify-between gap-2" style={{ maxWidth: gridContentWidth }}>
-          <Skeleton className="h-[30px] w-40 rounded-full" />
-          <div className="flex flex-col items-end gap-2 shrink-0 mt-1">
-            <Skeleton className="size-8 rounded-full" />
-            <Skeleton className="h-8 w-28 rounded-full" />
-          </div>
+        <div className="flex items-center gap-2">
+          <Skeleton className="size-8 rounded-full" />
+          <Skeleton className="h-8 w-28 rounded-full" />
         </div>
+      </header>
+      <div ref={gridWrapperRef}>
         <div className="space-y-6">
           {[...Array(3)].map((_, i) => (
             <div key={i}>
@@ -258,7 +232,7 @@ export default function MaintenancePage() {
 
   return (
     <main className="p-4 space-y-6">
-      <header className="pt-4 pb-2">
+      <header className="pt-4 pb-2 flex items-center justify-between gap-2" style={{ maxWidth: gridContentWidth }}>
         <Link
           href="/"
           aria-label={t("home.back_to_home")}
@@ -267,22 +241,8 @@ export default function MaintenancePage() {
         >
           <ChevronLeft size={22} className="-translate-x-px" />
         </Link>
-      </header>
-
-      <div className="space-y-3" ref={gridWrapperRef}>
-
-      {/* 並び替えトグル、絞り込み、表示設定ボタン（最終列のカード幅にそろえる） */}
-      {alerts.length > 0 && (
-        <div className="flex items-start justify-between gap-2" style={{ maxWidth: gridContentWidth }}>
-          <SegmentedToggle
-            value={sortMode}
-            onChange={handleSortModeChange}
-            options={[
-              { value: "distance", label: t("home.sort_distance") },
-              { value: "deadline", label: t("home.sort_deadline") },
-            ]}
-          />
-          <div className="flex flex-col items-end gap-2 shrink-0 mt-1">
+        {alerts.length > 0 && (
+          <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => setIsFilterOpen(true)}
@@ -306,8 +266,10 @@ export default function MaintenancePage() {
               {t("home.display_settings_title")}
             </button>
           </div>
-        </div>
-      )}
+        )}
+      </header>
+
+      <div ref={gridWrapperRef}>
 
       <ModalCard
         open={isDisplaySettingsOpen}
@@ -441,15 +403,15 @@ export default function MaintenancePage() {
           <p className="text-xs font-medium text-slate-500 dark:text-muted-foreground">{t("home.no_filtered_alerts")}</p>
         </Card>
       ) : isUngrouped ? (
-        <div className="grid gap-3 md:gap-4 items-stretch mt-6" style={gridStyle}>
-          {sortedAlerts.map((alert) => (
+        <div className="grid gap-3 md:gap-4 items-stretch" style={gridStyle}>
+          {filteredAlerts.map((alert) => (
             <MaintAlertCard key={alert.id} alert={alert} className="h-full" />
           ))}
         </div>
       ) : (
         <div className="space-y-6">
           {MAINT_CATEGORIES.map((category) => {
-            const items = category.items.flatMap((maintName) => sortedAlerts.filter((a) => a.maintName === maintName))
+            const items = filteredAlerts.filter((a) => maintNameToCategory[a.maintName] === category.key)
             if (items.length === 0) return null
             return (
               <div key={category.key}>
