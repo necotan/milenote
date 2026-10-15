@@ -240,6 +240,19 @@ export default function GaragePage() {
 
     setSavingCar(true)
     try {
+      // 元愛車への変更時は DB トリガーが定期費用を一時停止するため、通知用の件数だけ更新前に数えておく
+      const isArchivedStatus = (s: string | undefined) => s === "archived" || s === "archived_excluded"
+      const prevStatus = cars.find((c) => c.id === editCarId)?.status
+      let pausingCount = 0
+      if (!isArchivedStatus(prevStatus) && isArchivedStatus(carStatus)) {
+        const { count } = await supabase
+          .from("recurring_costs")
+          .select("id", { count: "exact", head: true })
+          .eq("car_id", editCarId)
+          .eq("is_active", true)
+        pausingCount = count ?? 0
+      }
+
       const { error } = await supabase.from("cars").update({
         name, maker, model_code: modelCode,
         year: parseInt(year) || null, grade, color, fuel_type: fuelType,
@@ -255,20 +268,9 @@ export default function GaragePage() {
       if (error) {
         toast.error(t("common.error_occurred") + ": " + error.message)
       } else {
-        // 元愛車（archived / archived_excluded）へ変更した場合、その車の有効な定期費用を自動で一時停止する
-        const isArchivedStatus = (s: string | undefined) => s === "archived" || s === "archived_excluded"
-        const prevStatus = cars.find((c) => c.id === editCarId)?.status
-        if (!isArchivedStatus(prevStatus) && isArchivedStatus(carStatus)) {
-          const { data: paused } = await supabase
-            .from("recurring_costs")
-            .update({ is_active: false })
-            .eq("car_id", editCarId)
-            .eq("is_active", true)
-            .select("id")
-          if (paused && paused.length > 0) {
-            toast.info(t("garage.recurring_paused", { count: paused.length }))
-            if (userId) await globalMutate(["recurring_costs", userId])
-          }
+        if (pausingCount > 0) {
+          toast.info(t("garage.recurring_paused", { count: pausingCount }))
+          if (userId) await globalMutate(["recurring_costs", userId])
         }
         toast.success(t("garage.car_updated"))
         resetCarForm()

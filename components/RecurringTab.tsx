@@ -22,6 +22,7 @@ import { toast } from "sonner"
 import { useTranslation } from "@/lib/i18n"
 import { CATEGORIES } from "@/app/records/page"
 import { SUB_CATEGORIES } from "@/lib/subcategories"
+import { toISODate } from "@/lib/date/calendar"
 
 const FREQUENCY_OPTIONS = [
   { value: "weekly", labelKey: "records.freq_weekly" },
@@ -360,18 +361,6 @@ export default function RecurringTab({
     if (cars.length > 0) setCarId(cars[0].id)
   }
 
-  const toDateStr = (d: Date) =>
-    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-
-  const advanceByFrequency = (d: Date, freq: string) => {
-    if (freq === "weekly") d.setDate(d.getDate() + 7)
-    else if (freq === "monthly") d.setMonth(d.getMonth() + 1)
-    else if (freq === "bimonthly") d.setMonth(d.getMonth() + 2)
-    else if (freq === "quarterly") d.setMonth(d.getMonth() + 3)
-    else if (freq === "semiannually") d.setMonth(d.getMonth() + 6)
-    else if (freq === "yearly") d.setFullYear(d.getFullYear() + 1)
-  }
-
   const handleSave = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
     if (!carId) return alert(t("records.select_car_alert"))
@@ -387,44 +376,22 @@ export default function RecurringTab({
       if (error) return toast.error(t("common.error_occurred") + ": " + error.message)
       toast.success(t("records.recurring_updated"))
     } else {
-      // 初回支払日が今日以前なら、過去分の日付リストと正しい次回支払日を先に計算する
-      const today = new Date()
-      const cursor = new Date(nextBillingDate + "T00:00:00")
-      const pastDates: string[] = []
-
-      while (cursor <= today && pastDates.length < 120) {
-        pastDates.push(toDateStr(cursor))
-        advanceByFrequency(cursor, frequency)
-      }
-
-      // 次回支払日 (過去分があれば計算済みの cursor、なければ入力値のまま)
-      const resolvedNextBillingDate = pastDates.length > 0 ? toDateStr(cursor) : nextBillingDate
-
-      const { error } = await supabase.from("recurring_costs").insert({
+      const { data: inserted, error } = await supabase.from("recurring_costs").insert({
         car_id: carId, category, sub_category: subCategory || null,
         amount: parseInt(amount), frequency,
-        next_billing_date: resolvedNextBillingDate,
+        next_billing_date: nextBillingDate,
         memo, user_id: user.id,
-      })
+      }).select("id").single()
       if (error) return toast.error(t("common.error_occurred") + ": " + error.message)
 
-      // 過去分を自動記録
-      if (pastDates.length > 0) {
-        const autoPrefix = t("records.auto_recorded")
-        const targetCar = cars.find((c) => c.id === carId)
-        const fallbackOdo = targetCar?.current_odo ?? 0
-        let insertedCount = 0
-        for (const dateStr of pastDates) {
-          const { error: recErr } = await supabase.from("records").insert({
-            user_id: user.id, car_id: carId, category,
-            sub_category: subCategory || null,
-            amount: parseInt(amount),
-            odo_at_record: fallbackOdo,
-            date: dateStr,
-            memo: `${autoPrefix}${memo || ""}`,
-          })
-          if (!recErr) insertedCount++
-        }
+      // 初回支払日が今日以前なら、過去分の記録と次回支払日の繰り上げをサーバー側でまとめて行う
+      const { data: processed } = await supabase.rpc("process_due_recurring_costs", {
+        p_today: toISODate(new Date()),
+        p_memo_prefix: t("records.auto_recorded"),
+        p_recurring_cost_id: inserted.id,
+      })
+      const insertedCount = typeof processed === "number" ? processed : 0
+      if (insertedCount > 0) {
         toast.success(`${t("records.recurring_saved")} ${t("records.auto_recorded_toast", { count: insertedCount })}`)
         onRecordsChanged?.()
       } else {
