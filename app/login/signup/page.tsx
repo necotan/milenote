@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { createClient } from "@/utils/supabase"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -159,6 +160,23 @@ export default function SignUpPage() {
           </div>
 
           <div className="flex flex-col items-center gap-4 pt-4">
+            <p className="text-[11px] text-center leading-relaxed text-slate-500 dark:text-muted-foreground">
+              {t("signup.consent").split(/(\{\{terms\}\}|\{\{privacy\}\})/).map((part, i) => {
+                if (part === "{{terms}}" || part === "{{privacy}}") {
+                  const key = part === "{{terms}}" ? "terms" : "privacy"
+                  return (
+                    <Link
+                      key={i}
+                      href={`/${key}`}
+                      className="font-bold underline underline-offset-2 hover:text-slate-600 dark:hover:text-foreground"
+                    >
+                      {t(`footer.${key}`)}
+                    </Link>
+                  )
+                }
+                return part
+              })}
+            </p>
             <Button className="font-bold min-w-[200px]" type="submit" disabled={loading}>
               {loading ? t("login.processing") : t("signup.create_account")}
             </Button>
