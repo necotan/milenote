@@ -409,6 +409,7 @@
     "user_id_hint": "Only letters, numbers, and underscores (_) are allowed",
     "password_placeholder": "At least 6 characters",
     "create_account": "Create Account",
+    "consent": "By creating an account, you agree to the {{terms}} and {{privacy}}.",
     "back_to_login": "Back to login",
     "error_title": "Registration Error",
     "email_taken": "This email address is already in use.",
@@ -484,14 +485,14 @@
     "title": "Privacy Policy",
     "back": "Back",
     "last_updated": "Last updated",
-    "updated_date": "June 26, 2026",
+    "updated_date": "October 15, 2026",
     "intro": "This Privacy Policy (the \"Policy\") describes how \"Milenote\" (the \"Service\"), a vehicle maintenance cost and expense management application provided by {{operator}} (the \"Operator\"), handles users' information.",
     "operator": "necotan",
     "article": "Section {{n}}",
     "sections": {
       "collection": {
         "heading": "Information We Collect",
-        "body": "The Service collects the email address and User ID entered during account registration, as well as vehicle information, expense and maintenance cost records, recurring expense information, and similar data recorded by users through the use of the Service."
+        "body": "The Service collects the following information.\n・The email address and User ID entered during account registration\n・The display name, vehicle information, vehicle images, expense and maintenance cost records, recurring expense information, wishlist items (including URLs), maintenance interval settings, and similar data entered through the use of the Service\n・Device information such as IP address and browser type, and login times, recorded automatically through the use of the Service (as access logs and authentication logs of external services)\nIn addition, the Service uses cookies to keep users logged in and the browser's local storage to save display settings. Display settings saved in local storage are not sent to the Operator."
       },
       "usage": {
         "heading": "Purpose of Use",
@@ -499,7 +500,7 @@
       },
       "external": {
         "heading": "Use of External Services",
-        "body": "The Service uses Supabase as its database and authentication platform, and Vercel as its hosting environment. Users' information is stored and processed on these services. The handling of information on each service is subject to the privacy policy established by its respective provider."
+        "body": "The Service uses Supabase as its database, authentication platform, and file storage, Vercel as its hosting environment, and Google (Gmail) to send registration confirmation and password reset emails. Users' information is stored and processed on these services. The handling of information on each service is subject to the privacy policy established by its respective provider."
       },
       "images": {
         "heading": "Handling of Vehicle Images",
@@ -515,7 +516,7 @@
       },
       "disclosure": {
         "heading": "Disclosure, Correction, and Deletion",
-        "body": "Users may view, correct, and delete their own data through operations within the Service. For requests such as deleting an account or stored data, please contact us through the GitHub repository where the Service's source code is published."
+        "body": "Users may view, correct, and delete their own records, vehicle information, wishlist items, and similar data through operations within the Service. For requests that cannot be handled within the Service, such as deleting an account or changing an email address, please contact necotan.works@gmail.com by email. For identity verification, please send your request from the email address registered with the Service."
       },
       "changes": {
         "heading": "Changes to the Privacy Policy",
