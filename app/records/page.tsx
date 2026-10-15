@@ -403,7 +403,9 @@ function RecordsPageInner() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [deleteRecordId, setDeleteRecordId] = useState<string | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
-  const [carId, setCarId] = useState("")
+  const [selectedCarId, setCarId] = useState("")
+  // 対象車が1台だけで未選択の場合は、その車を選択済みとして扱う
+  const carId = selectedCarId || (cars.length === 1 ? cars[0].id : "")
   const [category, setCategory] = useState("fuel")
   const [subCategory, setSubCategory] = useState("")
   const [amount, setAmount] = useState("")
@@ -423,11 +425,6 @@ function RecordsPageInner() {
   // 車検用ステート
   const [includesCompulsoryInsurance, setIncludesCompulsoryInsurance] = useState(false)
   const [inspectionExpiryDate, setInspectionExpiryDate] = useState("")
-
-  // 対象車が1台だけの場合はフォームの車選択にあらかじめセットしておく
-  useEffect(() => {
-    if (cars.length === 1) setCarId(cars[0].id)
-  }, [cars])
 
   // 月別・全期間 表示切り替え
   const currentYM = (() => {
@@ -469,9 +466,11 @@ function RecordsPageInner() {
   const [categoryFilters, setCategoryFilters] = useState<string[]>([])
   const [carFilters, setCarFilters] = useState<string[]>([])
   const [isFilterOpen, setIsFilterOpen] = useState(false)
+  // SSR の初期HTMLと一致させるため、保存済みの絞り込みはマウント後に反映する
   useEffect(() => {
     try {
       const savedCategory = localStorage.getItem("records_category_filters")
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (savedCategory) setCategoryFilters(JSON.parse(savedCategory))
       const savedCar = localStorage.getItem("records_car_filters")
       if (savedCar) setCarFilters(JSON.parse(savedCar))
@@ -519,10 +518,12 @@ function RecordsPageInner() {
   }
 
   // URLパラメータで給油フォームを自動展開
+  // URL という外部の値にフォームを同期させるため、effect 内で state を更新する
   const searchParams = useSearchParams()
   useEffect(() => {
     if (!loading && searchParams.get("action") === "add") {
       const cat = searchParams.get("category") || "fuel"
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       handleCategoryChange(cat)
       const sub = searchParams.get("sub_category")
       if (sub && SUB_CATEGORIES[cat]?.includes(sub as SubCategorySlug)) {

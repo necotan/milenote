@@ -11,7 +11,7 @@ import {
   ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   BarChart, Bar, BarStack
 } from "recharts"
-import type { TooltipContentProps } from "recharts"
+import type { DotItemDotProps, TooltipContentProps } from "recharts"
 import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, ChevronDown, Info, LineChart as LineChartIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { DatePicker } from "@/components/ui/date-picker"
@@ -543,6 +543,63 @@ function BentoTile({
   )
 }
 
+const LINE_ANIM_DURATION_MS = 900
+
+// 関数コンポーネントへの displayName の代入は描画中の値の書き換えとみなされるため、コンポーネントの外で作る
+function createLineDot(lastIndex: number, stroke: string) {
+  const LineDot = ({ cx, cy, index, value }: DotItemDotProps) => {
+    if (cx == null || cy == null || value == null) {
+      return <g key={`line-dot-${index}`} />
+    }
+    const denom = Math.max(lastIndex, 1)
+    const delay = (Math.min(index, lastIndex) / denom) * LINE_ANIM_DURATION_MS
+    return (
+      <circle
+        key={`line-dot-${index}`}
+        cx={cx}
+        cy={cy}
+        r={4}
+        fill="#3b82f6"
+        stroke={stroke}
+        strokeWidth={2}
+        className="line-dot-anim"
+        style={{ animationDelay: `${delay}ms` }}
+      />
+    )
+  }
+  LineDot.displayName = "LineDot"
+  return LineDot
+}
+
+// 折れ線グラフの実パス長を測定して CSS 変数に反映し、線と点のアニメーションを同期させる
+// 初期マウント時に該当タブが非アクティブで DOM が無いケースに対応するため、container を state で受けてアタッチされたタイミングで測定する
+function useLineReady(container: HTMLDivElement | null): boolean {
+  const [ready, setReady] = useState(false)
+  useEffect(() => {
+    if (!container) return
+    let raf = 0
+    let attempts = 0
+    const measure = () => {
+      const path = container.querySelector(".recharts-line-curve") as SVGPathElement | null
+      if (path) {
+        const len = path.getTotalLength()
+        if (len > 0) {
+          container.style.setProperty("--line-length", `${len}`)
+          setReady(true)
+          return
+        }
+      }
+      if (attempts++ < 30) raf = requestAnimationFrame(measure)
+    }
+    raf = requestAnimationFrame(measure)
+    return () => {
+      if (raf) cancelAnimationFrame(raf)
+      setReady(false)
+    }
+  }, [container])
+  return ready
+}
+
 export default function StatsPage() {
   const { user, isLoading: userLoading } = useSupabaseUser()
   const userId = user?.id ?? null
@@ -593,9 +650,8 @@ export default function StatsPage() {
   // タブ切替時に DOM がマウントされたタイミングで測定を発火させるため、callback ref として state を使用する
   const [monthlyLineContainer, setMonthlyLineContainer] = useState<HTMLDivElement | null>(null)
   const [yearlyLineContainer, setYearlyLineContainer] = useState<HTMLDivElement | null>(null)
-  const [monthlyLineReady, setMonthlyLineReady] = useState(false)
-  const [yearlyLineReady, setYearlyLineReady] = useState(false)
-  const LINE_ANIM_DURATION_MS = 900
+  const monthlyLineReady = useLineReady(monthlyLineContainer)
+  const yearlyLineReady = useLineReady(yearlyLineContainer)
 
   const { t, locale } = useTranslation()
 
@@ -620,9 +676,10 @@ export default function StatsPage() {
     areaTo: isDark ? "rgba(96,165,250,0.12)" : "rgba(59,130,246,0.06)",
   }), [isDark])
 
+  // SSR の初期HTMLと一致させるため、保存済みのグラフ表示設定はマウント後に反映する
   useEffect(() => {
-    // ローカルストレージからグラフの表示設定を復元
     const savedMonthly = localStorage.getItem("milenote_monthly_chart") as "line" | "bar"
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (savedMonthly) setMonthlyChartType(savedMonthly)
 
     const savedYearly = localStorage.getItem("milenote_yearly_chart") as "line" | "bar"
@@ -740,51 +797,6 @@ export default function StatsPage() {
     setPieAnimKey(k => k + 1)
   }, [catFilterStart, catFilterEnd])
 
-  // 折れ線グラフの実パス長を測定して CSS 変数に反映し、線と点のアニメーションを同期させる
-  // 初期マウント時に該当タブが非アクティブで DOM が無いケースに対応するため、container を state で受けてアタッチされたタイミングで測定する
-  useEffect(() => {
-    setMonthlyLineReady(false)
-    const container = monthlyLineContainer
-    if (!container) return
-    let raf = 0
-    let attempts = 0
-    const measure = () => {
-      const path = container.querySelector(".recharts-line-curve") as SVGPathElement | null
-      if (path) {
-        const len = path.getTotalLength()
-        if (len > 0) {
-          container.style.setProperty("--line-length", `${len}`)
-          setMonthlyLineReady(true)
-          return
-        }
-      }
-      if (attempts++ < 30) raf = requestAnimationFrame(measure)
-    }
-    raf = requestAnimationFrame(measure)
-    return () => { if (raf) cancelAnimationFrame(raf) }
-  }, [monthlyLineContainer])
-
-  useEffect(() => {
-    setYearlyLineReady(false)
-    const container = yearlyLineContainer
-    if (!container) return
-    let raf = 0
-    let attempts = 0
-    const measure = () => {
-      const path = container.querySelector(".recharts-line-curve") as SVGPathElement | null
-      if (path) {
-        const len = path.getTotalLength()
-        if (len > 0) {
-          container.style.setProperty("--line-length", `${len}`)
-          setYearlyLineReady(true)
-          return
-        }
-      }
-      if (attempts++ < 30) raf = requestAnimationFrame(measure)
-    }
-    raf = requestAnimationFrame(measure)
-    return () => { if (raf) cancelAnimationFrame(raf) }
-  }, [yearlyLineContainer])
 
   // 直近6か月の枠を常に生成してから集計（記録が無い月も枠を表示する）
   type MonthlyBucket = { month: string; amount: number } & Record<CategoryKey, number>
@@ -1034,58 +1046,14 @@ export default function StatsPage() {
     () => yearlyData.reduce((acc, d, i) => (d.amount != null ? i : acc), -1),
     [yearlyData],
   )
-  const monthlyLineDot = useMemo(() => {
-    const totalLastIndex = monthlyData.length - 1
-    const LineDot = (props: any) => {
-      const { cx, cy, index, value } = props
-      if (cx == null || cy == null || value == null) {
-        return <g key={`line-dot-${index}`} />
-      }
-      const denom = Math.max(totalLastIndex, 1)
-      const delay = (Math.min(index, totalLastIndex) / denom) * LINE_ANIM_DURATION_MS
-      return (
-        <circle
-          key={`line-dot-${index}`}
-          cx={cx}
-          cy={cy}
-          r={4}
-          fill="#3b82f6"
-          stroke={chartChrome.dotStroke}
-          strokeWidth={2}
-          className="line-dot-anim"
-          style={{ animationDelay: `${delay}ms` }}
-        />
-      )
-    }
-    LineDot.displayName = "LineDot"
-    return LineDot
-  }, [monthlyData.length, chartChrome.dotStroke])
-  const yearlyLineDot = useMemo(() => {
-    const totalLastIndex = yearlyLastValidIndex
-    const LineDot = (props: any) => {
-      const { cx, cy, index, value } = props
-      if (cx == null || cy == null || value == null) {
-        return <g key={`line-dot-${index}`} />
-      }
-      const denom = Math.max(totalLastIndex, 1)
-      const delay = (Math.min(index, totalLastIndex) / denom) * LINE_ANIM_DURATION_MS
-      return (
-        <circle
-          key={`line-dot-${index}`}
-          cx={cx}
-          cy={cy}
-          r={4}
-          fill="#3b82f6"
-          stroke={chartChrome.dotStroke}
-          strokeWidth={2}
-          className="line-dot-anim"
-          style={{ animationDelay: `${delay}ms` }}
-        />
-      )
-    }
-    LineDot.displayName = "LineDot"
-    return LineDot
-  }, [yearlyLastValidIndex, chartChrome.dotStroke])
+  const monthlyLineDot = useMemo(
+    () => createLineDot(monthlyData.length - 1, chartChrome.dotStroke),
+    [monthlyData.length, chartChrome.dotStroke],
+  )
+  const yearlyLineDot = useMemo(
+    () => createLineDot(yearlyLastValidIndex, chartChrome.dotStroke),
+    [yearlyLastValidIndex, chartChrome.dotStroke],
+  )
 
   /* eslint-enable @typescript-eslint/no-explicit-any */
 

@@ -28,19 +28,23 @@ function AppContent({ children, loading }: { children: React.ReactNode; loading:
   const [showOverlay, setShowOverlay] = useState(loading);
   const [fadingOut, setFadingOut] = useState(false);
 
-  useEffect(() => {
+  // loading の変化を描画中に検知して状態を切り替え、effect を経由した余分な再描画を避ける
+  const [prevLoading, setPrevLoading] = useState(loading);
+  if (loading !== prevLoading) {
+    setPrevLoading(loading);
     if (loading) {
       setShowOverlay(true);
       setFadingOut(false);
-      return;
+    } else if (showOverlay) {
+      setFadingOut(true);
     }
-    if (!showOverlay) return;
-    setFadingOut(true);
+  }
+
+  useEffect(() => {
+    if (!fadingOut) return;
     const id = setTimeout(() => setShowOverlay(false), LOADING_FADE_MS);
     return () => clearTimeout(id);
-    // loading が変化したときだけ実行し、showOverlay はその時点でフェードアウトが必要かの判定にのみ使う
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
+  }, [fadingOut]);
 
   // ロード後にスクロール済みの位置で表示されるのを防ぐ
   useEffect(() => {

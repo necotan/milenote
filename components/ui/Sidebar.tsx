@@ -1,12 +1,14 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Home, FileText, BarChart2, CarFront, User, LogOut } from "lucide-react"
 import { useTranslation } from "@/lib/i18n"
+import { signOutAndClearUser } from "@/lib/hooks/useSupabaseUser"
 
 export default function Sidebar() {
     const pathname = usePathname()
+    const router = useRouter()
     const { t } = useTranslation()
 
     const navItems = [
@@ -47,10 +49,8 @@ export default function Sidebar() {
             <div className="mt-auto pt-8 border-t border-slate-300 dark:border-border">
                 <button
                     onClick={async () => {
-                        const { createClient } = await import("@/utils/supabase")
-                        const supabase = createClient()
-                        await supabase.auth.signOut()
-                        window.location.href = "/login"
+                        await signOutAndClearUser()
+                        router.push("/login")
                     }}
                     className="flex w-full items-center gap-4 px-4 py-3.5 rounded-xl transition-all text-slate-600 hover:bg-red-50 hover:text-red-600 dark:text-muted-foreground dark:hover:bg-red-950/40 dark:hover:text-red-400 font-medium"
                 >
