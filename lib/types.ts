@@ -55,7 +55,7 @@ export type RecurringCost = {
   category: string
   sub_category: string | null
   amount: number
-  frequency: "monthly" | "yearly"
+  frequency: "weekly" | "monthly" | "bimonthly" | "quarterly" | "semiannually" | "yearly"
   billing_day: number | null
   billing_month: number | null
   next_billing_date: string
