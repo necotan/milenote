@@ -36,6 +36,7 @@ import { getFuelUnit } from "@/lib/fuelTypes"
 import type { LucideIcon } from "lucide-react"
 import type { Car, CarRecord } from "@/lib/types"
 
+// キーは DB の CHECK 制約（records / recurring_costs の category_check）と一致させており、増やすときは migration も追加する
 export const CATEGORIES: Record<string, { icon: LucideIcon; color: string; bg: string }> = {
   fuel: { icon: Fuel, color: "text-blue-500", bg: "bg-blue-50 dark:bg-surface-2" },
   maintenance: { icon: Wrench, color: "text-orange-500", bg: "bg-orange-50 dark:bg-surface-2" },

@@ -52,6 +52,7 @@ const CAR_STATUS_KEYS = ["pending", "active", "archived", "archived_excluded"] a
 type CarStatus = typeof CAR_STATUS_KEYS[number]
 
 // ウィッシュリストの絞り込み対象ステータス
+// DB の CHECK 制約（wishlists_status_check）と一致させており、増やすときは migration も追加する
 const WISH_STATUS_KEYS = ["considering", "purchased", "installed", "given_up"] as const
 type WishStatus = typeof WISH_STATUS_KEYS[number]
 

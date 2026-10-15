@@ -42,6 +42,7 @@ export type SubCategorySlug =
   | "other"
 
 // category（"fuel" 等、SUB_CATEGORIES を持たないカテゴリを含む）をキーに任意文字列でルックアップできるようにする
+// 組み合わせは DB 関数 is_valid_sub_category と一致させており、増やすときは migration も追加する
 export const SUB_CATEGORIES: Record<string, SubCategorySlug[]> = {
   maintenance: [
     "oil_change", "oil_filter_change", "transmission_oil_change", "tire_change", "tire_rotation",
