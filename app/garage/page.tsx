@@ -142,9 +142,11 @@ export default function GaragePage() {
   const [wishFilters, setWishFilters] = useState<WishStatus[]>([])
   const [wishGenreFilters, setWishGenreFilters] = useState<WishlistGenreSlug[]>([])
   const [isFilterOpen, setIsFilterOpen] = useState(false)
+  // SSR の初期HTMLと一致させるため、保存済みの絞り込みはマウント後に反映する
   useEffect(() => {
     try {
       const savedStatus = localStorage.getItem("garage_wish_status_filters")
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (savedStatus) setWishFilters(JSON.parse(savedStatus))
       const savedGenre = localStorage.getItem("garage_wish_genre_filters")
       if (savedGenre) setWishGenreFilters(JSON.parse(savedGenre))
@@ -160,17 +162,14 @@ export default function GaragePage() {
   }, [wishGenreFilters])
 
   // ウィッシュリスト追加フォームの状態管理
-  const [wishCarId, setWishCarId] = useState("")
+  const [selectedWishCarId, setWishCarId] = useState("")
+  // 対象車が1台だけで未選択の場合は、その車を選択済みとして扱う
+  const wishCarId = selectedWishCarId || (cars.length === 1 ? cars[0].id : "")
   const [wishItemName, setWishItemName] = useState("")
   const [wishGenre, setWishGenre] = useState("")
   const [wishPrice, setWishPrice] = useState("")
   const [wishUrl, setWishUrl] = useState("")
   const [wishMemo, setWishMemo] = useState("")
-
-  // 対象車が1台だけの場合はウィッシュリスト追加フォームの車選択にあらかじめセットしておく
-  useEffect(() => {
-    if (cars.length === 1) setWishCarId(cars[0].id)
-  }, [cars])
 
   const resetCarForm = () => {
     setIsAddingCar(false)
@@ -473,6 +472,8 @@ export default function GaragePage() {
     }
 
     // Storageにアップロード
+    // ファイル選択のイベントハンドラ内で実行され描画中ではないため、react-hooks/purity の指摘は誤検知
+    // eslint-disable-next-line react-hooks/purity
     const fileName = `${carId}-${Date.now()}.jpg` // メタデータ除去後は常に jpg で重複しないファイル名を生成
     const filePath = `${user.id}/${fileName}` // ユーザーごとのフォルダに保存
 

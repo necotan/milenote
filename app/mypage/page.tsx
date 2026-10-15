@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react"
 import type { ReactNode, PointerEvent as ReactPointerEvent } from "react"
 import { useHydrated } from "@/lib/hooks/useHydrated"
-import { mutate as globalMutate } from "swr"
 import { createClient } from "@/utils/supabase"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -25,7 +24,7 @@ import { recordsToCsv, downloadCsv, buildExportFilename } from "@/lib/csvExport"
 import type { ExportRecord } from "@/lib/csvExport"
 import Footer from "@/components/ui/Footer"
 import { MAINT_CATEGORIES } from "@/lib/subcategories"
-import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
+import { signOutAndClearUser, useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
 import { useUserProfile } from "@/lib/hooks/useUserProfile"
 
 type MaintSetting = { km: number; months: number; months_only?: boolean; enabled?: boolean }
@@ -461,11 +460,12 @@ export default function MyPage() {
     lastPersistedMaintRef.current = mergedMaintSettings
   }, [profile])
 
+  // SSR の初期HTMLと一致させるため、保存済みの並び順とカラーモードはマウント後に反映する
   useEffect(() => {
-    // localStorageからホーム画面の並び順を取得
     const savedOrder = localStorage.getItem("home_layout")
     if (savedOrder) {
       try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setHomeOrder(JSON.parse(savedOrder))
       } catch {}
     }
@@ -565,14 +565,14 @@ export default function MyPage() {
   const [targetIndex, setTargetIndex] = useState<number | null>(null)
   // ドロップ直後の1フレームだけアニメーションを止め、位置の飛びを防ぐカード
   const [justDroppedId, setJustDroppedId] = useState<string | null>(null)
-  const dragInfo = useRef<{ startY: number; startIndex: number; step: number } | null>(null)
+  const [dragInfo, setDragInfo] = useState<{ startY: number; startIndex: number; step: number } | null>(null)
   const rowRefs = useRef<Array<HTMLDivElement | null>>([])
 
   const handleDragStart = (e: ReactPointerEvent<HTMLSpanElement>, index: number) => {
     const el = rowRefs.current[index]
     // 行の高さ（区切り線を含む）を1段分の移動量とする
     const step = el ? el.getBoundingClientRect().height : 53
-    dragInfo.current = { startY: e.clientY, startIndex: index, step }
+    setDragInfo({ startY: e.clientY, startIndex: index, step })
     setDragId(homeOrder[index])
     setDragOffset(0)
     setTargetIndex(index)
@@ -580,8 +580,8 @@ export default function MyPage() {
   }
 
   const handleDragMove = (e: ReactPointerEvent<HTMLSpanElement>) => {
-    if (!dragInfo.current) return
-    const { startY, startIndex, step } = dragInfo.current
+    if (!dragInfo) return
+    const { startY, startIndex, step } = dragInfo
     // 先頭カードより上・末尾カードより下へはみ出さないよう移動量を制限する
     const minOffset = -startIndex * step
     const maxOffset = (homeOrder.length - 1 - startIndex) * step
@@ -593,8 +593,8 @@ export default function MyPage() {
 
   const handleDragEnd = () => {
     const movedId = dragId
-    if (dragInfo.current && targetIndex !== null && targetIndex !== dragInfo.current.startIndex) {
-      const { startIndex } = dragInfo.current
+    if (dragInfo && targetIndex !== null && targetIndex !== dragInfo.startIndex) {
+      const { startIndex } = dragInfo
       setHomeOrder((prev) => {
         const next = [...prev]
         const [moved] = next.splice(startIndex, 1)
@@ -607,7 +607,7 @@ export default function MyPage() {
       setJustDroppedId(movedId)
       requestAnimationFrame(() => setJustDroppedId(null))
     }
-    dragInfo.current = null
+    setDragInfo(null)
     setDragId(null)
     setDragOffset(0)
     setTargetIndex(null)
@@ -634,9 +634,7 @@ export default function MyPage() {
   }
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    // 認証ユーザーのキャッシュを破棄する
-    await globalMutate("auth-user", null, { revalidate: false })
+    await signOutAndClearUser()
     router.push("/login")
   }
 
@@ -1004,8 +1002,8 @@ export default function MyPage() {
                   let translateY = 0
                   if (isDragging) {
                     translateY = dragOffset
-                  } else if (dragInfo.current && targetIndex !== null) {
-                    const { startIndex, step } = dragInfo.current
+                  } else if (dragInfo && targetIndex !== null) {
+                    const { startIndex, step } = dragInfo
                     // ドラッグ中のカードが入る隙間を作るため、間のカードをずらす
                     if (startIndex < targetIndex && index > startIndex && index <= targetIndex) {
                       translateY = -step
