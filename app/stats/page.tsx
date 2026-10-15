@@ -1371,7 +1371,7 @@ export default function StatsPage() {
                 <div
                   key={monthlyAnimKey}
                   ref={monthlyChartType === "line" ? setMonthlyLineContainer : null}
-                  className={`${monthlyChartType === "bar" ? "bar-anim" : "line-anim"}${monthlyChartType === "line" && monthlyLineReady ? "line-ready" : ""}`}
+                  className={`${monthlyChartType === "bar" ? "bar-anim" : "line-anim"}${monthlyChartType === "line" && monthlyLineReady ? " line-ready" : ""}`}
                   style={{ width: "100%", height: "100%" }}
                 >
                   <ResponsiveContainer width="100%" height="100%">
@@ -1447,7 +1447,7 @@ export default function StatsPage() {
               <div
                 key={yearlyAnimKey}
                 ref={yearlyChartType === "line" ? setYearlyLineContainer : null}
-                className={`h-64 w-full lg:flex-1 lg:min-w-0 ${yearlyChartType === "bar" ? "bar-anim" : "line-anim"}${yearlyChartType === "line" && yearlyLineReady ? "line-ready" : ""}`}
+                className={`h-64 w-full lg:flex-1 lg:min-w-0 ${yearlyChartType === "bar" ? "bar-anim" : "line-anim"}${yearlyChartType === "line" && yearlyLineReady ? " line-ready" : ""}`}
               >
                 <ResponsiveContainer width="100%" height="100%">
                   {yearlyChartType === "line" ? (
