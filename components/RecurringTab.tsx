@@ -214,7 +214,7 @@ const RecurringForm = ({
               <DatePicker
                 value={nextBillingDate}
                 onChange={setNextBillingDate}
-                className="max-w-40 bg-white dark:bg-card h-8 min-h-0"
+                className="sm:max-w-sm bg-white dark:bg-card h-8 min-h-0"
               />
               {!isEdit && (
                 <p className="text-[11px] text-slate-500 dark:text-muted-foreground">
