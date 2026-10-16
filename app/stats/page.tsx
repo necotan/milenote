@@ -1,7 +1,7 @@
 "use client"
 
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import type { CSSProperties, ReactElement } from "react"
+import type { CSSProperties, ReactElement, ReactNode } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
@@ -11,7 +11,7 @@ import {
   ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   BarChart, Bar, BarStack
 } from "recharts"
-import type { DotItemDotProps, TooltipContentProps } from "recharts"
+import type { Coordinate, DotItemDotProps, PieLabelRenderProps, TooltipContentProps, TooltipValueType } from "recharts"
 import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, ChevronDown, Info, LineChart as LineChartIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 import { DatePicker } from "@/components/ui/date-picker"
@@ -21,6 +21,7 @@ import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
 import { useCars } from "@/lib/hooks/useCars"
 import { useRecords } from "@/lib/hooks/useRecords"
 import { getOwnershipStartYear, getYearRowState } from "@/lib/yearlyStats"
+import { toISODate } from "@/lib/date/calendar"
 
 const CATEGORY_MAP_COLORFUL: Record<string, { color: string }> = {
   fuel: { color: "#3b82f6" },
@@ -179,9 +180,7 @@ const computePieLabelYDeltas = (
 }
 
 const createCustomizedLabel = (t: (key: string, params?: Record<string, string | number>) => string, locale: string, fillColor: string, pieLabelDeltas: Map<number, number>) => {
-  // Recharts の PieLabel 型は省略可能フィールドを含む複雑な union のため any を許容
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const PieCustomLabel = (props: any) => {
+  const PieCustomLabel = (props: PieLabelRenderProps) => {
     const { x, y, cx, percent, value, textAnchor, index } = props;
 
     const formatValue = (val: number) => {
@@ -203,7 +202,7 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
 
     // 金額とパーセントを2行に分けて表示
     const amountText = formatValue(value);
-    const percentText = `(${(percent * 100).toFixed(1)}%)`;
+    const percentText = `(${((percent ?? 0) * 100).toFixed(1)}%)`;
 
     // ラベルがカード（SVG）の端に張り付かないよう、テキスト幅を概算して左右に最低限の余白を確保する
     const EDGE_PAD = 8;
@@ -242,10 +241,14 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
 
 // 引き出し線はラベル文字と必ず同じ条件で描画する（どちらか一方だけが描かれると、どのラベルにも繋がらない線が残る）
 // 終点のY座標はラベル側と同じ delta を適用し、重なり回避で動いたラベルに追従させる
+// Recharts は labelLine に渡す props の型を公開していないため、使う項目だけを定義する
+type PieLabelLineProps = {
+  points?: readonly Coordinate[]
+  index: number
+}
+
 const createCustomizedLabelLine = (strokeColor: string, pieLabelDeltas: Map<number, number>) => {
-  // Recharts の PieLabelLine 型自体が関数の引数を any で定義しているため、ここでも any を許容
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const PieCustomLabelLine = (props: any) => {
+  const PieCustomLabelLine = (props: PieLabelLineProps) => {
     const { points, index } = props;
     if (!points || points.length < 2) {
       return <path d="" stroke="none" fill="none" />;
@@ -502,9 +505,7 @@ const CategoryBreakdownCard = memo(function CategoryBreakdownCard({
                     <Label value={`¥${totalAmount.toLocaleString()}`} position="center" dy={-8} className="text-base font-bold fill-slate-800 dark:fill-foreground" />
                     <Label value={t("stats.total")} position="center" dy={8} className="text-[11px] font-bold fill-slate-500 dark:fill-muted-foreground" />
                   </Pie>
-                  {/* Recharts のコールバック型が複雑なため any を許容 */}
-                  {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  <Tooltip wrapperStyle={{ zIndex: 10 }} contentStyle={{ borderRadius: '8px', border: `1px solid ${chartChrome.tooltipBorder}`, boxShadow: 'none', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} formatter={(value: any, name: any) => [`¥${Number(value).toLocaleString()}`, String(name)]} />
+                  <Tooltip wrapperStyle={{ zIndex: 10 }} contentStyle={{ borderRadius: '8px', border: `1px solid ${chartChrome.tooltipBorder}`, boxShadow: 'none', backgroundColor: chartChrome.tooltipBg }} itemStyle={{ color: chartChrome.tooltipText }} formatter={(value, name) => [`¥${Number(value).toLocaleString()}`, String(name)]} />
                   <Legend verticalAlign="bottom" content={renderGridLegend(renderRawLegendLabel)} />
                 </PieChart>
               </ResponsiveContainer>
@@ -690,15 +691,14 @@ export default function StatsPage() {
   }, [])
 
   // 期間プリセットから実際の開始・終了日を算出
-  const toIsoDate = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
-  const todayStr = toIsoDate(new Date())
+  const todayStr = toISODate(new Date())
   const threeMonthsAgoStr = (() => {
     const now = new Date()
-    return toIsoDate(new Date(now.getFullYear(), now.getMonth() - 3, now.getDate()))
+    return toISODate(new Date(now.getFullYear(), now.getMonth() - 3, now.getDate()))
   })()
   const oneYearAgoStr = (() => {
     const now = new Date()
-    return toIsoDate(new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()))
+    return toISODate(new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()))
   })()
   const yearStartStr = `${currentYear}-01-01`
   // 全期間の開始日表示用
@@ -932,18 +932,16 @@ export default function StatsPage() {
   // 年別推移の年フォーマッター（軸は数値のみ、Tooltipはロケールに応じて年表記）
   const yearFormatter = useCallback((y: number) => String(y), [])
 
-  // Recharts のコールバック型（PieLabelRenderProps, Formatter, LabelFormatter 等）は省略可能フィールドを含む複雑な union のため本ファイル内では any を許容する
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  const numberTickFormatter = useCallback((v: any) => Number(v).toLocaleString(), [])
-  const expenditureTooltipFormatter = useCallback((value: any): [string, string] => [
+  const numberTickFormatter = useCallback((v: number | string) => Number(v).toLocaleString(), [])
+  const expenditureTooltipFormatter = useCallback((value: TooltipValueType | undefined): [string, string] => [
     `¥${Number(value).toLocaleString()}`,
     t("stats.expenditure"),
   ], [t])
   const yearTooltipLabelFormatter = useCallback(
-    (label: any) => t("common.year_suffix", { year: label }),
+    (label: ReactNode) => t("common.year_suffix", { year: String(label) }),
     [t],
   )
-  const monthlyTooltipLabelFormatter = useCallback((label: any) => {
+  const monthlyTooltipLabelFormatter = useCallback((label: ReactNode) => {
     const [year, month] = String(label).split("-")
     const monthNum = parseInt(month, 10)
     if (locale === "en") {
@@ -1054,8 +1052,6 @@ export default function StatsPage() {
     () => createLineDot(yearlyLastValidIndex, chartChrome.dotStroke),
     [yearlyLastValidIndex, chartChrome.dotStroke],
   )
-
-  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   // ローディング状態の表示（タイトルは即時表示し、コンテンツのみスケルトン）
   if (loading) return (
