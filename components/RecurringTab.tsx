@@ -335,7 +335,7 @@ export default function RecurringTab({
   const [subCategory, setSubCategory] = useState(getDefaultSubCategory("other"))
   const [amount, setAmount] = useState("")
   const [frequency, setFrequency] = useState("monthly")
-  const [nextBillingDate, setNextBillingDate] = useState(new Date().toISOString().split('T')[0])
+  const [nextBillingDate, setNextBillingDate] = useState(() => toISODate(new Date()))
   const [memo, setMemo] = useState("")
 
   // カテゴリをユーザーが手動で切り替えたときだけサブカテゴリと頻度を既定値にする
@@ -357,7 +357,7 @@ export default function RecurringTab({
     setCategory("other")
     setSubCategory(getDefaultSubCategory("other"))
     setFrequency("monthly")
-    setNextBillingDate(new Date().toISOString().split('T')[0])
+    setNextBillingDate(toISODate(new Date()))
     if (cars.length > 0) setCarId(cars[0].id)
   }
 
