@@ -71,7 +71,7 @@ function MonthPicker({
             className
           )}
         >
-          <span className={cn(!value && "text-muted-foreground")}>{label}</span>
+          <span className={cn("truncate", !value && "text-muted-foreground")}>{label}</span>
           <CalendarDays aria-hidden="true" className="size-4 shrink-0 text-muted-foreground" />
         </button>
       </PopoverPrimitive.Trigger>
