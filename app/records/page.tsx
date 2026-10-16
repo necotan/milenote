@@ -33,6 +33,7 @@ import { ExpandableNote } from "@/components/ui/ExpandableNote"
 import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES, type SubCategorySlug } from "@/lib/subcategories"
 import { getFuelUnit } from "@/lib/fuelTypes"
+import { toISODate } from "@/lib/date/calendar"
 import type { LucideIcon } from "lucide-react"
 import type { Car, CarRecord } from "@/lib/types"
 
@@ -413,7 +414,7 @@ function RecordsPageInner() {
   const [odoAtRecord, setOdoAtRecord] = useState("")
   const [fuelAmount, setFuelAmount] = useState("")
   const [fuelUnitPrice, setFuelUnitPrice] = useState("")
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0])
+  const [date, setDate] = useState(() => toISODate(new Date()))
   const [memo, setMemo] = useState("")
 
   // 高速料金用ステート
