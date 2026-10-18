@@ -255,7 +255,7 @@ const RecordForm = ({
                   onValueChange={value => onFuelFieldChange("amount", value)}
                   required
                   placeholder="6,800"
-                  className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 font-bold text-slate-800 dark:text-foreground placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
+                  className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 text-slate-800 dark:text-foreground placeholder:text-slate-300 dark:placeholder:text-muted-foreground"
                 />
               </div>
             </FormSection>
