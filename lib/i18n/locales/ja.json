@@ -225,6 +225,10 @@
     "unit_kg": "kg",
     "hydrogen_amount_label": "充填量:",
     "route_display_label": "区間:",
+    "unit_price_label": "単価:",
+    "unit_price_value_l": "{{price}} 円/L",
+    "unit_price_value_kwh": "{{price}} 円/kWh",
+    "unit_price_value_kg": "{{price}} 円/kg",
     "not_entered": "未入力",
     "view_by_month": "月別",
     "view_all": "全期間",
@@ -384,6 +388,7 @@
     "export_col_amount": "金額(円)",
     "export_col_odometer": "走行距離(km)",
     "export_col_fuel": "給油量・充電量",
+    "export_col_unit_price": "単価(円)",
     "export_col_memo": "メモ",
     "home_sections": {
       "summary": "今月の費用 ＆ 直近の記録",

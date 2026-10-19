@@ -55,6 +55,11 @@ export const CATEGORIES: Record<string, { icon: LucideIcon; color: string; bg: s
 // 給油フォームの相互自動計算で、入力元になったフィールド
 type FuelCalcField = "amount" | "fuelUnitPrice" | "fuelAmount"
 
+const parseOptionalNumber = (value: string): number | null => {
+  const n = parseFloat(value)
+  return isNaN(n) ? null : n
+}
+
 const RecordSkeleton = () => (
   <div className="space-y-4">
     <SkeletonTabs className="mb-4" />
@@ -625,6 +630,7 @@ function RecordsPageInner() {
         amount: parseInt(amount),
         odo_at_record: odoAtRecord ? parseInt(odoAtRecord) : fallbackOdo,
         fuel_amount: category === "fuel" ? parseFloat(fuelAmount) : null,
+        fuel_unit_price: category === "fuel" ? parseOptionalNumber(fuelUnitPrice) : null,
         date,
         memo: memo || null,
         entry_ic: category === "highway" ? (entryIc || null) : null,
@@ -658,7 +664,11 @@ function RecordsPageInner() {
     const liters = record.fuel_amount ? parseFloat(String(record.fuel_amount)) : null
     const total = record.amount ? record.amount : null
     setFuelAmount(liters ? String(liters) : "")
-    setFuelUnitPrice(liters && total ? deriveFuelUnitPrice(total, liters) : "")
+    if (record.fuel_unit_price != null) {
+      setFuelUnitPrice(String(Number(record.fuel_unit_price)))
+    } else {
+      setFuelUnitPrice(liters && total ? deriveFuelUnitPrice(total, liters) : "")
+    }
     setDate(record.date)
     
     if (record.category === "highway") {
@@ -691,6 +701,7 @@ function RecordsPageInner() {
         amount: parseInt(amount),
         odo_at_record: odoAtRecord ? parseInt(odoAtRecord) : fallbackOdo,
         fuel_amount: category === "fuel" ? parseFloat(fuelAmount) : null,
+        fuel_unit_price: category === "fuel" ? parseOptionalNumber(fuelUnitPrice) : null,
         date,
         memo: memo || null,
         entry_ic: category === "highway" ? (entryIc || null) : null,
@@ -1010,13 +1021,19 @@ function RecordsPageInner() {
 
                       <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-2">{record.date.replace(/-/g, '/')}</p>
 
-                      {record.category === "fuel" && record.fuel_amount && (() => {
+                      {record.category === "fuel" && (record.fuel_amount || record.fuel_unit_price != null) && (() => {
                         const unit = getFuelUnit(carsById.get(record.car_id)?.fuel_type)
                         const amountLabel = { l: t("records.fuel_amount_label"), kwh: t("records.charge_amount_label"), kg: t("records.hydrogen_amount_label") }[unit]
                         const amountUnit = { l: t("records.unit_l"), kwh: t("records.unit_kwh"), kg: t("records.unit_kg") }[unit]
+                        const priceKey = { l: "records.unit_price_value_l", kwh: "records.unit_price_value_kwh", kg: "records.unit_price_value_kg" }[unit]
                         return (
-                          <p className="text-xs text-slate-600 dark:text-muted-foreground mb-2">
-                            {amountLabel} <span className="font-bold text-slate-700 dark:text-foreground">{record.fuel_amount} {amountUnit}</span>
+                          <p className="flex flex-wrap gap-x-3 text-xs text-slate-600 dark:text-muted-foreground mb-2">
+                            {record.fuel_amount && (
+                              <span>{amountLabel} <span className="font-bold text-slate-700 dark:text-foreground">{record.fuel_amount} {amountUnit}</span></span>
+                            )}
+                            {record.fuel_unit_price != null && (
+                              <span>{t("records.unit_price_label")} <span className="font-bold text-slate-700 dark:text-foreground">{t(priceKey, { price: Number(record.fuel_unit_price).toLocaleString() })}</span></span>
+                            )}
                           </p>
                         )
                       })()}

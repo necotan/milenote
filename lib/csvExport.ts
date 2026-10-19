@@ -9,6 +9,7 @@ export type ExportRecord = {
   amount: number
   odo_at_record: number | null
   fuel_amount: number | null
+  fuel_unit_price: number | null
   memo: string | null
   cars: { name: string; fuel_type: string | null } | null
 }
@@ -46,6 +47,7 @@ export function recordsToCsv(records: ExportRecord[], t: TFunc): string {
     t("mypage.export_col_amount"),
     t("mypage.export_col_odometer"),
     t("mypage.export_col_fuel"),
+    t("mypage.export_col_unit_price"),
     t("mypage.export_col_memo"),
   ]
 
@@ -63,6 +65,7 @@ export function recordsToCsv(records: ExportRecord[], t: TFunc): string {
       r.amount,
       r.odo_at_record ?? "",
       fuel,
+      r.fuel_unit_price ?? "",
       r.memo ?? "",
     ]
   })
