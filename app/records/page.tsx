@@ -33,6 +33,7 @@ import { ExpandableNote } from "@/components/ui/ExpandableNote"
 import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES, type SubCategorySlug } from "@/lib/subcategories"
 import { getFuelUnit } from "@/lib/fuelTypes"
+import { deriveFuelUnitPrice } from "@/lib/fuelUnitPrice"
 import { toISODate } from "@/lib/date/calendar"
 import type { LucideIcon } from "lucide-react"
 import type { Car, CarRecord } from "@/lib/types"
@@ -557,7 +558,7 @@ function RecordsPageInner() {
       if (!isNaN(liters) && !isNaN(price)) {
         setAmount(Math.round(liters * price).toString())
       } else if (!isNaN(liters) && !isNaN(total)) {
-        setFuelUnitPrice((total / liters).toFixed(2))
+        setFuelUnitPrice(deriveFuelUnitPrice(total, liters))
       }
     } else if (field === "amount") {
       setAmount(value)
@@ -567,7 +568,7 @@ function RecordsPageInner() {
       if (!isNaN(total) && !isNaN(price)) {
         setFuelAmount((total / price).toFixed(2))
       } else if (!isNaN(total) && !isNaN(liters)) {
-        setFuelUnitPrice((total / liters).toFixed(2))
+        setFuelUnitPrice(deriveFuelUnitPrice(total, liters))
       }
     }
   }
@@ -657,7 +658,7 @@ function RecordsPageInner() {
     const liters = record.fuel_amount ? parseFloat(String(record.fuel_amount)) : null
     const total = record.amount ? record.amount : null
     setFuelAmount(liters ? String(liters) : "")
-    setFuelUnitPrice(liters && total ? (total / liters).toFixed(2) : "")
+    setFuelUnitPrice(liters && total ? deriveFuelUnitPrice(total, liters) : "")
     setDate(record.date)
     
     if (record.category === "highway") {
