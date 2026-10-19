@@ -645,7 +645,7 @@ export default function MyPage() {
       if (!user) return
       const { data, error } = await supabase
         .from("records")
-        .select("date, category, sub_category, amount, odo_at_record, fuel_amount, memo, cars!inner(name, fuel_type, status)")
+        .select("date, category, sub_category, amount, odo_at_record, fuel_amount, fuel_unit_price, memo, cars!inner(name, fuel_type, status)")
         .eq("user_id", user.id)
         .in("cars.status", ["active", "archived"])
         .order("date", { ascending: false })

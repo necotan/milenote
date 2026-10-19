@@ -225,6 +225,10 @@
     "unit_kg": "kg",
     "hydrogen_amount_label": "Refuel:",
     "route_display_label": "Route:",
+    "unit_price_label": "Price:",
+    "unit_price_value_l": "¥{{price}}/L",
+    "unit_price_value_kwh": "¥{{price}}/kWh",
+    "unit_price_value_kg": "¥{{price}}/kg",
     "not_entered": "N/A",
     "view_by_month": "Monthly",
     "view_all": "All Time",
@@ -384,6 +388,7 @@
     "export_col_amount": "Amount (JPY)",
     "export_col_odometer": "Odometer (km)",
     "export_col_fuel": "Fuel / Charge",
+    "export_col_unit_price": "Unit price (JPY)",
     "export_col_memo": "Memo",
     "home_sections": {
       "summary": "Monthly Cost & Recent",

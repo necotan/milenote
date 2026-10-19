@@ -38,6 +38,7 @@ export type CarRecord = {
   amount: number
   odo_at_record: number
   fuel_amount: number | string | null
+  fuel_unit_price: number | string | null
   date: string
   memo: string | null
   created_at: string
