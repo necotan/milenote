@@ -503,7 +503,7 @@ export default function RecurringTab({
           return (
             <Card
               key={cost.id}
-              className={`border-none shadow-sm overflow-hidden transition-opacity relative ${cost.is_active ? 'bg-white dark:bg-card' : 'bg-slate-50 dark:bg-muted opacity-60'}`}
+              className={`border-none shadow-sm overflow-hidden relative ${cost.is_active ? 'bg-white dark:bg-card' : 'bg-slate-50 dark:bg-muted'}`}
             >
               <CardContent className="p-0">
                 {/* アクションボタン（右上に常時表示） */}
@@ -528,7 +528,7 @@ export default function RecurringTab({
                   </IconButton>
                 </div>
 
-                <div className="p-4 flex gap-3 items-start">
+                <div className={`p-4 flex gap-3 items-start transition-opacity ${cost.is_active ? '' : 'opacity-60'}`}>
                   <div className={`p-3 rounded-full shrink-0 mt-1 ${cat.bg} ${cat.color}`}>
                     <Icon size={24} />
                   </div>
