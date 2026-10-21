@@ -242,18 +242,9 @@ const RecurringForm = ({
 
 const StatusBadge = ({ isActive }: { isActive: boolean }) => {
   const { t } = useTranslation()
-  if (isActive) {
-    return (
-      <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 whitespace-nowrap shrink-0">
-        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shrink-0" />
-        {t("records.status_active")}
-      </span>
-    )
-  }
   return (
-    <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 whitespace-nowrap shrink-0">
-      <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
-      {t("records.status_paused")}
+    <span className={`inline-flex items-center text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap shrink-0 transition-colors duration-300 ${isActive ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300' : 'bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300'}`}>
+      {isActive ? t("records.status_active") : t("records.status_paused")}
     </span>
   )
 }
@@ -501,34 +492,12 @@ export default function RecurringTab({
           const Icon = cat.icon
 
           return (
+            <div key={cost.id} className="relative">
             <Card
-              key={cost.id}
-              className={`border-none shadow-sm overflow-hidden relative ${cost.is_active ? 'bg-white dark:bg-card' : 'bg-slate-50 dark:bg-muted'}`}
+              className={`border-none shadow-sm overflow-hidden transition-[opacity,background-color] duration-300 ease-out relative ${cost.is_active ? 'bg-white dark:bg-card' : 'bg-slate-50 dark:bg-muted opacity-60'}`}
             >
               <CardContent className="p-0">
-                {/* アクションボタン（右上に常時表示） */}
-                <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
-                  <IconButton
-                    onClick={() => toggleActive(cost.id, cost.is_active)}
-                    tone={cost.is_active ? "default" : "positive"}
-                    title={cost.is_active ? t("records.pause_recurring") : t("records.resume_recurring")}
-                  >
-                    {cost.is_active ? <Pause size={15} /> : <Play size={15} />}
-                  </IconButton>
-                  <IconButton
-                    onClick={() => handleStartEdit(cost)}
-                  >
-                    <Pencil size={15} />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => setDeleteId(cost.id)}
-                    tone="destructive"
-                  >
-                    <Trash2 size={15} />
-                  </IconButton>
-                </div>
-
-                <div className={`p-4 flex gap-3 items-start transition-opacity ${cost.is_active ? '' : 'opacity-60'}`}>
+                <div className="p-4 flex gap-3 items-start">
                   <div className={`p-3 rounded-full shrink-0 mt-1 ${cat.bg} ${cat.color}`}>
                     <Icon size={24} />
                   </div>
@@ -569,6 +538,29 @@ export default function RecurringTab({
                 </div>
               </CardContent>
             </Card>
+
+            <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
+              <IconButton
+                onClick={() => toggleActive(cost.id, cost.is_active)}
+                tone={cost.is_active ? "default" : "positive"}
+                title={cost.is_active ? t("records.pause_recurring") : t("records.resume_recurring")}
+              >
+                <Pause size={15} className={`absolute transition-all duration-300 ${cost.is_active ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
+                <Play size={15} className={`absolute transition-all duration-300 ${cost.is_active ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`} />
+              </IconButton>
+              <IconButton
+                onClick={() => handleStartEdit(cost)}
+              >
+                <Pencil size={15} />
+              </IconButton>
+              <IconButton
+                onClick={() => setDeleteId(cost.id)}
+                tone="destructive"
+              >
+                <Trash2 size={15} />
+              </IconButton>
+            </div>
+            </div>
           )
         })}
       </div>
