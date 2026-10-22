@@ -41,7 +41,7 @@
 本アプリケーションはローカル環境（Next.js + Supabase）で動作します。以下の手順でセットアップしてください。
 
 ### 前提条件
-- Node.js 18以上
+- Node.js 24.22.1 以上（24.x）
 - [Supabase](https://supabase.com/) アカウント
 - [Docker Desktop](https://docs.docker.com/desktop)（Supabase CLI でDB初期化に必要）
 
