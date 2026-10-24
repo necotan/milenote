@@ -35,6 +35,7 @@ import { SUB_CATEGORIES, type SubCategorySlug } from "@/lib/subcategories"
 import { getFuelUnit } from "@/lib/fuelTypes"
 import { deriveFuelUnitPrice } from "@/lib/fuelUnitPrice"
 import { toISODate } from "@/lib/date/calendar"
+import { estimateOdoAtDate } from "@/lib/odoEstimate"
 import type { LucideIcon } from "lucide-react"
 import type { Car, CarRecord } from "@/lib/types"
 
@@ -121,6 +122,7 @@ type RecordFormProps = {
   setDate: (value: string) => void
   odoAtRecord: string
   setOdoAtRecord: (value: string) => void
+  odoPlaceholder: string
   fuelAmount: string
   fuelUnitPrice: string
   memo: string
@@ -152,6 +154,7 @@ const RecordForm = ({
   amount, setAmount,
   date, setDate,
   odoAtRecord, setOdoAtRecord,
+  odoPlaceholder,
   fuelAmount,
   fuelUnitPrice,
   memo, setMemo,
@@ -208,7 +211,7 @@ const RecordForm = ({
   const odoField = (
     <div className="space-y-2">
       <Label>{t("records.odometer_km")}</Label>
-      <NumberInput value={odoAtRecord} onValueChange={setOdoAtRecord} placeholder="52,500" className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
+      <NumberInput value={odoAtRecord} onValueChange={setOdoAtRecord} placeholder={odoPlaceholder} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
     </div>
   )
 
@@ -609,6 +612,13 @@ function RecordsPageInner() {
     await mutateCars()
   }
 
+  // ODO未入力で保存するときの値
+  const estimatedOdo = useMemo(() => {
+    const targetCar = carsById.get(carId)
+    if (!targetCar) return null
+    return estimateOdoAtDate({ car: targetCar, records: allRecords, date, today: toISODate(new Date()), excludeRecordId: editRecordId })
+  }, [carsById, carId, allRecords, date, editRecordId])
+
   const handleAddRecord = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!carId) return alert(t("records.select_car_alert"))
@@ -618,8 +628,7 @@ function RecordsPageInner() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
-      const targetCar = cars.find(c => c.id === carId)
-      const fallbackOdo = targetCar ? targetCar.current_odo : 0
+      const fallbackOdo = estimatedOdo ?? 0
       const isVehicleInspection = category === "inspection" && subCategory === "vehicle_inspection"
 
       const { error: recordError } = await supabase.from("records").insert({
@@ -690,8 +699,7 @@ function RecordsPageInner() {
 
     setIsSubmitting(true)
     try {
-      const targetCar = cars.find(c => c.id === carId)
-      const fallbackOdo = targetCar ? targetCar.current_odo : 0
+      const fallbackOdo = estimatedOdo ?? 0
       const isVehicleInspection = category === "inspection" && subCategory === "vehicle_inspection"
 
       const { error } = await supabase.from("records").update({
@@ -919,6 +927,7 @@ function RecordsPageInner() {
           amount={amount} setAmount={setAmount}
           date={date} setDate={setDate}
           odoAtRecord={odoAtRecord} setOdoAtRecord={setOdoAtRecord}
+          odoPlaceholder={estimatedOdo != null ? estimatedOdo.toLocaleString() : "52,500"}
           fuelAmount={fuelAmount}
           fuelUnitPrice={fuelUnitPrice}
           memo={memo} setMemo={setMemo}
@@ -942,6 +951,7 @@ function RecordsPageInner() {
           amount={amount} setAmount={setAmount}
           date={date} setDate={setDate}
           odoAtRecord={odoAtRecord} setOdoAtRecord={setOdoAtRecord}
+          odoPlaceholder={estimatedOdo != null ? estimatedOdo.toLocaleString() : "52,500"}
           fuelAmount={fuelAmount}
           fuelUnitPrice={fuelUnitPrice}
           memo={memo} setMemo={setMemo}
