@@ -2,7 +2,7 @@
 
 import type { MaintSettings } from "@/lib/maintenanceAlerts"
 
-export type CarStatus = "pending" | "active" | "archived" | "archived_excluded" | "deleted"
+export type CarStatus = "pending" | "active" | "archived" | "archived_excluded"
 
 export type Car = {
   id: string
