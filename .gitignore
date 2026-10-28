@@ -44,7 +44,13 @@ next-env.d.ts
 supabase/.temp
 supabase/.branches
 
-# AI conversation history
-/docs
+# documentation
+/docs/*
+!/docs/data-model.md
+!/docs/delete-design.md
+!/docs/design.md
+!/docs/ios-pwa.md
+!/docs/security-design.md
+!/docs/stored-values.md
 /.ai
 /.claude
