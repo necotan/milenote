@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { Home, FileText, BarChart2, CarFront, User, LogOut } from "lucide-react"
 import { useTranslation } from "@/lib/i18n"
+import { isHomeSubRoute } from "@/utils/homeSubRoutes"
 import { signOutAndClearUser } from "@/lib/hooks/useSupabaseUser"
 
 export default function Sidebar() {
@@ -26,7 +27,7 @@ export default function Sidebar() {
             </div>
             <nav className="flex-1 space-y-2">
                 {navItems.map((item) => {
-                    const isActive = pathname === item.href || (item.key === "home" && pathname === "/maintenance")
+                    const isActive = pathname === item.href || (item.key === "home" && isHomeSubRoute(pathname))
                     const Icon = item.icon
                     return (
                         <Link

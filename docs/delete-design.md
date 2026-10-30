@@ -39,8 +39,9 @@ Why: rows of cars that should be hidden once appeared in the record list and the
 
 | Target | How | Cleanup |
 |---|---|---|
-| Car | `delete()` on `cars` in `handleDeleteCar` (`app/garage/page.tsx`) | `records`, `recurring_costs`, and `wishlists` are removed by `ON DELETE CASCADE` on `car_id`. Car images in Storage are removed explicitly before the delete. |
-| Record, recurring cost, wishlist item | `delete()` on the row | None; they have no children or files. |
+| Car | `delete()` on `cars` in `handleDeleteCar` (`app/garage/page.tsx`) | `records`, `recurring_costs`, `wishlists`, and `odo_logs` are removed by `ON DELETE CASCADE` on `car_id`. Car images in Storage are removed explicitly before the delete. |
+| Recurring cost, wishlist item | `delete()` on the row | None; they have no children or files. |
+| Record, ODO history entry | `delete()` on the row | No children or files. Recalculate `cars.current_odo` with `recalcCarOdo` (`lib/carOdo.ts`). |
 
 - Storage files are not covered by FKs. Before deleting a car, list `{user_id}/` in the `cars` bucket and remove every file whose name starts with `{car_id}-`. This also removes images orphaned by earlier uploads.
 - When a car image is replaced, the old file is removed.

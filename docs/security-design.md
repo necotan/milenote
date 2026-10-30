@@ -7,7 +7,7 @@ Security decisions and the rules that keep them true. Report vulnerabilities as 
 - The browser talks to Supabase directly with the anon key (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`). Row Level Security is the real boundary; client-side checks are convenience only. The `service_role` key is never used in the app.
 - Every table has RLS. Policies allow only the `authenticated` role:
   - `users`: own row (`id = auth.uid()`).
-  - `cars`, `records`, `recurring_costs`: own rows (`user_id = auth.uid()`). Insert and update on `records` and `recurring_costs` also require that `car_id` belongs to the user.
+  - `cars`, `records`, `recurring_costs`, `odo_logs`: own rows (`user_id = auth.uid()`). Insert and update on `records`, `recurring_costs`, and `odo_logs` also require that `car_id` belongs to the user.
   - `wishlists`: through the owning car (`cars.user_id = auth.uid()`).
 - The `anon` role has no table privileges, including default privileges for future tables. Do not grant anything to `anon`.
 - New tables: enable RLS and add owner policies in the same migration. A child of `cars` must check car ownership on insert and update.

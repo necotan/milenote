@@ -15,6 +15,7 @@
     "loading_text": "Loading",
     "error_occurred": "An error occurred",
     "delete_failed": "Failed to delete",
+    "odo_lower_than_existing": "A record or odometer update already has a value above {{odo}} km. Fix the wrong value in the history or the record.",
     "logout": "Log out",
     "km_unit": "km",
     "months_unit": "mo",
@@ -52,6 +53,18 @@
     "garage": "Garage",
     "mypage": "My Page"
   },
+  "odo_history": {
+    "empty": "No odometer updates yet",
+    "diff_from_previous": "{{km}} km since previous",
+    "edit_title": "Edit Entry",
+    "edit_desc": "The current odometer is the highest value in the history and records.",
+    "date": "Date",
+    "updated": "History updated",
+    "deleted": "History entry deleted",
+    "delete_title": "Delete Entry",
+    "delete_message": "Delete {{odo}} km on {{date}}?\nThe current odometer will be recalculated from the remaining history and records.",
+    "duplicate_date": "An entry for that date already exists"
+  },
   "home": {
     "title": "Home",
     "greeting_morning": "Good morning",
@@ -66,6 +79,7 @@
     "update_odo_desc": "Update the current odometer reading. This is also reflected in maintenance alerts.",
     "update_odo_saved": "Odometer updated",
     "update_odo_invalid": "Please enter a valid odometer reading",
+    "odo_history_link": "View odometer history",
     "target_car": "Target car",
     "record_charge_label": "Charging",
     "record_hydrogen_label": "Refueling",

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, FileText, BarChart2, CarFront, User } from "lucide-react"
 import { useTranslation } from "@/lib/i18n"
+import { isHomeSubRoute } from "@/utils/homeSubRoutes"
 
 export default function BottomNav() {
   const pathname = usePathname()
@@ -22,7 +23,7 @@ export default function BottomNav() {
     <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md z-50 h-16 rounded-full bg-white/75 dark:bg-card/75 backdrop-blur-xl backdrop-saturate-150 shadow-lg border border-slate-300 dark:border-border">
       <div className="flex w-full max-w-md mx-auto justify-around items-center h-full">
         {navItems.map((item) => {
-          const isActive = pathname === item.href || (item.key === "home" && pathname === "/maintenance")
+          const isActive = pathname === item.href || (item.key === "home" && isHomeSubRoute(pathname))
           const Icon = item.icon
           return (
             <Link

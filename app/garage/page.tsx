@@ -47,6 +47,8 @@ import { stripImageMetadata } from "@/utils/stripImageMetadata"
 import { getSafeExternalUrl } from "@/utils/safeUrl"
 import { WISHLIST_GENRES, WishlistGenreSlug } from "@/lib/wishlistGenres"
 import { FUEL_TYPES } from "@/lib/fuelTypes"
+import { saveOdoUpdate } from "@/lib/carOdo"
+import { toISODate } from "@/lib/date/calendar"
 
 const CAR_STATUS_KEYS = ["pending", "active", "archived", "archived_excluded"] as const
 type CarStatus = typeof CAR_STATUS_KEYS[number]
@@ -180,24 +182,29 @@ export default function GaragePage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
-      const { error } = await supabase.from("cars").insert({
+      const newOdo = parseInt(currentOdo) || 0
+      const { data: newCar, error } = await supabase.from("cars").insert({
         user_id: user.id, name, maker, model_code: modelCode,
         year: parseInt(year) || null, grade, color, fuel_type: fuelType,
-        current_odo: parseInt(currentOdo) || 0,
+        current_odo: newOdo,
         first_registration_date: firstRegistrationDate ? `${firstRegistrationDate}-01` : null,
         purchase_date: purchaseDate || null,
         purchase_odo: parseInt(purchaseOdo) || 0,
         purchase_price: parseInt(purchasePrice) || 0,
         include_price_in_cost: includePriceInCost,
         status: carStatus,
-      })
+      }).select("id").single()
 
       if (error) {
         toast.error(t("common.error_occurred") + ": " + error.message)
       } else {
+        if (newOdo > 0) {
+          const { error: logError } = await supabase.from("odo_logs").insert({ user_id: user.id, car_id: newCar.id, date: toISODate(new Date()), odo: newOdo })
+          if (logError) toast.error(t("common.error_occurred") + ": " + logError.message)
+        }
         toast.success(t("garage.car_registered"))
         resetCarForm()
-        await mutateCars()
+        await Promise.all([mutateCars(), globalMutate(["odo_logs", user.id])])
       }
     } finally {
       setSavingCar(false)
@@ -230,9 +237,23 @@ export default function GaragePage() {
 
     setSavingCar(true)
     try {
+      const prevCar = cars.find((c) => c.id === editCarId)
+      const newOdo = parseInt(currentOdo) || 0
+      const newPurchaseOdo = parseInt(purchaseOdo) || 0
+      const odoChanged = !!prevCar && userId !== null && newOdo !== prevCar.current_odo
+      if (odoChanged) {
+        const result = await saveOdoUpdate({ userId, car: { id: editCarId, purchase_odo: newPurchaseOdo }, odo: newOdo, date: toISODate(new Date()) })
+        if (!result.ok) {
+          toast.error(result.reason === "lower_than_existing"
+            ? t("common.odo_lower_than_existing", { odo: result.maxOdo.toLocaleString() })
+            : t("common.error_occurred") + ": " + result.message)
+          return
+        }
+      }
+
       // 元愛車への変更時は DB トリガーが定期費用を一時停止するため、通知用の件数だけ更新前に数えておく
       const isArchivedStatus = (s: string | undefined) => s === "archived" || s === "archived_excluded"
-      const prevStatus = cars.find((c) => c.id === editCarId)?.status
+      const prevStatus = prevCar?.status
       let pausingCount = 0
       if (!isArchivedStatus(prevStatus) && isArchivedStatus(carStatus)) {
         const { count } = await supabase
@@ -243,13 +264,13 @@ export default function GaragePage() {
         pausingCount = count ?? 0
       }
 
+      // current_odo は saveOdoUpdate が odo_logs と合わせて更新するので、ここでは送らない
       const { error } = await supabase.from("cars").update({
         name, maker, model_code: modelCode,
         year: parseInt(year) || null, grade, color, fuel_type: fuelType,
-        current_odo: parseInt(currentOdo) || 0,
         first_registration_date: firstRegistrationDate ? `${firstRegistrationDate}-01` : null,
         purchase_date: purchaseDate || null,
-        purchase_odo: parseInt(purchaseOdo) || 0,
+        purchase_odo: newPurchaseOdo,
         purchase_price: parseInt(purchasePrice) || 0,
         include_price_in_cost: includePriceInCost,
         status: carStatus,
@@ -265,6 +286,7 @@ export default function GaragePage() {
         toast.success(t("garage.car_updated"))
         resetCarForm()
         await mutateCars()
+        if (odoChanged && userId) await globalMutate(["odo_logs", userId])
       }
     } finally {
       setSavingCar(false)
@@ -283,7 +305,7 @@ export default function GaragePage() {
     setDeleteCarRecurringCount(count ?? 0)
   }
 
-  // records、wishlists、recurring_costs は FK の ON DELETE CASCADE で車本体と一緒に削除される
+  // records、wishlists、recurring_costs、odo_logs は FK の ON DELETE CASCADE で車本体と一緒に削除される
   // Storage の車画像は FK では消えないため、削除前に明示的に削除する
   const handleDeleteCar = async () => {
     if (!deleteCarTarget) return
@@ -320,7 +342,7 @@ export default function GaragePage() {
         await mutateCars(remainingCars, { revalidate: false })
         await mutateRecords((prev) => prev?.filter(r => r.car_id !== deleteCarTarget.id), { revalidate: false })
         await mutateWishlists((prev) => prev?.filter(w => w.car_id !== deleteCarTarget.id), { revalidate: false })
-        if (userId) await globalMutate(["recurring_costs", userId])
+        if (userId) await Promise.all([globalMutate(["recurring_costs", userId]), globalMutate(["odo_logs", userId])])
         // 欲しいものフォームの車選択が削除した車を指したままにならないようにする
         if (remainingCars.length === 1) setWishCarId(remainingCars[0].id)
         else if (wishCarId === deleteCarTarget.id) setWishCarId("")

@@ -47,6 +47,15 @@ export type CarRecord = {
   inspection_expiry_date: string | null
 }
 
+export type OdoLog = {
+  id: string
+  user_id: string
+  car_id: string
+  date: string
+  odo: number
+  created_at: string
+}
+
 export type RecurringCost = {
   id: string
   user_id: string

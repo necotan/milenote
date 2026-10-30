@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useMemo } from "react"
-import { createClient } from "@/utils/supabase"
+import { mutate as globalMutate } from "swr"
 import { Card, CardContent } from "@/components/ui/card"
 import { CarFront, TrendingUp, TrendingDown, Minus, List, ChevronLeft, ChevronRight, Fuel, Gauge, Image as ImageIcon } from "lucide-react"
 import Link from "next/link"
@@ -21,6 +21,8 @@ import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
 import { useUserProfile } from "@/lib/hooks/useUserProfile"
 import { useCars } from "@/lib/hooks/useCars"
 import { useRecords } from "@/lib/hooks/useRecords"
+import { saveOdoUpdate } from "@/lib/carOdo"
+import { toISODate } from "@/lib/date/calendar"
 
 const getGreeting = (t: (key: string) => string) => {
   const hour = new Date().getHours()
@@ -36,7 +38,6 @@ export default function Home() {
   const [odoCarId, setOdoCarId] = useState("")
   const [odoValue, setOdoValue] = useState("")
   const [odoSaving, setOdoSaving] = useState(false)
-  const supabase = createClient()
   const { t, locale } = useTranslation()
 
   const { user, isLoading: userLoading } = useSupabaseUser()
@@ -99,21 +100,25 @@ export default function Home() {
     setOdoValue(c && c.current_odo != null ? String(c.current_odo) : "")
   }
 
+  const odoCar = cars.find(car => car.id === odoCarId)
+
   const handleSaveOdo = async () => {
-    if (!odoCarId) return
+    if (!odoCar || !userId) return
     const newOdo = parseInt(odoValue)
     if (isNaN(newOdo) || newOdo < 0) {
       toast.error(t("home.update_odo_invalid"))
       return
     }
     setOdoSaving(true)
-    const { error } = await supabase.from("cars").update({ current_odo: newOdo }).eq("id", odoCarId)
-    if (error) {
-      toast.error(t("common.error_occurred") + ": " + error.message)
-    } else {
+    const result = await saveOdoUpdate({ userId, car: odoCar, odo: newOdo, date: toISODate(new Date()) })
+    if (result.ok) {
       toast.success(t("home.update_odo_saved"))
       setOdoModalOpen(false)
-      await mutateCars()
+      await Promise.all([mutateCars(), globalMutate(["odo_logs", userId])])
+    } else if (result.reason === "lower_than_existing") {
+      toast.error(t("common.odo_lower_than_existing", { odo: result.maxOdo.toLocaleString() }))
+    } else {
+      toast.error(t("common.error_occurred") + ": " + result.message)
     }
     setOdoSaving(false)
   }
@@ -488,6 +493,14 @@ export default function Home() {
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-medium text-slate-500 dark:text-muted-foreground pointer-events-none">{t("common.km_unit")}</span>
             </div>
+            <Link
+              href={`/odo-history?car=${odoCarId}`}
+              scroll={false}
+              onClick={() => setOdoModalOpen(false)}
+              className="inline-block text-xs font-medium text-slate-600 dark:text-muted-foreground underline underline-offset-2 hover:text-slate-800 dark:hover:text-foreground"
+            >
+              {t("home.odo_history_link")}
+            </Link>
           </div>
 
           <DialogFooter>

@@ -2,6 +2,7 @@ import { parseISODate } from "@/lib/date/calendar"
 
 export type OdoAnchorRecord = { id: string; car_id: string; date: string; odo_at_record: number | null }
 export type OdoAnchorCar = { id: string; current_odo: number; purchase_odo: number; purchase_date: string | null }
+export type OdoAnchorLog = { car_id: string; date: string; odo: number }
 
 type OdoAnchor = { time: number; odo: number }
 
@@ -10,12 +11,14 @@ type OdoAnchor = { time: number; odo: number }
 export function estimateOdoAtDate({
   car,
   records,
+  odoLogs,
   date,
   today,
   excludeRecordId,
 }: {
   car: OdoAnchorCar
   records: OdoAnchorRecord[]
+  odoLogs: OdoAnchorLog[]
   date: string
   today: string
   excludeRecordId?: string | null
@@ -32,9 +35,12 @@ export function estimateOdoAtDate({
   records.forEach((r) => {
     if (r.car_id === car.id && r.id !== excludeRecordId) addAnchor(r.date, r.odo_at_record)
   })
+  odoLogs.forEach((l) => {
+    if (l.car_id === car.id) addAnchor(l.date, l.odo)
+  })
   // 購入時ODOは未設定だと0になるため、入力されている場合だけ基準点にする
   if (car.purchase_odo > 0) addAnchor(car.purchase_date, car.purchase_odo)
-  // ホームのODO更新は記録を伴わないので、現在のODOを今日時点の基準点として扱う
+  // odo_logs を経ずに current_odo だけが変わった場合に備えて、現在のODOも今日時点の基準点として扱う
   addAnchor(today, car.current_odo)
 
   // 過去の不具合で古い日付の記録に最新ODOが入っていることがあるため、それより後の日付にもっと小さいODOがある基準点は外す
