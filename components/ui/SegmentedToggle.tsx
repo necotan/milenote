@@ -27,7 +27,6 @@ export function SegmentedToggle<T extends string>({
   // 参照で判定すると切替直後の再レンダーで再計測が走り、スライド中のトランジションが打ち消される
   const optionsKey = options.map((option) => `${option.value}:${option.label}`).join("|")
 
-  // アクティブなボタンを実測してインジケータ位置を合わせる
   useLayoutEffect(() => {
     const activeButton = buttonRefs.current[value]
     const indicator = indicatorRef.current

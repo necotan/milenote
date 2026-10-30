@@ -13,7 +13,6 @@ function ListGroup({ className, children }: { className?: string; children: Reac
   )
 }
 
-// タイトル、補足、スイッチを横に並べた設定行
 function SwitchRow({
   id,
   icon: Icon,

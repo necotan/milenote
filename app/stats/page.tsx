@@ -59,7 +59,6 @@ const buildEmptyCategoryBuckets = (): Record<CategoryKey, number> => ({
   fuel: 0, maintenance: 0, inspection: 0, repair: 0, custom: 0, carwash: 0, highway: 0, tax: 0, insurance: 0, other: 0,
 })
 
-// 円グラフのスライスに保証する最小角度
 // 区切り線（strokeWidth 2）はパスの内側にも1pxずつ食い込むため、これより細いスライスは、塗りが完全に覆われて色が見えなくなる
 // ラベルのパーセントは値と合計から算出するため、最小角度を設けても表示される数値は正確なまま
 // ただしスライスの面積は本来より大きくなるため、見た目の面積に対してパーセント表示が小さく見える
@@ -68,7 +67,6 @@ const PIE_MIN_ANGLE_DEG = 3
 // 円グラフの外径（ラベル位置の事前計算にも使うため定数化）
 const PIE_OUTER_RADIUS = 80
 
-// 積み上げ棒グラフの出現アニメーション
 // CSS の transform アニメーションは SVG 上で描画残骸を生むため、Recharts 本体の矩形ジオメトリを補間するアニメーションを使用する
 const BAR_ANIM_DURATION_MS = 600
 const BAR_ANIM_STAGGER_MS = 90
@@ -100,7 +98,6 @@ const estimateLabelWidth = (text: string): number => {
   return width
 }
 
-// 円グラフのラベル同士の最小縦間隔（重なり防止）
 // ラベルは金額・パーセントの2行表示（fontSize 10、tspan dy -0.55em/1.1em）で実際の描画高さが約32pxあるため、それより余裕を持った値にする
 const PIE_LABEL_MIN_GAP = 34
 
@@ -200,7 +197,6 @@ const createCustomizedLabel = (t: (key: string, params?: Record<string, string |
       return `¥${val.toLocaleString()}`;
     };
 
-    // 金額とパーセントを2行に分けて表示
     const amountText = formatValue(value);
     const percentText = `(${((percent ?? 0) * 100).toFixed(1)}%)`;
 
@@ -296,8 +292,6 @@ function PeriodDateRow({
   )
 }
 
-// 上段のタブでプリセットを選択し、下段のボタンに現在の期間を常に表示
-// ボタンをタップすると開始日/終了日の編集行が開閉する
 function PeriodFilter({
   preset, onPresetChange,
   start, end, onStartChange, onEndChange,
@@ -334,7 +328,6 @@ function PeriodFilter({
     { value: "all", label: t("stats.period_all") },
   ]
 
-  // 展開エリアのアニメーション
   const EASE_APPLE = "cubic-bezier(0.32, 0.72, 0, 1)"
   // translate3d と will-change を併用することで、Safari で transform のみのアニメーションがカクつく問題を回避
   const fadeItemStyle = (index: number): CSSProperties => ({
@@ -373,7 +366,6 @@ function PeriodFilter({
         />
       </button>
 
-      {/* 開始日・終了日の編集行 */}
       <div
         aria-hidden={!expanded}
         className="grid"
@@ -609,7 +601,6 @@ export default function StatsPage() {
 
   const loading = userLoading || (!!userId && (carsLoading || recordsLoading))
 
-  // 稼働中・元愛車（統計含む）の車のみ集計対象にする
   const statsCars = useMemo(
     () => allCars.filter(c => c.status === "active" || c.status === "archived"),
     [allCars]
@@ -629,22 +620,18 @@ export default function StatsPage() {
     return fuelTypeMap
   }, [statsCars])
 
-  // カテゴリ別グラフ用フィルター
   const [catPreset, setCatPreset] = useState<PeriodPreset>("all")
   const [catStart, setCatStart] = useState("")
   const [catEnd, setCatEnd] = useState("")
 
-  // 月別推移グラフ
   const [monthlyChartType, setMonthlyChartType] = useState<"line" | "bar">("line")
   const [yearlyChartType, setYearlyChartType] = useState<"line" | "bar">("bar")
   const [isColorful, setIsColorful] = useState(false)
 
-  // 円グラフアニメーション
   const [pieAnimKey, setPieAnimKey] = useState(0)
   const hasAnimatedPie = useRef(false)
   const isFirstCatFilter = useRef(true)
 
-  // 年別推移用
   const currentYear = new Date().getFullYear()
 
   // 折れ線グラフの線の描画と点の出現を同期
@@ -690,7 +677,6 @@ export default function StatsPage() {
     setIsColorful(savedColorful)
   }, [])
 
-  // 期間プリセットから実際の開始・終了日を算出
   const todayStr = toISODate(new Date())
   const threeMonthsAgoStr = (() => {
     const now = new Date()
@@ -701,13 +687,11 @@ export default function StatsPage() {
     return toISODate(new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()))
   })()
   const yearStartStr = `${currentYear}-01-01`
-  // 全期間の開始日表示用
   const minRecordDate = useMemo(
     () => records.reduce((min, r) => (!min || r.date < min ? r.date : min), "") || todayStr,
     [records, todayStr],
   )
 
-  // 表示用の開始・終了日
   const catDisplayStart = catPreset === "3m" ? threeMonthsAgoStr
     : catPreset === "1y" ? oneYearAgoStr
     : catPreset === "year" ? yearStartStr
@@ -715,7 +699,6 @@ export default function StatsPage() {
     : catStart
   const catDisplayEnd = catPreset === "custom" ? catEnd : todayStr
 
-  // 絞り込み用
   const catFilterStart = catPreset === "all" ? "" : catDisplayStart
   const catFilterEnd = catPreset === "all" ? "" : catDisplayEnd
 
@@ -728,7 +711,6 @@ export default function StatsPage() {
     setCatPreset(p)
   }, [catPreset, catDisplayStart, catDisplayEnd])
 
-  // 日付を直接変更したら期間を指定に切り替え
   const changeCatStart = useCallback((v: string) => {
     if (catPreset !== "custom") {
       setCatEnd(catDisplayEnd)
@@ -771,7 +753,6 @@ export default function StatsPage() {
     return acc
   }, []), [catFilteredRecords, activeCategoryMap, t])
 
-  // 円グラフのラベル位置解決（重なり回避）
   // labelとlabelLineで共有するため categoryData 変化時のみ再生成する
   const pieLabelDeltas = useMemo(
     () => computePieLabelYDeltas(categoryData, PIE_MIN_ANGLE_DEG, PIE_OUTER_RADIUS),
@@ -783,7 +764,6 @@ export default function StatsPage() {
     [catFilteredRecords],
   )
 
-  // 初回データロード時にアニメーション
   useEffect(() => {
     if (categoryData.length > 0 && !hasAnimatedPie.current) {
       hasAnimatedPie.current = true
@@ -791,7 +771,6 @@ export default function StatsPage() {
     }
   }, [categoryData.length])
 
-  // 期間フィルター変更時にアニメーション（初回マウント時はスキップ）
   useEffect(() => {
     if (isFirstCatFilter.current) { isFirstCatFilter.current = false; return }
     setPieAnimKey(k => k + 1)
@@ -822,7 +801,6 @@ export default function StatsPage() {
     [monthlyData],
   )
 
-  // 直近3年（今年を含む過去3年）の枠を生成してから集計
   type YearlyBucket = { year: number; amount: number } & Record<CategoryKey, number>
   const yearlyData = useMemo<YearlyBucket[]>(() => {
     const years: YearlyBucket[] = Array.from({ length: 3 }, (_, i) => ({
@@ -950,15 +928,12 @@ export default function StatsPage() {
     }
     return t("common.year_month", { year, month: monthNum })
   }, [locale, t])
-  // 凡例ラベルの整形（カテゴリキーを翻訳して表示）
   const renderCategoryLegendLabel = useCallback((value: string) => (
     <span className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t(`categories.${value}`)}</span>
   ), [t])
   const renderRawLegendLabel = useCallback((value: string) => (
     <span className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{value}</span>
   ), [])
-  // 凡例を列揃えのグリッドで描画し、ブロック全体を中央寄せする
-  // formatLabel でラベルの整形方法を切り替える
   const renderGridLegend = useCallback(
     (formatLabel: (value: string) => ReactElement) => {
       const GridLegend = ({ payload }: { payload?: readonly { value?: string | number; color?: string }[] }) => (
@@ -988,7 +963,6 @@ export default function StatsPage() {
     },
     [],
   )
-  // 積み上げ棒グラフの詳細ポップアップ
   // 0円の項目を除外して高さを抑える
   const renderStackedBarTooltip = useCallback(
     (labelFormatter: (label: string) => string) => {
@@ -1062,7 +1036,6 @@ export default function StatsPage() {
       </header>
       <SkeletonTabs className="mb-4" />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* カテゴリ別内訳カード（見出し、期間絞り込み、グラフ） */}
         <div className="bg-white dark:bg-card rounded-xl py-4">
           {/* CardTitle が leading-snug を内包しているため行間を明示する */}
           <div className="p-4 pb-0 pl-8">
@@ -1076,7 +1049,6 @@ export default function StatsPage() {
             <Skeleton className="h-56 w-full rounded-lg" />
           </div>
         </div>
-        {/* 月別出費推移カード（見出し、表示切替トグル、グラフ） */}
         <div className="bg-white dark:bg-card rounded-xl py-4">
           <div className="p-4 pb-2 pl-8 flex items-center justify-between">
             <SkeletonText size="sm" leading="snug" className="w-28" />
@@ -1109,14 +1081,11 @@ export default function StatsPage() {
           </TabsTrigger>
         </TabsList>
 
-        {/* 走行距離タブ */}
         <TabsContent value="distance" className="space-y-6 outline-none">
 
-          {/* ヒーローバナー：地球周、月進捗 */}
           <Card className="border-none overflow-hidden bg-white dark:bg-card">
             <CardContent className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-11 md:gap-8">
-                {/* 地球周セクション */}
                 <div className="flex items-center gap-4">
                   <div className="shrink-0">
                     <Globe className="text-blue-500 w-10 h-10" />
@@ -1131,7 +1100,6 @@ export default function StatsPage() {
                   </div>
                 </div>
 
-                {/* 月進捗セクション */}
                 <div className="space-y-3 md:border-l md:border-slate-200 dark:border-border md:pl-8">
                   <svg width="0" height="0" className="absolute">
                     <defs>
@@ -1162,7 +1130,6 @@ export default function StatsPage() {
             </CardContent>
           </Card>
 
-          {/* 給油サマリーカード */}
           <Card className="border-none bg-white dark:bg-card">
             <CardHeader className="p-4 pb-2">
               <CardTitle className="text-sm font-bold pl-4 text-slate-600 dark:text-muted-foreground">
@@ -1210,7 +1177,6 @@ export default function StatsPage() {
             </CardContent>
           </Card>
 
-          {/* 充電サマリーカード（EV車の充電記録がある場合のみ表示） */}
           {chargeCount > 0 && (
             <Card className="border-none bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2">
@@ -1245,7 +1211,6 @@ export default function StatsPage() {
             </Card>
           )}
 
-          {/* FCV充填サマリーカード（水素車の充填記録がある場合のみ表示） */}
           {hydrogenCount > 0 && (
             <Card className="border-none bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2">
@@ -1281,7 +1246,6 @@ export default function StatsPage() {
           )}
         </TabsContent>
 
-        {/* 費用分析タブ */}
         <TabsContent value="cost" className="space-y-6 outline-none">
           <style>{`
             .bar-anim .recharts-legend-wrapper {
@@ -1323,7 +1287,6 @@ export default function StatsPage() {
             }
           `}</style>
 
-          {/* グラフセクション */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
             <CategoryBreakdownCard
@@ -1342,7 +1305,6 @@ export default function StatsPage() {
               renderRawLegendLabel={renderRawLegendLabel}
             />
 
-            {/* 月別出費推移 */}
             <Card className="border-none bg-white dark:bg-card">
               <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between space-y-0">
                 <CardTitle className="text-sm font-bold pl-4 text-slate-600 dark:text-muted-foreground">
@@ -1415,7 +1377,6 @@ export default function StatsPage() {
             </Card>
           </div>
 
-          {/* 年別推移セクション */}
           <Card className="border-none bg-white dark:bg-card">
             <CardHeader className="p-4 pb-3">
               <div className="flex items-center justify-between">

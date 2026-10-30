@@ -11,7 +11,6 @@ import { useDimmedPageBackground } from "@/lib/hooks/useDimmedPageBackground"
 // オーバーレイの backdrop-brightness-40 と同じ値
 const OVERLAY_BRIGHTNESS = 40
 
-// 絞り込み・表示設定用のモーダル
 // 外側のタップまたは保存ボタンで閉じる
 function ModalCard({
   open,

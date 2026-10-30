@@ -15,11 +15,9 @@ export type StrippedImage = {
 }
 
 export type StripImageOptions = {
-  // 出力ファイルサイズの上限
   maxBytes?: number
 }
 
-// canvas を JPEG の Blob にエンコードする
 const encodeCanvas = (canvas: HTMLCanvasElement, quality: number): Promise<Blob> =>
   new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(
@@ -29,7 +27,6 @@ const encodeCanvas = (canvas: HTMLCanvasElement, quality: number): Promise<Blob>
     )
   })
 
-// 渡された画像ファイルからメタデータを除去した新しいファイルを返す
 // 画像の向きは EXIF の情報を参照して自動的に補正される
 export const stripImageMetadata = async (file: File, options: StripImageOptions = {}): Promise<StrippedImage> => {
   const { maxBytes } = options

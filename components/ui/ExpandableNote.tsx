@@ -15,7 +15,6 @@ const LINE_CLAMP_CLASS = {
 
 type NoteLines = keyof typeof LINE_CLAMP_CLASS
 
-// 閉じているときの表示行数の既定値
 const DEFAULT_NOTE_LINES: NoteLines = 1
 
 const BOX_CLASS = "text-sm text-slate-600 dark:text-muted-foreground bg-slate-50 dark:bg-muted p-2 rounded-md whitespace-pre-wrap"
@@ -27,7 +26,6 @@ type ExpandableNoteProps = {
   lines?: NoteLines
 }
 
-// 長いメモを指定行数で省略し、省略されているときだけタップで全文を開閉できるメモ表示
 function ExpandableNote({ note, lines = DEFAULT_NOTE_LINES }: ExpandableNoteProps) {
   const [open, setOpen] = useState(false)
   // 閉じるアニメーション中に line-clamp を掛けると2行目以降が先に消えるため、開閉状態とは別に持つ

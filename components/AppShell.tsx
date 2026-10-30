@@ -21,7 +21,6 @@ const LOADING_FADE_MS = 400;
 
 function AppContent({ children, loading }: { children: React.ReactNode; loading: boolean }) {
   const pathname = usePathname();
-  // メンテナンス一覧用
   const contentMaxWidth = pathname === "/maintenance" ? "max-w-[1600px]" : "max-w-6xl";
 
   // フェードアウトが終わるまでオーバーレイをマウントし続けるための状態
@@ -62,14 +61,12 @@ function AppContent({ children, loading }: { children: React.ReactNode; loading:
       <RecurringCostProcessor />
       <Sidebar />
 
-      {/* メインコンテンツエリア */}
       <div className={`flex-1 pb-20 md:pb-8 w-full min-w-0 mx-auto ${contentMaxWidth}`}>
         {children}
       </div>
 
       <BottomNav />
 
-      {/* 初回ローディング画面 */}
       {showOverlay && (
         <div
           className={`fixed inset-0 z-[100] touch-none overscroll-none transition-opacity ease-out ${fadingOut ? "opacity-0" : "opacity-100"}`}
@@ -109,7 +106,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     return () => { active = false; };
   }, [pathname, router, supabase.auth]);
 
-  // 最低表示時間と最大待機時間
   useEffect(() => {
     const minId = setTimeout(() => setMinElapsed(true), 1800);
     const maxId = setTimeout(() => setMaxElapsed(true), 8000);

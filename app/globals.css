@@ -153,7 +153,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* iOSのセーフエリアに合わせてpadding-topを調整 */
     padding-top: env(safe-area-inset-top, 0px);
   }
   /* Radix のスクロールロック(Dialog/Select)が body の padding-top を 0 に上書きし、画面がセーフエリア分ずれるのを防ぐ */
@@ -180,7 +179,6 @@ svg.lucide {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* スクロールバーを非表示 */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
@@ -237,7 +235,6 @@ svg.lucide {
   }
 }
 
-/* スイープに合わせてアークを描画 */
 .meter-arc {
   stroke-dasharray: 160;
   stroke-dashoffset: 160;
@@ -281,7 +278,6 @@ select:autofill {
   box-shadow: 0 0 0 1000px var(--autofill-bg) inset;
 }
 
-/* 数値入力のスピナーを非表示 */
 input[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;

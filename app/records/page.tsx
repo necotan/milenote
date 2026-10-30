@@ -64,7 +64,6 @@ const parseOptionalNumber = (value: string): number | null => {
 const RecordSkeleton = () => (
   <div className="space-y-4">
     <SkeletonTabs className="mb-4" />
-    {/* 絞り込みトグル、フィルター、登録ボタン、月ナビ行 */}
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <Skeleton className="h-[30px] w-32 rounded-full" />
@@ -80,21 +79,15 @@ const RecordSkeleton = () => (
     {[...Array(5)].map((_, i) => (
       <div key={i} className="bg-white dark:bg-card rounded-xl overflow-hidden py-4">
         <div className="p-4 flex gap-4 items-start">
-          {/* アイコン */}
           <Skeleton className="w-12 h-12 rounded-full shrink-0 mt-1" />
           <div className="flex-1 min-w-0 pr-20 space-y-2">
-            {/* 金額 */}
             <SkeletonText size="lg" className="w-28 rounded-lg" />
-            {/* タグ */}
             <div className="flex gap-2">
               <Skeleton className="h-5 w-16 rounded-full" />
               <Skeleton className="h-5 w-20 rounded-full" />
             </div>
-            {/* 車名・ODO */}
             <SkeletonText size="11px" className="w-36" />
-            {/* 日付 */}
             <SkeletonText size="11px" className="w-24" />
-            {/* カテゴリ別の追加行 */}
             <SkeletonText size="xs" className="w-40" />
           </div>
         </div>
@@ -140,7 +133,6 @@ type RecordFormProps = {
   setInspectionExpiryDate: (value: string) => void
 }
 
-// 新規追加・編集に使うフォームのJSX
 const RecordForm = ({
   onSubmit,
   submitLabel,
@@ -166,7 +158,6 @@ const RecordForm = ({
   inspectionExpiryDate, setInspectionExpiryDate,
 }: RecordFormProps) => {
   const { t } = useTranslation()
-  // 選択中の車の燃料種別に応じて、給油フォームを給油(L)/充電(kWh)/充填(kg)表示に切り替える
   const selectedCar = cars.find((c) => c.id === carId)
   const fuelUnit = getFuelUnit(selectedCar?.fuel_type)
   const fuelFieldText = {
@@ -396,10 +387,8 @@ function RecordsPageInner() {
 
   const carsById = useMemo(() => new Map(allCars.map(c => [c.id, c])), [allCars])
 
-  // 記録追加フォームの対象車
   const cars = useMemo(() => allCars.filter(c => c.status === "active"), [allCars])
 
-  // 稼働中・元愛車（統計含む）の車に紐づく記録を、日付・作成日時の新しい順にする
   const records = useMemo(() => {
     return allRecords
       .filter(r => {
@@ -415,7 +404,6 @@ function RecordsPageInner() {
   const [deleteRecordId, setDeleteRecordId] = useState<string | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
   const [selectedCarId, setCarId] = useState("")
-  // 対象車が1台だけで未選択の場合は、その車を選択済みとして扱う
   const carId = selectedCarId || (cars.length === 1 ? cars[0].id : "")
   const [category, setCategory] = useState("fuel")
   const [subCategory, setSubCategory] = useState("")
@@ -426,18 +414,14 @@ function RecordsPageInner() {
   const [date, setDate] = useState(() => toISODate(new Date()))
   const [memo, setMemo] = useState("")
 
-  // 高速料金用ステート
   const [entryIc, setEntryIc] = useState("")
   const [exitIc, setExitIc] = useState("")
 
-  // 定期点検の車ごとの点検周期(月数)用ステート
   const [intervalMonths, setIntervalMonths] = useState("")
 
-  // 車検用ステート
   const [includesCompulsoryInsurance, setIncludesCompulsoryInsurance] = useState(false)
   const [inspectionExpiryDate, setInspectionExpiryDate] = useState("")
 
-  // 月別・全期間 表示切り替え
   const currentYM = (() => {
     const now = new Date()
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
@@ -473,7 +457,6 @@ function RecordsPageInner() {
     ? records.filter(r => r.date.startsWith(selectedYearMonth))
     : records
 
-  // カテゴリ、車の絞り込み用ステート（localStorageに保存）
   const [categoryFilters, setCategoryFilters] = useState<string[]>([])
   const [carFilters, setCarFilters] = useState<string[]>([])
   const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -518,7 +501,6 @@ function RecordsPageInner() {
     (carFilters.length === 0 || carFilters.includes(r.car_id))
   )
 
-  // 絞り込み中の選択数（バッジ表示用）
   const activeFilterCount = categoryFilters.length + carFilters.length
 
   // カテゴリをユーザーが手動で切り替えたときだけサブカテゴリをデフォルト値にリセットする
@@ -545,7 +527,6 @@ function RecordsPageInner() {
     }
   }, [loading, searchParams])
 
-  // 給油フィールドの相互自動計算ハンドラー
   const handleFuelFieldChange = (field: FuelCalcField, value: string) => {
     const toNum = (v: string) => parseFloat(v)
     if (field === "fuelUnitPrice") {
@@ -787,7 +768,6 @@ function RecordsPageInner() {
                     ]}
                   />
                   <div className="flex items-center gap-4">
-                    {/* 絞り込みボタン（記録があるときのみ表示、絞り込み中は選択数をバッジ表示） */}
                     {records.length > 0 && (
                       <button
                         type="button"

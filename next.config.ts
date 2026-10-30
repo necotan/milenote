@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 
-// 全ルートに付与するセキュリティヘッダ
 const securityHeaders = [
   // クリックジャッキング対策（古いブラウザ向けに X-Frame-Options も併用）
   { key: "X-Frame-Options", value: "DENY" },

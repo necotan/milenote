@@ -7,7 +7,6 @@ export default function LoadingScreen() {
   const { t } = useTranslation();
   const text = t("common.loading_text");
 
-  // テキストを1文字ずつ表示する
   const [typedCount, setTypedCount] = useState(0);
   const typingDone = typedCount >= text.length;
 
@@ -17,7 +16,6 @@ export default function LoadingScreen() {
     return () => clearTimeout(id);
   }, [typedCount, typingDone]);
 
-  // アニメーション後にドットを循環させる
   const [dots, setDots] = useState(1);
   useEffect(() => {
     if (!typingDone) return;
@@ -27,7 +25,6 @@ export default function LoadingScreen() {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-6 bg-page">
-      {/* メーター */}
       <svg
         viewBox="0 0 100 100"
         className="h-24 w-24"
@@ -63,7 +60,6 @@ export default function LoadingScreen() {
             strokeLinecap="round"
           />
         </g>
-        {/* 中心のハブ */}
         <circle className="text-neutral-800 dark:text-neutral-200" cx="50" cy="50" r="3.5" fill="currentColor" />
       </svg>
 

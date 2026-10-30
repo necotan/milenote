@@ -19,15 +19,12 @@ import { useCars } from "@/lib/hooks/useCars"
 import { useRecords } from "@/lib/hooks/useRecords"
 import { useChipTapHandlers } from "@/lib/hooks/useChipTapHandlers"
 
-// 表示設定モーダルの各項目はlocalStorageに個別キーで保存
 const SHOW_DISABLED_STORAGE_KEY = "milenote_maintenance_show_disabled"
 const HIDE_UNRECORDED_STORAGE_KEY = "milenote_maintenance_hide_unrecorded"
 const UNGROUP_STORAGE_KEY = "milenote_maintenance_ungroup"
-// 絞り込みモーダルの選択状態もlocalStorageに保存
 const CATEGORY_FILTERS_STORAGE_KEY = "milenote_maintenance_category_filters"
 const CAR_FILTERS_STORAGE_KEY = "milenote_maintenance_car_filters"
 
-// カードグリッドの列数計算とボタン位置合わせで使用
 const CARD_WIDTH = 300
 const CARD_GAP = 16
 const MAX_GRID_COLUMNS = 4
@@ -50,13 +47,11 @@ export default function MaintenancePage() {
 
   const carsById = useMemo(() => new Map(allCars.map(c => [c.id, c])), [allCars])
 
-  // メンテナンス一覧の対象車
   const cars = useMemo(
     () => allCars.filter(c => c.status === "active" && c.is_display_home),
     [allCars]
   )
 
-  // 稼働中・元愛車（統計含む）の車に紐づく記録
   const records = useMemo(
     () => allRecords.filter(r => {
       const car = carsById.get(r.car_id)
@@ -71,20 +66,15 @@ export default function MaintenancePage() {
     [cars, records, maintSettings]
   )
 
-  // カテゴリ、車の絞り込み用ステート
   const [categoryFilters, setCategoryFilters] = useState<string[]>([])
   const [carFilters, setCarFilters] = useState<string[]>([])
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
-  // 表示設定用ステート
   const [isDisplaySettingsOpen, setIsDisplaySettingsOpen] = useState(false)
   // メンテナンス基準でオフにした項目もこの一覧では表示するかの切り替え
   const [showDisabled, setShowDisabled] = useState(false)
-  // 未記録の項目を一覧から非表示にするかの切り替え
   const [hideUnrecorded, setHideUnrecorded] = useState(false)
-  // カテゴリごとのグループ化を解除し、1つの一覧としてまとめて表示するかの切り替え
   const [isUngrouped, setIsUngrouped] = useState(false)
-  // 表示設定、絞り込みをlocalStorageから復元
   // SSR の初期HTMLと一致させるため、保存済みの設定はマウント後に反映する
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -122,7 +112,6 @@ export default function MaintenancePage() {
     localStorage.setItem(UNGROUP_STORAGE_KEY, String(checked))
   }
 
-  // カードグリッドの列数は実測した横幅から決定
   const gridWrapperRef = useRef<HTMLDivElement>(null)
   const [gridColumns, setGridColumns] = useState(1)
 
@@ -161,22 +150,18 @@ export default function MaintenancePage() {
 
   const chipTapHandlers = useChipTapHandlers()
 
-  // メンテナンス項目名からカテゴリキーを引くための対応表
   const maintNameToCategory: Record<string, string> = {}
   MAINT_CATEGORIES.forEach((category) => {
     category.items.forEach((maintName) => { maintNameToCategory[maintName] = category.key })
   })
 
-  // オフ/未記録の項目の表示切り替えを適用したアラート
   const visibleAlerts = alerts.filter((a) => (showDisabled || !a.isDisabled) && (!hideUnrecorded || a.hasRecord))
 
-  // カテゴリ、車の絞り込みを適用したアラート
   const filteredAlerts = visibleAlerts.filter((a) =>
     (categoryFilters.length === 0 || categoryFilters.includes(maintNameToCategory[a.maintName])) &&
     (carFilters.length === 0 || carFilters.includes(a.carId))
   )
 
-  // 絞り込み中の選択数（バッジ表示用）
   const activeFilterCount = categoryFilters.length + carFilters.length
 
   usePageLoadingGate(!loading)

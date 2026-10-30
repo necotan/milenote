@@ -27,7 +27,6 @@ export default function SignUpPage() {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // バリデーション
     if (!email || !password || !userId) return
 
     if (password.length < 6) {
@@ -35,7 +34,6 @@ export default function SignUpPage() {
       return
     }
 
-    // ユーザーIDのフォーマットチェック（英数字とアンダースコアのみ）
     if (!/^[a-zA-Z0-9_]+$/.test(userId)) {
       setErrorPopup(t("signup.invalid_user_id"))
       return
@@ -44,7 +42,6 @@ export default function SignUpPage() {
     setLoading(true)
 
     try {
-      // Supabase Auth でアカウント作成
       // ユーザーIDの一意性は users.username の UNIQUE 制約で担保する
       // 未認証では RLS により users を SELECT できず事前の重複チェックは機能しないため、ここでは行わない
       const { error } = await supabase.auth.signUp({
@@ -63,7 +60,6 @@ export default function SignUpPage() {
       if (error) {
         const message = error.message.toLowerCase()
         if (message.includes("already registered") || message.includes("already been registered")) {
-          // メールアドレス重複
           setErrorPopup(t("signup.email_taken"))
         } else if (error.code === "unexpected_failure" || message.includes("database error saving new user")) {
           // 新規ユーザー作成トリガーが users.username の UNIQUE 制約違反で失敗したケース

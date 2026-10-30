@@ -1,5 +1,3 @@
-// ホーム、メンテナンス一覧画面で共通利用するアラート生成ロジック
-
 import { Wrench, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, ClipboardCheck, CarFront, type LucideIcon } from "lucide-react"
 
 export type MaintSetting = { km: number; months: number; months_only?: boolean; enabled?: boolean }

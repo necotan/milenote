@@ -44,7 +44,6 @@ const DEFAULT_MAINT_SETTINGS: MaintSettings = {
   "vehicle_inspection": { km: 0, months: 0, months_only: true },
 }
 
-// メンテナンス基準設定UIのアイコン、プリセット値
 const MAINT_ITEM_ICON: Record<string, LucideIcon> = {
   oil_change: Droplet,
   oil_filter_change: Filter,
@@ -83,7 +82,6 @@ const THEME_OPTIONS: { value: "light" | "dark"; labelKey: string }[] = [
 
 type TranslateFn = (key: string, params?: Record<string, string | number>) => string
 
-// 距離、期間のプリセットチップとカスタム値入力
 function ChipPresetRow({
   value,
   presets,
@@ -151,7 +149,6 @@ function ChipPresetRow({
   )
 }
 
-// 各設定カード左側のスケルトン
 function MypageSkeletonDesc({ titleWidth }: { titleWidth: string }) {
   return (
     <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card space-y-2">
@@ -228,7 +225,6 @@ function MaintenanceItemRow({
   )
 }
 
-// メンテナンス基準の距離、期間を編集するポップアップ
 function MaintEditDialog({
   itemKey,
   setting,
@@ -347,7 +343,6 @@ function ProfileFieldRow({
   )
 }
 
-// プロフィール項目（表示名、ユーザーID）を編集するポップアップ
 function ProfileFieldDialog({
   field,
   initialValue,
@@ -451,7 +446,6 @@ export default function MyPage() {
     profileSeededRef.current = true
     setUsername(profile.username || "")
     setDisplayName(profile.display_name || "")
-    // デフォルトをベースにDBの保存値を上書きマージ
     const mergedMaintSettings = profile.maint_settings
       ? { ...DEFAULT_MAINT_SETTINGS, ...profile.maint_settings }
       : DEFAULT_MAINT_SETTINGS
@@ -470,7 +464,6 @@ export default function MyPage() {
       } catch {}
     }
 
-    // グラフのカラーモード設定を取得
     setIsColorful(localStorage.getItem("milenote_colorful_pie") === "true")
   }, [])
 
@@ -677,7 +670,6 @@ export default function MyPage() {
         </div>
       </header>
       <div className="space-y-8">
-        {/* プロフィールカードスケルトン */}
         {/* 実カードは Card 自体の py-4 により区切り線が上下の枠に接しないため、ただの div であるスケルトンにも同じ py-4 を付与する */}
         <div className="bg-white dark:bg-card rounded-xl overflow-hidden py-4">
           <div className="md:flex">
@@ -697,7 +689,6 @@ export default function MyPage() {
             </div>
           </div>
         </div>
-        {/* メンテナンス設定カードスケルトン */}
         <div className="bg-white dark:bg-card rounded-xl overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-32" />
@@ -724,7 +715,6 @@ export default function MyPage() {
             </div>
           </div>
         </div>
-        {/* 言語設定カードスケルトン */}
         <div className="bg-white dark:bg-card rounded-xl overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-28" />
@@ -733,7 +723,6 @@ export default function MyPage() {
             </div>
           </div>
         </div>
-        {/* アクセシビリティカードスケルトン */}
         <div className="bg-white dark:bg-card rounded-xl overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-32" />
@@ -750,7 +739,6 @@ export default function MyPage() {
             </div>
           </div>
         </div>
-        {/* ホーム画面カスタマイズカードスケルトン */}
         <div className="bg-white dark:bg-card rounded-xl overflow-hidden py-4">
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-32" />
@@ -770,7 +758,6 @@ export default function MyPage() {
             </div>
           </div>
         </div>
-        {/* データエクスポートカードスケルトン */}
         {/* 実カードはフッター(border-t)を持つCardのため、Card自体のpbは0になり、pt-4のみ効いている */}
         <div className="bg-white dark:bg-card rounded-xl overflow-hidden pt-4">
           <div className="p-6 space-y-2">
@@ -783,7 +770,6 @@ export default function MyPage() {
         </div>
       </div>
 
-      {/* ログアウトボタンスケルトン（モバイル） */}
       <div className="md:hidden pt-8 flex justify-center mb-8">
         <Skeleton className="h-9 w-40 rounded-lg" />
       </div>
@@ -800,7 +786,6 @@ export default function MyPage() {
       </header>
 
       <div className="space-y-8">
-        {/* プロフィール設定 */}
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
@@ -833,7 +818,6 @@ export default function MyPage() {
           </div>
         </Card>
 
-        {/* メンテナンス基準設定 */}
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
@@ -871,7 +855,6 @@ export default function MyPage() {
           </div>
         </Card>
 
-        {/* 言語設定 */}
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
@@ -910,7 +893,6 @@ export default function MyPage() {
           </div>
         </Card>
 
-        {/* アクセシビリティ */}
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
@@ -980,7 +962,6 @@ export default function MyPage() {
           </div>
         </Card>
 
-        {/* ホーム画面のカスタマイズ */}
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="md:flex">
             <div className="md:w-1/3 pt-6 pb-6 px-0 mx-6 md:px-6 md:mx-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-border bg-white dark:bg-card">
@@ -993,12 +974,10 @@ export default function MyPage() {
             </div>
 
             <div className="md:w-2/3 p-6">
-              {/* スマートフォン表示時 */}
               <div className="lg:hidden">
               <ListGroup className="max-w-md">
                 {homeOrder.map((sectionId, index) => {
                   const isDragging = dragId === sectionId
-                  // ドラッグ中の見た目の移動量を算出
                   let translateY = 0
                   if (isDragging) {
                     translateY = dragOffset
@@ -1048,7 +1027,6 @@ export default function MyPage() {
               <p className="mt-3 text-[11px] text-slate-500 dark:text-muted-foreground font-medium">{t("mypage.home_order_hint")}</p>
               </div>
 
-              {/* PC表示時 */}
               <div className="hidden lg:block max-w-md">
                 <div className="flex items-center justify-between gap-3 mb-3">
                   <span className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("mypage.home_order_pc_car_position")}</span>
@@ -1099,7 +1077,6 @@ export default function MyPage() {
           </div>
         </Card>
 
-        {/* データのエクスポート */}
         <Card className="border-none bg-white dark:bg-card overflow-hidden rounded-xl">
           <div className="px-6 pt-6 pb-2">
             <h2 className="text-base font-bold text-slate-800 dark:text-foreground flex items-center gap-2 mb-2">
@@ -1140,7 +1117,6 @@ export default function MyPage() {
         t={t}
       />
 
-      {/* ログアウトボタン (モバイル) */}
       <div className="md:hidden pt-8 flex justify-center mb-8">
         <Button variant="outline" className="px-8 h-9 font-bold bg-white dark:bg-card border-transparent dark:border-transparent text-slate-500 dark:text-muted-foreground hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 dark:hover:text-red-400 transition-colors text-xs" onClick={handleLogout}>
           <LogOut className="w-4 h-4 mr-2" />

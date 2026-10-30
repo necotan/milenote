@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input"
 type NumberInputProps = Omit<React.ComponentProps<"input">, "type" | "value" | "onChange"> & {
   value: string
   onValueChange: (value: string) => void
-  // 小数を許可するか（給油量、単価など）
   decimal?: boolean
 }
 
