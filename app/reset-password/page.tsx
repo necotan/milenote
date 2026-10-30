@@ -86,7 +86,6 @@ function ResetPasswordContent() {
         </DialogContent>
       </Dialog>
 
-      {/* 更新完了ポップアップ */}
       {/* OKでトップへ遷移するため、画面外のタップやEscでは閉じない */}
       <Dialog open={succeeded}>
         <DialogContent showCloseButton={false} onEscapeKeyDown={(e) => e.preventDefault()} onInteractOutside={(e) => e.preventDefault()}>

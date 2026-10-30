@@ -59,13 +59,11 @@ export default function Home() {
 
   const carsById = useMemo(() => new Map(allCars.map(c => [c.id, c])), [allCars])
 
-  // ホーム表示対象の車
   const cars = useMemo(
     () => allCars.filter(c => c.status === "active" && c.is_display_home),
     [allCars]
   )
 
-  // 稼働中・元愛車（統計含む）の車に紐づく記録
   const records = useMemo(
     () => allRecords.filter(r => {
       const car = carsById.get(r.car_id)
@@ -77,7 +75,6 @@ export default function Home() {
   const alerts = useMemo(() => generateMaintAlerts(cars, records, maintSettings), [cars, records, maintSettings])
 
   useEffect(() => {
-    // localStorageから並び順を取得
     const savedOrder = localStorage.getItem("home_layout")
     if (savedOrder) {
       try {
@@ -96,7 +93,6 @@ export default function Home() {
     setOdoModalOpen(true)
   }
 
-  // モーダル内で対象車を変更したら、その車の現在ODOを入力欄へ反映
   const handleOdoCarChange = (id: string) => {
     setOdoCarId(id)
     const c = cars.find(car => car.id === id)
@@ -125,14 +121,12 @@ export default function Home() {
   const today = new Date()
 
   
-  // 今月の費用
   const thisMonthRecords = records.filter(r => {
     const d = new Date(r.date)
     return d.getFullYear() === today.getFullYear() && (d.getMonth() + 1) === (today.getMonth() + 1)
   })
   const thisMonthCost = thisMonthRecords.reduce((sum, r) => sum + r.amount, 0)
 
-  // 先月の費用
   const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1)
   const lastMonthRecords = records.filter(r => {
     const d = new Date(r.date)
@@ -149,7 +143,6 @@ export default function Home() {
         <p className="text-sm text-slate-500 dark:text-muted-foreground mt-1">{getGreeting(t)}</p>
       </header>
       <div className="flex flex-col lg:flex-row lg:items-stretch gap-6 lg:gap-8">
-        {/* 愛車カードスケルトン */}
         <div className="lg:w-[380px] lg:shrink-0" style={{ order: homeOrder.indexOf("cars") }}>
           <div className="bg-white dark:bg-card rounded-xl overflow-hidden">
             <Skeleton className="aspect-[11/6] rounded-none" />
@@ -194,7 +187,6 @@ export default function Home() {
           style={{ order: Math.min(homeOrder.indexOf("summary"), homeOrder.indexOf("alerts")) }}
         >
           <div className="space-y-6" style={{ order: homeOrder.indexOf("summary") }}>
-            {/* 今月の費用カードスケルトン */}
             <div className="relative bg-white dark:bg-card rounded-xl overflow-hidden py-4">
               <div className="absolute top-4 right-4 z-10 flex flex-col gap-1.5">
                 <Skeleton className="h-8 w-24 rounded-full" />
@@ -223,7 +215,6 @@ export default function Home() {
             </div>
           </div>
           <div className="space-y-6" style={{ order: homeOrder.indexOf("alerts") }}>
-            {/* アラートカードスケルトン */}
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
               {/* 1件目は常に表示、2〜4件目はPC初期表示用（lg以上のみ表示）に合わせる */}
               {[...Array(4)].map((_, i) => (
@@ -266,11 +257,9 @@ export default function Home() {
           style={{ order: Math.min(homeOrder.indexOf("summary"), homeOrder.indexOf("alerts")) }}
         >
         <section style={{ order: homeOrder.indexOf("summary") }}>
-          {/* 一体型カード：今月の費用、給油ボタン、直近の記録 */}
           <Card className="relative border-none bg-white dark:bg-card">
               <CardContent className="p-0">
 
-                {/* 給油を記録、ODO更新ボタン */}
                 {cars.length > 0 && (
                   <div className="absolute top-4 right-4 z-10 flex flex-col gap-1.5">
                     <Link href="/records?action=add&category=fuel">
@@ -286,7 +275,6 @@ export default function Home() {
                   </div>
                 )}
 
-                {/* 今月の費用 */}
                 <div className={`px-5 pt-1 pb-4 ${cars.length > 0 ? "pr-36" : ""}`}>
                   <p className="text-sm font-medium text-slate-500 dark:text-muted-foreground">
                     {t("home.this_month_cost")}
@@ -312,7 +300,6 @@ export default function Home() {
 
                 <div className="mx-5 border-t border-slate-200 dark:border-border" />
 
-                {/* 直近の記録 */}
                 <div className="px-5 pt-4 pb-1">
                   <p className="text-xs font-semibold text-slate-500 dark:text-muted-foreground mb-3">{t("home.recent_records")}</p>
                   {records.length === 0 ? (
@@ -350,7 +337,6 @@ export default function Home() {
         <section style={{ order: homeOrder.indexOf("alerts") }}>
           {alerts.length > 0 ? (
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4 items-stretch">
-                {/* 常に表示される1件目 */}
                 <div className="relative h-full">
                   <MaintAlertCard alert={alerts[0]} reserveButtonSpace={alerts.length > 1} className="h-full" />
                   {alerts.length > 1 && (
@@ -364,7 +350,6 @@ export default function Home() {
                   )}
                 </div>
 
-                {/* PC版初期表示用 */}
                 {alerts.slice(1, 4).map((alert) => (
                   <MaintAlertCard key={alert.id} alert={alert} className="hidden lg:block h-full" />
                 ))}

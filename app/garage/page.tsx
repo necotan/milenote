@@ -51,12 +51,10 @@ import { FUEL_TYPES } from "@/lib/fuelTypes"
 const CAR_STATUS_KEYS = ["pending", "active", "archived", "archived_excluded"] as const
 type CarStatus = typeof CAR_STATUS_KEYS[number]
 
-// ウィッシュリストの絞り込み対象ステータス
 // DB の CHECK 制約（wishlists_status_check）と一致させており、増やすときは migration も追加する
 const WISH_STATUS_KEYS = ["considering", "purchased", "installed", "given_up"] as const
 type WishStatus = typeof WISH_STATUS_KEYS[number]
 
-// 一覧での並び順
 const CAR_STATUS_ORDER: Record<string, number> = {
   active: 0,
   pending: 1,
@@ -68,7 +66,6 @@ const CAR_STATUS_ORDER: Record<string, number> = {
 type AdjustImageTarget = Pick<Car, "id" | "image_url"> & Partial<Pick<Car, "name">> & CarImageTransform
 
 export default function GaragePage() {
-  // 表示の切り替えステート
   const [isAddingCar, setIsAddingCar] = useState(false)
   const [editCarId, setEditCarId] = useState<string | null>(null)
   const [isAddingWish, setIsAddingWish] = useState(false)
@@ -76,7 +73,6 @@ export default function GaragePage() {
   const [savingCar, setSavingCar] = useState(false)
   const [savingWish, setSavingWish] = useState(false)
 
-  // 削除確認モーダル用
   const [deleteCarTarget, setDeleteCarTarget] = useState<Car | null>(null)
   const [deleteCarConfirmName, setDeleteCarConfirmName] = useState("")
   const [deletingCar, setDeletingCar] = useState(false)
@@ -84,7 +80,6 @@ export default function GaragePage() {
   const [deleteWishId, setDeleteWishId] = useState<string | null>(null)
   const [deletingWish, setDeletingWish] = useState(false)
 
-  // 画像の位置、ズーム調整モーダル用
   const [adjustTarget, setAdjustTarget] = useState<AdjustImageTarget | null>(null)
   const [adjustPosX, setAdjustPosX] = useState(DEFAULT_IMAGE_POSITION_X)
   const [adjustPosY, setAdjustPosY] = useState(DEFAULT_IMAGE_POSITION_Y)
@@ -106,7 +101,6 @@ export default function GaragePage() {
 
   usePageLoadingGate(!loading)
 
-  // ステータス順、同ステータス内は登録日時が新しい順
   const cars = useMemo(() => {
     return [...allCars].sort((a, b) => {
       const aOrder = CAR_STATUS_ORDER[a.status] ?? 99
@@ -123,7 +117,6 @@ export default function GaragePage() {
 
   const carsById = useMemo(() => new Map(allCars.map(c => [c.id, c])), [allCars])
 
-  // 車両追加フォームの状態管理
   const [name, setName] = useState("")
   const [maker, setMaker] = useState("")
   const [modelCode, setModelCode] = useState("")
@@ -139,7 +132,6 @@ export default function GaragePage() {
   const [includePriceInCost, setIncludePriceInCost] = useState(false)
   const [carStatus, setCarStatus] = useState<CarStatus>("active")
 
-  // ウィッシュリストのステータス・ジャンル絞り込み用ステート
   const [wishFilters, setWishFilters] = useState<WishStatus[]>([])
   const [wishGenreFilters, setWishGenreFilters] = useState<WishlistGenreSlug[]>([])
   const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -162,9 +154,7 @@ export default function GaragePage() {
     localStorage.setItem("garage_wish_genre_filters", JSON.stringify(wishGenreFilters))
   }, [wishGenreFilters])
 
-  // ウィッシュリスト追加フォームの状態管理
   const [selectedWishCarId, setWishCarId] = useState("")
-  // 対象車が1台だけで未選択の場合は、その車を選択済みとして扱う
   const wishCarId = selectedWishCarId || (cars.length === 1 ? cars[0].id : "")
   const [wishItemName, setWishItemName] = useState("")
   const [wishGenre, setWishGenre] = useState("")
@@ -318,7 +308,6 @@ export default function GaragePage() {
         }
       }
 
-      // 車本体を物理削除する（紐づく records、wishlists、recurring_costs は CASCADE で削除）
       const { error } = await supabase.from("cars").delete().eq("id", deleteCarTarget.id)
       if (error) {
         toast.error(t("common.delete_failed") + ": " + error.message)
@@ -416,7 +405,6 @@ export default function GaragePage() {
       toast.error(t("common.delete_failed") + ": " + error.message)
     } else {
       toast.success(t("garage.item_deleted"))
-      // 再取得せずキャッシュから取り除く
       await mutateWishlists((prev) => prev?.filter(w => w.id !== deleteWishId), { revalidate: false })
     }
     setDeletingWish(false)
@@ -472,7 +460,6 @@ export default function GaragePage() {
       return
     }
 
-    // Storageにアップロード
     // ファイル選択のイベントハンドラ内で実行され描画中ではないため、react-hooks/purity の指摘は誤検知
     // eslint-disable-next-line react-hooks/purity
     const fileName = `${carId}-${Date.now()}.jpg` // メタデータ除去後は常に jpg で重複しないファイル名を生成
@@ -488,10 +475,8 @@ export default function GaragePage() {
       return
     }
 
-    // アップロードした画像の公開URLを取得
     const { data: { publicUrl } } = supabase.storage.from('cars').getPublicUrl(filePath)
 
-    // cars テーブルの image_url を更新
     // 写真を差し替えると前の位置、ズームは新しい画像に合わないため、中央、等倍に初期化する
     const { error: updateError } = await supabase.from('cars').update({
       image_url: publicUrl,
@@ -504,7 +489,6 @@ export default function GaragePage() {
     if (updateError) {
       toast.error(t("garage.db_update_failed"))
     } else {
-      // 画像への差し替えが成功したら、古い画像を Storage から削除
       // 失敗しても表示は壊れず、残ったファイルは次回の写真変更・車両削除時に処理されるため、エラーは表示しない
       try {
         const { data: files, error: listError } = await supabase.storage.from("cars").list(user.id)
@@ -522,7 +506,7 @@ export default function GaragePage() {
       }
 
       toast.success(t("garage.photo_set"))
-      await mutateCars() // 画面を更新して写真を表示
+      await mutateCars()
       // アップロード直後に位置・ズーム調整モーダルを開き、新しい画像をすぐ調整できるようにする
       const baseCar = cars.find((c) => c.id === carId) || {}
       handleStartAdjustImage({
@@ -544,7 +528,6 @@ export default function GaragePage() {
     setAdjustScale(car.image_scale ?? DEFAULT_IMAGE_SCALE)
   }
 
-  // プレビュー上のドラッグで位置を調整する
   const handleAdjustPointerDown = (e: React.PointerEvent) => {
     e.currentTarget.setPointerCapture(e.pointerId)
     dragState.current = { startX: e.clientX, startY: e.clientY, baseX: adjustPosX, baseY: adjustPosY }
@@ -564,7 +547,6 @@ export default function GaragePage() {
     dragState.current = null
   }
 
-  // 位置、ズームを cars テーブルに保存する
   const handleSaveImagePosition = async () => {
     if (!adjustTarget) return
     setSavingPosition(true)
@@ -594,13 +576,11 @@ export default function GaragePage() {
 
   const chipTapHandlers = useChipTapHandlers()
 
-  // ステータス・ジャンル絞り込みを適用したウィッシュリスト
   const filteredWishlists = wishlists.filter((w) =>
     (wishFilters.length === 0 || wishFilters.includes(w.status as WishStatus)) &&
     (wishGenreFilters.length === 0 || wishGenreFilters.includes(w.genre as WishlistGenreSlug))
   )
 
-  // 絞り込み中の選択数（バッジ表示用）
   const activeFilterCount = wishFilters.length + wishGenreFilters.length
 
   const getStatusStyle = (status: string) => {
@@ -635,7 +615,6 @@ export default function GaragePage() {
 
         {loading && <SkeletonTabs className="mb-6" />}
 
-        {/* 「車を登録」ボタン行（!isAddingCar && !editCarId の間だけ表示される実ボタンのプレースホルダ） */}
         {loading && (
           <div className="flex justify-end mb-4">
             <Skeleton className="h-7 w-28 rounded-full" />
@@ -689,7 +668,6 @@ export default function GaragePage() {
           </div>
         )}
 
-        {/* 愛車一覧（My Cars）*/}
         <TabsContent value="mycars" className="space-y-4">
           <div className="flex justify-end">
             {!loading && !isAddingCar && !editCarId && (
@@ -799,7 +777,6 @@ export default function GaragePage() {
               {cars.map((car) => (
                 <Card key={car.id} className="border-none overflow-hidden bg-white dark:bg-card p-0 relative group">
                   <div className="absolute top-3 right-3 flex items-center gap-2 z-20">
-                    {/* 画像の位置、ズーム調整ボタン（画像が設定済みの場合のみ） */}
                     {car.image_url && (
                       <button
                         type="button"
@@ -810,7 +787,6 @@ export default function GaragePage() {
                         <Move size={16} />
                       </button>
                     )}
-                    {/* 画像アップロードボタン */}
                     <Label className="bg-black/40 hover:bg-black/70 text-white p-2 rounded-full cursor-pointer transition-all backdrop-blur-sm opacity-80 hover:opacity-100 shadow-lg">
                       <Camera size={16} />
                       {/* Input は外側に w-full の枠を持ち、非表示でも幅を取ってアイコンが潰れるため素の input を使う */}
@@ -824,7 +800,6 @@ export default function GaragePage() {
                   </div>
 
                   <div className="relative aspect-[11/6] bg-neutral-300 dark:bg-neutral-800 w-full m-0 border-b border-slate-200 dark:border-border overflow-hidden">
-                    {/* 登録済みの画像がある場合は表示、なければプレースホルダーアイコンを表示 */}
                     {car.image_url ? (
                       // Storage の公開URLを直接表示し、getCarImageStyle の位置・ズームを img に当てるため next/image は使わない
                       // eslint-disable-next-line @next/next/no-img-element
@@ -906,7 +881,6 @@ export default function GaragePage() {
           )}
         </TabsContent>
 
-        {/* 車両削除確認モーダル */}
         {deleteCarTarget && (
           <Dialog open onOpenChange={(open) => { if (!open && !deletingCar) { setDeleteCarTarget(null); setDeleteCarConfirmName(""); } }}>
             {/* スマホでキーボードが勝手に開かないよう、確認入力欄への自動フォーカスは止める */}
@@ -957,7 +931,6 @@ export default function GaragePage() {
           </Dialog>
         )}
 
-        {/* 画像の位置、ズーム調整モーダル */}
         {adjustTarget && (
           <Dialog open onOpenChange={(open) => { if (!open && !savingPosition) setAdjustTarget(null) }}>
             <DialogContent showCloseButton={false} className="max-w-md" onOpenAutoFocus={(e) => e.preventDefault()}>
@@ -1014,10 +987,8 @@ export default function GaragePage() {
           </Dialog>
         )}
 
-        {/* ウィッシュリスト（欲しいもの） */}
         <TabsContent value="wishlist" className="space-y-4">
           <div className="flex items-center justify-end gap-4">
-            {/* 絞り込みボタン（アイテムがあるときのみ表示、絞り込み中は選択数をバッジ表示） */}
             {!loading && !isAddingWish && !editWishId && wishlists.length > 0 && (
               <button
                 type="button"
@@ -1201,7 +1172,6 @@ export default function GaragePage() {
             </div>
           )}
 
-          {/* 絞り込み結果が無いとき */}
           {!loading && !isAddingWish && !editWishId && wishlists.length > 0 && filteredWishlists.length === 0 && (
             <div className="text-center py-20">
               <ListTodo className="mx-auto h-12 w-12 text-slate-300 dark:text-muted-foreground mb-3" />
@@ -1213,11 +1183,9 @@ export default function GaragePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filteredWishlists.map((wish) => {
                 const statusStyle = getStatusStyle(wish.status)
-                // http(s) 以外のスキームは弾き、安全なURLのみリンク化
                 const safeUrl = getSafeExternalUrl(wish.url)
                 return (
                   <Card key={wish.id} className="border-none bg-white dark:bg-card overflow-hidden relative">
-                    {/* 編集・削除ボタン（右上に常時表示） */}
                     <div className="absolute top-3 right-3 flex items-center gap-2 z-10">
                       <IconButton
                         onClick={() => handleStartEditWish(wish)}

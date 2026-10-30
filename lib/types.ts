@@ -1,5 +1,3 @@
-// DBテーブルの行の型（SWRフックや各ページで共通利用）
-
 import type { MaintSettings } from "@/lib/maintenanceAlerts"
 
 export type CarStatus = "pending" | "active" | "archived" | "archived_excluded"

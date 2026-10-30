@@ -37,7 +37,6 @@ const AutoRecordBanner = () => {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
-  // 展開エリアのアニメーション
   const EASE_APPLE = "cubic-bezier(0.32, 0.72, 0, 1)"
 
   return (
@@ -411,7 +410,6 @@ export default function RecurringTab({
     if (!deleteId) return
     setIsDeleting(true)
 
-    // 楽観的UI (先にキャッシュから削除)
     await mutateCosts((prev) => prev?.filter(c => c.id !== deleteId), { revalidate: false })
 
     const { error } = await supabase.from("recurring_costs").delete().eq("id", deleteId)
@@ -427,7 +425,6 @@ export default function RecurringTab({
   }
 
   const toggleActive = async (id: string, currentStatus: boolean) => {
-    // 楽観的UI (先にキャッシュを反転)
     await mutateCosts((prev) => prev?.map(c => c.id === id ? { ...c, is_active: !currentStatus } : c), { revalidate: false })
 
     const { error } = await supabase.from("recurring_costs").update({ is_active: !currentStatus }).eq("id", id)
@@ -442,7 +439,6 @@ export default function RecurringTab({
     <div className="space-y-2">
       <AutoRecordBanner />
 
-      {/* 追加ボタン（コスト一覧がある場合のみ右上に表示） */}
       {!isAdding && !editId && cars.length > 0 && costs.length > 0 && (
         <div className="flex justify-end mt-8 mb-8">
           <Button onClick={() => setIsAdding(true)} size="sm" className="px-6 font-bold">
@@ -451,7 +447,6 @@ export default function RecurringTab({
         </div>
       )}
 
-      {/* フォーム */}
       {(isAdding || editId) && (
         <RecurringForm
           onSubmit={handleSave}
@@ -468,10 +463,8 @@ export default function RecurringTab({
         />
       )}
 
-      {/* ローディング中のスケルトン */}
       {loading && !isAdding && !editId && costs.length === 0 && (
         <>
-          {/* 「定期費用を追加」ボタン行（costs.length > 0 の間だけ表示される実ボタンのプレースホルダ） */}
           <div className="flex justify-end mt-8 mb-8">
             <Skeleton className="h-7 w-36 rounded-full" />
           </div>
@@ -479,12 +472,10 @@ export default function RecurringTab({
         </>
       )}
 
-      {/* 空状態 */}
       {!loading && !isAdding && !editId && costs.length === 0 && (
         <EmptyState onAdd={() => setIsAdding(true)} />
       )}
 
-      {/* 定期費用カード一覧 */}
       {!isAdding && !editId && (
       <div className="space-y-3">
         {costs.map(cost => {

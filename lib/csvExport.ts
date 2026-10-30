@@ -87,7 +87,6 @@ export function downloadCsv(filename: string, csv: string): void {
   URL.revokeObjectURL(url)
 }
 
-// milenote_records_YYYYMMDD.csv 形式のファイル名を生成する
 export function buildExportFilename(): string {
   const now = new Date()
   const y = now.getFullYear()

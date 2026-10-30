@@ -20,7 +20,6 @@ export default function Sidebar() {
     ]
 
     return (
-        // サイドバーの背景をメインコンテンツと同じにし、区切り線をなくす
         <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0 bg-page p-6 z-10">
             <div className="mb-12 px-2 pt-2">
                 <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-foreground">Milenote</h1>
@@ -45,7 +44,6 @@ export default function Sidebar() {
                 })}
             </nav>
 
-            {/* ログアウトボタン (PC設定) */}
             <div className="mt-auto pt-8 border-t border-slate-300 dark:border-border">
                 <button
                     onClick={async () => {
