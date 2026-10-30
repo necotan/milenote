@@ -6,6 +6,7 @@ import { createClient } from "@/utils/supabase"
 import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
 import { useCars } from "@/lib/hooks/useCars"
 import { useRecords } from "@/lib/hooks/useRecords"
+import { useOdoLogs } from "@/lib/hooks/useOdoLogs"
 import { useChipTapHandlers } from "@/lib/hooks/useChipTapHandlers"
 import { scrollToPageTop } from "@/utils/pageScroll"
 import { Button } from "@/components/ui/button"
@@ -36,6 +37,7 @@ import { getFuelUnit } from "@/lib/fuelTypes"
 import { deriveFuelUnitPrice } from "@/lib/fuelUnitPrice"
 import { toISODate } from "@/lib/date/calendar"
 import { estimateOdoAtDate } from "@/lib/odoEstimate"
+import { recalcCarOdo } from "@/lib/carOdo"
 import type { LucideIcon } from "lucide-react"
 import type { Car, CarRecord } from "@/lib/types"
 
@@ -380,8 +382,9 @@ function RecordsPageInner() {
   const userId = user?.id ?? null
   const { cars: allCars, isLoading: carsLoading, mutate: mutateCars } = useCars(userId)
   const { records: allRecords, isLoading: recordsLoading, mutate: mutateRecords } = useRecords(userId)
+  const { odoLogs, isLoading: odoLogsLoading } = useOdoLogs(userId)
 
-  const loading = userLoading || (!!userId && (carsLoading || recordsLoading))
+  const loading = userLoading || (!!userId && (carsLoading || recordsLoading || odoLogsLoading))
 
   usePageLoadingGate(!loading)
 
@@ -577,19 +580,9 @@ function RecordsPageInner() {
     setCarId(firstCarId)
   }
 
-  // 記録の削除・編集で過大なODO値（桁間違いなど）が残らないよう、残っている記録の最大ODOに合わせる
-  // 記録が無くなった場合や記録より大きい場合は購入時ODO(purchase_odo)を下限とする
-  const recalcCarOdo = async (targetCarId: string) => {
-    const targetCar = cars.find(c => c.id === targetCarId)
-    const baseOdo = targetCar?.purchase_odo || 0
-    const { data: remaining } = await supabase
-      .from("records")
-      .select("odo_at_record")
-      .eq("car_id", targetCarId)
-    const maxRecordOdo = remaining && remaining.length > 0
-      ? Math.max(...remaining.map((r: { odo_at_record: number | null }) => r.odo_at_record ?? 0))
-      : 0
-    await supabase.from("cars").update({ current_odo: Math.max(maxRecordOdo, baseOdo) }).eq("id", targetCarId)
+  const syncCarOdo = async (targetCarId: string) => {
+    const targetCar = carsById.get(targetCarId)
+    if (targetCar) await recalcCarOdo(targetCar)
     await mutateCars()
   }
 
@@ -597,8 +590,8 @@ function RecordsPageInner() {
   const estimatedOdo = useMemo(() => {
     const targetCar = carsById.get(carId)
     if (!targetCar) return null
-    return estimateOdoAtDate({ car: targetCar, records: allRecords, date, today: toISODate(new Date()), excludeRecordId: editRecordId })
-  }, [carsById, carId, allRecords, date, editRecordId])
+    return estimateOdoAtDate({ car: targetCar, records: allRecords, odoLogs, date, today: toISODate(new Date()), excludeRecordId: editRecordId })
+  }, [carsById, carId, allRecords, odoLogs, date, editRecordId])
 
   const handleAddRecord = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -632,7 +625,7 @@ function RecordsPageInner() {
 
       if (recordError) return toast.error(t("common.error_occurred") + ": " + recordError.message)
 
-      await recalcCarOdo(carId)
+      await syncCarOdo(carId)
       await mutateRecords()
 
       toast.success(t("records.saved"))
@@ -703,7 +696,7 @@ function RecordsPageInner() {
       if (error) {
         toast.error(t("common.error_occurred") + ": " + error.message)
       } else {
-        await recalcCarOdo(carId)
+        await syncCarOdo(carId)
         await mutateRecords()
         toast.success(t("records.updated"))
         resetForm()
@@ -723,7 +716,7 @@ function RecordsPageInner() {
     } else {
       // 一覧からは即時に取り除き、ODO再計算後の車データはキャッシュ再検証で同期
       await mutateRecords((prev) => prev?.filter(r => r.id !== deleteRecordId), { revalidate: false })
-      if (targetRecord) await recalcCarOdo(targetRecord.car_id)
+      if (targetRecord) await syncCarOdo(targetRecord.car_id)
       toast.success(t("records.deleted"))
     }
     setIsDeleting(false)

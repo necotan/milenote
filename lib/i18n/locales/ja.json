@@ -15,6 +15,7 @@
     "loading_text": "読み込み中",
     "error_occurred": "エラーが発生しました",
     "delete_failed": "削除に失敗しました",
+    "odo_lower_than_existing": "{{odo}} km より大きい値が記録かODO更新の履歴にあります。誤った値は履歴または記録から直してください",
     "logout": "ログアウト",
     "km_unit": "km",
     "months_unit": "ヶ月",
@@ -52,6 +53,18 @@
     "garage": "ガレージ",
     "mypage": "マイページ"
   },
+  "odo_history": {
+    "empty": "ODO更新の履歴はまだありません",
+    "diff_from_previous": "前回から {{km}} km",
+    "edit_title": "履歴を編集",
+    "edit_desc": "現在の走行距離は、履歴と記録のうち一番大きい値になります。",
+    "date": "日付",
+    "updated": "履歴を更新しました",
+    "deleted": "履歴を削除しました",
+    "delete_title": "履歴の削除",
+    "delete_message": "{{date}} の {{odo}} km を削除しますか？\n現在の走行距離は、残りの履歴と記録から計算し直されます。",
+    "duplicate_date": "その日付の履歴はすでにあります"
+  },
   "home": {
     "title": "ホーム",
     "greeting_morning": "おはようございます",
@@ -66,6 +79,7 @@
     "update_odo_desc": "現在の走行距離を更新します。メンテナンスのアラートにも反映されます。",
     "update_odo_saved": "走行距離を更新しました",
     "update_odo_invalid": "正しい走行距離を入力してください",
+    "odo_history_link": "ODO更新の履歴を見る",
     "target_car": "対象の車",
     "record_charge_label": "充電",
     "record_hydrogen_label": "充填",
