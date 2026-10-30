@@ -53,7 +53,7 @@ milenote: a car maintenance-cost tracking app (Next.js App Router + Supabase).
 ## Comments
 
 - Write only why: the reason for a choice, workarounds for browser or library quirks, and relations to DB constraints.
-- Do not write what names or JSX already say (labels like "〜処理", "〜コンポーネント", "金額").
+- Do not write what the code, names, or JSX already say (e.g. "ハンバーガーメニュー", "〜処理", "〜コンポーネント", "金額"). If there is no why to explain, write no comment.
 - If the same explanation would go in two places, consider sharing the code instead.
 - No decorative characters such as `---`, `===`, `***`.
 
@@ -99,9 +99,14 @@ Status semantics, per-screen filters, and the checklist: `docs/delete-design.md`
 | upgrade | Version upgrade |
 | revert | Revert a change |
 
-- Line 1: `<prefix>: <summary in English>`. Then a blank line.
-- Body: about 4 Japanese bullets. Name the concrete files, components, properties, or storage targets changed and how. Do not explain causes or background.
+- Line 1: `<prefix>: <summary in English>`.
+- The body is optional. For a small change that line 1 fully describes, write line 1 only. Otherwise add a blank line and 1 to about 4 Japanese bullets; do not pad to reach 4.
+- Bullets name the concrete files, components, properties, or storage targets changed and how. Do not explain causes or background.
 - Only when the user explicitly asks for causes or background, write prose with the root cause (file and line) and the fix approach.
+
+```
+fix: typo in garage empty state text
+```
 
 ```
 fix: skeleton UI misaligned with actual cards in maintenance list
