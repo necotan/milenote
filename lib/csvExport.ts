@@ -1,4 +1,4 @@
-import { getFuelUnit } from "./fuelTypes"
+import { getFillTypeLabelKey, getFuelUnit, type FillType } from "./fuelTypes"
 
 type TFunc = (key: string, params?: Record<string, string | number>) => string
 
@@ -10,6 +10,7 @@ export type ExportRecord = {
   odo_at_record: number | null
   fuel_amount: number | null
   fuel_unit_price: number | null
+  fill_type: FillType | null
   memo: string | null
   cars: { name: string; fuel_type: string | null } | null
 }
@@ -46,6 +47,7 @@ export function recordsToCsv(records: ExportRecord[], t: TFunc): string {
     t("mypage.export_col_subcategory"),
     t("mypage.export_col_amount"),
     t("mypage.export_col_odometer"),
+    t("mypage.export_col_fill_type"),
     t("mypage.export_col_fuel"),
     t("mypage.export_col_unit_price"),
     t("mypage.export_col_memo"),
@@ -54,8 +56,9 @@ export function recordsToCsv(records: ExportRecord[], t: TFunc): string {
   const fuelUnitKey = { l: "records.unit_l", kwh: "records.unit_kwh", kg: "records.unit_kg" } as const
 
   const rows = records.map((r) => {
+    const unit = getFuelUnit(r.cars?.fuel_type)
     const fuel = r.fuel_amount != null
-      ? `${r.fuel_amount}${t(fuelUnitKey[getFuelUnit(r.cars?.fuel_type)])}`
+      ? `${r.fuel_amount}${t(fuelUnitKey[unit])}`
       : ""
     return [
       r.date.replace(/-/g, "/"),
@@ -64,6 +67,7 @@ export function recordsToCsv(records: ExportRecord[], t: TFunc): string {
       r.sub_category ? t(`subcategories.${r.sub_category}`) : "",
       r.amount,
       r.odo_at_record ?? "",
+      r.fill_type ? t(getFillTypeLabelKey(r.fill_type, unit)) : "",
       fuel,
       r.fuel_unit_price ?? "",
       r.memo ?? "",

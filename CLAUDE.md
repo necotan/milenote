@@ -61,7 +61,7 @@ milenote: a car maintenance-cost tracking app (Next.js App Router + Supabase).
 
 - Use translation keys for all UI text. Do not write Japanese or English directly in JSX.
 - Add every new string to both `lib/i18n/locales/ja.json` and `lib/i18n/locales/en.json` in the same change.
-- Key naming: `<page>.<element>` in snake_case (e.g. `garage.car_status_active`). Shared text goes in `common`, `nav`, `categories`, `subcategories`, `fuel_types`, `wishlist_genres`, `wishlist_statuses`.
+- Key naming: `<page>.<element>` in snake_case (e.g. `garage.car_status_active`). Shared text goes in `common`, `nav`, `categories`, `subcategories`, `fuel_types`, `fill_types`, `wishlist_genres`, `wishlist_statuses`.
 - Use `useTranslation()` from `lib/i18n/index.tsx`. Placeholders use `{{name}}`.
 
 ## Database (Supabase)

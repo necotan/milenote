@@ -1,4 +1,5 @@
 import type { MaintSettings } from "@/lib/maintenanceAlerts"
+import type { FillType } from "@/lib/fuelTypes"
 
 export type CarStatus = "pending" | "active" | "archived" | "archived_excluded"
 
@@ -37,6 +38,7 @@ export type CarRecord = {
   odo_at_record: number
   fuel_amount: number | string | null
   fuel_unit_price: number | string | null
+  fill_type: FillType | null
   date: string
   memo: string | null
   created_at: string

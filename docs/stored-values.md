@@ -15,6 +15,7 @@ Rules for identifier values saved in the database (categories, sub-categories, f
   | Sub-categories per category | `SUB_CATEGORIES` in `lib/subcategories.ts` |
   | Maintenance alert items (`maint_settings` keys) | `MAINT_CATEGORIES` in `lib/subcategories.ts` |
   | Fuel types | `FUEL_TYPES` in `lib/fuelTypes.ts` |
+  | Fill types (full tank, fixed volume, fixed amount) | `FILL_TYPES` in `lib/fuelTypes.ts` |
   | Wishlist genres | `WISHLIST_GENRES` in `lib/wishlistGenres.ts` |
 
   Most lists are also enforced by CHECK constraints; see the table in `docs/data-model.md`.

@@ -29,6 +29,7 @@ Constraints are the last line of validation. Keep them in sync with the UI.
   | `cars.status` | `cars_status_check` | `CarStatus` in `lib/types.ts` |
   | `records.category`, `recurring_costs.category` | `*_category_check` | `CATEGORIES` in `app/records/page.tsx` |
   | `records.sub_category`, `recurring_costs.sub_category` | `is_valid_sub_category(category, sub_category)` | `SUB_CATEGORIES` in `lib/subcategories.ts` |
+  | `records.fill_type` | `records_fill_type_check` | `FILL_TYPES` in `lib/fuelTypes.ts` |
   | `recurring_costs.frequency` | `recurring_costs_frequency_check` | `FREQUENCY_OPTIONS` in `components/RecurringTab.tsx` |
   | `wishlists.genre` | `wishlists_genre_check` | `WISHLIST_GENRES` in `lib/wishlistGenres.ts` |
   | `wishlists.status` | `wishlists_status_check` | `WISH_STATUS_KEYS` in `app/garage/page.tsx` |

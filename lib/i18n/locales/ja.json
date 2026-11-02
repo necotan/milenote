@@ -193,6 +193,9 @@
     "date": "日付",
     "odometer_km": "ODOメーター (km)",
     "fuel_info": "給油情報",
+    "fill_type": "給油方法",
+    "charge_type": "充電方法",
+    "hydrogen_fill_type": "充填方法",
     "unit_price": "単価 (円/L)",
     "fuel_amount": "給油量 (L)",
     "total_amount": "総額 (円)",
@@ -401,6 +404,7 @@
     "export_col_subcategory": "サブカテゴリ",
     "export_col_amount": "金額(円)",
     "export_col_odometer": "走行距離(km)",
+    "export_col_fill_type": "給油方法",
     "export_col_fuel": "給油量・充電量",
     "export_col_unit_price": "単価(円)",
     "export_col_memo": "メモ",
@@ -595,6 +599,12 @@
     "loan_lease": "ローン・リース代",
     "car_goods": "カー用品・小物",
     "road_service": "ロードサービス"
+  },
+  "fill_types": {
+    "full": "満タン",
+    "full_charge": "満充電",
+    "fixed_volume": "定量",
+    "fixed_amount": "定額"
   },
   "fuel_types": {
     "regular": "レギュラー",

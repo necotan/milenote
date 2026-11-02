@@ -33,7 +33,7 @@ import { ModalCard } from "@/components/ui/ModalCard"
 import { ExpandableNote } from "@/components/ui/ExpandableNote"
 import RecurringTab from "@/components/RecurringTab"
 import { SUB_CATEGORIES, type SubCategorySlug } from "@/lib/subcategories"
-import { getFuelUnit } from "@/lib/fuelTypes"
+import { FILL_TYPES, getFillTypeLabelKey, getFuelUnit, type FillType } from "@/lib/fuelTypes"
 import { deriveFuelUnitPrice } from "@/lib/fuelUnitPrice"
 import { toISODate } from "@/lib/date/calendar"
 import { estimateOdoAtDate } from "@/lib/odoEstimate"
@@ -120,6 +120,8 @@ type RecordFormProps = {
   odoPlaceholder: string
   fuelAmount: string
   fuelUnitPrice: string
+  fillType: FillType
+  setFillType: (value: FillType) => void
   memo: string
   setMemo: (value: string) => void
   onFuelFieldChange: (field: FuelCalcField, value: string) => void
@@ -151,6 +153,7 @@ const RecordForm = ({
   odoPlaceholder,
   fuelAmount,
   fuelUnitPrice,
+  fillType, setFillType,
   memo, setMemo,
   onFuelFieldChange,
   entryIc, setEntryIc,
@@ -163,9 +166,9 @@ const RecordForm = ({
   const selectedCar = cars.find((c) => c.id === carId)
   const fuelUnit = getFuelUnit(selectedCar?.fuel_type)
   const fuelFieldText = {
-    l: { info: t("records.fuel_info"), priceLabel: t("records.unit_price"), pricePh: "170", priceUnit: t("records.unit_yen_per_l"), amountLabel: t("records.fuel_amount"), amountPh: "40.0", amountUnit: t("records.unit_l") },
-    kwh: { info: t("records.charge_info"), priceLabel: t("records.unit_price_kwh"), pricePh: "30", priceUnit: t("records.unit_yen_per_kwh"), amountLabel: t("records.charge_amount"), amountPh: "30.0", amountUnit: t("records.unit_kwh") },
-    kg: { info: t("records.hydrogen_info"), priceLabel: t("records.unit_price_kg"), pricePh: "1100", priceUnit: t("records.unit_yen_per_kg"), amountLabel: t("records.hydrogen_amount"), amountPh: "4.5", amountUnit: t("records.unit_kg") },
+    l: { info: t("records.fuel_info"), fillTypeLabel: t("records.fill_type"), priceLabel: t("records.unit_price"), pricePh: "170", priceUnit: t("records.unit_yen_per_l"), amountLabel: t("records.fuel_amount"), amountPh: "40.0", amountUnit: t("records.unit_l") },
+    kwh: { info: t("records.charge_info"), fillTypeLabel: t("records.charge_type"), priceLabel: t("records.unit_price_kwh"), pricePh: "30", priceUnit: t("records.unit_yen_per_kwh"), amountLabel: t("records.charge_amount"), amountPh: "30.0", amountUnit: t("records.unit_kwh") },
+    kg: { info: t("records.hydrogen_info"), fillTypeLabel: t("records.hydrogen_fill_type"), priceLabel: t("records.unit_price_kg"), pricePh: "1100", priceUnit: t("records.unit_yen_per_kg"), amountLabel: t("records.hydrogen_amount"), amountPh: "4.5", amountUnit: t("records.unit_kg") },
   }[fuelUnit]
 
   // 対象車・カテゴリ（fuelは2列レイアウトの左側、それ以外は単独で使い、サブカテゴリは直下に差し込む）
@@ -228,6 +231,15 @@ const RecordForm = ({
             </FormSection>
 
             <FormSection icon={Fuel} title={fuelFieldText.info} divided="mobile">
+              <div className="space-y-2">
+                <Label>{fuelFieldText.fillTypeLabel}</Label>
+                <SegmentedToggle
+                  value={fillType}
+                  onChange={setFillType}
+                  options={FILL_TYPES.map(type => ({ value: type, label: t(getFillTypeLabelKey(type, fuelUnit)) }))}
+                />
+              </div>
+
               <div className="space-y-2">
                 <Label>{fuelFieldText.priceLabel}</Label>
                 <NumberInput
@@ -414,6 +426,7 @@ function RecordsPageInner() {
   const [odoAtRecord, setOdoAtRecord] = useState("")
   const [fuelAmount, setFuelAmount] = useState("")
   const [fuelUnitPrice, setFuelUnitPrice] = useState("")
+  const [fillType, setFillType] = useState<FillType>("full")
   const [date, setDate] = useState(() => toISODate(new Date()))
   const [memo, setMemo] = useState("")
 
@@ -569,7 +582,7 @@ function RecordsPageInner() {
     setIsAdding(false)
     setEditRecordId(null)
     scrollToPageTop()
-    setAmount(""); setOdoAtRecord(""); setFuelAmount(""); setFuelUnitPrice(""); setMemo("")
+    setAmount(""); setOdoAtRecord(""); setFuelAmount(""); setFuelUnitPrice(""); setFillType("full"); setMemo("")
     setEntryIc(""); setExitIc("")
     setIntervalMonths("")
     setIncludesCompulsoryInsurance(false)
@@ -614,6 +627,7 @@ function RecordsPageInner() {
         odo_at_record: odoAtRecord ? parseInt(odoAtRecord) : fallbackOdo,
         fuel_amount: category === "fuel" ? parseFloat(fuelAmount) : null,
         fuel_unit_price: category === "fuel" ? parseOptionalNumber(fuelUnitPrice) : null,
+        fill_type: category === "fuel" ? fillType : null,
         date,
         memo: memo || null,
         entry_ic: category === "highway" ? (entryIc || null) : null,
@@ -652,6 +666,7 @@ function RecordsPageInner() {
     } else {
       setFuelUnitPrice(liters && total ? deriveFuelUnitPrice(total, liters) : "")
     }
+    setFillType(record.fill_type ?? "full")
     setDate(record.date)
     
     if (record.category === "highway") {
@@ -684,6 +699,7 @@ function RecordsPageInner() {
         odo_at_record: odoAtRecord ? parseInt(odoAtRecord) : fallbackOdo,
         fuel_amount: category === "fuel" ? parseFloat(fuelAmount) : null,
         fuel_unit_price: category === "fuel" ? parseOptionalNumber(fuelUnitPrice) : null,
+        fill_type: category === "fuel" ? fillType : null,
         date,
         memo: memo || null,
         entry_ic: category === "highway" ? (entryIc || null) : null,
@@ -903,6 +919,7 @@ function RecordsPageInner() {
           odoPlaceholder={estimatedOdo != null ? estimatedOdo.toLocaleString() : "52,500"}
           fuelAmount={fuelAmount}
           fuelUnitPrice={fuelUnitPrice}
+          fillType={fillType} setFillType={setFillType}
           memo={memo} setMemo={setMemo}
           onFuelFieldChange={handleFuelFieldChange}
           entryIc={entryIc} setEntryIc={setEntryIc}
@@ -927,6 +944,7 @@ function RecordsPageInner() {
           odoPlaceholder={estimatedOdo != null ? estimatedOdo.toLocaleString() : "52,500"}
           fuelAmount={fuelAmount}
           fuelUnitPrice={fuelUnitPrice}
+          fillType={fillType} setFillType={setFillType}
           memo={memo} setMemo={setMemo}
           onFuelFieldChange={handleFuelFieldChange}
           entryIc={entryIc} setEntryIc={setEntryIc}
@@ -1004,13 +1022,16 @@ function RecordsPageInner() {
 
                       <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-2">{record.date.replace(/-/g, '/')}</p>
 
-                      {record.category === "fuel" && (record.fuel_amount || record.fuel_unit_price != null) && (() => {
+                      {record.category === "fuel" && (record.fill_type || record.fuel_amount || record.fuel_unit_price != null) && (() => {
                         const unit = getFuelUnit(carsById.get(record.car_id)?.fuel_type)
                         const amountLabel = { l: t("records.fuel_amount_label"), kwh: t("records.charge_amount_label"), kg: t("records.hydrogen_amount_label") }[unit]
                         const amountUnit = { l: t("records.unit_l"), kwh: t("records.unit_kwh"), kg: t("records.unit_kg") }[unit]
                         const priceKey = { l: "records.unit_price_value_l", kwh: "records.unit_price_value_kwh", kg: "records.unit_price_value_kg" }[unit]
                         return (
                           <p className="flex flex-wrap gap-x-3 text-xs text-slate-600 dark:text-muted-foreground mb-2">
+                            {record.fill_type && (
+                              <span className="font-bold text-slate-700 dark:text-foreground">{t(getFillTypeLabelKey(record.fill_type, unit))}</span>
+                            )}
                             {record.fuel_amount && (
                               <span>{amountLabel} <span className="font-bold text-slate-700 dark:text-foreground">{record.fuel_amount} {amountUnit}</span></span>
                             )}
