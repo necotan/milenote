@@ -1011,6 +1011,9 @@ function RecordsPageInner() {
                             {t(`subcategories.${record.sub_category}`)}
                           </span>
                         )}
+                        {record.category === "fuel" && record.fill_type && (
+                          <span className="bg-slate-100 dark:bg-surface-2 px-2.5 py-1 rounded-full">{t(getFillTypeLabelKey(record.fill_type, recordFuelUnit))}</span>
+                        )}
                       </div>
 
                       <div className="flex items-center gap-3 text-[11px] text-slate-600 dark:text-muted-foreground mb-1">
@@ -1022,16 +1025,12 @@ function RecordsPageInner() {
 
                       <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-2">{record.date.replace(/-/g, '/')}</p>
 
-                      {record.category === "fuel" && (record.fill_type || record.fuel_amount || record.fuel_unit_price != null) && (() => {
-                        const unit = getFuelUnit(carsById.get(record.car_id)?.fuel_type)
-                        const amountLabel = { l: t("records.fuel_amount_label"), kwh: t("records.charge_amount_label"), kg: t("records.hydrogen_amount_label") }[unit]
-                        const amountUnit = { l: t("records.unit_l"), kwh: t("records.unit_kwh"), kg: t("records.unit_kg") }[unit]
-                        const priceKey = { l: "records.unit_price_value_l", kwh: "records.unit_price_value_kwh", kg: "records.unit_price_value_kg" }[unit]
+                      {record.category === "fuel" && (record.fuel_amount || record.fuel_unit_price != null) && (() => {
+                        const amountLabel = { l: t("records.fuel_amount_label"), kwh: t("records.charge_amount_label"), kg: t("records.hydrogen_amount_label") }[recordFuelUnit]
+                        const amountUnit = { l: t("records.unit_l"), kwh: t("records.unit_kwh"), kg: t("records.unit_kg") }[recordFuelUnit]
+                        const priceKey = { l: "records.unit_price_value_l", kwh: "records.unit_price_value_kwh", kg: "records.unit_price_value_kg" }[recordFuelUnit]
                         return (
                           <p className="flex flex-wrap gap-x-3 text-xs text-slate-600 dark:text-muted-foreground mb-2">
-                            {record.fill_type && (
-                              <span className="font-bold text-slate-700 dark:text-foreground">{t(getFillTypeLabelKey(record.fill_type, unit))}</span>
-                            )}
                             {record.fuel_amount && (
                               <span>{amountLabel} <span className="font-bold text-slate-700 dark:text-foreground">{record.fuel_amount} {amountUnit}</span></span>
                             )}
