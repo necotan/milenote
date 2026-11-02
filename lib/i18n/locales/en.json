@@ -193,6 +193,9 @@
     "date": "Date",
     "odometer_km": "Odometer (km)",
     "fuel_info": "Fuel Details",
+    "fill_type": "Fill Type",
+    "charge_type": "Charge Type",
+    "hydrogen_fill_type": "Fill Type",
     "unit_price": "Price per L",
     "fuel_amount": "Volume (L)",
     "total_amount": "Total",
@@ -401,6 +404,7 @@
     "export_col_subcategory": "Subcategory",
     "export_col_amount": "Amount (JPY)",
     "export_col_odometer": "Odometer (km)",
+    "export_col_fill_type": "Fill type",
     "export_col_fuel": "Fuel / Charge",
     "export_col_unit_price": "Unit price (JPY)",
     "export_col_memo": "Memo",
@@ -595,6 +599,12 @@
     "loan_lease": "Loan / Lease",
     "car_goods": "Accessories",
     "road_service": "Roadside Assistance"
+  },
+  "fill_types": {
+    "full": "Full",
+    "full_charge": "Full",
+    "fixed_volume": "By volume",
+    "fixed_amount": "By amount"
   },
   "fuel_types": {
     "regular": "Regular",
