@@ -439,7 +439,7 @@ export default function Home() {
                           onClick={() => setCarIndex(v => (v - 1 + cars.length) % cars.length)}
                           disabled={cars.length <= 1}
                           aria-label={t("common.previous")}
-                          className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-muted transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                          className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-muted transition-colors disabled:opacity-30 disabled:pointer-events-none"
                         >
                           <ChevronLeft size={18} className="text-slate-600 dark:text-muted-foreground" />
                         </button>
@@ -450,7 +450,7 @@ export default function Home() {
                           onClick={() => setCarIndex(v => (v + 1) % cars.length)}
                           disabled={cars.length <= 1}
                           aria-label={t("common.next")}
-                          className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-muted transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                          className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-muted transition-colors disabled:opacity-30 disabled:pointer-events-none"
                         >
                           <ChevronRight size={18} className="text-slate-600 dark:text-muted-foreground" />
                         </button>

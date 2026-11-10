@@ -29,8 +29,10 @@ Visual rules for the UI. Values live in `app/globals.css`; this file explains ho
 ## Shape
 
 - Cards: `rounded-xl` (20px). Larger containers: `rounded-2xl` / `rounded-3xl` (22 / 24px).
-- Buttons, chips, tags, badges, and icon buttons: `rounded-full`.
+- Buttons, chips, tags, badges, icon buttons, segmented toggles, and tabs: `rounded-full`. Prefer `components/ui/SegmentedToggle.tsx` for new toggles.
 - Inputs and selects keep the base radius (`--radius`, 10px).
+- `muted` fills inside a card (e.g. the period filter in stats) use `rounded-lg` (10px), not the card's radius: the same radius on a nested surface makes its corners look rounder than the card's.
+- Skeleton placeholders take the radius of the element they stand in for.
 - Buttons shrink slightly when pressed (`active:scale-[0.97]` in `components/ui/button.tsx`).
 - Small icon actions (edit, delete) use `components/ui/IconButton.tsx`: 32px visible, 44px tap area, filled, no border.
 
