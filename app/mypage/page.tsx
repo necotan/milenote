@@ -719,7 +719,7 @@ export default function MyPage() {
           <div className="md:flex">
             <MypageSkeletonDesc titleWidth="w-28" />
             <div className="md:w-2/3 p-6">
-              <Skeleton className="h-9 w-40 rounded-lg" />
+              <Skeleton className="h-9 w-40 rounded-full" />
             </div>
           </div>
         </div>
@@ -730,11 +730,11 @@ export default function MyPage() {
               {/* 実要素は Label（leading-none を内包）なので行間を明示する */}
               <div className="space-y-2">
                 <SkeletonText size="xs" leading="none" className="w-32" />
-                <Skeleton className="h-9 w-44 rounded-lg" />
+                <Skeleton className="h-9 w-44 rounded-full" />
               </div>
               <div className="space-y-2">
                 <SkeletonText size="xs" leading="none" className="w-24" />
-                <Skeleton className="h-9 w-44 rounded-lg" />
+                <Skeleton className="h-9 w-44 rounded-full" />
               </div>
             </div>
           </div>
@@ -765,13 +765,13 @@ export default function MyPage() {
             <SkeletonText size="xs" leading="relaxed" className="w-2/3" />
           </div>
           <div className="border-t border-slate-200 dark:border-border mx-6 py-6 flex justify-center md:justify-end">
-            <Skeleton className="h-8 w-32 rounded-lg" />
+            <Skeleton className="h-8 w-32 rounded-full" />
           </div>
         </div>
       </div>
 
       <div className="md:hidden pt-8 flex justify-center mb-8">
-        <Skeleton className="h-9 w-40 rounded-lg" />
+        <Skeleton className="h-9 w-40 rounded-full" />
       </div>
     </main>
   )
@@ -867,10 +867,10 @@ export default function MyPage() {
             </div>
 
             <div className="md:w-2/3 p-6">
-              <div className="inline-flex rounded-lg bg-slate-100 dark:bg-surface-2 p-1">
+              <div className="inline-flex rounded-full bg-slate-100 dark:bg-surface-2 p-1">
                 <button
                   onClick={() => setLocale("ja")}
-                  className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
+                  className={`px-5 py-1.5 rounded-full text-sm font-bold transition-all ${
                     locale === "ja"
                       ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                       : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
@@ -880,7 +880,7 @@ export default function MyPage() {
                 </button>
                 <button
                   onClick={() => setLocale("en")}
-                  className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
+                  className={`px-5 py-1.5 rounded-full text-sm font-bold transition-all ${
                     locale === "en"
                       ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                       : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
@@ -908,10 +908,10 @@ export default function MyPage() {
               <Label className="text-slate-700 dark:text-foreground font-bold text-xs">
                 {t("mypage.chart_color_mode")}
               </Label>
-              <div className="inline-flex rounded-lg bg-slate-100 dark:bg-surface-2 p-1 mt-2">
+              <div className="inline-flex rounded-full bg-slate-100 dark:bg-surface-2 p-1 mt-2">
                 <button
                   onClick={() => handleColorfulChange(false)}
-                  className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
+                  className={`px-5 py-1.5 rounded-full text-sm font-bold transition-all ${
                     !isColorful
                       ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                       : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
@@ -921,7 +921,7 @@ export default function MyPage() {
                 </button>
                 <button
                   onClick={() => handleColorfulChange(true)}
-                  className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
+                  className={`px-5 py-1.5 rounded-full text-sm font-bold transition-all ${
                     isColorful
                       ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                       : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
@@ -939,14 +939,14 @@ export default function MyPage() {
 
               <div className="mt-6">
                 <Label className="text-slate-700 dark:text-foreground font-bold text-xs">{t("mypage.theme_mode")}</Label>
-                <div className="inline-flex rounded-lg bg-slate-100 dark:bg-surface-2 p-1 mt-2">
+                <div className="inline-flex rounded-full bg-slate-100 dark:bg-surface-2 p-1 mt-2">
                   {THEME_OPTIONS.map(({ value, labelKey }) => {
                     const active = themeMounted && resolvedTheme === value
                     return (
                       <button
                         key={value}
                         onClick={() => setTheme(value)}
-                        className={`px-5 py-1.5 rounded-md text-sm font-bold transition-all ${
+                        className={`px-5 py-1.5 rounded-full text-sm font-bold transition-all ${
                           active
                             ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                             : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
@@ -1030,14 +1030,14 @@ export default function MyPage() {
               <div className="hidden lg:block max-w-md">
                 <div className="flex items-center justify-between gap-3 mb-3">
                   <span className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("mypage.home_order_pc_car_position")}</span>
-                  <div className="inline-flex bg-slate-100 dark:bg-surface-2 rounded-lg p-1 shrink-0">
+                  <div className="inline-flex bg-slate-100 dark:bg-surface-2 rounded-full p-1 shrink-0">
                     {(["left", "right"] as const).map((position) => {
                       const active = carsFirst ? position === "left" : position === "right"
                       return (
                         <button
                           key={position}
                           onClick={() => handleCarPositionChange(position)}
-                          className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${
+                          className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
                             active
                               ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                               : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"
@@ -1052,14 +1052,14 @@ export default function MyPage() {
 
                 <div className="flex items-center justify-between gap-3">
                   <span className="text-xs font-medium text-slate-600 dark:text-muted-foreground">{t("mypage.home_order_pc_content_order")}</span>
-                  <div className="inline-flex bg-slate-100 dark:bg-surface-2 rounded-lg p-1 shrink-0">
+                  <div className="inline-flex bg-slate-100 dark:bg-surface-2 rounded-full p-1 shrink-0">
                     {(["summary", "alerts"] as const).map((content) => {
                       const active = summaryFirst ? content === "summary" : content === "alerts"
                       return (
                         <button
                           key={content}
                           onClick={() => handleContentOrderChange(content)}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold transition-all ${
+                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
                             active
                               ? "bg-white dark:bg-surface-3 text-slate-900 dark:text-foreground shadow-sm"
                               : "text-slate-600 dark:text-muted-foreground hover:text-slate-700 dark:hover:text-foreground"

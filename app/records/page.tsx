@@ -799,7 +799,7 @@ function RecordsPageInner() {
                 </div>
                 {viewMode === "month" && (
                   <div className="flex items-center justify-center gap-4">
-                    <button onClick={goToPrevMonth} className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-muted transition-colors">
+                    <button onClick={goToPrevMonth} className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-muted transition-colors">
                       <ChevronLeft size={18} className="text-slate-600 dark:text-muted-foreground" />
                     </button>
                     <span className="font-bold text-slate-700 dark:text-foreground min-w-[120px] text-center">
@@ -808,7 +808,7 @@ function RecordsPageInner() {
                     <button
                       onClick={goToNextMonth}
                       disabled={selectedYearMonth >= currentYM}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-muted transition-colors disabled:opacity-30"
+                      className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-muted transition-colors disabled:opacity-30"
                     >
                       <ChevronRight size={18} className="text-slate-600 dark:text-muted-foreground" />
                     </button>
