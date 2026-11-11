@@ -6,7 +6,11 @@ import en from "./locales/en.json"
 
 export type Locale = "ja" | "en"
 type Messages = { [key: string]: string | Messages }
-const locales: Record<Locale, Messages> = { ja, en }
+// t() は欠けたキーをそのまま表示するため、ja と en のキーの過不足を tsc で検出する
+const locales: Record<Locale, Messages> = {
+  ja: ja satisfies typeof en,
+  en: en satisfies typeof ja,
+}
 
 type I18nContextType = {
   locale: Locale

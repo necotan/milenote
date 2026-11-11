@@ -88,7 +88,7 @@ export default function SignUpPage() {
           <DialogTitle>{t("signup.error_title")}</DialogTitle>
           <DialogDescription className="mt-2 leading-relaxed">{errorPopup}</DialogDescription>
           <DialogFooter>
-            <DialogActionButton onClick={() => setErrorPopup(null)}>OK</DialogActionButton>
+            <DialogActionButton onClick={() => setErrorPopup(null)}>{t("common.ok")}</DialogActionButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>
