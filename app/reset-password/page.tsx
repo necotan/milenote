@@ -81,7 +81,7 @@ function ResetPasswordContent() {
           <DialogTitle>{t("reset.error_title")}</DialogTitle>
           <DialogDescription className="mt-2 leading-relaxed">{errorPopup}</DialogDescription>
           <DialogFooter>
-            <DialogActionButton onClick={() => setErrorPopup(null)}>OK</DialogActionButton>
+            <DialogActionButton onClick={() => setErrorPopup(null)}>{t("common.ok")}</DialogActionButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -92,7 +92,7 @@ function ResetPasswordContent() {
           <DialogTitle className="pr-0">{t("reset.success_title")}</DialogTitle>
           <DialogDescription className="mt-2 leading-relaxed">{t("reset.success_message")}</DialogDescription>
           <DialogFooter>
-            <DialogActionButton onClick={() => router.push("/")}>OK</DialogActionButton>
+            <DialogActionButton onClick={() => router.push("/")}>{t("common.ok")}</DialogActionButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>

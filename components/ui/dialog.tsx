@@ -7,6 +7,7 @@ import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { useDimmedPageBackground } from "@/lib/hooks/useDimmedPageBackground"
+import { useTranslation } from "@/lib/i18n"
 
 // オーバーレイの backdrop-brightness-50 と同じ値
 const OVERLAY_BRIGHTNESS = 50
@@ -24,6 +25,7 @@ function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean
 }) {
+  const { t } = useTranslation()
   return (
     <DialogPrimitive.Portal>
       {/* iOSで上端の固定要素の背景色を上部バーに取り込み黒く見えるため、背景色ではなく backdrop の明るさで暗くする（上部バーの色は useDimmedPageBackground で合わせる） */}
@@ -43,7 +45,7 @@ function DialogContent({
         {showCloseButton && (
           <DialogPrimitive.Close className="absolute right-4 top-4 rounded-lg text-slate-500 dark:text-muted-foreground outline-none transition-colors hover:text-slate-700 dark:hover:text-foreground focus-visible:ring-2 focus-visible:ring-slate-300">
             <X className="size-4" />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">{t("common.close")}</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Content>

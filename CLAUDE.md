@@ -15,15 +15,14 @@ milenote: a car maintenance-cost tracking app (Next.js App Router + Supabase).
 ## Commands
 
 - `npm run dev` / `npm run build` / `npm run start`
-- `npm run lint`: ESLint
-- `npx tsc --noEmit`: type check (no npm script)
+- `npm run lint`: ESLint (warnings fail too)
+- `npm run typecheck`: type check
 - `npx supabase <command>`: Supabase CLI (see `manuals/supabase_migrations.md`)
 - There is no test suite.
 
 ## After every change
 
-- Run `npm run lint` and `npx tsc --noEmit`.
-- If locales changed, confirm `ja.json` and `en.json` have the same keys. `tsc` does not check keys, and `t()` shows the raw key when one is missing.
+- Run `npm run lint` and `npm run typecheck`. They enforce the i18n literal rules and the `ja.json` / `en.json` key match; the git `pre-commit` hook runs both.
 - For UI changes, check both PC and smartphone layouts.
 - For new queries or deletes, re-check the car status and delete rules below.
 
@@ -34,6 +33,7 @@ milenote: a car maintenance-cost tracking app (Next.js App Router + Supabase).
 - `lib/`: business logic. `lib/hooks/`: SWR data hooks (`useCars`, `useRecords`, etc.). `lib/i18n/`: translations.
 - `utils/`: generic helpers (Supabase client, car images, public routes, etc.)
 - `supabase/migrations/`: schema changes. `manuals/`: operation guides.
+- `.githooks/`: `pre-commit` (lint, type check) and `commit-msg` (line 1 format). Enable once per clone: `git config core.hooksPath .githooks`.
 - `docs/`: design docs tracked in git. Read the one for the area you change:
   - `data-model.md`: tables, constraints, server-side functions
   - `delete-design.md`: car status, status filtering, delete rules
@@ -46,8 +46,6 @@ milenote: a car maintenance-cost tracking app (Next.js App Router + Supabase).
 
 ## Coding
 
-- TypeScript. Do not use `any` or omit type definitions.
-- Function components with Hooks.
 - NEVER hard-code values from `.env.local`.
 
 ## Comments
@@ -59,8 +57,9 @@ milenote: a car maintenance-cost tracking app (Next.js App Router + Supabase).
 
 ## i18n
 
-- Use translation keys for all UI text. Do not write Japanese or English directly in JSX.
+- Use translation keys for all UI text. ESLint rejects text in JSX and Japanese string literals, but not English strings in attributes or in calls such as `toast()`; use keys there too.
 - Add every new string to both `lib/i18n/locales/ja.json` and `lib/i18n/locales/en.json` in the same change.
+- A symbol or unit written directly in JSX must be in `allowedStrings` in `eslint.config.mjs`.
 - Key naming: `<page>.<element>` in snake_case (e.g. `garage.car_status_active`). Shared text goes in `common`, `nav`, `categories`, `subcategories`, `fuel_types`, `fill_types`, `wishlist_genres`, `wishlist_statuses`.
 - Use `useTranslation()` from `lib/i18n/index.tsx`. Placeholders use `{{name}}`.
 

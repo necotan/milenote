@@ -65,7 +65,7 @@ export default function LoginPage() {
           <DialogTitle>{t("login.error_title")}</DialogTitle>
           <DialogDescription className="mt-2 leading-relaxed">{errorPopup}</DialogDescription>
           <DialogFooter>
-            <DialogActionButton onClick={() => setErrorPopup(null)}>OK</DialogActionButton>
+            <DialogActionButton onClick={() => setErrorPopup(null)}>{t("common.ok")}</DialogActionButton>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -78,7 +78,7 @@ export default function LoginPage() {
             <>
               <DialogDescription className="mt-2 leading-relaxed whitespace-pre-line">{t("reset.sent_message")}</DialogDescription>
               <DialogFooter>
-                <DialogActionButton onClick={() => setResetOpen(false)}>OK</DialogActionButton>
+                <DialogActionButton onClick={() => setResetOpen(false)}>{t("common.ok")}</DialogActionButton>
               </DialogFooter>
             </>
           ) : (
