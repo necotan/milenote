@@ -90,6 +90,13 @@
    ```
 7. ブラウザで `http://localhost:3000` にアクセスします。
 
+### Gitフック（変更をコミットする場合）
+コミットする場合は、クローンごとに一度だけ `.githooks/` のフックを有効にします。
+```bash
+git config core.hooksPath .githooks
+```
+`pre-commit` が `npm run lint` と `npm run typecheck` を実行し、`commit-msg` が1行目の書式を検査します。アプリを動かすだけなら不要です。
+
 ### データベース構成について
 `supabase/migrations/` 配下のSQLファイルでスキーマを管理しています。スキーマを変更したい場合は新しいマイグレーションファイルを追加してください。
 

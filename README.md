@@ -90,6 +90,13 @@ The app runs locally with Next.js and Supabase. Follow the steps below to set it
    ```
 7. Open `http://localhost:3000` in your browser.
 
+### Git Hooks (for committing changes)
+If you plan to commit, enable the hooks in `.githooks/` once per clone:
+```bash
+git config core.hooksPath .githooks
+```
+`pre-commit` runs `npm run lint` and `npm run typecheck`, and `commit-msg` checks the format of the first line. This is not needed just to run the app.
+
 ### About the Database Schema
 The schema is managed by the SQL files in `supabase/migrations/`. To change the schema, add a new migration file.
 
