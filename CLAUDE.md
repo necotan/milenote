@@ -34,6 +34,7 @@ milenote: a car maintenance-cost tracking app (Next.js App Router + Supabase).
 - `utils/`: generic helpers (Supabase client, car images, public routes, etc.)
 - `supabase/migrations/`: schema changes. `manuals/`: operation guides.
 - `.githooks/`: `pre-commit` (lint, type check) and `commit-msg` (line 1 format). Enable once per clone: `git config core.hooksPath .githooks`.
+- `.claude/`: Claude Code settings (denied git commands) and the Stop hook that runs lint and type check. `settings.local.json` is personal and git-ignored.
 - `docs/`: design docs tracked in git. Read the one for the area you change:
   - `data-model.md`: tables, constraints, server-side functions
   - `delete-design.md`: car status, status filtering, delete rules
