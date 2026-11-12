@@ -45,7 +45,7 @@ To run it in your own environment, see Running Locally below.
 The app runs locally with Next.js and Supabase. Follow the steps below to set it up.
 
 ### Prerequisites
-- Node.js 24.22.1 or later (24.x)
+- Node.js 24.22.3 or later (24.x)
 - A [Supabase](https://supabase.com/) account
 - [Docker Desktop](https://docs.docker.com/desktop) (required by the Supabase CLI to initialize the database)
 
