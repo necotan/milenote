@@ -252,7 +252,7 @@ function OdoHistoryPageInner() {
           </div>
 
           <DialogFooter>
-            <DialogActionButton variant="outline" disabled={busy} onClick={() => setEditTarget(null)}>
+            <DialogActionButton variant="secondary" disabled={busy} onClick={() => setEditTarget(null)}>
               {t("common.cancel")}
             </DialogActionButton>
             <DialogActionButton disabled={busy} onClick={handleSaveEdit}>
