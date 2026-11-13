@@ -504,7 +504,7 @@ export default function Home() {
           </div>
 
           <DialogFooter>
-            <DialogActionButton variant="outline" disabled={odoSaving} onClick={() => setOdoModalOpen(false)}>
+            <DialogActionButton variant="secondary" disabled={odoSaving} onClick={() => setOdoModalOpen(false)}>
               {t("common.cancel")}
             </DialogActionButton>
             <DialogActionButton disabled={odoSaving} onClick={handleSaveOdo}>

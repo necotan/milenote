@@ -300,7 +300,7 @@ function MaintEditDialog({
           )}
         </div>
         <DialogFooter>
-          <DialogActionButton variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>
+          <DialogActionButton variant="secondary" onClick={() => onOpenChange(false)} disabled={saving}>
             {t("common.cancel")}
           </DialogActionButton>
           <DialogActionButton onClick={handleSave} disabled={saving}>
@@ -396,7 +396,7 @@ function ProfileFieldDialog({
           )}
         </div>
         <DialogFooter>
-          <DialogActionButton variant="outline" onClick={() => onOpenChange(false)} disabled={saving}>
+          <DialogActionButton variant="secondary" onClick={() => onOpenChange(false)} disabled={saving}>
             {t("common.cancel")}
           </DialogActionButton>
           <DialogActionButton onClick={handleSave} disabled={saving}>

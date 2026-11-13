@@ -998,7 +998,7 @@ export default function GaragePage() {
               </div>
 
               <DialogFooter>
-                <DialogActionButton variant="outline" disabled={savingPosition} onClick={() => setAdjustTarget(null)}>
+                <DialogActionButton variant="secondary" disabled={savingPosition} onClick={() => setAdjustTarget(null)}>
                   {t("common.cancel")}
                 </DialogActionButton>
                 <DialogActionButton disabled={savingPosition} onClick={handleSaveImagePosition}>
