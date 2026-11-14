@@ -60,10 +60,40 @@ export const DEFAULT_MAINT_SETTINGS: MaintSettings = {
 // 車検の満了日が何日後に迫ったら警告表示にするか
 export const VEHICLE_INSPECTION_URGENT_DAYS = 30
 
-// 日付文字列(YYYY-MM-DD)を時差の影響を受けないローカル日付のミリ秒に変換する
-function toLocalDateMs(dateStr: string): number {
+// 期日が近いほど細かく知りたいため、残りがこの月数を下回ったら日数で表示する
+const MONTHS_DISPLAY_MIN = 2
+
+const DAY_MS = 86400000
+
+// 日付文字列(YYYY-MM-DD)を時差の影響を受けないローカル日付に変換する
+function toLocalDate(dateStr: string): Date {
   const [y, m, d] = dateStr.split("-").map(Number)
-  return new Date(y, m - 1, d).getTime()
+  return new Date(y, m - 1, d)
+}
+
+function addMonths(date: Date, months: number): Date {
+  const y = date.getFullYear()
+  const m = date.getMonth() + months
+  // 1/31 + 1ヶ月が 3/3 に繰り越さないよう、移動先の月末日で止める
+  const lastDay = new Date(y, m + 1, 0).getDate()
+  return new Date(y, m, Math.min(date.getDate(), lastDay))
+}
+
+function wholeMonthsBetween(from: Date, to: Date): number {
+  if (to <= from) return 0
+  const months = (to.getFullYear() - from.getFullYear()) * 12 + (to.getMonth() - from.getMonth())
+  return addMonths(from, months) > to ? months - 1 : months
+}
+
+function daysBetween(from: Date, to: Date): number {
+  return Math.round((to.getTime() - from.getTime()) / DAY_MS)
+}
+
+function formatTimeRemaining(today: Date, dueDate: Date): { unit: "months" | "days"; displayValue: string } {
+  const [from, to] = today <= dueDate ? [today, dueDate] : [dueDate, today]
+  const months = wholeMonthsBetween(from, to)
+  if (months >= MONTHS_DISPLAY_MIN) return { unit: "months", displayValue: months.toLocaleString() }
+  return { unit: "days", displayValue: daysBetween(from, to).toLocaleString() }
 }
 
 export function generateMaintAlerts(
@@ -73,6 +103,7 @@ export function generateMaintAlerts(
   options: { now?: Date; includeDisabled?: boolean } = {}
 ): MaintAlertItem[] {
   const { now = new Date(), includeDisabled = false } = options
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const generatedAlerts: MaintAlertItem[] = []
 
   cars.forEach(car => {
@@ -81,70 +112,22 @@ export function generateMaintAlerts(
       // 通知オフの項目は既定では生成しない（enabled未設定は後方互換でオン扱い）
       const isDisabled = setting.enabled === false
       if (isDisabled && !includeDisabled) return
+      const isVehicleInspection = maintName === "vehicle_inspection"
       const isMonthsOnly = !!setting.months_only
       const style = MAINT_STYLE_CONFIG[maintName] || { icon: Wrench, color: "text-slate-500 dark:text-muted-foreground" }
       const maintRecords = records.filter(r => r.car_id === car.id && r.sub_category === maintName).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      // 車検は前回からの周期ではなく、記録に入力された車検満了日を期日とする
+      // 満了日が未入力だと期日を出せないため、未記録として扱う
+      const lastRecord = isVehicleInspection
+        ? maintRecords.find(r => !!r.inspection_expiry_date)
+        : maintRecords[0]
 
-      // 車検は前回からの周期ではなく、記録に入力された車検満了日までの残り日数で判定する
-      if (maintName === "vehicle_inspection") {
-        const expiryRecord = maintRecords.find(r => !!r.inspection_expiry_date)
-        // 満了日が未入力だと残り日数を出せないため、未記録として扱う
-        if (!expiryRecord || !expiryRecord.inspection_expiry_date) {
-          generatedAlerts.push({
-            id: `${car.id}-${maintName}`,
-            carId: car.id,
-            carName: car.name,
-            maintName,
-            icon: style.icon,
-            color: style.color,
-            isDisabled,
-            hasRecord: false,
-          })
-          return
-        }
-
-        const expiryMs = toLocalDateMs(expiryRecord.inspection_expiry_date)
-        const todayMs = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
-        const lastDateMs = toLocalDateMs(expiryRecord.date)
-        const daysRemaining = Math.round((expiryMs - todayMs) / 86400000)
-        const isOver = daysRemaining < 0
-        const isUrgent = daysRemaining <= VEHICLE_INSPECTION_URGENT_DAYS
-
-        const lastDate = new Date(lastDateMs)
-        const monthsPassed = (now.getFullYear() - lastDate.getFullYear()) * 12 + (now.getMonth() - lastDate.getMonth())
-
-        // 車検を受けた日から満了日までを100%として進捗を出す
-        const totalMs = expiryMs - lastDateMs
-        const dueRatio = totalMs > 0 ? Math.max(0, (todayMs - lastDateMs) / totalMs) : Infinity
-        const progressPercent = Math.min(100, dueRatio * 100)
-
+      if (!lastRecord) {
         generatedAlerts.push({
           id: `${car.id}-${maintName}`,
           carId: car.id,
           carName: car.name,
           maintName,
-          isDisabled,
-          hasRecord: true,
-          displayValue: Math.abs(daysRemaining).toLocaleString(),
-          isMonthsOnly: true,
-          unit: "days",
-          isOver,
-          monthsPassed,
-          isUrgent,
-          dueRatio,
-          progressPercent,
-          icon: style.icon,
-          color: isUrgent ? "text-red-600" : style.color,
-        })
-        return
-      }
-
-      if (maintRecords.length === 0) {
-        generatedAlerts.push({
-          id: `${car.id}-${maintName}`,
-          carId: car.id,
-          carName: car.name,
-          maintName: maintName,
           icon: style.icon,
           color: style.color,
           isDisabled,
@@ -153,14 +136,20 @@ export function generateMaintAlerts(
         return
       }
 
-      const lastRecord = maintRecords[0]
-      const lastDate = new Date(lastRecord.date)
-      const monthsPassed = (now.getFullYear() - lastDate.getFullYear()) * 12 + (now.getMonth() - lastDate.getMonth())
-
+      const lastDate = toLocalDate(lastRecord.date)
       // その記録自体に周期指定があれば、マイページの全車共通設定より優先
       const effectiveMonths = (lastRecord.interval_months && lastRecord.interval_months > 0)
         ? lastRecord.interval_months
         : setting.months
+      const dueDate = isVehicleInspection && lastRecord.inspection_expiry_date
+        ? toLocalDate(lastRecord.inspection_expiry_date)
+        : addMonths(lastDate, effectiveMonths)
+      const daysRemaining = daysBetween(today, dueDate)
+      const monthsPassed = wholeMonthsBetween(lastDate, today)
+
+      // 前回の日を0%、期日を100%とする
+      const totalMs = dueDate.getTime() - lastDate.getTime()
+      const timeRatio = totalMs > 0 ? Math.max(0, (today.getTime() - lastDate.getTime()) / totalMs) : Infinity
 
       let kmRemaining = Infinity
       let kmRatio = 0
@@ -168,31 +157,30 @@ export function generateMaintAlerts(
         kmRemaining = (lastRecord.odo_at_record + setting.km) - car.current_odo
         kmRatio = Math.max(0, (setting.km - kmRemaining) / setting.km)
       }
-      const monthsRemaining = effectiveMonths - monthsPassed
-      const timeRatio = Math.max(0, monthsPassed / effectiveMonths)
-      const dueRatio = isMonthsOnly ? timeRatio : Math.max(kmRatio, timeRatio)
+      const dueRatio = Math.max(kmRatio, timeRatio)
       const progressPercent = Math.min(100, dueRatio * 100)
-      const isOver = isMonthsOnly ? monthsPassed >= effectiveMonths : kmRemaining <= 0
-      const isUrgent = isOver || (!isMonthsOnly && kmRemaining <= 0) || monthsPassed >= effectiveMonths
-      const displayValue = isMonthsOnly
-        ? Math.abs(monthsRemaining).toLocaleString()
-        : Math.abs(kmRemaining).toLocaleString()
+
+      const isOver = isMonthsOnly ? daysRemaining < 0 : kmRemaining <= 0
+      const urgentDays = isVehicleInspection ? VEHICLE_INSPECTION_URGENT_DAYS : 0
+      const isUrgent = isOver || daysRemaining <= urgentDays
+      const remaining = isMonthsOnly
+        ? formatTimeRemaining(today, dueDate)
+        : { unit: "km" as const, displayValue: Math.abs(kmRemaining).toLocaleString() }
 
       generatedAlerts.push({
         id: `${car.id}-${maintName}`,
         carId: car.id,
         carName: car.name,
-        maintName: maintName,
+        maintName,
         isDisabled,
         hasRecord: true,
-        displayValue,
         isMonthsOnly,
-        unit: isMonthsOnly ? "months" : "km",
+        ...remaining,
         isOver,
-        monthsPassed: monthsPassed,
-        isUrgent: isUrgent,
+        monthsPassed,
+        isUrgent,
         dueRatio,
-        progressPercent: progressPercent,
+        progressPercent,
         icon: style.icon,
         color: isUrgent ? "text-red-600" : style.color,
       })
