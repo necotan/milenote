@@ -106,6 +106,16 @@ export function generateMaintAlerts(
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const generatedAlerts: MaintAlertItem[] = []
 
+  // 車ごと・項目ごとの最新記録を効率よく探すために、Map にまとめる
+  const recordsByCarAndItem = new Map<string, MaintAlertRecord[]>()
+  records.forEach(r => {
+    if (!r.sub_category) return
+    const key = `${r.car_id}|${r.sub_category}`
+    const bucket = recordsByCarAndItem.get(key)
+    if (bucket) bucket.push(r)
+    else recordsByCarAndItem.set(key, [r])
+  })
+
   cars.forEach(car => {
     Object.keys(maintSettings).forEach(maintName => {
       const setting = maintSettings[maintName]
@@ -115,12 +125,15 @@ export function generateMaintAlerts(
       const isVehicleInspection = maintName === "vehicle_inspection"
       const isMonthsOnly = !!setting.months_only
       const style = MAINT_STYLE_CONFIG[maintName] || { icon: Wrench, color: "text-slate-500 dark:text-muted-foreground" }
-      const maintRecords = records.filter(r => r.car_id === car.id && r.sub_category === maintName).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-      // 車検は前回からの周期ではなく、記録に入力された車検満了日を期日とする
-      // 満了日が未入力だと期日を出せないため、未記録として扱う
-      const lastRecord = isVehicleInspection
-        ? maintRecords.find(r => !!r.inspection_expiry_date)
-        : maintRecords[0]
+      // 必要なのは最新の1件だけなので、並べ替えずに1回の走査で選ぶ（date は YYYY-MM-DD なので文字列比較で日付順になる）
+      // 同じ日付の記録は先に出てきたものを残し、記録の並び順で結果が決まるようにする
+      let lastRecord: MaintAlertRecord | undefined
+      for (const r of recordsByCarAndItem.get(`${car.id}|${maintName}`) ?? []) {
+        // 車検は前回からの周期ではなく、記録に入力された車検満了日を期日とする
+        // 満了日が未入力だと期日を出せないため、未記録として扱う
+        if (isVehicleInspection && !r.inspection_expiry_date) continue
+        if (!lastRecord || r.date > lastRecord.date) lastRecord = r
+      }
 
       if (!lastRecord) {
         generatedAlerts.push({
