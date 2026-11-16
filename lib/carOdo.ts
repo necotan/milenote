@@ -11,21 +11,29 @@ export type OdoSaveResult =
 const UNIQUE_VIOLATION = "23505"
 
 // 取得に失敗したまま計算すると current_odo を小さすぎる値で上書きしてしまうため、エラーを返して更新させない
+// 全件を取ると Data API の Max rows（1000行）で打ち切られて最大値を取りこぼすため、最大の1行だけを取得する
+// PostgREST の集計関数（max()）は既定で無効なので order と limit で取得する
 async function fetchMaxOdo(car: OdoCar, excludeLogDate?: string): Promise<{ maxOdo: number } | { error: string }> {
   const supabase = getSupabaseBrowserClient()
   let logsQuery = supabase.from("odo_logs").select("odo").eq("car_id", car.id)
   if (excludeLogDate) logsQuery = logsQuery.neq("date", excludeLogDate)
   const [{ data: records, error: recordsError }, { data: logs, error: logsError }] = await Promise.all([
-    supabase.from("records").select("odo_at_record").eq("car_id", car.id),
-    logsQuery,
+    supabase
+      .from("records")
+      .select("odo_at_record")
+      .eq("car_id", car.id)
+      .not("odo_at_record", "is", null)
+      .order("odo_at_record", { ascending: false })
+      .limit(1),
+    logsQuery.order("odo", { ascending: false }).limit(1),
   ])
   const error = recordsError ?? logsError
   if (error) return { error: error.message }
   return {
     maxOdo: Math.max(
       car.purchase_odo || 0,
-      ...(records ?? []).map((r: { odo_at_record: number | null }) => r.odo_at_record ?? 0),
-      ...(logs ?? []).map((l: { odo: number }) => l.odo),
+      records?.[0]?.odo_at_record ?? 0,
+      logs?.[0]?.odo ?? 0,
     ),
   }
 }
