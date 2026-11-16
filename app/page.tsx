@@ -15,6 +15,7 @@ import { useTranslation, formatDateLocale, formatMonthsPassedLocale } from "@/li
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { getCarImageStyle } from "@/utils/carImage"
 import { generateMaintAlerts, DEFAULT_MAINT_SETTINGS, type MaintSettings } from "@/lib/maintenanceAlerts"
+import { sumRecordAmountByCar, getCarTotalCost } from "@/lib/carTotals"
 import { MaintAlertCard } from "@/components/MaintenanceAlertViews"
 import { getFuelUnit } from "@/lib/fuelTypes"
 import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
@@ -74,6 +75,15 @@ export default function Home() {
   )
 
   const alerts = useMemo(() => generateMaintAlerts(cars, records, maintSettings), [cars, records, maintSettings])
+
+  const recordTotalByCar = useMemo(() => sumRecordAmountByCar(records), [records])
+
+  const recentRecords = useMemo(
+    () => [...records]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime() || new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      .slice(0, 3),
+    [records]
+  )
 
   useEffect(() => {
     const savedOrder = localStorage.getItem("home_layout")
@@ -311,25 +321,21 @@ export default function Home() {
                     <p className="text-sm text-slate-500 dark:text-muted-foreground">{t("home.no_records")}</p>
                   ) : (
                     <div className="space-y-3">
-                      {[...records]
-                        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime() || new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-                        .slice(0, 3)
-                        .map((r) => {
-                          const fuelUnit = getFuelUnit(carsById.get(r.car_id)?.fuel_type)
-                          const categoryLabel = r.category === "fuel" && fuelUnit !== "l"
-                            ? t(fuelUnit === "kwh" ? "home.record_charge_label" : "home.record_hydrogen_label")
-                            : t(`categories.${r.category}`)
-                          return (
-                            <div key={r.id} className="flex items-baseline justify-between gap-3">
-                              <div className="flex items-baseline gap-2 min-w-0">
-                                <span className="shrink-0 text-xs text-slate-500 dark:text-muted-foreground tabular-nums">{r.date.replace(/-/g, '/')}</span>
-                                <span className="text-sm font-medium text-slate-700 dark:text-foreground truncate">{categoryLabel}</span>
-                              </div>
-                              <span className="text-sm font-semibold text-slate-800 dark:text-foreground tabular-nums">¥{r.amount.toLocaleString()}</span>
+                      {recentRecords.map((r) => {
+                        const fuelUnit = getFuelUnit(carsById.get(r.car_id)?.fuel_type)
+                        const categoryLabel = r.category === "fuel" && fuelUnit !== "l"
+                          ? t(fuelUnit === "kwh" ? "home.record_charge_label" : "home.record_hydrogen_label")
+                          : t(`categories.${r.category}`)
+                        return (
+                          <div key={r.id} className="flex items-baseline justify-between gap-3">
+                            <div className="flex items-baseline gap-2 min-w-0">
+                              <span className="shrink-0 text-xs text-slate-500 dark:text-muted-foreground tabular-nums">{r.date.replace(/-/g, '/')}</span>
+                              <span className="text-sm font-medium text-slate-700 dark:text-foreground truncate">{categoryLabel}</span>
                             </div>
-                          )
-                        })
-                      }
+                            <span className="text-sm font-semibold text-slate-800 dark:text-foreground tabular-nums">¥{r.amount.toLocaleString()}</span>
+                          </div>
+                        )
+                      })}
                     </div>
                   )}
 
@@ -405,8 +411,7 @@ export default function Home() {
                         <div className="p-4">
                           <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.total_cost")}</p>
                           <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">¥{
-                            (records.filter(r => r.car_id === car.id).reduce((sum, r) => sum + r.amount, 0)
-                              + (car.include_price_in_cost ? (car.purchase_price || 0) : 0)).toLocaleString()
+                            getCarTotalCost(car, recordTotalByCar).toLocaleString()
                           }</p>
                         </div>
                       </div>

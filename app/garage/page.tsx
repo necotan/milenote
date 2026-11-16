@@ -44,6 +44,7 @@ import {
   listCarImagePaths,
 } from "@/utils/carImage"
 import type { Car, Wishlist } from "@/lib/types"
+import { sumRecordAmountByCar, getCarTotalCost } from "@/lib/carTotals"
 import { stripImageMetadata } from "@/utils/stripImageMetadata"
 import { getSafeExternalUrl } from "@/utils/safeUrl"
 import { WISHLIST_GENRES, WishlistGenreSlug } from "@/lib/wishlistGenres"
@@ -119,6 +120,8 @@ export default function GaragePage() {
   )
 
   const carsById = useMemo(() => new Map(allCars.map(c => [c.id, c])), [allCars])
+
+  const recordTotalByCar = useMemo(() => sumRecordAmountByCar(records), [records])
 
   const [name, setName] = useState("")
   const [maker, setMaker] = useState("")
@@ -838,8 +841,7 @@ export default function GaragePage() {
                       <div className="p-4">
                         <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground mb-1">{t("common.total_cost")}</p>
                         <p className="text-lg font-bold text-slate-800 dark:text-foreground tracking-tight tabular-nums">¥{
-                          (records.filter(r => r.car_id === car.id).reduce((sum, r) => sum + r.amount, 0)
-                            + (car.include_price_in_cost ? (car.purchase_price || 0) : 0)).toLocaleString()
+                          getCarTotalCost(car, recordTotalByCar).toLocaleString()
                         }</p>
                       </div>
                     </div>
