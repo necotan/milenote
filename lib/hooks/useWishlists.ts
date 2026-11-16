@@ -1,5 +1,6 @@
 import useSWR from "swr"
 import { getSupabaseBrowserClient } from "@/utils/supabase"
+import { fetchAllRows } from "@/lib/fetchAllRows"
 import type { Wishlist } from "@/lib/types"
 
 // wishlistsテーブルにuser_idカラムが無いため、car_idを介してcars.user_idで絞り込む
@@ -8,10 +9,14 @@ export function useWishlists(userId: string | null | undefined) {
     userId ? ["wishlists", userId] : null,
     async ([, uid]: [string, string]) => {
       const supabase = getSupabaseBrowserClient()
-      const { data, error } = await supabase
-        .from("wishlists")
-        .select("*, cars!inner(user_id)")
-        .eq("cars.user_id", uid)
+      const { data, error } = await fetchAllRows(() =>
+        supabase
+          .from("wishlists")
+          .select("*, cars!inner(user_id)")
+          .eq("cars.user_id", uid)
+          .order("created_at")
+          .order("id")
+      )
       if (error) throw error
       return (data ?? []).map((row): Wishlist => ({
         id: row.id,

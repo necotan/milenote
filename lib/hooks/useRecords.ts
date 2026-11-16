@@ -1,5 +1,6 @@
 import useSWR from "swr"
 import { getSupabaseBrowserClient } from "@/utils/supabase"
+import { fetchAllRows } from "@/lib/fetchAllRows"
 import type { CarRecord } from "@/lib/types"
 
 // ユーザーの維持費記録を全件取得する（car側のstatus絞り込みはuseCarsの結果と突き合わせて呼び出し側で行う）
@@ -8,7 +9,9 @@ export function useRecords(userId: string | null | undefined) {
     userId ? ["records", userId] : null,
     async ([, uid]: [string, string]) => {
       const supabase = getSupabaseBrowserClient()
-      const { data, error } = await supabase.from("records").select("*").eq("user_id", uid)
+      const { data, error } = await fetchAllRows(() =>
+        supabase.from("records").select("*").eq("user_id", uid).order("created_at").order("id")
+      )
       if (error) throw error
       return (data ?? []) as CarRecord[]
     }

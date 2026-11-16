@@ -1,5 +1,6 @@
 import useSWR from "swr"
 import { getSupabaseBrowserClient } from "@/utils/supabase"
+import { fetchAllRows } from "@/lib/fetchAllRows"
 import type { RecurringCost } from "@/lib/types"
 
 export function useRecurringCosts(userId: string | null | undefined) {
@@ -7,7 +8,9 @@ export function useRecurringCosts(userId: string | null | undefined) {
     userId ? ["recurring_costs", userId] : null,
     async ([, uid]: [string, string]) => {
       const supabase = getSupabaseBrowserClient()
-      const { data, error } = await supabase.from("recurring_costs").select("*").eq("user_id", uid)
+      const { data, error } = await fetchAllRows(() =>
+        supabase.from("recurring_costs").select("*").eq("user_id", uid).order("created_at").order("id")
+      )
       if (error) throw error
       return (data ?? []) as RecurringCost[]
     }

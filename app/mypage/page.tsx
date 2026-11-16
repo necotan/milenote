@@ -21,6 +21,7 @@ import { useTheme } from "next-themes"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { recordsToCsv, downloadCsv, buildExportFilename } from "@/lib/csvExport"
+import { fetchAllRows } from "@/lib/fetchAllRows"
 import type { ExportRecord } from "@/lib/csvExport"
 import Footer from "@/components/ui/Footer"
 import { MAINT_CATEGORIES } from "@/lib/subcategories"
@@ -636,13 +637,16 @@ export default function MyPage() {
     try {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
-      const { data, error } = await supabase
-        .from("records")
-        .select("date, category, sub_category, amount, odo_at_record, fuel_amount, fuel_unit_price, fill_type, memo, cars!inner(name, fuel_type, status)")
-        .eq("user_id", user.id)
-        .in("cars.status", ["active", "archived"])
-        .order("date", { ascending: false })
-        .order("created_at", { ascending: false })
+      const { data, error } = await fetchAllRows(() =>
+        supabase
+          .from("records")
+          .select("date, category, sub_category, amount, odo_at_record, fuel_amount, fuel_unit_price, fill_type, memo, cars!inner(name, fuel_type, status)")
+          .eq("user_id", user.id)
+          .in("cars.status", ["active", "archived"])
+          .order("date", { ascending: false })
+          .order("created_at", { ascending: false })
+          .order("id", { ascending: false })
+      )
 
       if (error) {
         toast.error(t("common.error_occurred") + ": " + error.message)
