@@ -1,5 +1,6 @@
 import useSWR from "swr"
 import { getSupabaseBrowserClient } from "@/utils/supabase"
+import { fetchAllRows } from "@/lib/fetchAllRows"
 import type { Car } from "@/lib/types"
 
 // ユーザーの車両を全ステータス取得する（画面間で SWR のキャッシュを共有するため、ここでは絞り込まない）
@@ -9,7 +10,9 @@ export function useCars(userId: string | null | undefined) {
     userId ? ["cars", userId] : null,
     async ([, uid]: [string, string]) => {
       const supabase = getSupabaseBrowserClient()
-      const { data, error } = await supabase.from("cars").select("*").eq("user_id", uid)
+      const { data, error } = await fetchAllRows(() =>
+        supabase.from("cars").select("*").eq("user_id", uid).order("created_at").order("id")
+      )
       if (error) throw error
       return (data ?? []) as Car[]
     }

@@ -49,3 +49,4 @@ Constraints are the last line of validation. Keep them in sync with the UI.
 
 - Filter car-linked data by car status for each use (`docs/delete-design.md`).
 - Home totals and maintenance alerts use each car's full record history. Do not add a date range to those queries.
+- The Data API returns at most Max rows (1,000 in production) per request and drops the rest without an error. Fetch any list that can grow past that with `fetchAllRows` in `lib/fetchAllRows.ts`, with an `order` that ends in a unique column such as `id`. When only the largest or newest row is needed, use `order` + `limit(1)` instead (as `lib/carOdo.ts` does).
