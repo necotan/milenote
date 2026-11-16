@@ -41,6 +41,7 @@ import {
   MIN_IMAGE_SCALE,
   MAX_IMAGE_SCALE,
   type CarImageTransform,
+  listCarImagePaths,
 } from "@/utils/carImage"
 import type { Car, Wishlist } from "@/lib/types"
 import { stripImageMetadata } from "@/utils/stripImageMetadata"
@@ -320,14 +321,9 @@ export default function GaragePage() {
       if (!user) return
 
       // Storage の車画像を削除する（過去にアップロードした孤立画像も car_id プレフィックスで一括削除）
-      const { data: files } = await supabase.storage.from("cars").list(user.id)
-      if (files && files.length > 0) {
-        const targets = files
-          .filter((f) => f.name.startsWith(`${deleteCarTarget.id}-`))
-          .map((f) => `${user.id}/${f.name}`)
-        if (targets.length > 0) {
-          await supabase.storage.from("cars").remove(targets)
-        }
+      const { paths: targets } = await listCarImagePaths(supabase, user.id, deleteCarTarget.id)
+      if (targets.length > 0) {
+        await supabase.storage.from("cars").remove(targets)
       }
 
       const { error } = await supabase.from("cars").delete().eq("id", deleteCarTarget.id)
@@ -513,16 +509,12 @@ export default function GaragePage() {
     } else {
       // 失敗しても表示は壊れず、残ったファイルは次回の写真変更・車両削除時に処理されるため、エラーは表示しない
       try {
-        const { data: files, error: listError } = await supabase.storage.from("cars").list(user.id)
+        const { paths, error: listError } = await listCarImagePaths(supabase, user.id, carId)
         if (listError) console.warn("old image cleanup: list failed", listError.message)
-        if (files && files.length > 0) {
-          const targets = files
-            .filter((f) => f.name.startsWith(`${carId}-`) && f.name !== fileName)
-            .map((f) => `${user.id}/${f.name}`)
-          if (targets.length > 0) {
-            const { error: removeError } = await supabase.storage.from("cars").remove(targets)
-            if (removeError) console.warn("old image cleanup: remove failed", removeError.message)
-          }
+        const targets = paths.filter((p) => p !== filePath)
+        if (targets.length > 0) {
+          const { error: removeError } = await supabase.storage.from("cars").remove(targets)
+          if (removeError) console.warn("old image cleanup: remove failed", removeError.message)
         }
       } catch {
       }

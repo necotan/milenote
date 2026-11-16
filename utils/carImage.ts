@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react"
+import type { SupabaseClient } from "@supabase/supabase-js"
 
 export type CarImageTransform = {
   image_position_x?: number | null
@@ -22,6 +23,16 @@ export const clampImageScale = (value: number): number => {
   if (!Number.isFinite(value)) return DEFAULT_IMAGE_SCALE
   const clamped = Math.min(MAX_IMAGE_SCALE, Math.max(MIN_IMAGE_SCALE, value))
   return Math.round(clamped * 100) / 100
+}
+
+// list() は既定で100件までしか返さず、ユーザーのフォルダ全体を取ると100件目以降の画像を見落とすため、その車の画像だけをサーバー側で絞り込む
+// search の一致方法は前方一致と限らないので、最終判定は startsWith で行う
+export async function listCarImagePaths(supabase: SupabaseClient, userId: string, carId: string) {
+  const prefix = `${carId}-`
+  const { data, error } = await supabase.storage.from("cars").list(userId, { search: prefix, limit: 100 })
+  if (error) return { paths: [], error }
+  const paths = (data ?? []).filter((f) => f.name.startsWith(prefix)).map((f) => `${userId}/${f.name}`)
+  return { paths, error: null }
 }
 
 // 車両画像の表示スタイルを生成（プレビュー、ガレージ、ホームで共用し見え方を一致させる）
