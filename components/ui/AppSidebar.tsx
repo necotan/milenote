@@ -7,7 +7,7 @@ import { useTranslation } from "@/lib/i18n"
 import { isHomeSubRoute } from "@/utils/homeSubRoutes"
 import { signOutAndClearUser } from "@/lib/hooks/useSupabaseUser"
 
-export default function Sidebar() {
+export default function AppSidebar() {
     const pathname = usePathname()
     const router = useRouter()
     const { t } = useTranslation()

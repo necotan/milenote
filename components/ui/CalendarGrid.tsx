@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import { useTranslation, formatYearMonthLocale } from "@/lib/i18n"
 import { getMonthMatrix, getWeekdayLabels, isSameDay, isToday } from "@/lib/date/calendar"
 
-interface CalendarProps {
+interface CalendarGridProps {
   month: Date
   onMonthChange: (date: Date) => void
   selected: Date | null
@@ -17,7 +17,7 @@ interface CalendarProps {
   maxDate?: Date
 }
 
-function Calendar({ month, onMonthChange, selected, onSelect, onOpenWheel, minDate, maxDate }: CalendarProps) {
+function CalendarGrid({ month, onMonthChange, selected, onSelect, onOpenWheel, minDate, maxDate }: CalendarGridProps) {
   const { locale, t } = useTranslation()
   const weeks = React.useMemo(() => getMonthMatrix(month.getFullYear(), month.getMonth()), [month])
   const weekdayLabels = React.useMemo(() => getWeekdayLabels(locale), [locale])
@@ -98,4 +98,4 @@ function Calendar({ month, onMonthChange, selected, onSelect, onOpenWheel, minDa
   )
 }
 
-export { Calendar }
+export { CalendarGrid }
