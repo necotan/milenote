@@ -25,7 +25,7 @@ npx supabase migration new <変更内容を表すスラッグ>
 npx supabase migration new add_nickname_to_cars
 ```
 
-→ `supabase/migrations/<timestamp>_add_nickname_to_cars.sql` が生成されます。
+-> `supabase/migrations/<timestamp>_add_nickname_to_cars.sql` が生成されます。
 
 ### 2. SQL を記述
 
@@ -78,7 +78,7 @@ npx supabase migration list
 npx supabase db pull
 ```
 
-→ 差分が新しい migration ファイルとして生成されます。
+-> 差分が新しい migration ファイルとして生成されます。
 
 ### 3. 生成されたファイルを確認・コミット
 
@@ -156,7 +156,7 @@ npx supabase db push    # migration が適用される
 Docker Desktop を起動してから再実行してください。タスクバーのDockerアイコンが「Engine running」になるまで待つこと。
 
 ### 「password authentication failed」
-DBパスワードが間違っています。Dashboard → Settings → Database → **Reset database password** で再設定してください（既存データには影響しません）。
+DBパスワードが間違っています。Dashboard -> Settings -> Database -> **Reset database password** で再設定してください（既存データには影響しません）。
 
 ### migration が大量にドリフトしてどうにもならない
 最後の手段として、`supabase/migrations/` をローカルで一旦全削除して `db pull` で1ファイルにまとめ直す方法があります。ただし変更履歴が失われるので慎重に行ってください。

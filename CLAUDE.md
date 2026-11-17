@@ -7,6 +7,12 @@
 - Write code comments in Japanese.
 - Use English for variable names, function names, file names, and translation keys.
 - Write `ja.json` values in Japanese and `en.json` values in English.
+- In docs, code comments, and commit messages, use ASCII instead of these symbols. This does not apply to UI text.
+  - Arrows: `->` `<-` `=>` `<=>` (not `→` `←` `⇒` `⇔`)
+  - Dashes and ellipsis: `-` (not `—` `–`), `...` (not `…`)
+  - Math: `x` (not `×`), `~` (not `≒`), `>=` `<=` (not `≥` `≤`)
+  - Quotes: `"` `'` (not `“ ”` `‘ ’`)
+  - Lists and marks: `1.` `2.` (not `①` `②`), `OK` / `NG` or words (not `✓` `✗` or emoji)
 
 ## Project
 

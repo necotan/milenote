@@ -69,7 +69,7 @@ When adding a query, export, batch job, or delete:
 
 ## Open issues
 
-- **Account deletion** does not exist. If it is added: `auth.users` → `public.users` → `cars` → children cascade in the database, but the files under `{user_id}/` in the `cars` bucket must be removed explicitly.
+- **Account deletion** does not exist. If it is added: `auth.users` -> `public.users` -> `cars` -> children cascade in the database, but the files under `{user_id}/` in the `cars` bucket must be removed explicitly.
 - **Old orphaned images** may remain in Storage from before images were cleaned up on delete. Check with this read-only query in the Dashboard and remove matches from the Storage screen:
 
   ```sql
