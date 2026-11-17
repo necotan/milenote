@@ -134,21 +134,16 @@ export default function Home() {
   }
 
   const today = new Date()
-
-  
-  const thisMonthRecords = records.filter(r => {
-    const d = new Date(r.date)
-    return d.getFullYear() === today.getFullYear() && (d.getMonth() + 1) === (today.getMonth() + 1)
-  })
-  const thisMonthCost = thisMonthRecords.reduce((sum, r) => sum + r.amount, 0)
-
   const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1)
-  const lastMonthRecords = records.filter(r => {
-    const d = new Date(r.date)
-    return d.getFullYear() === lastMonth.getFullYear() && (d.getMonth() + 1) === (lastMonth.getMonth() + 1)
-  })
+
+  // new Date("YYYY-MM-DD") は UTC 0時として解釈され、UTC より西では1日の記録が前月に入るため文字列で比較する
+  const thisYearMonth = toISODate(today).slice(0, 7)
+  const lastYearMonth = toISODate(lastMonth).slice(0, 7)
+  const thisMonthRecords = records.filter(r => r.date.startsWith(thisYearMonth))
+  const thisMonthCost = thisMonthRecords.reduce((sum, r) => sum + r.amount, 0)
+  const lastMonthRecords = records.filter(r => r.date.startsWith(lastYearMonth))
   const lastMonthCost = lastMonthRecords.reduce((sum, r) => sum + r.amount, 0)
-  
+
   const diffCost = thisMonthCost - lastMonthCost
 
   if (loading) return (
