@@ -62,9 +62,9 @@
    ```
 3. Supabaseプロジェクトの作成
    [Supabase Dashboard](https://supabase.com/dashboard) で新規プロジェクトを作成し、以下を控えておきます。
-   - **Project URL**（Settings → API → Project URL）
-   - **anon public key**（Settings → API → Project API keys → anon）
-   - **Project ID**（Settings → General → Reference ID）
+   - **Project URL**（Settings -> API -> Project URL）
+   - **anon public key**（Settings -> API -> Project API keys -> anon）
+   - **Project ID**（Settings -> General -> Reference ID）
    - **Database password**（プロジェクト作成時に設定したもの）
 
 4. 環境変数の設定

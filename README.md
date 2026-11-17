@@ -62,9 +62,9 @@ The app runs locally with Next.js and Supabase. Follow the steps below to set it
    ```
 3. Create a Supabase project
    Create a new project in the [Supabase Dashboard](https://supabase.com/dashboard) and note the following:
-   - **Project URL** (Settings → API → Project URL)
-   - **anon public key** (Settings → API → Project API keys → anon)
-   - **Project ID** (Settings → General → Reference ID)
+   - **Project URL** (Settings -> API -> Project URL)
+   - **anon public key** (Settings -> API -> Project API keys -> anon)
+   - **Project ID** (Settings -> General -> Reference ID)
    - **Database password** (the one you set when creating the project)
 
 4. Set environment variables
