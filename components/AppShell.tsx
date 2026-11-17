@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { SWRConfig } from "swr";
 import BottomNav from "@/components/ui/BottomNav";
-import Sidebar from "@/components/ui/Sidebar";
+import AppSidebar from "@/components/ui/AppSidebar";
 import { createClient } from "@/utils/supabase";
 import { useRouter, usePathname } from "next/navigation";
 import { Toaster } from "@/components/ui/sonner";
@@ -59,7 +59,7 @@ function AppContent({ children, loading }: { children: React.ReactNode; loading:
   return (
     <div className="flex min-h-screen w-full relative">
       <RecurringCostProcessor />
-      <Sidebar />
+      <AppSidebar />
 
       <div className={`flex-1 pb-20 md:pb-8 w-full min-w-0 mx-auto ${contentMaxWidth}`}>
         {children}

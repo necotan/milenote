@@ -7,7 +7,7 @@ import { CalendarDays } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useTranslation, formatDateLocale } from "@/lib/i18n"
 import { parseISODate, toISODate, getDefaultWheelYearRange } from "@/lib/date/calendar"
-import { Calendar } from "@/components/ui/calendar"
+import { CalendarGrid } from "@/components/ui/CalendarGrid"
 import { YearMonthWheel } from "@/components/ui/YearMonthWheel"
 
 type DatePickerVariant = "input" | "inline"
@@ -120,7 +120,7 @@ function DatePicker({
         >
           {mode === "days" ? (
             <>
-              <Calendar
+              <CalendarGrid
                 month={displayMonth}
                 onMonthChange={setDisplayMonth}
                 selected={selectedDate}
