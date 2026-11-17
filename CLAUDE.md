@@ -87,7 +87,7 @@ Status semantics, per-screen filters, and the checklist: `docs/delete-design.md`
 ## Git workflow
 
 - Do not run `git checkout -b`, `commit`, `push`, PR creation, `merge`, or `pull`. The user runs them.
-- At the start of work, propose a branch name (`feature/xxx` or `fix/xxx`). Say no branch is needed only when the change is visual only (CSS, text, colors) with no logic impact, and small enough to review the diff by eye.
+- At the start of work, propose a branch name (`feature/xxx` or `fix/xxx`). Say no branch is needed only when the change touches nothing that ships: docs, README, CLAUDE.md, or code comments. Changes to UI text, CSS, config, or dependencies need a branch.
 - After code changes, run `git status` and `git diff` (plus `git diff --staged` if anything is staged), then propose a commit message based on the actual diff.
 
 ## Commit messages
