@@ -14,7 +14,7 @@ import {
 import type { Coordinate, DotItemDotProps, PieLabelRenderProps, TooltipContentProps, TooltipValueType } from "recharts"
 import { Globe, Moon, PieChart as PieIcon, BarChart3, CalendarDays, ChevronDown, Info, LineChart as LineChartIcon } from "lucide-react"
 import { useTheme } from "next-themes"
-import { DatePicker } from "@/components/ui/date-picker"
+import { DatePicker } from "@/components/ui/DatePicker"
 import { useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { useSupabaseUser } from "@/lib/hooks/useSupabaseUser"
