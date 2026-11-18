@@ -3,9 +3,9 @@
 import { createContext, useContext, useEffect, ReactNode } from "react"
 
 type LoadingGate = {
-  // このページが初回ローディングの完了を期待していることをゲートに伝える
+  /** このページが初回ローディングの完了を期待していることをゲートに伝える */
   setExpecting: () => void
-  // このページのデータ取得が完了したことをゲートに伝える
+  /** このページのデータ取得が完了したことをゲートに伝える */
   setReady: () => void
 }
 

@@ -1,7 +1,3 @@
-// 画像のメタデータ（GPS位置情報や撮影日時を含む）を除去する
-// canvas で再エンコードしピクセル以外の情報を落とす（public な cars バケット保存前に必ず通す）
-// maxBytes 指定時は指定サイズに収まるまで品質・解像度の順で段階的に圧縮する
-
 const OUTPUT_MIME = "image/jpeg"
 const OUTPUT_EXT = "jpg"
 const OUTPUT_QUALITY = 0.92
@@ -27,7 +23,12 @@ const encodeCanvas = (canvas: HTMLCanvasElement, quality: number): Promise<Blob>
     )
   })
 
-// 画像の向きは EXIF の情報を参照して自動的に補正される
+/**
+ * 画像のメタデータ（GPS位置情報や撮影日時を含む）を除去する
+ * canvas で再エンコードしピクセル以外の情報を落とす（public な cars バケット保存前に必ず通す）
+ * maxBytes 指定時は指定サイズに収まるまで品質・解像度の順で段階的に圧縮する
+ * 画像の向きは EXIF の情報を参照して自動的に補正される
+ */
 export const stripImageMetadata = async (file: File, options: StripImageOptions = {}): Promise<StrippedImage> => {
   const { maxBytes } = options
   const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" })

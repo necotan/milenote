@@ -38,8 +38,10 @@ async function fetchMaxOdo(car: OdoCar, excludeLogDate?: string): Promise<{ maxO
   }
 }
 
-// current_odo は記録・ODO更新の履歴・購入時ODOの最大値に揃える
-// 記録や履歴の削除・編集で過大なODO値（桁間違いなど）が残らないようにするため、毎回全件から計算し直す
+/**
+ * current_odo は記録・ODO更新の履歴・購入時ODOの最大値に揃える
+ * 記録や履歴の削除・編集で過大なODO値（桁間違いなど）が残らないようにするため、毎回全件から計算し直す
+ */
 export async function recalcCarOdo(car: OdoCar): Promise<void> {
   const supabase = getSupabaseBrowserClient()
   const result = await fetchMaxOdo(car)

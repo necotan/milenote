@@ -6,8 +6,10 @@ export type OdoAnchorLog = { car_id: string; date: string; odo: number }
 
 type OdoAnchor = { time: number; odo: number }
 
-// ODO未入力の記録に入れる値として、その日付以前で一番新しい基準点のODOをそのまま使う
-// 定期費用の自動記録で使う SQL 関数 public.estimate_odo_at_date と同じ規則なので、片方を変えたらもう片方も合わせて変える
+/**
+ * ODO未入力の記録に入れる値として、その日付以前で一番新しい基準点のODOをそのまま使う
+ * 定期費用の自動記録で使う SQL 関数 public.estimate_odo_at_date と同じ規則なので、片方を変えたらもう片方も合わせて変える
+ */
 export function estimateOdoAtDate({
   car,
   records,

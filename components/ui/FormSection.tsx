@@ -13,8 +13,10 @@ function FormSection({
 }: {
   icon?: LucideIcon
   title?: ReactNode
-  // true のとき上側に区切り線を引き、直前のグループと分ける
-  // "mobile" は2カラムの右列用で、縦積みになるスマホ表示のときだけ区切る
+  /**
+   * true のとき上側に区切り線を引き、直前のグループと分ける
+   * "mobile" は2カラムの右列用で、縦積みになるスマホ表示のときだけ区切る
+   */
   divided?: boolean | "mobile"
   className?: string
   children: ReactNode

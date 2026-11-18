@@ -73,7 +73,7 @@ export const SUB_CATEGORIES: Record<string, SubCategorySlug[]> = {
   ]
 }
 
-// ホームのメンテナンスアラート項目から遷移する際の記録カテゴリ
+/** ホームのメンテナンスアラート項目から遷移する際の記録カテゴリ */
 export const MAINT_TYPE_CATEGORY: Record<string, "maintenance" | "inspection"> = {
   oil_change: "maintenance",
   oil_filter_change: "maintenance",
@@ -88,7 +88,7 @@ export const MAINT_TYPE_CATEGORY: Record<string, "maintenance" | "inspection"> =
   vehicle_inspection: "inspection",
 }
 
-// メンテナンス基準設定、ホームの表示で共通利用するカテゴリ分け
+/** メンテナンス基準設定、ホームの表示で共通利用するカテゴリ分け */
 export const MAINT_CATEGORIES: { key: string; items: string[] }[] = [
   { key: "fluid", items: ["oil_change", "oil_filter_change", "transmission_oil_change", "coolant_change"] },
   { key: "chassis", items: ["tire_rotation", "battery_change", "brake_pad_change"] },

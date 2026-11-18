@@ -35,9 +35,9 @@ export async function listCarImagePaths(supabase: SupabaseClient, userId: string
   return { paths, error: null }
 }
 
-// 車両画像の表示スタイルを生成（プレビュー、ガレージ、ホームで共用し見え方を一致させる）
-// NULL は ?? でデフォルトに（0 を誤変換しないよう || は使用しない）、transform-origin も位置に合わせズーム位置を安定させる
+/** 車両画像の表示スタイルを生成（プレビュー、ガレージ、ホームで共用し見え方を一致させる） */
 export const getCarImageStyle = (car: CarImageTransform): CSSProperties => {
+  // NULL は ?? でデフォルトに（0 を誤変換しないよう || は使用しない）、transform-origin も位置に合わせズーム位置を安定させる
   const x = car.image_position_x ?? DEFAULT_IMAGE_POSITION_X
   const y = car.image_position_y ?? DEFAULT_IMAGE_POSITION_Y
   const scale = car.image_scale ?? DEFAULT_IMAGE_SCALE

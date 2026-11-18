@@ -18,13 +18,13 @@ type MaintAlertBase = {
 export type RecordedMaintAlert = MaintAlertBase & {
   hasRecord: true
   isMonthsOnly: boolean
-  // 残り値の単位
+  /** 残り値の単位 */
   unit: "km" | "months" | "days"
   displayValue: string
   isOver: boolean
   monthsPassed: number
   isUrgent: boolean
-  // 周期の消化率（単位の異なる項目同士を並べるために使用）
+  /** 周期の消化率（単位の異なる項目同士を並べるために使用） */
   dueRatio: number
   progressPercent: number
 }
@@ -57,7 +57,7 @@ export const DEFAULT_MAINT_SETTINGS: MaintSettings = {
   "vehicle_inspection": { km: 0, months: 0, months_only: true },
 }
 
-// 車検の満了日が何日後に迫ったら警告表示にするか
+/** 車検の満了日が何日後に迫ったら警告表示にするか */
 export const VEHICLE_INSPECTION_URGENT_DAYS = 30
 
 // 期日が近いほど細かく知りたいため、残りがこの月数を下回ったら日数で表示する

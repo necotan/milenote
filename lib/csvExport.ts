@@ -38,7 +38,7 @@ function escapeCell(value: string | number | null | undefined): string {
   return str
 }
 
-// 記録配列をCSV文字列へ変換する（先頭にUTF-8 BOMを付与しExcelの文字化けを防ぐ）
+/** 記録配列をCSV文字列へ変換する（先頭にUTF-8 BOMを付与しExcelの文字化けを防ぐ） */
 export function recordsToCsv(records: ExportRecord[], t: TFunc): string {
   const header = [
     t("mypage.export_col_date"),
