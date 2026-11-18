@@ -3,12 +3,13 @@ import { getSupabaseBrowserClient } from "@/utils/supabase"
 import { fetchAllRows } from "@/lib/fetchAllRows"
 import type { Wishlist } from "@/lib/types"
 
-// wishlistsテーブルにuser_idカラムが無いため、car_idを介してcars.user_idで絞り込む
+/** car側のstatus絞り込みはuseCarsの結果と突き合わせて呼び出し側で行う */
 export function useWishlists(userId: string | null | undefined) {
   const { data, isLoading, error, mutate } = useSWR(
     userId ? ["wishlists", userId] : null,
     async ([, uid]: [string, string]) => {
       const supabase = getSupabaseBrowserClient()
+      // wishlistsテーブルにuser_idカラムが無いため、car_idを介してcars.user_idで絞り込む
       const { data, error } = await fetchAllRows(() =>
         supabase
           .from("wishlists")

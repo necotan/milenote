@@ -3,7 +3,7 @@ import { getSupabaseBrowserClient } from "@/utils/supabase"
 import { fetchAllRows } from "@/lib/fetchAllRows"
 import type { CarRecord } from "@/lib/types"
 
-// ユーザーの維持費記録を全件取得する（car側のstatus絞り込みはuseCarsの結果と突き合わせて呼び出し側で行う）
+/** ユーザーの維持費記録を全件取得する（car側のstatus絞り込みはuseCarsの結果と突き合わせて呼び出し側で行う） */
 export function useRecords(userId: string | null | undefined) {
   const { data, isLoading, error, mutate } = useSWR(
     userId ? ["records", userId] : null,

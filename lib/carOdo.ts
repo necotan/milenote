@@ -47,8 +47,10 @@ export async function recalcCarOdo(car: OdoCar): Promise<void> {
   await supabase.from("cars").update({ current_odo: result.maxOdo }).eq("id", car.id)
 }
 
-// current_odo は最大値で決まるので、既存の値より小さい更新は保存しても反映されない
-// 誤った値の修正は履歴の編集で行ってもらうため、ここでは保存しない（同じ日の履歴は上書き対象なので比較から外す）
+/**
+ * current_odo は最大値で決まるので、既存の値より小さい更新は保存しても反映されない
+ * 誤った値の修正は履歴の編集で行ってもらうため、ここでは保存しない（同じ日の履歴は上書き対象なので比較から外す）
+ */
 export async function saveOdoUpdate({ userId, car, odo, date }: { userId: string; car: OdoCar; odo: number; date: string }): Promise<OdoSaveResult> {
   const supabase = getSupabaseBrowserClient()
   const current = await fetchMaxOdo(car, date)

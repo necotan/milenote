@@ -3,7 +3,7 @@ import { getSupabaseBrowserClient } from "@/utils/supabase"
 import { fetchAllRows } from "@/lib/fetchAllRows"
 import type { OdoLog } from "@/lib/types"
 
-// car側のstatus絞り込みはuseCarsの結果と突き合わせて呼び出し側で行う
+/** car側のstatus絞り込みはuseCarsの結果と突き合わせて呼び出し側で行う */
 export function useOdoLogs(userId: string | null | undefined) {
   const { data, isLoading, error, mutate } = useSWR(
     userId ? ["odo_logs", userId] : null,

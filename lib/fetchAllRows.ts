@@ -8,8 +8,10 @@ type RangeableQuery<T> = {
   range: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: PostgrestError | null }>
 }
 
-// クエリビルダーは range などの呼び出しで自身を書き換えるため、使い回さずページごとに作り直す
-// 並び順が無いとページ間で行が重複・欠落するので、呼び出し側で一意に決まる order を付けること
+/**
+ * クエリビルダーは range などの呼び出しで自身を書き換えるため、使い回さずページごとに作り直す
+ * 並び順が無いとページ間で行が重複・欠落するので、呼び出し側で一意に決まる order を付けること
+ */
 export async function fetchAllRows<T>(
   buildQuery: () => RangeableQuery<T>,
 ): Promise<{ data: T[]; error: null } | { data: null; error: PostgrestError }> {

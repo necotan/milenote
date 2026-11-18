@@ -62,6 +62,7 @@ milenote: a car maintenance-cost tracking app (Next.js App Router + Supabase).
 - Do not write what the code, names, or JSX already say (e.g. "ハンバーガーメニュー", "〜処理", "〜コンポーネント", "金額"). If there is no why to explain, write no comment.
 - If the same explanation would go in two places, consider sharing the code instead.
 - No decorative characters such as `---`, `===`, `***`.
+- Use `/** */` above an exported function, hook, type, or prop when callers must know something to use it correctly: rules they must follow (e.g. filter by car status), what the return value means, or side effects. VS Code shows it on hover at call sites. Put implementation reasons in `//` inside the function, next to the code they explain. Use `//` for all other comments.
 
 ## i18n
 
