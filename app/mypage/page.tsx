@@ -18,7 +18,7 @@ import { User, LogOut, Wrench, LayoutTemplate, Globe, Accessibility, Download, C
 import type { LucideIcon } from "lucide-react"
 import { toast } from "sonner"
 import { useTheme } from "next-themes"
-import { useTranslation } from "@/lib/i18n"
+import { pluralKey, useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { recordsToCsv, downloadCsv, buildExportFilename } from "@/lib/csvExport"
 import { fetchAllRows } from "@/lib/fetchAllRows"
@@ -86,16 +86,17 @@ type TranslateFn = (key: string, params?: Record<string, string | number>) => st
 function ChipPresetRow({
   value,
   presets,
-  suffix,
+  unitKey,
   customLabel,
   onChange,
 }: {
   value: number
   presets: number[]
-  suffix: string
+  unitKey: string
   customLabel: string
   onChange: (value: number) => void
 }) {
+  const { t } = useTranslation()
   const [customOpen, setCustomOpen] = useState(false)
   const isPreset = presets.includes(value)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -116,7 +117,7 @@ function ChipPresetRow({
               : "bg-white dark:bg-card text-slate-600 dark:text-muted-foreground border-neutral-300 dark:border-neutral-600"
           }`}
         >
-          {p.toLocaleString()}<span className="ml-0.5">{suffix}</span>
+          {p.toLocaleString()}<span className="ml-0.5">{t(pluralKey(unitKey, p))}</span>
         </button>
       ))}
       {customOpen || !isPreset ? (
@@ -135,7 +136,7 @@ function ChipPresetRow({
               className="h-[calc((2rem-2px)*4/3)] w-[calc(100%*4/3)] origin-top-left scale-75 rounded-none border-0 bg-transparent dark:bg-transparent px-0 text-base md:text-base font-bold text-left text-primary-foreground outline-none focus-visible:ring-0"
             />
           </div>
-          <span className="ml-0.5 text-xs font-bold pointer-events-none">{suffix}</span>
+          <span className="ml-0.5 text-xs font-bold pointer-events-none">{t(pluralKey(unitKey, value))}</span>
         </div>
       ) : (
         <button
@@ -281,7 +282,7 @@ function MaintEditDialog({
               <ChipPresetRow
                 value={draftKm}
                 presets={presets.km}
-                suffix={t("common.km_unit")}
+                unitKey="common.km_unit"
                 customLabel={t("mypage.maint_custom")}
                 onChange={setDraftKm}
               />
@@ -293,7 +294,7 @@ function MaintEditDialog({
               <ChipPresetRow
                 value={draftMonths}
                 presets={presets.months}
-                suffix={t("common.months_unit")}
+                unitKey="common.months_unit"
                 customLabel={t("mypage.maint_custom")}
                 onChange={setDraftMonths}
               />
