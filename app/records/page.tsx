@@ -206,7 +206,7 @@ const RecordForm = ({
 
   const odoField = (
     <div className="space-y-2">
-      <Label>{t("records.odometer_km")}</Label>
+      <Label>{t("common.odometer_km")}</Label>
       <NumberInput value={odoAtRecord} onValueChange={setOdoAtRecord} placeholder={odoPlaceholder} className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
     </div>
   )
