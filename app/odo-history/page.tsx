@@ -239,16 +239,13 @@ function OdoHistoryPageInner() {
           </div>
 
           <div className="mt-4 space-y-2">
-            <label className="block text-[11px] font-medium leading-none text-slate-600 dark:text-muted-foreground">{t("common.odometer")}</label>
-            <div className="relative max-w-40">
-              <NumberInput
-                value={editOdo}
-                onValueChange={setEditOdo}
-                disabled={busy}
-                className="pr-10 bg-white dark:bg-card border-slate-200 dark:border-border"
-              />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-medium text-slate-500 dark:text-muted-foreground pointer-events-none">{t("common.km_unit")}</span>
-            </div>
+            <label className="block text-[11px] font-medium leading-none text-slate-600 dark:text-muted-foreground">{t("common.odometer_km")}</label>
+            <NumberInput
+              value={editOdo}
+              onValueChange={setEditOdo}
+              disabled={busy}
+              className="max-w-40 bg-white dark:bg-card border-slate-200 dark:border-border"
+            />
           </div>
 
           <DialogFooter>
