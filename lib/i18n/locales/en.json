@@ -19,7 +19,7 @@
     "odo_lower_than_existing": "A record or odometer update already has a value above {{odo}} km. Fix the wrong value in the history or the record.",
     "logout": "Log out",
     "km_unit": "km",
-    "months_unit": "mo",
+    "months_unit": "months",
     "days_unit": "days",
     "memo": "Notes",
     "target_car": "Car",

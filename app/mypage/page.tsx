@@ -116,7 +116,7 @@ function ChipPresetRow({
               : "bg-white dark:bg-card text-slate-600 dark:text-muted-foreground border-neutral-300 dark:border-neutral-600"
           }`}
         >
-          {p.toLocaleString()}{suffix}
+          {p.toLocaleString()}<span className="ml-0.5">{suffix}</span>
         </button>
       ))}
       {customOpen || !isPreset ? (
@@ -135,7 +135,7 @@ function ChipPresetRow({
               className="h-[calc((2rem-2px)*4/3)] w-[calc(100%*4/3)] origin-top-left scale-75 rounded-none border-0 bg-transparent dark:bg-transparent px-0 text-base md:text-base font-bold text-left text-primary-foreground outline-none focus-visible:ring-0"
             />
           </div>
-          <span className="text-xs font-bold pointer-events-none">{suffix}</span>
+          <span className="ml-0.5 text-xs font-bold pointer-events-none">{suffix}</span>
         </div>
       ) : (
         <button

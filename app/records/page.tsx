@@ -337,7 +337,7 @@ const RecordForm = ({
                       value={intervalMonths}
                       onValueChange={setIntervalMonths}
                       placeholder="6"
-                      className="pr-12"
+                      className="pr-16"
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 dark:text-muted-foreground pointer-events-none">{t("common.months_unit")}</span>
                   </div>
