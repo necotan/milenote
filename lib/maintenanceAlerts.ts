@@ -20,7 +20,8 @@ export type RecordedMaintAlert = MaintAlertBase & {
   isMonthsOnly: boolean
   /** 残り値の単位 */
   unit: "km" | "months" | "days"
-  displayValue: string
+  /** 残り値（超過時も正の数） */
+  value: number
   isOver: boolean
   monthsPassed: number
   isUrgent: boolean
@@ -89,11 +90,11 @@ function daysBetween(from: Date, to: Date): number {
   return Math.round((to.getTime() - from.getTime()) / DAY_MS)
 }
 
-function formatTimeRemaining(today: Date, dueDate: Date): { unit: "months" | "days"; displayValue: string } {
+function formatTimeRemaining(today: Date, dueDate: Date): { unit: "months" | "days"; value: number } {
   const [from, to] = today <= dueDate ? [today, dueDate] : [dueDate, today]
   const months = wholeMonthsBetween(from, to)
-  if (months >= MONTHS_DISPLAY_MIN) return { unit: "months", displayValue: months.toLocaleString() }
-  return { unit: "days", displayValue: daysBetween(from, to).toLocaleString() }
+  if (months >= MONTHS_DISPLAY_MIN) return { unit: "months", value: months }
+  return { unit: "days", value: daysBetween(from, to) }
 }
 
 export function generateMaintAlerts(
@@ -178,7 +179,7 @@ export function generateMaintAlerts(
       const isUrgent = isOver || daysRemaining <= urgentDays
       const remaining = isMonthsOnly
         ? formatTimeRemaining(today, dueDate)
-        : { unit: "km" as const, displayValue: Math.abs(kmRemaining).toLocaleString() }
+        : { unit: "km" as const, value: Math.abs(kmRemaining) }
 
       generatedAlerts.push({
         id: `${car.id}-${maintName}`,

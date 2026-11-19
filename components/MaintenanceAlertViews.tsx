@@ -3,14 +3,9 @@
 import Link from "next/link"
 import { CalendarDays, TrendingUp } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
-import { useTranslation } from "@/lib/i18n"
+import { pluralKey, useTranslation } from "@/lib/i18n"
 import { MAINT_TYPE_CATEGORY } from "@/lib/subcategories"
-import type { MaintAlertItem, RecordedMaintAlert } from "@/lib/maintenanceAlerts"
-
-function unitLabel(alert: RecordedMaintAlert, t: (key: string) => string) {
-  if (alert.unit === "days") return t("common.days_unit")
-  return alert.unit === "months" ? t("common.months_unit") : t("common.km_unit")
-}
+import type { MaintAlertItem } from "@/lib/maintenanceAlerts"
 
 export function MaintAlertCard({ alert, className = "", reserveButtonSpace = false }: { alert: MaintAlertItem; className?: string; reserveButtonSpace?: boolean }) {
   const { t } = useTranslation()
@@ -62,13 +57,13 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
           <div className="mt-0.5 leading-tight text-slate-800 dark:text-foreground">
             <p className="text-[11px] font-bold">{t(`subcategories.${alert.maintName}`)}{alert.isDisabled ? ` (${t("mypage.maint_disabled_desc")})` : (alert.isOver ? t("home.alert_overdue") : t("home.alert_remaining"))}</p>
             <p className="text-lg font-bold flex items-baseline">
-              {alert.displayValue}<span className="text-[11px] ml-0.5">{unitLabel(alert, t)}</span>
+              {alert.value.toLocaleString()}<span className="text-[11px] ml-0.5">{t(pluralKey(`common.${alert.unit}_unit`, alert.value))}</span>
               {alert.isOver && <TrendingUp size={16} className={`ml-1 shrink-0 self-center ${iconColor}`} aria-hidden="true" />}
             </p>
           </div>
           <div className="flex flex-col gap-1.5 mt-1">
             <div className="flex items-center gap-1 text-[11px] text-slate-600 dark:text-muted-foreground font-medium">
-              <CalendarDays size={10} /> {t("home.months_since_last", { months: alert.monthsPassed })}
+              <CalendarDays size={10} /> {t(pluralKey("home.months_since_last", alert.monthsPassed), { months: alert.monthsPassed })}
             </div>
             <div className="w-[80%] bg-slate-100 dark:bg-surface-3 h-1.5 rounded-full overflow-hidden">
               <div

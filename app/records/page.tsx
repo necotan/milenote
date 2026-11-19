@@ -22,7 +22,7 @@ import { SwitchRow } from "@/components/ui/ListGroup"
 import { X, Fuel, Wrench, Settings, Receipt, Shield, FileText, CarFront, Pencil, Trash2, Ticket, ChevronLeft, ChevronRight, Hammer, ClipboardList, Droplets, SlidersHorizontal, BatteryCharging, Atom } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
-import { useTranslation } from "@/lib/i18n"
+import { pluralKey, useTranslation } from "@/lib/i18n"
 import { usePageLoadingGate } from "@/lib/loadingGate"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { SegmentedToggle } from "@/components/ui/SegmentedToggle"
@@ -339,7 +339,7 @@ const RecordForm = ({
                       placeholder="6"
                       className="pr-16"
                     />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 dark:text-muted-foreground pointer-events-none">{t("common.months_unit")}</span>
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 dark:text-muted-foreground pointer-events-none">{t(pluralKey("common.months_unit", Number(intervalMonths)))}</span>
                   </div>
                 </div>
                 <p className="text-[11px] text-slate-500 dark:text-muted-foreground whitespace-nowrap">{t("records.periodic_inspection_interval_hint")}</p>

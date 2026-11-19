@@ -70,6 +70,11 @@ export function useTranslation() {
   return context
 }
 
+/** count が 1 のとき英語の単数形キー `<key>_one` を返す。ja.json にも同じ `_one` キーを置くこと */
+export function pluralKey(key: string, count: number): string {
+  return count === 1 ? `${key}_one` : key
+}
+
 export function formatDateLocale(dateStr: string | null, locale: Locale): string {
   if (!dateStr) return "-"
   const d = new Date(dateStr)
