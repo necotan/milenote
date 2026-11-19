@@ -204,7 +204,7 @@ function OdoHistoryPageInner() {
                         <div className="min-w-0 flex-1">
                           <p className="text-[11px] font-medium text-slate-500 dark:text-muted-foreground">{formatDateLocale(log.date, locale)}</p>
                           <p className="text-base font-bold text-slate-800 dark:text-foreground tabular-nums">
-                            {log.odo.toLocaleString()} <span className="text-[11px]">{t("common.km_unit")}</span>
+                            {log.odo.toLocaleString()} {t("common.km_unit")}
                             {diff !== null && (
                               <span className="ml-2 text-[11px] font-medium text-slate-500 dark:text-muted-foreground">
                                 {t("odo_history.diff_from_previous", { km: (diff > 0 ? "+" : "") + diff.toLocaleString() })}

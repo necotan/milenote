@@ -57,7 +57,7 @@ export function MaintAlertCard({ alert, className = "", reserveButtonSpace = fal
           <div className="mt-0.5 leading-tight text-slate-800 dark:text-foreground">
             <p className="text-[11px] font-bold">{t(`subcategories.${alert.maintName}`)}{alert.isDisabled ? ` (${t("mypage.maint_disabled_desc")})` : (alert.isOver ? t("home.alert_overdue") : t("home.alert_remaining"))}</p>
             <p className="text-lg font-bold flex items-baseline">
-              {alert.value.toLocaleString()}<span className="text-[11px] ml-0.5">{t(pluralKey(`common.${alert.unit}_unit`, alert.value))}</span>
+              {alert.value.toLocaleString()}<span className="ml-1">{t(pluralKey(`common.${alert.unit}_unit`, alert.value))}</span>
               {alert.isOver && <TrendingUp size={16} className={`ml-1 shrink-0 self-center ${iconColor}`} aria-hidden="true" />}
             </p>
           </div>
