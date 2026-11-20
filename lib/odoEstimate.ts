@@ -1,8 +1,8 @@
 import { parseISODate } from "@/lib/date/calendar"
 
-export type OdoAnchorRecord = { id: string; car_id: string; date: string; odo_at_record: number | null }
-export type OdoAnchorCar = { id: string; current_odo: number; purchase_odo: number; purchase_date: string | null }
-export type OdoAnchorLog = { car_id: string; date: string; odo: number }
+type OdoAnchorRecord = { id: string; car_id: string; date: string; odo_at_record: number | null }
+type OdoAnchorCar = { id: string; current_odo: number; purchase_odo: number; purchase_date: string | null }
+type OdoAnchorLog = { car_id: string; date: string; odo: number }
 
 type OdoAnchor = { time: number; odo: number }
 

@@ -1,6 +1,6 @@
 // cars.fuel_type の識別子スラッグ定義
 
-export type FuelTypeSlug =
+type FuelTypeSlug =
   | "regular"
   | "premium"
   | "diesel"
@@ -10,8 +10,8 @@ export type FuelTypeSlug =
 
 export const FUEL_TYPES: FuelTypeSlug[] = ["regular", "premium", "diesel", "ev", "hydrogen", "other"]
 
-/** 給油記録の入力・集計単位（レギュラー/ハイオク/軽油/その他はL、EVはkWh、FCV(水素)はkg） */
-export type FuelUnit = "l" | "kwh" | "kg"
+// 給油記録の入力・集計単位（レギュラー/ハイオク/軽油/その他はL、EVはkWh、FCV(水素)はkg）
+type FuelUnit = "l" | "kwh" | "kg"
 
 /**
  * records.fill_type の識別子スラッグ定義（CHECK 制約 records_fill_type_check と一致させる）
