@@ -113,6 +113,33 @@ migrationの追加・適用・ドリフト対処などの詳しい運用手順�
 - **Icons**: [Lucide React](https://lucide.dev/) (Licensed under ISC)
 - **Hosting**: [Vercel](https://vercel.com/)
 
+## プロジェクト構成
+
+```text
+/
+├── app/                   # ルーティング(ホーム, records, stats, garage, mypage, maintenance, odo-history, login, login/signup, reset-password, terms, privacy)
+│   ├── layout.tsx
+│   ├── manifest.ts        # PWAマニフェスト
+│   └── globals.css        # カラートークン・全体のスタイル
+├── components/            # AppShell, RecurringTab, RecurringCostProcessor, MaintenanceAlertViews
+│   └── ui/                # 共通UI(shadcn/uiのコンポーネント, AppSidebar, BottomNav, DatePicker, ModalCard など)
+├── lib/                   # ビジネスロジック(types.ts, subcategories.ts, maintenanceAlerts.ts, yearlyStats.ts, csvExport.ts など)
+│   ├── hooks/             # SWRのデータ取得フック(useCars, useRecords, useRecurringCosts, useWishlists など)
+│   └── i18n/              # 翻訳(index.tsx, locales/ja.json, locales/en.json)
+├── utils/                 # 汎用ヘルパー(supabase.ts, carImage.ts, publicRoutes.ts, safeUrl.ts など)
+├── supabase/
+│   └── migrations/        # スキーマ変更(テーブル, 関数, RLS, Storage)
+├── docs/                  # 設計ドキュメント(data-model, delete-design, stored-values, security-design, design, ios-pwa)
+├── manuals/               # 運用手順(supabase_migrations.ja.md)
+├── scripts/               # backup.cmd / backup.ps1(本番DBと車の写真をリポジトリ外に書き出す)
+├── public/                # PWAアイコン
+├── .githooks/             # pre-commit, commit-msg
+├── proxy.ts               # 未ログインのリクエストを /login へリダイレクト
+├── next.config.ts
+├── components.json        # shadcn/uiの設定
+└── package.json
+```
+
 ## 免責事項
 
 **1. データの取り扱いとプライバシー**

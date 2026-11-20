@@ -113,6 +113,33 @@ This project is built with the following technologies and open-source libraries.
 - **Icons**: [Lucide React](https://lucide.dev/) (Licensed under ISC)
 - **Hosting**: [Vercel](https://vercel.com/)
 
+## Project Structure
+
+```text
+/
+├── app/                   # Routes (home, records, stats, garage, mypage, maintenance, odo-history, login, login/signup, reset-password, terms, privacy)
+│   ├── layout.tsx
+│   ├── manifest.ts        # PWA manifest
+│   └── globals.css        # Color tokens and global styles
+├── components/            # AppShell, RecurringTab, RecurringCostProcessor, MaintenanceAlertViews
+│   └── ui/                # Shared UI (shadcn/ui components, AppSidebar, BottomNav, DatePicker, ModalCard, etc.)
+├── lib/                   # Business logic (types.ts, subcategories.ts, maintenanceAlerts.ts, yearlyStats.ts, csvExport.ts, etc.)
+│   ├── hooks/             # SWR data hooks (useCars, useRecords, useRecurringCosts, useWishlists, etc.)
+│   └── i18n/              # Translations (index.tsx, locales/ja.json, locales/en.json)
+├── utils/                 # Generic helpers (supabase.ts, carImage.ts, publicRoutes.ts, safeUrl.ts, etc.)
+├── supabase/
+│   └── migrations/        # Schema changes (tables, functions, RLS, Storage)
+├── docs/                  # Design docs (data-model, delete-design, stored-values, security-design, design, ios-pwa)
+├── manuals/               # Operation guides (supabase_migrations.md)
+├── scripts/               # backup.cmd / backup.ps1 (dumps the production DB and car photos outside the repo)
+├── public/                # PWA icons
+├── .githooks/             # pre-commit, commit-msg
+├── proxy.ts               # Redirects unauthenticated requests to /login
+├── next.config.ts
+├── components.json        # shadcn/ui settings
+└── package.json
+```
+
 ## Disclaimer
 
 **1. Data Handling and Privacy**
