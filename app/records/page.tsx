@@ -336,7 +336,7 @@ const RecordForm = ({
                     value={intervalMonths}
                     onValueChange={setIntervalMonths}
                     placeholder="6"
-                    className="max-w-40"
+                    className="max-w-40 bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400"
                   />
                 </div>
                 <p className="text-[11px] text-slate-500 dark:text-muted-foreground whitespace-nowrap">{t("records.periodic_inspection_interval_hint")}</p>
@@ -367,7 +367,7 @@ const RecordForm = ({
         <FormSection divided>
           <div className="space-y-2">
             <Label>{t("common.memo")}</Label>
-            <Textarea value={memo} onChange={e => setMemo(e.target.value)} placeholder={t("records.memo_placeholder")} className="resize-none" />
+            <Textarea value={memo} onChange={e => setMemo(e.target.value)} placeholder={t("records.memo_placeholder")} className="resize-none bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
           </div>
         </FormSection>
 
