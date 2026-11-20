@@ -100,7 +100,7 @@ git config core.hooksPath .githooks
 ### データベース構成について
 `supabase/migrations/` 配下のSQLファイルでスキーマを管理しています。スキーマを変更したい場合は新しいマイグレーションファイルを追加してください。
 
-migrationの追加・適用・ドリフト対処などの詳しい運用手順は [manuals/supabase_migrations.md](manuals/supabase_migrations.md) を参照してください。
+migrationの追加・適用・ドリフト対処などの詳しい運用手順は [manuals/supabase_migrations.ja.md](manuals/supabase_migrations.ja.md) を参照してください。
 
 ## 技術スタック・クレジット
 このプロジェクトは以下の優れた技術およびオープンソースライブラリを使用して構築されています。

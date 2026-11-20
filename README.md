@@ -100,7 +100,7 @@ git config core.hooksPath .githooks
 ### About the Database Schema
 The schema is managed by the SQL files in `supabase/migrations/`. To change the schema, add a new migration file.
 
-For details on adding and applying migrations and handling drift, see [manuals/supabase_migrations.md](manuals/supabase_migrations.md) (Japanese).
+For details on adding and applying migrations and handling drift, see [manuals/supabase_migrations.md](manuals/supabase_migrations.md).
 
 ## Tech Stack & Credits
 This project is built with the following technologies and open-source libraries.

@@ -1,172 +1,174 @@
-# Supabase Migration 運用ガイド
+# Supabase Migration Guide
 
-milenote の Supabase データベーススキーマは `supabase/migrations/` 配下のSQLファイルで管理しています。本書はDB変更作業の手順書です。
+English | [日本語](supabase_migrations.ja.md)
 
-## 基本ルール
+The milenote Supabase database schema is managed as SQL files in `supabase/migrations/`. This guide describes how to change the database.
 
-> **Supabase Dashboard の SQL Editor で直接変更系SQL（CREATE / ALTER / DROP / INSERT 等）を実行しない。**
+## Basic rule
 
-変更は必ず migration ファイル経由で行います。Dashboard の SQL Editor は **SELECT などの参照系のみ** に留めてください。
+> **Do not run mutating SQL (CREATE / ALTER / DROP / INSERT, etc.) directly in the Supabase Dashboard SQL Editor.**
 
-理由：Dashboard で直接実行するとローカルの migration ファイルとリモートDBにズレ（ドリフト）が生じ、別環境での再現や Git 上の履歴管理ができなくなります。
+Always make changes through a migration file. Use the Dashboard SQL Editor **only for read-only queries such as SELECT**.
+
+Why: running SQL directly in the Dashboard makes the remote database drift from the local migration files, so the schema can no longer be reproduced in another environment or tracked in Git.
 
 ---
 
-## 通常フロー：DBに変更を加える
+## Normal flow: changing the database
 
-### 1. 新しい migration ファイルを作成
+### 1. Create a migration file
 
 ```bash
-npx supabase migration new <変更内容を表すスラッグ>
+npx supabase migration new <slug-describing-the-change>
 ```
 
-例：
+Example:
 ```bash
 npx supabase migration new add_nickname_to_cars
 ```
 
--> `supabase/migrations/<timestamp>_add_nickname_to_cars.sql` が生成されます。
+-> This creates `supabase/migrations/<timestamp>_add_nickname_to_cars.sql`.
 
-### 2. SQL を記述
+### 2. Write the SQL
 
-生成されたファイルに変更SQLを書きます。
+Write the change in the generated file.
 
 ```sql
 -- supabase/migrations/20260601120000_add_nickname_to_cars.sql
 ALTER TABLE public.cars ADD COLUMN nickname text;
 ```
 
-### 3. バックアップ
+### 3. Back up
 
-`db push` の前に `scripts/backup.cmd` をダブルクリックして、本番DBと車の写真をバックアップします。列やテーブルの削除など、データが消える変更では必ず行ってください。
+Before `db push`, double-click `scripts/backup.cmd` to back up the production database and car photos. Always do this for changes that delete data, such as dropping a column or table.
 
-- 保存先：`ドキュメント\milenote\backups\<日付>`（`schema.sql`、`data.sql`、`storage\`）
-- 事前に Docker Desktop を起動しておく
-- DB のポート（5432 / 6543）への接続をファイアウォールなどで遮断しているネットワークでは実行できないため、接続できるネットワークで実行する
-- 保存先を変える場合は `scripts/backup.ps1 -Destination <フォルダ>` で実行する。利用者のデータが入るため、リポジトリ内やクラウドの共有フォルダは指定しない
+- Destination: `Documents\milenote\backups\<date>` (`schema.sql`, `data.sql`, `storage\`)
+- Start Docker Desktop first.
+- It cannot run on a network whose firewall blocks the database ports (5432 / 6543). Run it on a network that allows them.
+- To use another destination, run `scripts/backup.ps1 -Destination <folder>`. The backup contains user data, so do not choose a folder inside the repository or a shared cloud folder.
 
-### 4. リモートに適用
+### 4. Apply to the remote database
 
 ```bash
 npx supabase db push
 ```
 
-未適用の migration ファイルが順番に実行されます。
+Unapplied migration files run in order.
 
-### 5. コミット
+### 5. Commit
 
 ```bash
 git add supabase/migrations/<timestamp>_add_nickname_to_cars.sql
-git commit -m "add: cars テーブルに nickname カラムを追加"
+git commit -m "add: nickname column to cars table"
 ```
 
 ---
 
-## ドリフト発生時の対処（うっかり Dashboard で実行してしまった場合）
+## Fixing drift (after running SQL in the Dashboard by mistake)
 
-リモートDBだけが変更され、ローカルと不一致になった状態を救済する手順。
+Use this when only the remote database was changed and no longer matches the local files.
 
-### 1. ドリフト検知
+### 1. Detect drift
 
 ```bash
 npx supabase migration list
 ```
 
-`Local` と `Remote` 列がズレていればドリフト発生中。
+If the `Local` and `Remote` columns do not match, the schema has drifted.
 
 ```
    Local          | Remote
   ----------------|----------------
    20260522022446 | 20260522022446   OK
-                  | 20260601120000   リモートだけ進んでいる
+                  | 20260601120000   only on the remote
 ```
 
-### 2. リモートの変更を migration として取り込み
+### 2. Pull the remote changes into a migration
 
 ```bash
 npx supabase db pull
 ```
 
--> 差分が新しい migration ファイルとして生成されます。
+-> The difference is written to a new migration file.
 
-### 3. 生成されたファイルを確認・コミット
+### 3. Review and commit the generated file
 
 ```bash
 git add supabase/migrations/<timestamp>_remote_schema.sql
-git commit -m "add: Dashboard で追加した変更を migration に取り込み"
+git commit -m "add: migration for changes made in the Dashboard"
 ```
 
 ---
 
-## 既存リモートDBに「既に適用済み」としてマークする
+## Marking a migration as already applied on the remote
 
-新しい migration ファイルの内容が**既にリモートに反映済み**の場合に使用。
+Use this when the contents of a new migration file are **already in the remote database**.
 
 ```bash
 npx supabase migration repair --status applied <timestamp>
 ```
 
-例：
+Example:
 ```bash
 npx supabase migration repair --status applied 20260522022447
 ```
 
-これをしないと、次回 `db push` 時に未適用と判定されて再実行されます。
+Without this, the next `db push` treats the file as unapplied and runs it again.
 
 ---
 
-## 別環境（他PC・新規プロジェクト）でのセットアップ
+## Setting up another environment (another PC or a new project)
 
 ```bash
 git clone <repo>
 cd milenote
 npm install
 
-# Docker Desktop を起動しておく
+# Start Docker Desktop first
 npx supabase login
 npx supabase link --project-ref <project_id>
-npx supabase db push    # migration が適用される
+npx supabase db push    # applies the migrations
 ```
 
-これで現行と同じスキーマが再現できます。
+This reproduces the current schema.
 
 ---
 
-## コマンドチートシート
+## Command cheat sheet
 
-| やりたいこと | コマンド |
+| Task | Command |
 |---|---|
-| 新規migration作成 | `npx supabase migration new <slug>` |
-| 本番DBのバックアップ | `scripts/backup.cmd` をダブルクリック |
-| リモートに適用 | `npx supabase db push` |
-| リモートの状態を取り込み | `npx supabase db pull` |
-| 適用状況確認 | `npx supabase migration list` |
-| 履歴を「適用済み」に修正 | `npx supabase migration repair --status applied <timestamp>` |
-| 履歴を「未適用」に戻す | `npx supabase migration repair --status reverted <timestamp>` |
-| リモートとlink | `npx supabase link --project-ref <id>` |
+| Create a migration | `npx supabase migration new <slug>` |
+| Back up the production database | Double-click `scripts/backup.cmd` |
+| Apply to the remote | `npx supabase db push` |
+| Pull the remote state | `npx supabase db pull` |
+| Check what is applied | `npx supabase migration list` |
+| Mark as applied in the history | `npx supabase migration repair --status applied <timestamp>` |
+| Mark as unapplied in the history | `npx supabase migration repair --status reverted <timestamp>` |
+| Link to the remote | `npx supabase link --project-ref <id>` |
 
 ---
 
-## やってはいけないこと
+## Don'ts
 
-| NG | 理由 |
+| Don't | Why |
 |---|---|
-| Dashboard の SQL Editor で `CREATE TABLE` / `ALTER TABLE` 等を直接実行 | migration とドリフトする |
-| migration ファイルを後から編集（適用済みのもの） | 既に適用された履歴と不整合になる |
-| migration ファイルのリネーム・削除 | タイムスタンプ順序が壊れる |
-| `supabase/.temp/` や `supabase/.branches/` をコミット | 個人環境固有の状態が混入する（`.gitignore` 済み） |
+| Run `CREATE TABLE`, `ALTER TABLE`, etc. directly in the Dashboard SQL Editor | It drifts from the migrations |
+| Edit a migration file after it has been applied | It no longer matches the applied history |
+| Rename or delete a migration file | It breaks the timestamp order |
+| Commit `supabase/.temp/` or `supabase/.branches/` | They hold state specific to your machine (already in `.gitignore`) |
 
-適用済み migration を「修正したい」場合は、**新しい migration ファイルを作って打ち消す/上書きする** のが正しい流儀です。
+To "fix" an applied migration, **create a new migration that reverts or overrides it**.
 
 ---
 
-## トラブルシューティング
+## Troubleshooting
 
-### `db push` で「Docker Desktop is a prerequisite」エラー
-Docker Desktop を起動してから再実行してください。タスクバーのDockerアイコンが「Engine running」になるまで待つこと。
+### `db push` fails with "Docker Desktop is a prerequisite"
+Start Docker Desktop and run the command again. Wait until the Docker icon in the taskbar shows "Engine running".
 
-### 「password authentication failed」
-DBパスワードが間違っています。Dashboard -> Settings -> Database -> **Reset database password** で再設定してください（既存データには影響しません）。
+### "password authentication failed"
+The database password is wrong. Reset it in Dashboard -> Settings -> Database -> **Reset database password** (existing data is not affected).
 
-### migration が大量にドリフトしてどうにもならない
-最後の手段として、`supabase/migrations/` をローカルで一旦全削除して `db pull` で1ファイルにまとめ直す方法があります。ただし変更履歴が失われるので慎重に行ってください。
+### Migrations have drifted too far to fix
+As a last resort, delete everything in `supabase/migrations/` locally and run `db pull` to rebuild it as a single file. This loses the change history, so be careful.
