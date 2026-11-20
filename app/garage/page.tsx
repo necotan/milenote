@@ -761,7 +761,7 @@ export default function GaragePage() {
                   <FormSection divided className="space-y-2">
                     <Label>{t("garage.status")}</Label>
                     <Select value={carStatus} onValueChange={(v) => setCarStatus(v as CarStatus)}>
-                      <SelectTrigger className="w-full"><SelectValue /></SelectTrigger>
+                      <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         {CAR_STATUS_KEYS.map(key => (
                           <SelectItem key={key} value={key}>{t(`garage.car_status_${key}`)}</SelectItem>
@@ -1132,7 +1132,7 @@ export default function GaragePage() {
                     <div className="space-y-2">
                       <Label>{t("common.target_car")} <span className="text-red-500">{t("common.required")}</span></Label>
                       <Select value={wishCarId} onValueChange={setWishCarId} required>
-                        <SelectTrigger><SelectValue placeholder={t("common.select_car")} /></SelectTrigger>
+                        <SelectTrigger className="bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400"><SelectValue placeholder={t("common.select_car")} /></SelectTrigger>
                         <SelectContent>
                           {cars.map(car => <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>)}
                         </SelectContent>
@@ -1141,7 +1141,7 @@ export default function GaragePage() {
                     <div className="space-y-2">
                       <Label>{t("garage.genre")} <span className="text-red-500">{t("common.required")}</span></Label>
                       <Select value={wishGenre} onValueChange={setWishGenre} required>
-                        <SelectTrigger className="min-w-36"><SelectValue placeholder={t("garage.genre")} /></SelectTrigger>
+                        <SelectTrigger className="min-w-36 bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400"><SelectValue placeholder={t("garage.genre")} /></SelectTrigger>
                         <SelectContent>
                           {WISHLIST_GENRES.map(key => (
                             <SelectItem key={key} value={key}>{t(`wishlist_genres.${key}`)}</SelectItem>
@@ -1153,22 +1153,22 @@ export default function GaragePage() {
 
                   <div className="space-y-2">
                     <Label>{t("garage.parts_name")} <span className="text-red-500">{t("common.required")}</span></Label>
-                    <Input placeholder="" value={wishItemName} onChange={(e) => setWishItemName(e.target.value)} required className="sm:max-w-sm" />
+                    <Input placeholder="" value={wishItemName} onChange={(e) => setWishItemName(e.target.value)} required className="sm:max-w-sm bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
                   </div>
 
                   <div className="space-y-2">
                     <Label>{t("garage.reference_url")}</Label>
-                    <Input type="url" placeholder="https://..." value={wishUrl} onChange={(e) => setWishUrl(e.target.value)} className="sm:max-w-sm" />
+                    <Input type="url" placeholder="https://..." value={wishUrl} onChange={(e) => setWishUrl(e.target.value)} className="sm:max-w-sm bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
                   </div>
 
                   <div className="space-y-2">
                     <Label>{t("garage.estimated_price")}</Label>
-                    <NumberInput placeholder="100,000" value={wishPrice} onValueChange={setWishPrice} className="max-w-40" />
+                    <NumberInput placeholder="100,000" value={wishPrice} onValueChange={setWishPrice} className="max-w-40 bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
                   </div>
 
                   <div className="space-y-2 sm:max-w-[50rem]">
                     <Label>{t("common.memo")}</Label>
-                    <Textarea placeholder="" value={wishMemo} onChange={(e) => setWishMemo(e.target.value)} className="resize-none h-20" />
+                    <Textarea placeholder="" value={wishMemo} onChange={(e) => setWishMemo(e.target.value)} className="resize-none h-20 bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
                   </div>
 
                   <div className="pt-4 flex justify-center">

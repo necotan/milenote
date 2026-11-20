@@ -145,7 +145,7 @@ const RecurringForm = ({
             <div className="space-y-2">
               <Label>{t("common.target_car")} <span className="text-red-500">{t("common.required")}</span></Label>
               <Select value={carId} onValueChange={setCarId} required>
-                <SelectTrigger className="w-full"><SelectValue placeholder={t("common.select_car")} /></SelectTrigger>
+                <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400"><SelectValue placeholder={t("common.select_car")} /></SelectTrigger>
                 <SelectContent>
                   {cars.map((car) => <SelectItem key={car.id} value={car.id}>{car.name}</SelectItem>)}
                 </SelectContent>
@@ -154,7 +154,7 @@ const RecurringForm = ({
             <div className="space-y-2">
               <Label>{t("records.category")} <span className="text-red-500">{t("common.required")}</span></Label>
               <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger className="w-full"><SelectValue placeholder={t("records.category")} /></SelectTrigger>
+                <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400"><SelectValue placeholder={t("records.category")} /></SelectTrigger>
                 <SelectContent>
                   {Object.keys(CATEGORIES).map(key => (
                     <SelectItem key={key} value={key}>{t(`categories.${key}`)}</SelectItem>
@@ -168,7 +168,7 @@ const RecurringForm = ({
             <div className="space-y-2 w-1/2 pr-1.5 sm:pr-0 sm:max-w-sm">
               <Label>{t("records.subcategory")}</Label>
               <Select value={subCategory} onValueChange={setSubCategory}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400">
                   <SelectValue placeholder={t("common.please_select")} />
                 </SelectTrigger>
                 <SelectContent>
@@ -189,13 +189,13 @@ const RecurringForm = ({
                   onValueChange={setAmount}
                   required
                   placeholder="5,000"
-                  className="max-w-40 bg-white dark:bg-card"
+                  className="max-w-40 bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400"
                 />
               </div>
               <div className="space-y-2">
                 <Label>{t("records.frequency")} <span className="text-red-500">{t("common.required")}</span></Label>
                 <Select value={frequency} onValueChange={setFrequency}>
-                  <SelectTrigger className="w-full bg-white dark:bg-card"><SelectValue placeholder={t("records.frequency")} /></SelectTrigger>
+                  <SelectTrigger className="w-full bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400"><SelectValue placeholder={t("records.frequency")} /></SelectTrigger>
                   <SelectContent>
                     {FREQUENCY_OPTIONS.map(opt => (
                       <SelectItem key={opt.value} value={opt.value}>{t(opt.labelKey)}</SelectItem>
@@ -213,7 +213,7 @@ const RecurringForm = ({
               <DatePicker
                 value={nextBillingDate}
                 onChange={setNextBillingDate}
-                className="sm:max-w-sm bg-white dark:bg-card h-8 min-h-0"
+                className="sm:max-w-sm bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400 h-8 min-h-0"
               />
               {!isEdit && (
                 <p className="text-[11px] text-slate-500 dark:text-muted-foreground">
@@ -226,7 +226,7 @@ const RecurringForm = ({
           <FormSection divided>
             <div className="space-y-2 sm:max-w-[50rem]">
               <Label>{t("common.memo")}</Label>
-              <Textarea value={memo} onChange={e => setMemo(e.target.value)} placeholder={t("records.memo_placeholder")} className="resize-none" />
+              <Textarea value={memo} onChange={e => setMemo(e.target.value)} placeholder={t("records.memo_placeholder")} className="resize-none bg-white dark:bg-card border-slate-200 dark:border-border focus:border-slate-400" />
             </div>
           </FormSection>
 
