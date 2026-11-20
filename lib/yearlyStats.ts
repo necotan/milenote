@@ -1,7 +1,7 @@
 import type { Car, CarRecord } from "@/lib/types"
 
-/** muted は比較として意味を持たない値（所有前の年、初年の前年比）を薄く表示するための目印 */
-export type YearRowState = {
+// muted は比較として意味を持たない値（所有前の年、初年の前年比）を薄く表示するための目印
+type YearRowState = {
   amount: number
   diff: number
   amountMuted: boolean

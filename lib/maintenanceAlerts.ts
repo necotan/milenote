@@ -3,8 +3,8 @@ import { Wrench, Droplet, Filter, Cog, Snowflake, RefreshCw, BatteryFull, Disc, 
 export type MaintSetting = { km: number; months: number; months_only?: boolean; enabled?: boolean }
 export type MaintSettings = Record<string, MaintSetting>
 
-export type MaintAlertCar = { id: string; name: string; current_odo: number }
-export type MaintAlertRecord = { car_id: string; sub_category: string | null; date: string; odo_at_record: number; interval_months?: number | null; inspection_expiry_date?: string | null }
+type MaintAlertCar = { id: string; name: string; current_odo: number }
+type MaintAlertRecord = { car_id: string; sub_category: string | null; date: string; odo_at_record: number; interval_months?: number | null; inspection_expiry_date?: string | null }
 
 type MaintAlertBase = {
   id: string
@@ -15,7 +15,7 @@ type MaintAlertBase = {
   color: string
   isDisabled: boolean
 }
-export type RecordedMaintAlert = MaintAlertBase & {
+type RecordedMaintAlert = MaintAlertBase & {
   hasRecord: true
   isMonthsOnly: boolean
   /** 残り値の単位 */
@@ -29,10 +29,10 @@ export type RecordedMaintAlert = MaintAlertBase & {
   dueRatio: number
   progressPercent: number
 }
-export type UnrecordedMaintAlert = MaintAlertBase & { hasRecord: false }
+type UnrecordedMaintAlert = MaintAlertBase & { hasRecord: false }
 export type MaintAlertItem = RecordedMaintAlert | UnrecordedMaintAlert
 
-export const MAINT_STYLE_CONFIG: Record<string, { icon: LucideIcon; color: string }> = {
+const MAINT_STYLE_CONFIG: Record<string, { icon: LucideIcon; color: string }> = {
   "oil_change": { icon: Droplet, color: "text-orange-500" },
   "oil_filter_change": { icon: Filter, color: "text-blue-500" },
   "transmission_oil_change": { icon: Cog, color: "text-purple-500" },
@@ -58,8 +58,8 @@ export const DEFAULT_MAINT_SETTINGS: MaintSettings = {
   "vehicle_inspection": { km: 0, months: 0, months_only: true },
 }
 
-/** 車検の満了日が何日後に迫ったら警告表示にするか */
-export const VEHICLE_INSPECTION_URGENT_DAYS = 30
+// 車検の満了日が何日後に迫ったら警告表示にするか
+const VEHICLE_INSPECTION_URGENT_DAYS = 30
 
 // 期日が近いほど細かく知りたいため、残りがこの月数を下回ったら日数で表示する
 const MONTHS_DISPLAY_MIN = 2

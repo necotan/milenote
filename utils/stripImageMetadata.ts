@@ -5,12 +5,12 @@ const MIN_QUALITY = 0.72
 const QUALITY_STEP = 0.05
 const MAX_DOWNSCALE_ATTEMPTS = 3
 
-export type StrippedImage = {
+type StrippedImage = {
   file: File
   ext: string
 }
 
-export type StripImageOptions = {
+type StripImageOptions = {
   maxBytes?: number
 }
 
