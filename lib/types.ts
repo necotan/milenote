@@ -66,8 +66,6 @@ export type RecurringCost = {
   sub_category: string | null
   amount: number
   frequency: "weekly" | "monthly" | "bimonthly" | "quarterly" | "semiannually" | "yearly"
-  billing_day: number | null
-  billing_month: number | null
   next_billing_date: string
   memo: string | null
   is_active: boolean
@@ -90,7 +88,6 @@ export type UserProfile = {
   id: string
   username: string
   display_name: string | null
-  avatar_url: string | null
   created_at: string
   maint_settings: MaintSettings | null
 }
