@@ -36,7 +36,16 @@ npx supabase migration new add_nickname_to_cars
 ALTER TABLE public.cars ADD COLUMN nickname text;
 ```
 
-### 3. リモートに適用
+### 3. バックアップ
+
+`db push` の前に `scripts/backup.cmd` をダブルクリックして、本番DBと車の写真をバックアップします。列やテーブルの削除など、データが消える変更では必ず行ってください。
+
+- 保存先：`ドキュメント\milenote\backups\<日付>`（`schema.sql`、`data.sql`、`storage\`）
+- 事前に Docker Desktop を起動しておく
+- DB のポート（5432 / 6543）への接続をファイアウォールなどで遮断しているネットワークでは実行できないため、接続できるネットワークで実行する
+- 保存先を変える場合は `scripts/backup.ps1 -Destination <フォルダ>` で実行する。利用者のデータが入るため、リポジトリ内やクラウドの共有フォルダは指定しない
+
+### 4. リモートに適用
 
 ```bash
 npx supabase db push
@@ -44,7 +53,7 @@ npx supabase db push
 
 未適用の migration ファイルが順番に実行されます。
 
-### 4. コミット
+### 5. コミット
 
 ```bash
 git add supabase/migrations/<timestamp>_add_nickname_to_cars.sql
@@ -128,6 +137,7 @@ npx supabase db push    # migration が適用される
 | やりたいこと | コマンド |
 |---|---|
 | 新規migration作成 | `npx supabase migration new <slug>` |
+| 本番DBのバックアップ | `scripts/backup.cmd` をダブルクリック |
 | リモートに適用 | `npx supabase db push` |
 | リモートの状態を取り込み | `npx supabase db pull` |
 | 適用状況確認 | `npx supabase migration list` |

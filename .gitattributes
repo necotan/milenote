@@ -1,2 +1,4 @@
 # autocrlf で CRLF になると sh がフックを実行できない
 .githooks/* text eol=lf
+# LF のバッチファイルは cmd.exe が行の区切りを誤認することがある
+*.cmd text eol=crlf
