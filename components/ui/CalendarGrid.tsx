@@ -13,11 +13,9 @@ interface CalendarGridProps {
   selected: Date | null
   onSelect: (date: Date) => void
   onOpenWheel: () => void
-  minDate?: Date
-  maxDate?: Date
 }
 
-function CalendarGrid({ month, onMonthChange, selected, onSelect, onOpenWheel, minDate, maxDate }: CalendarGridProps) {
+function CalendarGrid({ month, onMonthChange, selected, onSelect, onOpenWheel }: CalendarGridProps) {
   const { locale, t } = useTranslation()
   const weeks = React.useMemo(() => getMonthMatrix(month.getFullYear(), month.getMonth()), [month])
   const weekdayLabels = React.useMemo(() => getWeekdayLabels(locale), [locale])
@@ -68,7 +66,6 @@ function CalendarGrid({ month, onMonthChange, selected, onSelect, onOpenWheel, m
         {weeks.map((week, wi) => (
           <div key={wi} role="row" className="grid grid-cols-7 gap-x-1">
             {week.map((cell, di) => {
-              const disabled = (minDate && cell.date < minDate) || (maxDate && cell.date > maxDate)
               const isSelected = selected ? isSameDay(cell.date, selected) : false
               const today = isToday(cell.date)
               return (
@@ -77,14 +74,12 @@ function CalendarGrid({ month, onMonthChange, selected, onSelect, onOpenWheel, m
                   type="button"
                   role="gridcell"
                   aria-selected={isSelected}
-                  disabled={disabled}
                   onClick={() => onSelect(cell.date)}
                   className={cn(
                     "mx-auto flex size-9 items-center justify-center rounded-md text-sm tabular-nums transition-colors text-foreground hover:bg-accent hover:text-accent-foreground",
                     cell.outside && "text-muted-foreground/50",
                     today && !isSelected && "ring-1 ring-ring",
-                    isSelected && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
-                    disabled && "opacity-40 pointer-events-none"
+                    isSelected && "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground"
                   )}
                 >
                   {cell.date.getDate()}
