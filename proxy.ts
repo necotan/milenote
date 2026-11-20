@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isPublicRoute } from "@/utils/publicRoutes";
 
 // 未認証で保護ルートへアクセスした場合にサーバー側で /login へリダイレクトする
-// クライアント側の app/layout.tsx のチェックは多層防御として残す
+// クライアント側の components/AppShell.tsx のチェックは多層防御として残す
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
