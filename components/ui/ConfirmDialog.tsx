@@ -8,9 +8,6 @@ interface ConfirmDialogProps {
   onOpenChange: (open: boolean) => void
   title: string
   message: string
-  confirmLabel?: string
-  cancelLabel?: string
-  destructive?: boolean
   loading?: boolean
   onConfirm: () => void
 }
@@ -20,9 +17,6 @@ export function ConfirmDialog({
   onOpenChange,
   title,
   message,
-  confirmLabel,
-  cancelLabel,
-  destructive = true,
   loading = false,
   onConfirm,
 }: ConfirmDialogProps) {
@@ -35,10 +29,10 @@ export function ConfirmDialog({
         <DialogDescription className="mt-2 whitespace-pre-wrap">{message}</DialogDescription>
         <DialogFooter>
           <DialogActionButton variant="secondary" onClick={() => onOpenChange(false)} disabled={loading}>
-            {cancelLabel ?? t("common.cancel")}
+            {t("common.cancel")}
           </DialogActionButton>
-          <DialogActionButton destructive={destructive} onClick={onConfirm} disabled={loading}>
-            {loading ? t("common.deleting") : (confirmLabel ?? t("common.delete_action"))}
+          <DialogActionButton destructive onClick={onConfirm} disabled={loading}>
+            {loading ? t("common.deleting") : t("common.delete_action")}
           </DialogActionButton>
         </DialogFooter>
       </DialogContent>

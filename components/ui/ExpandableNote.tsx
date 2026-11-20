@@ -6,27 +6,15 @@ import { ChevronDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-// Tailwind がクラスを検出できるように、行数ごとのクラス名は完全な文字列で列挙する
-const LINE_CLAMP_CLASS = {
-  1: "line-clamp-1",
-  2: "line-clamp-2",
-  3: "line-clamp-3",
-} as const
-
-type NoteLines = keyof typeof LINE_CLAMP_CLASS
-
-const DEFAULT_NOTE_LINES: NoteLines = 1
-
 const BOX_CLASS = "text-sm text-slate-600 dark:text-muted-foreground bg-slate-50 dark:bg-muted p-2 rounded-md whitespace-pre-wrap"
 const EASE_APPLE = "cubic-bezier(0.32, 0.72, 0, 1)"
 const TOGGLE_DURATION_MS = 380
 
 type ExpandableNoteProps = {
   note: string
-  lines?: NoteLines
 }
 
-function ExpandableNote({ note, lines = DEFAULT_NOTE_LINES }: ExpandableNoteProps) {
+function ExpandableNote({ note }: ExpandableNoteProps) {
   const [open, setOpen] = useState(false)
   // 閉じるアニメーション中に line-clamp を掛けると2行目以降が先に消えるため、開閉状態とは別に持つ
   const [clamped, setClamped] = useState(true)
@@ -52,7 +40,7 @@ function ExpandableNote({ note, lines = DEFAULT_NOTE_LINES }: ExpandableNoteProp
     const observer = new ResizeObserver(measure)
     observer.observe(el)
     return () => observer.disconnect()
-  }, [note, lines, clamped, truncated])
+  }, [note, clamped, truncated])
 
   // 閉じた状態でも1行目は見せるため、バナーの grid-template-rows 0fr/1fr ではなく実測した高さでアニメーションする
   useLayoutEffect(() => {
@@ -85,7 +73,7 @@ function ExpandableNote({ note, lines = DEFAULT_NOTE_LINES }: ExpandableNoteProp
     setOpen((v) => !v)
   }
 
-  const clampClass = clamped ? LINE_CLAMP_CLASS[lines] : undefined
+  const clampClass = clamped ? "line-clamp-1" : undefined
 
   if (!truncated) {
     return (
