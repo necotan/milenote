@@ -575,6 +575,7 @@
     "interior": "内装・インテリア",
     "exhaust_intake": "吸排気系（マフラー等）",
     "suspension_wheels": "足回り（ホイール・車高調等）",
+    "drivetrain": "駆動系（クラッチ・シフター等）",
     "electronics": "電装系（オーディオ等）",
     "wash_machine": "洗車機",
     "hand_wash": "手洗い洗車",
@@ -614,6 +615,7 @@
     "exhaust_intake": "マフラー・吸排気",
     "aero_exterior": "エアロ・外装",
     "suspension": "足回り・車高調",
+    "drivetrain": "駆動系・シフター",
     "interior": "インテリア・内装",
     "other": "その他"
   },
