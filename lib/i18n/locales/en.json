@@ -575,6 +575,7 @@
     "interior": "Interior",
     "exhaust_intake": "Exhaust / Intake",
     "suspension_wheels": "Suspension / Wheels",
+    "drivetrain": "Drivetrain",
     "electronics": "Electronics",
     "wash_machine": "Car Wash Machine",
     "hand_wash": "Hand Wash",

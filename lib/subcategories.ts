@@ -24,6 +24,7 @@ export type SubCategorySlug =
   | "interior"
   | "exhaust_intake"
   | "suspension_wheels"
+  | "drivetrain"
   | "electronics"
   | "wash_machine"
   | "hand_wash"
@@ -57,7 +58,7 @@ export const SUB_CATEGORIES: Record<string, SubCategorySlug[]> = {
   ],
   custom: [
     "exterior_aero", "interior", "exhaust_intake",
-    "suspension_wheels", "electronics", "other"
+    "suspension_wheels", "drivetrain", "electronics", "other"
   ],
   carwash: [
     "wash_machine", "hand_wash", "coating", "interior_cleaning", "wash_supplies", "other"
