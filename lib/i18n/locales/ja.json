@@ -615,6 +615,7 @@
     "exhaust_intake": "マフラー・吸排気",
     "aero_exterior": "エアロ・外装",
     "suspension": "足回り・車高調",
+    "drivetrain": "駆動系・シフター",
     "interior": "インテリア・内装",
     "other": "その他"
   },

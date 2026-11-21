@@ -615,6 +615,7 @@
     "exhaust_intake": "Exhaust / Intake",
     "aero_exterior": "Aero / Exterior",
     "suspension": "Suspension",
+    "drivetrain": "Drivetrain",
     "interior": "Interior",
     "other": "Other"
   },
